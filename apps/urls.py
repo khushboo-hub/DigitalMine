@@ -42,6 +42,7 @@ urlpatterns = [
     path('sms/', include('SMS.urls', namespace='sms')),
     path('news/', include('news.urls', namespace='news')),
     path('emails/', include('emails.urls', namespace='emails')),
+    path('dashboard/', include('dashboard.urls', namespace='dashboard')),
 ]
 
 if settings.DEBUG:
