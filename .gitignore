@@ -2,3 +2,5 @@
 migrations
 __pycache__
 .pdf
+media/*
+apps/settings.py
