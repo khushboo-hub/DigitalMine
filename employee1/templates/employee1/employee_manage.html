@@ -1,0 +1,648 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+.table > tbody > tr > td {
+     vertical-align: middle;
+
+}
+.table td {
+   text-align: left;
+
+}
+.row.text-center{
+    padding-bottom:10px;
+}
+td {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+</style>
+
+<div class="container">
+
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Manage Employee</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'employee1:employee_add' %}"  data-toggle="tooltip"
+                                                              title="Click here to Add New Employee">Add Employee</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive" align="right">
+                        <table class="table table-bordered" id="content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <!--                                <th>ID</th>-->
+                                <th>Name</th>
+                                <th>Mine Name</th>
+                                <!--                                <th>Father Name</th>-->
+                                <th>Email</th>
+                                <th>Token No</th>
+                                <th>RFID</th>
+                                <!--<th>Mining Role</th>-->
+                                <th>Photo</th>
+
+                                <th class="text-center" colspan="5">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in object_list %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <!--                                <td>{{ book.id }}</td>-->
+                                <td>{{ book.name }}</td>
+                                <td>{{book.mine.name}}</td>
+                                <!--                                <td>{{ book.father_name }}</td>-->
+                                <td>{{ book.email }}</td>
+                                <td>{{ book.token_no }}</td>
+                                <td>{{ book.rfid }}</td>
+
+                                <td><img alt="Image not found"
+                                         class="image image-responsive"
+                                         onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
+                                         src="/media/{{ book.photo }}"
+                                         width="100"
+                                         height="100"/>
+                                </td>
+
+
+                                <td class="text-center"><span class="btn btn-info btn-sm more_details"
+                                                              data-toggle="tooltip"
+                                                              data-url="{% url 'employee1:more_details_ajax' %}"
+
+                                                              id="{{book.id}}"
+                                                              title="Click here to get more details">More Details</span>
+                                    <br>
+                                    <br>
+                                    <span class="btn btn-info btn-sm generate_login"
+                                                              data-toggle="tooltip"
+                                                              data-url="{% url 'employee1:generate_login_details_ajax' %}"
+                                                              data-email="{{book.email}}"
+                                                              id="{{book.id}}"
+                                                              title="Click here generate Login">Generate Login</span>
+
+                                </td>
+                                <!--                                "{% url 'employee1:update_shift_link' book.id %}-->
+                                <td class="text-center">
+                                    <span
+                                            class="btn btn-success btn-sm update_shift" data-toggle="tooltip"
+                                            data-url="{% url 'employee1:update_shift_link_ajax' %}" id="{{book.id}}"
+                                            mode="0"
+                                            title="Click here to update shift">Update Shift</span><br><br><a
+                                        data-toggle="tooltip"
+                                        href="{% url 'employee1:details_employee_shift_assign' book.id %}"
+                                        title="Click here to Check Report of an Employee"><small>Check
+                                    Report</small></a></td>
+                                <td class="text-center"><a href="{% url 'employee1:update_medical' book.id %}">
+                                    <span
+                                            class="glyphicon glyphicon-plus-sign"
+                                            data-toggle="tooltip"
+                                            title="Click here to update Medical Info">
+
+                                    </span></a></td>
+                                <td class="text-center"><a href="{% url 'employee1:employee_edit' book.id %}"
+                                                           title="Edit Employee."><span
+                                        class="glyphicon glyphicon-pencil"
+                                        data-toggle="tooltip"
+                                        title="Click here to edit"></span></a></td>
+                                <td class="text-center"><a class="delete"
+                                                           data-url="{% url 'employee1:employee_delete' book.id %}"
+                                                           href="#"
+                                                           title="Delete Employee."><span
+                                        class="glyphicon glyphicon-trash"
+                                        data-toggle="tooltip"
+                                        title="Click here to delete employee"></span></a></td>
+
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+</div>
+
+
+<!-- More Details Modal -->
+<div id="printThis">
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header employee_details">
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <div class="text-center" style="padding-left:10px;"><h4 class="modal-title"><span class="label label-warning">Employee Details</span></h4></div>
+
+                    <center>
+                        <div class="text_center">
+                            <img class="image image-responsive"
+                                 height="100"
+                                 id="photo"
+                                 onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
+                                 src="/media/employee_image/miner2_my3qE2R.jpg"
+                                 width="100">
+                        </div>
+                    </center>
+                </div>
+                <td class="modal-body">
+
+                    <div class="row text-center"><h3><span class="label label-warning">Personal Details</span></h3></div>
+                    <table class="table table-bordered" align="right">
+                        <tbody>
+                           <tr>
+                                <td>
+                                    <span class="label label-primary">Name</span><span id="name"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary text-left">Father's Name</span><span id="father_name"> World</span>
+                                </td>
+                                <td><span class="label label-primary">Gender</span><span
+                                    id="gender"> World</span></td>
+
+                          </tr>
+                          <tr>
+                            <td>
+                                <span class="label label-primary">DOB</span><span id="dob"> World</span>
+                            </td>
+                            <td  class="text-left">
+                                <span class="label label-primary ">Marital Status</span><span id="marital_status"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Email</span><span id="email"> World</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+
+                        <div class="row text-center" ><h3><span class="label label-warning">Contact Details</span></h3></div>
+
+                    <table class="table table-bordered" align="right">
+                        <tbody>
+                           <tr>
+                                <td>
+                                    <span class="label label-primary">Address</span><span id="address"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">State</span><span id="state"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">City</span><span id="city"> World</span>
+                                </td>
+                          </tr>
+                          <tr>
+                            <td>
+                               <span class="label label-primary">Pin</span><span id="pin"> World</span>
+                            </td>
+                            <td  class="text-left">
+                                <span class="label label-primary">Mobile No</span><span
+                                id="mob"> World</span>
+                            </td>
+                              <td></td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                        <div class="row text-center"><h3><span class="label label-warning">Medical Details</span></h3></div>
+
+                    <table class="table table-bordered" align="right">
+                        <tbody>
+                           <tr>
+                                <td>
+                                    <span class="label label-primary">Medical Status</span><span id="medical_status"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">Is Rescue</span><span id="is_rescue"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">Blood Group</span><span id="blood_group"> World</span>
+                                </td>
+                          </tr>
+                        </tbody>
+                      </table>
+
+                        <div class="row text-center"><h3><span class="label label-warning">Contact Details</span></h3></div>
+
+                    <table class="table table-bordered" align="right">
+                        <tbody>
+                           <tr>
+                                <td>
+                                   <span class="label label-primary">Mine</span><span id="mine"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">RFID</span><span id="rfid"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">Designation</span><span id="designation"> World</span>
+                                </td>
+                          </tr>
+                        <tr>
+                                <td>
+                                   <span class="label label-primary">Token No</span><span id="token_no"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">DOJ</span><span id="date_of_joining"> World</span>
+                                </td>
+                                <td>
+                                   <span class="label label-primary">DOR</span><span id="retirement_date"> World</span>
+                                </td>
+                          </tr>
+                        <tr>
+                                <td>
+                                   <span class="label label-primary">Job Type</span><span id="job_type"> World</span>
+                                </td>
+                                <td>
+                                   <span class="label label-primary">Mining Role</span><span
+                                id="mining_role"> World</span>
+                                </td>
+                                <td>
+                                   <span class="label label-primary">Cat Type</span><span
+                                id="cat_type"> World</span>
+                                </td>
+                          </tr>
+                        <tr>
+                                <td>
+                                   <span class="label label-primary">Immediate Staff</span><span id="immediat0e_staff"> World</span>
+                                </td>
+                            <td></td>
+                            <td></td>
+
+                          </tr>
+                        </tbody>
+                      </table>
+
+                        <div class="row text-center"><h3><span class="label label-warning">Bank Details</span></h3></div>
+
+                    <table class="table table-bordered" align="right">
+                        <tbody>
+                           <tr>
+                                <td>
+                                   <span class="label label-primary">Bank Name</span><span
+                                id="bank_name"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">Bank Acc No</span><span
+                                id="bank_ac_no"> World</span>
+                                </td>
+                                <td>
+                                    <span class="label label-primary">Bank IFSC</span><span
+                                id="bank_ifsc"> World</span>
+                                </td>
+                               <td><span class="label label-primary">Bank PF No</span><span
+                                id="bank_pf_no"> World</span></td>
+                          </tr>
+                        </tbody>
+                    </table>
+
+
+                        <div class="row text-center"><h3><span class="label label-warning">Document Details</span></h3></div>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>
+                               <span class="label label-primary">Aadhaar No</span><span id="aadhaar_no"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Pan No</span><span
+                                id="pan_no"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Voter Id No</span><span
+                                id="voter_id_no"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Medical Ins No</span><span
+                                id="medical_ins_no"> World</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                        <div class="row text-center"><h3><span class="label label-warning">Education Details</span></h3></div>
+
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <span class="label label-primary">Course Name</span><span
+                                id="edu_course_name"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Board Name</span><span
+                                id="edu_board_name"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Year</span><span
+                                id="edu_year"> World</span>
+                            </td>
+                            <td>
+                                <span class="label label-primary">Percent</span><span
+                                id="edu_percent"> World</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                <div class="modal-footer">
+                    <button class="btn btn-primary hidden-print" id="btnPrint"><span aria-hidden="true"
+                                                                                     class="glyphicon glyphicon-print"></span>
+                        Print
+                    </button>
+                    <button class="btn btn-default hidden-print" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="UpdateShiftModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header update_employee">
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title" id="UpdateEmployeeTitle">Update Employee Shift</h4>
+            </div>
+            <div id="status_msg"></div>
+            <input id="MinerIdUpdateShift" type="hidden" value="">
+            <div class="modal-body" id="UpdateShiftOptions">
+
+            </div>
+            <div class="modal-footer">
+                <input class="btn btn-primary" id="UpdateShift" mode='1' type="submit" value="UpdateShift">
+
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="generate_login" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header update_employee">
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+                <h4 class="modal-title " style="text-align:center" id="UpdateEmployeeTitle">Generate Login</h4>
+            </div>
+            <div id="status_msg_login"></div>
+            <input id="MinerIdUpdateShift" type="hidden" value="">
+            <div class="modal-body" id="UpdateShiftOptions">
+                <form>
+                    {% csrf_token %}
+                   <div class="form-group">
+                        <label for="id_username">Username:</label>
+                        <input type="text" name="username" autofocus="" class=" form-control" required="" id="id_username">
+                   </div>
+                    <div class="form-group">
+                        <label for="id_username">Password:</label>
+                        <input type="text" name="username" autofocus="" class=" form-control" required="" id="id_password">
+                    </div>
+                    </form>
+                </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="generate_login_submit" mode='1' type="submit" value="Generate">Generate</button>
+
+                <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+
+    $(document.body).on("click", ".more_details", function () {
+
+        url=$(this).data('url');
+        id=this.id;
+
+        $.ajax({
+        url: url,
+        dataType: 'json',
+            data: {
+                'id': id
+                },
+            success: function(data) {
+               XX=data;
+              var obj = JSON.parse(data.result)[0].fields;
+              obj['mine']=data['mine_name'];
+              obj['mining_role']=data['mining_role'];
+              FillDataToModel(obj);
+
+<!--              $("#more_details_data").html(data.name);-->
+              $('#myModal').modal('show');
+        }});
+
+
+        <!--$('#myModal').modal('show');-->
+
+    });
+    function FillDataToModel(obj){
+        for(ob in obj){
+            if(ob=='photo'){
+                $('img#photo').attr("src",'/media/'+obj[ob]);
+            }
+            else{
+            $("span#"+ob).html(" "+obj[ob]);
+            }
+        }
+    }
+   document.getElementById("btnPrint").onclick = function () {
+    printElement(document.getElementById("printThis"));
+}
+
+function printElement(elem) {
+    var domClone = elem.cloneNode(true);
+
+    var $printSection = document.getElementById("printSection");
+
+    if (!$printSection) {
+        var $printSection = document.createElement("div");
+        $printSection.id = "printSection";
+        document.body.appendChild($printSection);
+    }
+
+    $printSection.innerHTML = "";
+    $printSection.appendChild(domClone);
+    window.print();
+}
+var XX;
+
+$(document.body).on('click',".generate_login",function(e){
+    url=$(this).data('url');
+    email=$(this).data('email');
+    id=this.id;
+    $('input#id_username').val(email.split('@')[0]);
+    var randomstring = Math.random().toString(36).slice(-8);
+    $('input#id_password').val(randomstring);
+    $('#generate_login').modal('show');
+    e.preventDefault();
+    $("button#generate_login_submit").unbind().click(function(){
+        e.preventDefault();
+        $.ajax({
+            type:'post',
+            url:url,
+            dataType:'json',
+            data:{
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                'miner_id':id,
+                'username':$('input#id_username').val(),
+                 'email':email,
+                 'pass':randomstring
+            },
+            beforeSend: function() {
+                 $('#status_msg_login').empty();
+                $('button#generate_login_submit').attr('disabled','true');
+                $('button#generate_login_submit').html('<span id="loading" class="glyphicon glyphicon-refresh"></span> Generating')
+            },
+            success:function(data){
+                console.log(data);
+                if(!isEmpty(data.ie)){
+                    $('#status_msg_login').html('<span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;'+data.ie+'!</span>');
+                }
+                else if(!isEmpty(data.success)){
+                     $('#status_msg_login').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;'+data.success+'!</span>');
+                }
+            },
+            error:function(){
+                console.log('Something Went Wrong!');
+            },
+            complete: function() {
+                $('button#generate_login_submit').removeAttr('disabled');
+                 $('button#generate_login_submit').html('Generate')
+            }
+
+        });
+    })
+})
+
+$(document.body).on("click", ".update_shift", function () {
+       $('#status_msg').empty();
+       url=$(this).data('url');
+       id=this.id;
+       mode=$(this).attr('mode');
+        $.ajax({
+        type:'get',
+        url: url,
+        dataType: 'json',
+            data: {
+                'miner_id': id,
+                'mode':mode,
+                },
+        success: function(data) {
+                Y=data;
+                $('#UpdateShiftOptions').empty();
+                data=JSON.parse(data.result)
+                for(i=0;i<data.length;i++){
+                    console.log(data[i].pk);
+                    $('#UpdateShiftOptions').append( '<span><input type="radio" name="mine_shift_id" id="radio'+data[i].pk+'" required="true" value="'+data[i].pk+'">'+data[i].fields.shift_name+'('+data[i].fields.time_from+'-'+data[i].fields.time_to+')</span><br>');
+                }
+                $('input#MinerIdUpdateShift').val(id)
+                console.log(Y.employee_name);
+                var employee_name="";
+                if(!isEmpty(Y.employee_name)){
+                    employee_name=' | '+Y.employee_name
+                }
+                else{
+                       employee_name="Shift Not Updated Yet"
+                }
+                $('#UpdateEmployeeTitle').text('Update Employee Shift'+employee_name);
+                $("#radio"+Y.assigned_shift).prop("checked", true);
+              $('#UpdateShiftModal').modal('show')
+        }});
+
+})
+$(function() {
+
+$('#UpdateShift').on('click', function(e) {
+
+    url=$('.update_shift').data('url');
+    mode=$(this).attr('mode');
+    mine_shift_id=$('input[name=mine_shift_id]:checked').val()
+    e.preventDefault();
+    $.ajax({
+        type: "GET",
+        url: url,
+        data: {
+               'miner_id':$('input#MinerIdUpdateShift').val(),
+              'mode':mode,
+               'mine_shift_id':mine_shift_id,
+
+        },
+        success: function(response) {
+            console.log(response);
+
+                 $('#status_msg').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;Shift updated successfully!</span>');
+<!--            $('#UpdateShiftModal').modal('hide')-->
+
+        },
+        error: function() {
+         $('#status_msg').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;Something Went Wrong!!</span>');
+            console.log('Something Went Wrong!')
+        }
+    });
+    return false;
+});
+});
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});
+var Y;
+
+</script>
+<style>
+    .glyphicon-plus-sign{
+        color:red !important;
+    }
+
+@media print {
+  body * {
+    visibility:hidden;
+  }
+  .close{
+    visibility:hidden !important;
+  }
+<!--  @page {size: landscape}-->
+  .modal-header.employee_details, .modal-header.update_employee{
+     background-color: #0480be !important;
+  }
+  }
+.modal-header.employee_details, .modal-header.update_employee{
+    padding:9px 15px;
+    border-bottom:1px solid #eee;
+    background-color: #0480be !important;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+     border-top-left-radius: 5px;
+     border-top-right-radius: 5px;
+ }
+input[type="radio"]:checked+label { font-weight: bold; }
+
+</style>
+{% endblock %}

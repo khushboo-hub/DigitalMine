@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<style>
+    .container{width:90% !important;}
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-header">Accident Record Management</h3>
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                <fieldset>
+                    <legend>&nbsp;</legend>
+                        <div class="col-md-2">
+                            <label> Select Mine</label><span id="mine_id_span">{{form.mine}}</span><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label> Choose Shift </label> <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option value="0">  --------- </option></select></span><br>
+                        </div>
+                </fieldset>
+                <fieldset>
+                    <legend>&nbsp;</legend>
+                        <div class="col-md-4">
+                            <label>Situation of Mines</label>{{form.situation_mines}}<br><br>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Name and postal address of owner</label>{{form.name_address}}<br><br>
+                        </div>
+                        <div class="col-md-4">
+                            <label>Village Post Office Police Station Sub-Division(Taluqa) District Pin</label>{{form.vil_pin}}<br><br>
+                        </div>
+
+                </fieldset>
+                 <fieldset>
+                    <legend>&nbsp;</legend>
+                        <div class="col-md-3">
+                            <label>Date and hour of accident</label>{{form.date_hour_accident}}<br><br>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Place of location of accident in mine/rescue station/rescue room*</label>{{form.accident_location}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Number of person(s) Killed</label>{{form.killed_num}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Number of person(s) Seriously Injured</label>{{form.injured_num}}<br><br>
+                        </div>
+                         <div class="col-md-2">
+                                <label>Cause and description of accident</label>{{form.accident_cause_description}}<br><br>
+                            </div>
+                 </fieldset>
+                 <fieldset>
+                    <legend>&nbsp;</legend>
+                        <div class="col-md-2">
+                            <label>Name of person(s) killed/injured</label>{{form.person_names}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Nature of employment</label>{{form.emp_nat}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Age</label>{{form.age}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Sex</label>{{form.sex}}<br><br>
+                        </div>
+                        <div class="col-md-2">
+                            <label>Nature of injured/cause of death</label>{{form.injury_death_cause}}<br><br>
+                        </div>
+                 </fieldset>
+                <hr>
+                <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Records"/>&nbsp;&nbsp;&nbsp; <a href="{% url 'Training_Rescue_Accident:Rescue_index' %}" class="btn btn-primary" role="button">Show Records</a>
+                <hr>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+       
+        $('#id_mine').addClass('form-control');
+        $("#id_date_hour_accident").change(function(){
+        });
+    });
+    $(document.body).on('blur','#id_date_parent',function(){
+        $(".date_fill").val($(this).val());
+     });
+
+    //FETCH MINE DETAILS
+    $("#id_mine").change(function(){
+        mine_id=$(this).val();
+        $.ajax({
+            type:"get",
+            url: "{% url 'attendance:fetch_shift' %}",
+            data: {
+             'id': mine_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+                //alert(data.result);
+                fill_dropdown_shift(data.result);
+                return data;
+            },
+            error: function(){
+                //console.log("Error!");
+            }
+          });
+
+    });
+
+    //POPULATE SHIFT DROP DOWN
+    function fill_dropdown_shift(result){
+        $("#shift_id").html("<option value='0'>--Choose Shift--</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            $("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "("+str_array[3]+" - "+str_array[4]+")"));
+        }
+    }
+</script>
+{% endblock %}

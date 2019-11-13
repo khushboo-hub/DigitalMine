@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+ <div class="container">
+        <div class="row">
+        	<div class="col-md-12">
+        		<img src="{% static '/image/iot_banner.jpg' %}" class="img-responsive img-rounded" /><br><br>
+        	</div>
+        	<div class="col-md-12">
+        		<h2 class="shadow"> About IoT </h2><br>
+        		<p>
+        		Internet of things (IoT) has shown significant benefits for manufacturing and production industries worldwide and it can be a revolutionary technology for Indian mining and allied industries. IoT is implemented for transforming physical mines into a virtual mine. IoT based digital mining can be used for information retrieval and management of data related to production, strata condition, environmental status, stowing and water levels, miners and equipment locations, machine health conditions, etc. The network of sensors, actuators, location trackers and communication devices are able to interconnect and exchange data from ground to server in real time. Based on sensors values, prediction and alert generation is done to avoid any accident or casualties. Real time production data can be useful for making immediate decisions and improving productivity. Rescue operations can also be more fast and affective as the occurrence of any accidents is notified to the ground control room as well as rescue team simultaneously without delay. Sensors installed on mine machineries sense any fault or overloading and generates necessary alert which helps in reducing machine downtime that usually takes long time to recover. The digital mine is also used for imparting training on evacuation plan in case of disaster, safety in working environment, electrical safety, use of personal protective equipment, blasting precautions, and other safe practices. Further digital mines helps in imparting advanced training on rescue or evacuation plans by creating artificial disaster situations. Thus, IoT plays a pivotal role in improvement of production and safety for mining industries. This paper incorporates the concept and different modules of digital mine covering preparation of 3D virtual mine, data acquisition, miner voice communication, graphical interactive display, hazards prediction and training modules.
+        		</p>
+        	</div>
+        </div>
+</div>       
+
+{% endblock %}

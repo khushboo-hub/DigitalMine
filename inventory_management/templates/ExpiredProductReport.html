@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<style type="text/css">
+    .table th {
+    width: auto !important;
+}
+</style>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container-fluid">
+    <div class="row">
+        <section class="col-md-12">
+          <center>
+            <h1 class="page-header"><centre>Expired Product Report <small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+
+
+<div class="row text-center">
+        <div class="col-md-12">
+            
+       <!--      <a class="btn btn-primary" href="{% url 'inventory_management:supplier_add' %}"> Return Product</a> -->
+            <a class="btn btn-primary" href="{% url 'inventory_management:deleteExpired' %}"> Delete Expired Product </a>
+            <a class="btn btn-primary" href="{% url 'inventory_management:outlet_viewall' %}"> Back</a>
+
+            <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table " id="myTable">
+                    <thead>
+                        <tr>
+                           <th>Sl No</th>
+                            <th>Invoice Number</th>
+                            <th>Mine Name</th> 
+                            <th>Prod Category</th>
+                            
+                            <th>Prod Batch </th>
+                            
+                            <th>Product Name</th>
+                            <th>In Stock</th>
+                            <th>Per Unit Price</th>
+                            <th>Prod Expiry On</th>
+                           <!--  <th>Prod Status</th> -->
+                            <th>Return Product</th>
+                        </tr>
+                    </thead>
+                    <tbody id="body_id">
+                            {% for book in object_list %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.7 }}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.3 }}</td>
+
+                            <td>{{ book.12 }}</td>
+
+                            <td>{{ book.4 }}</td>
+                            <td>{{ book.6 }}</td>
+                            <td>{{ book.10 }}</td>
+                            <td>{{ book.8 }} </td>
+                   <!--          <td> {{ book.11}} </td>  -->
+                   
+                            <!-- <td>{{ book.16 }}</td>
+                            <td>{{ book.15 }}</td> -->  
+                            
+                           <!--  <td class="text-center"><a href="{% url 'inventory_management:supplier_add' %}" title="Reorder Product.">
+                                <span class="glyphicon glyphicon-pencil"></span></a></td> -->
+                             <td> <a class="btn btn-warning btn-circle" href="{% url 'inventory_management:supplier_add' %}"> Return Product</a></td>
+
+
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        $('#myTable').DataTable();
+    });
+$("#btn_print").click(function(){
+    window.print();
+});
+    
+</script>
+{% endblock %}

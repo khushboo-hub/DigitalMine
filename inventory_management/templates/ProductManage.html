@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row">
+<section class="col-md-12">
+       <center>
+            <h1 class="page-header"><centre>Manage Product<small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{% url 'inventory_management:product_add' %}">Add Product</a>
+             <a class="btn btn-primary" href="{% url 'inventory_management:category_manage' %}">Manage Category</a>
+        </div>
+    </div>
+    <hr>
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+           <!--      <table class="table table-bordered" id="content"> -->
+                     <table class="table " id="myTable" >
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Mine ID</th>
+                            <th>Mine Nm</th>
+                            <th>Supplier Nm</th>
+                            <th>Product Category</th>
+                            <th>Product Name</th>
+                            <th>Batch No</th>
+                            <th>Notes</th>
+                            <th>Alernate Prod</th>
+
+                            <th>Quantity</th>
+                            <th>Unit</th>
+
+                            <th>Prod Expiry</th>
+                            <th>Price</th>
+                            <th>Tax</th>
+                            <th>Rate %</th>
+                            <th>Total Tax</th>
+                            <th>Net Amount</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in object_list %}
+                        <tr>
+
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.16 }}</td>
+                            <td>{{ book.0 }}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.2 }}</td>
+                            <td>{{ book.3 }}</td>
+                            <td>{{ book.4 }}</td>
+                            <td>{{ book.5 }}</td>
+
+                          <!--   <td>{{ book.6 }}</td> -->
+
+                                   <!--  {% if book.6 == "" %}
+                                        <td>  no alternate prod  </td> 
+                                    {% else %} 
+                                         <td> {{ book.6 }}  </td> 
+                                    {% endif %} -->
+                            {% if book.6|length %}
+                                 <td> {{ book.6 }}  </td> 
+                            {% else %}
+                                <td>  no alternate prod  </td> 
+                            {% endif %}
+
+                            <td>{{ book.8 }}</td>
+                            <td>{{ book.7 }}</td>
+                            <td>{{ book.9 }}</td>
+                            <td>{{ book.10 }}</td>
+                            <td>{{ book.11 }}</td>
+                            <td>{{ book.12 }}</td>
+                            <td>{{ book.13 }}</td>
+                            <td>{{ book.14 }}</td>
+                            <td class="text-center"><a href="{% url 'inventory_management:product_edit' book.16 %}" title="Edit Product.">
+                                <span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'inventory_management:product_delete' book.16 %}" title="Delete Product"><span class="glyphicon glyphicon-trash"></span></a></td>
+
+
+                        </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        $(document).ready(function(){
+
+        var table = $('#myTable').DataTable();
+        // // myTable.hide1 .col2 { display: none; }
+        // var table = $('#example').DataTable();
+        table.column( 1 ).visible( false );
+
+
+
+    });
+
+     $(document.body).on("click", ".delete", function ()
+      {
+         $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+        $("#id_mine_id").addClass('form-control');
+
+    });
+
+
+
+</script>
+
+
+<style>
+    .glyphicon-plus-sign{
+        color:red !important;
+    }
+</style>
+{% endblock %}

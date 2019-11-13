@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+
+        <div class="row">
+
+            <center>
+                <h1 class="page-header"><centre>BatchWise Report<small> &nbsp&nbspDetailed information based on Batch</small></centre></h1>
+
+                <!-- Table content -->
+            </center>
+            <!-- Table content -->
+
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'inventory_management:outlet_viewall' %}"> Back To Report<a>
+       
+                    <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table " id="myTable">
+                            <thead>
+                            <tr>
+                                <th>Sl No</th>
+                                <th>Batch Name</th>
+                                <th>Product Name</th>
+                                <th>Mine Name</th>
+                                <th>Category Name</th>
+                                <th>No of Product</th>
+                                <th>In Stock</th>
+                                <th>No.of Prod Expiring Soon...(2 months)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% if object_list2 %}
+                                {% for x in object_list2 %}
+                                    {% if x.5 == "0" %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{x.0}}</td>
+                                            <td>{{ x.1}}</td>
+                                            <td>{{ x.2 }}</td>
+                                            <td>{{ x.3}}</td>
+                                            <td>{{ x.4 }}</td>
+                                            <td> Out of Stock</td>
+                                            <td> Out of Stock </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{x.0}}</td>
+                                            <td>{{ x.1}}</td>
+                                            <td>{{ x.2 }}</td>
+                                            <td>{{ x.3}}</td>
+                                  <!--           <td>{{ x.4 }}</td> -->
+                                            <td>{{ x.5 }}</td>
+                                            <td>{{ x.6 }}</td>
+                                            <td>{{ x.7 }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% for x in object_list %}
+                                    {% if x.4 == "0" %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{x.0}}</td>
+                                            <td>{{ x.1}}</td>
+                                            <td>{{ x.2 }}</td>
+                                            <td>{{ x.3 }}</td>
+                                            <td>{{ x.5 }}</td>
+                                            <td> Out of Stock</td>
+                                            <td> Out of Stock </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{ x.0 }}</td>
+                                            <td>{{ x.1}}</td>
+                                            <td>{{ x.2 }}</td>
+                                            <td>{{ x.3}}</td>
+                                            <td>{{ x.5 }}</td>
+                                            <td>{{ x.4 }}</td>
+                                            <td> 0 </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+           
+            
+
+
+
+
+<script>
+$(document).ready(function(){
+        $('#myTable').DataTable();
+});
+
+$("#btn_print").click(function(){
+    window.print();
+});
+    
+</script>
+{% endblock %}

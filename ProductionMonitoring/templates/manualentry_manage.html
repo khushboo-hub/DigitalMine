@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+<section class="col-md-12">
+    <h1 class="page-header">Manage Manual Entry</h1>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{% url 'ProductionMonitoring:manualentry_add' %}">Add Manual Entry</a>
+        </div>
+    </div>
+    <hr>
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="content">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Mine</th>
+                            <th>Weighbridge Name</th>
+                            <th>Vehicle Registration No</th>
+                            <th>WB Code</th>
+                            <th>Production Type</th>
+
+
+                            <!--<th>Mining Role</th>-->
+
+
+                            <th class="text-center" colspan="5">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in result %}
+                        <tr>
+                            <!-- 0-mine_id,1-,5-id -->
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.0 }}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.2 }}</td>
+                            <td>{{ book.3 }}</td>
+                            <td>{{ book.4 }}</td>
+
+
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'ProductionMonitoring:manualentry_delete' book.5 %}" title="Delete Manual Entry."><span class="glyphicon glyphicon-trash"></span></a></td>
+
+
+
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- More Details Modal -->
+<!--<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <!--<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">More Info</h4>
+      </div>
+      <div class="modal-body">
+        <div id="more_details_data">Some text in the modal.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>-->
+
+<script>
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+
+
+
+    $(document.body).on("click", ".more_details", function () {
+
+        url=$(this).data('url');
+        id=this.id;
+
+        $.ajax({
+        url: url,
+        dataType: 'json',
+            data: {
+                'id': id
+                },
+            success: function(data) {
+
+              <!--alert(data.result);-->
+              console.log(data)
+              $("#more_details_data").html(data.name);
+              $('#myModal').modal('show');
+        }});
+
+
+        <!--$('#myModal').modal('show');-->
+
+    });
+</script>
+<style>
+    .glyphicon-plus-sign{
+        color:red !important;
+    }
+</style>
+{% endblock %}

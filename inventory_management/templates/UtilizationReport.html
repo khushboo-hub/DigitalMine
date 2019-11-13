@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+<!--<style type="text/css">-->
+<!--    #sensor_name_id {-->
+<!--    margin-top: -60px !important;-->
+<!--}-->
+<!--</style>-->
+<div class="container">
+    <div class="row">
+            <div class="col-md-12">
+                <!-- <h3 class="page-header">Product Utilization Report</h3> -->
+                <center><h1 class="page-header">Product Pending Report</h1></center>
+            </div>
+
+            <div class="col-md-8">
+                <form action=""  method="post" class="post-form">
+                {% csrf_token %}
+<!--                 <label class="control-label">Pending Time:</label>
+                <input type="text" required class="form-control" id=""  name="" value='' >
+ -->                <label class="control-label">Product Pending From:</label>
+                <input type="text" required class="form-control" id="to_date"  name="" value='{% now "Y-m-d" %}' >
+            
+                <label class="control-label">Minumum Deduction:</label>
+                <input type="text" required class="form-control" id="min_id"  name="min_id" value="0" >
+                <br>
+                <input type="Button" id="btn_longPending_report" class="btn btn-primary" style="width:200px" value="Pending Product"/>
+                <!-- <input type="Button" class="btn btn-primary" name="erasebutton" value="Frequently using Product" /> %Y-%m-%d-->
+               
+                <!-- <input type="submit" class="btn btn-primary" name="displaybutton" value="Previous Records" />
+                <input type="submit" class="btn btn-danger" name="deleteButton" value="Delete Records" /> -->
+                </form>
+            </div>
+
+                   
+            
+            </div>
+            <div class="table-responsive">
+                    <table class="table table-striped table-bordered" id="Table_content">
+                        <thead >
+                            <tr>
+                                <th>Mine Name</th>
+                                <th>Product Name</th>
+                                <th>Entered Date</th>
+                                <th>Initial Stock</th>
+                                <th>Current Stock</th>
+                                <th>Pending Time </th>
+                                <th>Send Mail</th>
+                            </tr>
+                        </thead>
+                        <tbody id="body_idd">
+                            {% for book in Report %}
+                                <tr>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+</div>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+<script>
+
+
+$(function() {
+    $('#to_date').datepicker({
+        dateFormat: 'yy-mm-dd',
+         
+    });
+});
+
+$("#btn_longPending_report").click(function(){
+    // Selecteduration=$("#id_duration_list").val();
+   
+   // $("#Table_content").empty();
+   $("#body_idd").empty();
+   // $("#sensor_content_body").empty();
+    date_to=$("#to_date").val();
+    min_id_value=$("#min_id").val();
+    // alert(date_to);
+
+        $.ajax({
+                type:"get",
+                url: "{% url 'inventory_management:fetch_longpending' %}",
+                data: {
+                             'date_to':date_to,
+                              'min':min_id_value,
+                        },
+                success:function(data) {
+                        console.log(data.result);
+                        fill_Report_table(data.result);
+                        },
+                error: function(){
+                            console.log("error");
+                        }
+                });
+    
+});
+
+function fill_Report_table(result){
+
+    // alert(result);
+    if(result.length==0)
+    {
+        alert("Data Not Available");
+
+    }
+    else
+    {
+
+        for (index = 0; index <= result.length; index++) {
+             var str_array = result[index].split(',');
+             var pending=str_array[4];
+             
+             pendingInt=parseInt(pending);
+             // alert("pending int")
+             // alert(str_array[6])
+             var abc;
+             var abc1;
+             var unit=(str_array[3]+" "+str_array[5])
+             var unit2=(str_array[6]+" "+str_array[5])
+             // alert(unit)
+
+            if(pendingInt<31)
+            {
+             abc=pendingInt;
+             abc1=abc+" "+"Days";
+             // alert(abc+""+"Days");
+            }
+            else if(pendingInt>31 && pendingInt<365)
+            {
+             abc=Math.floor(pendingInt/12);
+             if (abc>1)
+             {
+               abc1=abc+" "+"Months"; 
+             }
+             else
+             {
+                abc1=abc+" "+"Month";
+             }
+             
+            }
+            else
+            { 
+            abc=Math.floor(pendingInt/365);
+            abc1=abc+" "+"Year";
+             if (abc>1)
+             {
+               abc1=abc+" "+"Years"; 
+             }
+             else
+             {
+                abc1=abc+" "+"Year";
+             }
+             
+            // alert(abc+""+"Year")
+            }
+
+            var urll='<a class="btn btn-warning btn-circle" href="{% url 'DGMS_Forms:sendMail' %}"> Send Mail</a>'
+
+            $("#Table_content").append($("<tr><td>"+str_array[0]+"</td><td>"+str_array[1]+"</td><td>"+str_array[2]+"</td><td>"+unit+"</td><td>"+unit2+"</td><td>"+abc1+"</td><td>"+urll+"</td></tr>"));
+
+        }
+ d_table();
+        
+    }
+
+}
+
+
+
+// $(document).ready(function() {
+//     $('#Table_content').DataTable();
+// } );
+
+function d_table(){
+         $('#Table_content').DataTable({
+                paging: true,
+                searching: true,
+                ordering: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+         });
+    }
+
+$(document).ready(function() {
+   d_table();
+} );
+
+</script>
+{% endblock %}

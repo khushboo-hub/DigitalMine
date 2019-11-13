@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="container">
+	<h3 class="page-header">Mine Gas Analysis - Manual Mode &nbsp; </h3>
+						<form action="" method="post" class="post-form">
+							{% csrf_token %}
+							<div class="row">
+									<div class="col-md-4">
+										<label>Methane (CH<sub>4</sub>) in &#37;</label>
+											{{form.CH4}}
+									</div>
+									<div class="col-md-4">
+										<label>Carbon Monoxide (CO) in ppm</label>
+											{{form.CO}}
+									</div>
+									<div class="col-md-4">
+										<label>Carbon Dioxide (CO<sub>2</sub>) in &#37;</label>
+											{{form.CO2}}
+									</div>
+							</div><br>
+							<div class="row">
+									<div class="col-md-4">
+										<label>Oxygen in (O<sub>2</sub>) in &#37;</label>
+											{{form.O2}}
+									</div>
+									<div class="col-md-4">
+										<label>Hydrogen Sulphide (H<sub>2</sub>S) in ppm</label>
+											{{form.H2S}}
+									</div>
+									<div class="col-md-4">
+										<label>Nitrogen Dioxide (NO<sub>2</sub>) in ppm</label>
+											{{form.NO2}}
+									</div>
+							</div><br>
+							<div class="row">
+								<div class="col-md-4">
+										<label>Sulphur Dioxide (SO<sub>2</sub>) in ppm</label>
+											{{form.SO2}}
+									</div>
+								<div class="col-md-4">
+									<label>Hydrogen (H<sub>2</sub>) in ppm</label>
+										{{form.H2}}
+								</div>
+								<div class="col-md-4">
+									<label>Helium (He) in &#37; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+										{{form.He}}
+								</div>
+							</div>
+							<br>
+						<input type="submit" class="btn btn-primary" name="Showbutton" value="Show" /><br><br>
+						<!--RESULT STARTS-->
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-responsive table-bordered" id="gaslev">
+								<thead>
+									<tr>
+									<th> CH<sub>4</sub></th>
+									<th> CO </th>
+									<th> CO<sub>2</sub></th>
+									<th> O<sub>2</sub></th>
+									<th> H<sub>2</sub>S</th>
+									<th> NO<sub>2</sub></th>
+									<th> SO<sub>2</sub></th>
+									<th> H<sub>2</sub></th>
+									<th> He </th>
+									<th> Date &amp; Time </th>
+									<th> Delete </th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+									{%  for x in tb %}
+										<td>
+										{% if x.CH4_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.CH4}} {{x.CH4_ALERT}}</span>
+											{% elif x.CH4_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.CH4}} {{x.CH4_ALERT}}</span>
+											{% elif x.CH4_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.CH4}} {{x.CH4_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.CH4}} {{x.CH4_ALERT}}</span>
+											
+										{% endif %}
+										</td>
+										<td>
+										{% if x.CO_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.CO}} {{x.CO_ALERT}}</span>
+											{% elif x.CO_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.CO}} {{x.CO_ALERT}}</span>
+											{% elif x.CO_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.CO}} {{x.CO_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.CO}} {{x.CO_ALERT}}</span>
+										{% endif %}		
+										</td>
+										<td>
+										{% if x.CO2_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.CO2}} {{x.CO2_ALERT}}</span>
+											{% elif x.CO2_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.CO2}} {{x.CO2_ALERT}}</span>
+											{% elif x.CO2ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.CO2}} {{x.CO2_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.CO2}} {{x.CO2_ALERT}}</span>
+										{% endif %}		
+										</td>
+										<td>
+										{% if x.O2_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.O2}} {{x.O2_ALERT}}</span>
+											{% elif x.O2_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.O2}} {{x.O2_ALERT}}</span>
+											{% elif x.O2_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.O2}} {{x.O2_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.O2}} {{x.O2_ALERT}}</span>
+										{% endif %}		
+										</td>
+										<td>
+										{% if x.H2S_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.H2S}} {{x.H2S_ALERT}}</span>
+											{% elif x.H2S_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.H2S}} {{x.H2S_ALERT}}</span>
+											{% elif x.H2S_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.H2S}} {{x.H2S_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.H2S}} {{x.H2S_ALERT}}</span>
+										{% endif %}		
+										</td>
+										<td>
+										{% if x.NO2_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.NO2}} {{x.NO2_ALERT}}</span>
+											{% elif x.NO2_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.NO2}} {{x.NO2_ALERT}}</span>
+											{% elif x.NO2_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.NO2}} {{x.NO2_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.NO2}} {{x.NO2_ALERT}}</span>
+										{% endif %}	
+										</td>
+										<td>
+										{% if x.SO2_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.SO2}} {{x.SO2_ALERT}}</span>
+											{% elif x.NO2_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.SO2}} {{x.SO2_ALERT}}</span>
+											{% elif x.NO2_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.SO2}} {{x.SO2_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.SO2}} {{x.SO2_ALERT}}</span>
+										{% endif %}	
+										</td>
+										<td>
+										{% if x.H2_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.H2}} {{x.H2_ALERT}}</span>
+											{% elif x.H2_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.H2}} {{x.H2_ALERT}}</span>
+											{% elif x.H2_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.H2}} {{x.H2_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.H2}} {{x.H2_ALERT}}</span>
+										{% endif %}
+										</td>
+										<td>
+										{% if x.He_ALERT == "Alarming"  %}	
+												<span style="font-weight: bold; color: red;" >{{x.He}} {{x.He_ALERT}}</span>
+											{% elif x.He_ALERT == "Critical" %}
+												<span style="font-weight: bold; color: orange;" >{{x.H2}} {{x.He_ALERT}}</span>
+											{% elif x.He_ALERT == "Evacuate" %}
+												<span style="font-weight: bold; color: red;" >{{x.H2}} {{x.He_ALERT}}</span>
+											{% else %}
+												<span style="font-weight: bold; color: green;" >{{x.H2}} {{x.He_ALERT}}</span>
+										{% endif %}
+										</td>
+										<td>
+										{{x.dt}}
+										</td>
+										<td class="text-center"><a href="#" class="delete" data-url="{% url 'gasmonitoring:gas_delete' x.id %}" title="Remove"><span class="glyphicon glyphicon-trash"></span></a></td>
+									</tr>
+									{% endfor %}
+									</tr>
+								</table>
+							</tbody>	
+							</div>
+						</div>
+					<br><br><br><!--RESULT ENDS-->
+					<div class="row"><!---START-GRAPH--->
+						<div class="col-md-12">
+                            <canvas id="myChart" width="400" height="500"></canvas>
+						</div>
+					</div><!---END-GRAPH-->
+					<div class="modal fade" id="del_confirm_dialogue" role="dialog">
+						<div class="modal-dialog modal-sm">
+						    <div class="modal-content">
+						        <div class="modal-header">
+						            <button type="button" class="close" data-dismiss="modal">&times;</button>
+						            <h4 class="modal-title">
+						                Warning !
+						            </h4>
+						        </div>
+						        <div class="modal-body">Are you sure, You want to delete?
+						        </div>
+						        <div class="modal-footer">
+						            <a  id="del"><button type="button" class="btn btn-danger" >Yes</button></a>
+						            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+						        </div>
+						    </div>
+						</div>
+					</div>
+</div>					
+<script>
+    $(document.body).on("click", ".delete", function () {
+        $("#del").attr("href", $(this).data('url'));
+        $('#del_confirm_dialogue').modal('show');
+    });
+
+</script>
+{% endblock %}

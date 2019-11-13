@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Mining Role<small>&nbsp&nbsp&nbspHere you can add basic info of mining
+                Role/Class</small></sma></h1>
+
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'employee1:manage_mining_role' %}">Manage Role</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+
+                        <div class="form-group">
+                            <table class="table table-responsive table-bordered">
+                                <tbody>
+                                <tr>
+                                    <th><label for="id_parent_role">Parent role:</label></th>
+                                    <td>
+                                        {{form.parent_role}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="id_name">Name:</label></th>
+                                    <td>
+                                        {{form.name}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="id_type_0">Type:</label></th>
+                                    <td>
+                                        {{form.type}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="id_description">Description:</label></th>
+                                    <td>
+                                        {{form.description}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <!--                            {{ form.as_table }}-->
+                            </table>
+                            <div class="text-center"><input type="submit" class="btn btn-primary" value="Submit"/></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<style>
+    ul {list-style:none}
+
+</style>
+<script>
+    $(document).ready(function(){
+       $("#id_parent_role").addClass('form-control');
+    });
+
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+    <link rel="stylesheet" href="{% static '/css/jquery.orgchart.css' %}">
+    <script src="{% static 'js/jquery.orgchart.js' %}"></script>
+
+
+
+<div class="container">
+    <div class="row">
+<section class="col-md-12">
+    <h1 class="page-header">Mining Role Hierarchy</h1>
+
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div id="orgChart"></div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+
+<script>
+
+ $(document).ready(function(){
+        //alert(testData);
+        $.ajax({
+            url: "{% url 'employee1:fetch_role_ajax' %}",
+            success: function(data) {
+                alert(data);
+                var dew=JSON.parse(data);
+                alert(dew);
+
+                console.log(data);
+                 call_graph(dew);
+            return data;
+                    }
+            });
+
+            function call_graph(data)
+            {
+             $(function(){
+	  org_chart = $('#orgChart').orgChart({
+	    <!--data: testData, // your data-->
+            data: data, // your data
+	    showControls: true, // display add or remove node button.
+	    allowEdit: true, // click the node's title to edit
+            toggleSiblingsResp: true,
+	    onAddNode: function(node){},
+	    onDeleteNode: function(node){},
+	    onClickNode: function(node){},
+	    newNodeText: '', // text of add button,
+
+                });
+                    });
+            }
+            //call_graph(testData);
+    });
+
+
+    var testData = [
+	    {id: 1, name: 'My Organization', parent: 0},
+	    {id: 2, name: 'CEO Office', parent: 1},
+	    {id: 3, name: 'Division 1', parent: 1},
+	    {id: 4, name: 'Division 2', parent: 1},
+	    {id: 6, name: 'Division 3', parent: 1},
+	    {id: 7, name: 'Division 4', parent: 1},
+	    {id: 8, name: 'Division 5', parent: 1},
+	    {id: 5, name: 'Sub Division', parent: 3},
+	];
+
+
+</script>
+{% endblock %}

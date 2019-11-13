@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+
+      <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
+        <a href="#" class="close" data-dismiss="alert"aria-label="close">&times;</a>
+      </div>
+      <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      </div>
+
+      <section class="col-md-12">
+        <h1 class="page-header">News BulletIn
+          <small>&nbsp&nbsp&nbspHere you can add news to show it in home page</small>
+        </h1>
+          <div class="text-center {{no_add_button}}">
+              <a class="btn btn-primary text-center" href="../">Add News</a>
+              <hr>
+          </div>
+            <div class="row" style="background-color: powderblue;">
+                <div class="form-group"></div>
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" id="routerForm" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label>News:</label>
+                                </div>
+                                <div class="col-md-10">
+                                    {{form.news}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-8">
+                                <div class="col-md-3">
+                                    <label>Valid Till</label>
+                                </div>
+                                <div class='col-md-9 input-group date' id='doo_date_time_picker' style="padding-left:17px;">
+                                            {{form.valid_till}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="col-md-4">
+                                    <label>Download Link</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.download_link}}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <center><button id="NewsCreate" onclick="document.querySelector('.glyphicon').classList.toggle('icon-rotate')" type="submit" class="btn btn-primary" value="Create News"/><i class="glyphicon glyphicon-signal"></i> {{ button }}</center>
+                    </form>
+                </div>
+            </div>
+
+
+            <br>
+            <hr>
+            <center><h2>All News List</h2></center>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table hover " id="myTable">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>News</th>
+                                <th>Created On</th>
+                                <th>Created By</th>
+                                <th>Updated On</th>
+                                <th>Valid Till</th>
+                                <th>Download Link</th>
+                                <th>Downloaded Number</th>
+                                 <th>Edit</th>
+                                <th>Delete</th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="RouterList">
+                            {% for news in book %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td class="more">{{ news.news }}</td>
+                                <td>{{ news.created_on }}</td>
+                                <td>{{ news.user_id }}</td>
+                                <td>{{ news.updated_on }}</td>
+                                <td>{{ news.valid_till }}</td>
+                                <td><a href="/media/{{ news.download_link }}">{{ news.download_link }}</a></td>
+                                <td>{{ news.download_number }}</td>
+                                <td class="text-center"><a href="{% url 'news:update_news' news.pk %}" class="editRouter"
+                                                           data-url=""
+                                                           title="Edit Router."><span
+                                        class="glyphicon glyphicon-pencil"></span></a></td>
+                                <td class="text-center"><a href="#" class="delete"
+                                                           data-url="{{news.pk}}"
+                                                           title="Delete News."><span
+                                        class="glyphicon glyphicon-trash"></span></a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    var date_from=$('#doo_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+                });
+
+    $(document.body).on("click", ".delete", function () {
+        $('#update_info').modal('show');
+        var news_id=$(this).data('url');
+        var Curr=$(this).parents('tr');
+        console.log(Curr);
+        var datatable=$('#myTable').DataTable();
+        $('#update_info').on('click', '#delete', function(e) {
+        $('#update_info').unbind('click');
+        $('#update_info').modal('hide');
+        $.ajax({
+            type:"post",
+             url: "{% url 'news:delete_news_ajax' %}",
+            data:{
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                'id':news_id,
+            },
+            success:function(json){
+                console.log(json);
+                if(json.hasOwnProperty("success")){
+                     datatable.row(Curr).remove().draw();
+                     toastr.success(json.success);
+                      setTimeout(function() {
+                        location.reload();
+                    }, 1000);
+
+                 }
+                else{
+                   toastr.error(json.error);
+                }
+            },
+            error: function(){
+                    console.log("something is not right.please contact admin - 1");
+            }});
+        });
+    });
+</script>
+{% endblock %}

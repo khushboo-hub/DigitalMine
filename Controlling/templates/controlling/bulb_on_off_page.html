@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2 class="page-header">Controlling of Lights in Undergroung Mines</h2>
+            <div class="row">
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-2">
+                        <label for="" class="" id="">Arduino Port No:</label>
+                        </div>
+                        <div class="col-md-2">
+                        {{form.port_no}}
+                        </div>
+                        <div class="col-md-2">
+                        <label for="" class="" id="">Baud Rate: </label>
+                        </div>
+                        <div class="col-md-2">
+                        {{form.baud_rate}}
+                        </div>
+
+
+                        <input type="submit" id="bulb_on" name="bulb_on" class="btn btn-success" value="Light On"/>
+
+
+                        <input type="submit" id="bulb_off" name="bulb_off" class="btn btn-danger" value="Light Off"/>
+                        <a target="_blank" href="{% static '/image/light_on_off.txt' %}" title="Hardware Code">
+                            <small>Hardware Code</small>
+                        </a>
+
+                    </div>
+
+                </form>
+
+                <div class="col-md-12" id="bulb_photo">
+
+
+                            <img class="img img-responsive" id="dd" src="{{bulb_img}}" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+        
+
+</script>
+
+{% endblock %}
+

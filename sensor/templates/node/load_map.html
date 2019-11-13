@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row" style="height:50%; overflow-y:scroll;">
+                <h3>Active Nodes List</h3>
+                    <ul>
+                        <li>Node1</li>
+                        <li>Node2</li>
+                        <li>Node3</li>
+                        <li>Node4</li>
+                        <li>Node5</li>
+                        <li>Node6</li>
+                        <li>Node7</li><li>Node8</li>
+                        <li>Node9</li><li>Node10</li><li>Node11</li><li>Node12</li>
+                        <li>Node13</li><li>Node14</li>
+                        <li>Node15</li><li>Node15</li><li>Node16</li><li>Node17</li><li>Node18</li><li>Node19</li><li>Node20</li><li>Node21</li><li>Node22</li>
+                        <li>Node23</li><li>Node24</li><li>Node25</li><li>Node26</li><li>Node27</li><li>Node28</li>
+
+                    </ul>
+            </div>
+            <div class="row" style="height:50%;overflow-y:scroll;">
+                <h3>Router Explorer</h3>
+                {% for r in routers %}
+                    <ul>
+                        <li>{{r.2}}</li>
+
+                    </ul>
+                {% endfor %}
+            </div>
+        </div>
+        <section class="col-md-10">
+            <form name="" id=" " action="/Sensor/load_map" method="post">{% csrf_token %}
+            <div class="row">
+                    <label class="col-md-3">Choose Mine to Show Map</label>
+                    <div class="col-md-3">
+                    <select id="" name="mine_id" class="form-control">
+                        {% for x in object_list %}
+                        <option value="{{x.id}}" >{{ x.name}}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="submit" class="btn btn-success" value="Load Mining Map"/>
+                    </div>
+            </div>
+            </form>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                {{mine_data.6}}
+
+
+                    <div class="" style=" width:100%;height:80%;background-image: url('/media/{{mine_data.6}}');">
+
+
+                        {% for r in routers %}
+                            <!--{{r.0}}-->
+                            {% if r.5 == "No" %}
+                            <div class="pin {{r.2}}" id="pin{{r.0}}" router_name="{{r.2}}" router_address="{{r.3}}" style="top:{{r.6}}cm;left:{{r.7}}cm; background-image: url('/media/mine_map_image/green_router1.jpg');">
+                                <center><label style="color:blue;">{{r.3}}</label></center>
+                            </div>
+                            {% elif r.5 == "Yes" %}
+                            <div class="pin {{r.2}}" id="pin{{r.0}}" router_name="{{r.2}}" router_address="{{r.3}}" style="top:{{r.6}}cm;left:{{r.7}}cm; background-image: url('/media/mine_map_image/red_router.jpg');">
+                                <center><label style="">{{r.3}}</label></center>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div><!--end Table content -->
+
+        </section>
+    </div>
+</div>
+<!--Popup for Router's Information-->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+        <h4 class="modal-title">Router Information</h4>
+      </div>
+      <div class="modal-body">
+        <div id="router_info_popup"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<style>
+  .pin{
+position:absolute;
+height:25px;
+width:25px;
+}
+</style>
+<script>
+$(".pin").mouseover(function(){
+     //var id = this.id;
+     //alert(id);
+     //var router_name=$(this).attr("router_name");
+     //alert(router_name);
+
+});
+//-----Click on Router-----
+$(".pin").click(function(){
+    var router_name=$(this).attr("router_name");
+    var router_address=$(this).attr("router_address");
+    $("#router_info_popup").html("<ul><li>Router Name:"+router_name+"</li><li>Router Address:"+router_address+"</li></ul>");
+    $('#myModal').modal('show');
+    //------close the model automatic after 2 sec
+    setTimeout(function(){
+        $('#myModal').modal('hide');
+    }, 2000);
+});
+
+
+$(document).ready(function(){
+
+
+    //--------Ready Function Start----------
+    setInterval(function()
+    {
+        //alert("ok");
+        //call ajax
+         $.ajax({
+            url: "/MinersTracking/get_miners_data",
+            success: function(data) {
+                //alert(data);
+                var fields = data.split('-');
+                router_name=fields[0];
+                miner_name=fields[1];
+                //router_name(R001) ka miners dikhana he
+                //$('.'+router_name).html("<img src='/media/mine_map_image/Miner.gif' />");
+                $('.'+router_name).html("<img src='/media/mine_map_image/pointer.gif' />");
+
+                 return data;
+                    }
+            });
+        //end call ajax
+
+    }, 9000);//time in milliseconds
+
+    //--------Ready Function End----------
+
+
+});
+
+
+
+
+
+
+</script>
+
+{% endblock %}

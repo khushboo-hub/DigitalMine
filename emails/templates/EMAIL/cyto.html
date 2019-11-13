@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load staticfiles%}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.3.2/svg.min.js"></script>
+<script src="{% static 'js/workflowChart.js' %}"></script>
+    <style>
+         body {
+      font: 14px helvetica neue, helvetica, arial, sans-serif;
+    }
+  #cy {
+      height: 100%;
+      width: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+    </style>
+</head>
+
+<body>
+<!--<div id="cy"></div>-->
+<div class="workflow">
+</div>
+
+<script>
+    var cy;
+    $(function() { // on dom ready
+<!--        cy = cytoscape({-->
+<!--            container: document.getElementById('cy')-->
+<!--        });-->
+
+<!--    var eles = cy.add([-->
+<!--    {-->
+<!--        group: 'nodes',-->
+<!--        data: {-->
+<!--            id: 'n0'-->
+<!--        },-->
+<!--        position: {-->
+<!--            x: 500,-->
+<!--            y: 100-->
+<!--        }-->
+<!--    },-->
+<!--    {-->
+<!--        group: 'nodes',-->
+<!--        data: {-->
+<!--            id: 'n1'-->
+<!--        },-->
+<!--        position: {-->
+<!--            x: 200,-->
+<!--            y: 200-->
+<!--        }-->
+<!--    },-->
+<!--    {-->
+<!--        group: 'edges',-->
+<!--        data: {-->
+<!--            id: 'e0',-->
+<!--            source: 'n0',-->
+<!--            target: 'n1'-->
+<!--        }-->
+<!--    },-->
+<!--    {-->
+<!--        group: 'nodes',-->
+<!--        data: {-->
+<!--            id: 'n5'-->
+<!--        },-->
+<!--        position: {-->
+<!--            x: 500,-->
+<!--            y: 200-->
+<!--        }-->
+<!--    },-->
+<!--    {-->
+<!--    group: 'edges',-->
+<!--        data: {-->
+<!--            id: 'e1',-->
+<!--            source: 'n0',-->
+<!--            target: 'n5'-->
+<!--        }-->
+<!--    },-->
+<!--]);-->
+
+    $('.workflow').workflowChart({
+  data: [
+    {id: 1, title:'Node 1', parent:null, optional:false},
+
+    {id: 2, title:'Node 2', parent: 1, optional:false},
+
+    {id: 3, title:'Node 3', parent: 1, optional:tru/+
+
+    +-e, link:'#'},
+
+    {id: 4, title:'Node 4', parent: 1, optional:false, link:'#'},
+
+    {id: 5, title:'Node 5', parent: 1, optional:false, link:'#'},
+
+    {id: 6, title:'Node 6', parent: 1, optional:false, link:'#'}
+  ]
+})
+
+
+   }); // on dom ready
+</script>
+</body>
+</html>

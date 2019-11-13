@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="container-fluid">
+    <div class="row" style="margin-top:30px;margin-left:10px;">
+        <div class="col-md-2" style="height:100%;background-color: powderblue;" >
+                        <div class="row" style="box-shadow:10px 10px 5px #aaaaaa;">
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <label class="" id="select_mine">Select Mine:</label>
+                                        <select id="id_mine_id" name="mine_id" class="form-control">
+                                            <option value="" >--Select Mine--</option>
+                                            {% for x in object_list %}
+                                            <option value="{{x.id}}" >{{ x.name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                </div>
+                                <div class="col-md-12">
+                                        <label class="" id="select_miner">Select Miner:</label>
+                                        <select id="id_miner_id" name="" class="form-control" >
+                                             <option value="">--Select Miner--</option>
+                                         </select>
+                                </div>
+                                <div class="col-md-12 text-center" style="margin-top:30px;">
+
+                                    <button type="submit" class="btn btn-primary" id="start_track">
+                                      <span class="glyphicon glyphicon-eye-open"></span> Start Tracking</button>
+                                </div>
+                                 <div class="col-md-12" style="margin-top:30px;">
+
+                                     <li class="MinerWorkerIcon">Worker</li>
+                                     <li class="MinerOfficerIcon">Officer</li>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+        <section class="KBmap" id="KBtestmap" style="margin-top:0px">
+
+        </section>
+       <!-- <section id="ZoomButtons">
+            <div class="buttons">
+                <button class="zoom-in btn btn-info btn-sm"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true">ZoomIn</span></button>
+                <button class="zoom-out btn btn-info btn-sm"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true">ZoomOut</span></button>
+                <div class="slidecontainer">
+                    <input type="range" class="zoom-range slider">
+                </div>
+                <button class="reset btn btn-primary" value="Reset">Reset</button>
+            </div>
+        </section>-->
+    </div>
+</div>
+
+<script>
+var KB_flag=0;
+var TRACKING;
+var ACTIVE_MINER;
+$(document).ready(function() {
+    $('#start_track').prop("disabled", true);
+       toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "100",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",  
+                    }
+
+        FillDropDownAutomate(getUrlVars());
+
+});
+  
+
+      $("#id_mine_id").on("change",function(){
+          $('#start_track').html('<span class="glyphicon glyphicon-eye-open"></span> Start Tracking');
+            clearInterval(TRACKING);
+            KB_flag=0;
+            // console.log($(this).val());
+            if($(this).val()!=''){
+                setImageData(this.value);
+                FillDropDown(this.value);
+                FULLSCREEN();
+                ZoomButtonsInitialization();
+            }
+            else{
+                $('#start_track').prop("disabled", true);
+            }
+});
+  $("#id_miner_id").on("change",function(){
+        clearInterval(TRACKING);
+        ClearMapMarkers();
+        KB_flag=0;
+        ACTIVE_MINER="";
+
+       $('#start_track').html('<span class="glyphicon glyphicon-eye-open"></span> Start Tracking');  
+           // console.log($(this).val())
+        if($(this).val()!=''){$('#start_track').prop("disabled", false);}else{$('#start_track').prop("disabled", true);}
+  });
+function FillDropDown(mine_id){
+    $.ajax({
+            type:"get",
+            url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                fill_dropdown(data.result);
+
+                fill_map_with_routers(data.mine,data.routers);
+                return data;
+                    },
+            error: function(){
+                  toastr.warning("Something Went Wrong :(");
+                    console.log("Something Went Wrong :(");
+                 }
+            });
+}
+function setImageData(mine_id){
+    url=$("#get_url").data('url');
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'Strata:fetch_map_image' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                // CreateMapModel(data.result.image_url,data.result.name);
+                tempData=data;
+                  CreateKBtestMap(data.result.image_url);
+                //console.log(data.result.name);
+                //console.log(data.result.image_url);
+                    },
+            error: function(){
+                    toaster.warning("something is not right.please contact admin - 1");
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+}
+
+
+	function CreateKBtestMap(data){
+      var img=data;
+            //console.log(url);
+      if(addedKBmaps.length>0){
+        addedKBmaps.pop();
+        $('.KBmap__mapContainer').remove();
+      }
+
+      if(img){
+        createKBmap('KBtestmap', '/media/'+img);
+				}
+      else{
+        $("#map").css("");
+        $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+      }
+  };
+  function fill_dropdown(result){
+
+    $("#id_miner_id").html("<option value=''>--Select Miner--</option>");
+    for (x in result) {
+      $("#id_miner_id").append($("<option></option>")
+                      .attr("value",result[x].rfid)
+                      .text(result[x].name+"("+result[x].rfid+")"));
+    }
+  }
+  function fill_map_with_routers(mine,routers){
+    var img=mine.image_url;
+            //console.log(url);
+    if(addedKBmaps.length>0){
+      addedKBmaps.pop();
+      $('.KBmap__mapContainer').remove();
+    }
+    if(img){
+      createKBmap('KBtestmap', '/media/'+img);
+
+			KBtestmap.importJSON(routers);
+			KBtestmap.showAllMapMarkers();
+		}
+    else{
+      $("#map").css("");
+      $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+    }
+  }
+
+$("#start_track").click(function(){
+    miner_id=$("#id_miner_id").val();
+    ACTIVE_MINER=miner_id;
+
+    $(this).html('<span id="loading" class="glyphicon glyphicon-refresh"></span><span> Tracking</span>');
+    var flag=0;
+    FULLSCREEN();
+    TRACKING=setInterval(function(){
+        //call ajax
+         $.ajax({
+            data:{'id':miner_id},
+            url: "/MinersTracking/get_single_miners_data",
+            success: function(data) {
+              // $('.KBmap__marker.'+miner_id).remove();
+               
+                if(data.hasOwnProperty("error")){
+                     toastr.error(data.error);
+                     ACTIVE_MINER="";
+                     return data; 
+                  }
+                if(KB_flag!=0)KBtestmap.mapMarkers[miner_id].removeMarker();   //this is excecuted only when KBmap is already Created.
+                KB_flag=1;
+
+                KBtestmap.importJSON(data);
+
+                KBtestmap.mapMarkers[miner_id].cordX=data[miner_id].cordX;
+                KBtestmap.mapMarkers[miner_id].cordY=data[miner_id].cordY;
+
+				        KBtestmap.mapMarkers[miner_id].show();
+
+				        return data;
+              },
+              error: function(){
+                toastr.warning("Something Went Wrong :(");
+                console.log("Something Went Wrong :(");
+              }
+            });
+        //end call ajax
+
+    }, 3000);//time in milliseconds
+
+});
+
+
+
+var zoomflag=0;
+$(".zoom-in").click(function(){
+    if(zoomflag==0)ZoomButtonsInitialization();zoomflag=1;
+});
+
+function ClearMapMarkers(){
+        if(!isEmpty(ACTIVE_MINER))KBtestmap.mapMarkers[ACTIVE_MINER].removeMarker();
+}
+
+function FillDropDownAutomate(urlData){
+        if(urlData.hasOwnProperty("mine_id") && urlData.hasOwnProperty("miner_id")){
+            mine_id=urlData['mine_id'];
+            miner_id=urlData['miner_id'];
+            console.log(miner_id);
+            $('select#id_mine_id').val(mine_id);
+            FillDropDown(mine_id);
+
+            setTimeout(function(){
+                $('select#id_miner_id').val(miner_id);
+                $('#start_track').prop("disabled", false);
+                 }, 2000);
+
+        }
+}
+
+
+</script>
+
+<style>
+  .pin{
+position:absolute;
+height:25px;
+width:25px;
+background:green;
+}
+section { text-align: center; margin: 50px 0; }
+      .panzoom-parent { border: 2px solid #333; }
+      .panzoom-parent .panzoom { border: 2px dashed #666; }
+      .buttons { margin: 40px 0 0; }
+#map_div{
+<!--background-position: center;-->
+<!--background-size: contain;-->
+background-repeat: no-repeat;
+}
+
+.buttons {
+  position:relative;
+  width:50%;
+  margin-left:-25%;
+  bottom:0px;
+  left:50%;
+}
+.MinerWorkerIcon  { list-style-image:url('/static/image/miner_worker.svg') }
+.MinerOfficerIcon  { list-style-image:url('/static/image/miner_officer.svg') }
+</style>
+{% endblock %}
+

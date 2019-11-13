@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="styet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row"lesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+      
+        <section class="col-md-12">
+          
+           <center>
+            <h1 class="page-header"><centre>Add Inventory<small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+<p>
+            <!-- Table content -->
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                  <div class="col-md-1">
+                                        
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for=""  id="">Choose Mine:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                          {{form.mine_id}}
+                                    </div>
+                                   <!--  <div class="col-md-2">
+                                        <label for="" class="" id="">Choose Area:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_area_list">
+                                            <option>--Select Area--</option>
+                                        </select>
+                                    </div> -->
+                                    <div class="col-md-2">
+                                        <label for="" class="" id="">Choose Category:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                    <select class="form-control" id="id_category_list">
+                                            <option>--Select Category--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                        
+                                    </div>
+                                <div class="col-md-12" style="margin-top:30px;">
+                                     <!-- <div class="col-md-2">
+                                        <label for="" class="" id="">Choose Category:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_category_list">
+                                            <option>--Select Category--</option>
+                                        </select>
+                                    </div> -->
+
+                                    <div class="col-md-1">
+                                        
+                                    </div>
+                                   
+                                    <div class="col-md-2">
+                                        <label for="" class="" id="">Choose Product:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="id_product_list">
+                                            <option>--Select Product--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="" class="" id="">Choose Batch:</label>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-control" id="id_batch_list">
+                                            <option>--Select Batch--</option>
+                                        </select>
+                                    </div>
+                                   
+
+                                </div>
+                            </div>
+
+                    </form>
+
+
+<div class="col-md-2"></div>
+<div class="row text-center">
+        <div class="col-md-12">
+              <div class="col-md-2"></div>
+            <!-- <a class="btn btn-primary" href="{% url 'inventory_management:product_manage' %}"> Product Wise</a> -->
+             <input type="submit" id="btn_search_prod" class="btn btn-primary" style="width:150px" value="Search Product"/>
+             
+            <button type="button" id="reloadpage" class="btn btn-primary"> <span class="glyphicon glyphicon-refresh"></span>Refresh</button>
+            <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+        </div>
+    </div>
+
+        <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="table-responsive">
+              <!--   <table class="table" id="myTable"> -->
+                     <table class="table table-bordered" id="Table_content">
+                    <thead>
+                        <tr>
+                           <!--  <th>Sl No.</th> -->
+                            <th>Today's Date</th>
+                            <th>Mine Name</th>
+                            <th>Prod Category</th>
+                            <th>Prod Name</th>
+                            <th>Batch No.</th>
+                            <th>Barcode</th>
+                            <th>Current Stock</th>
+                            <th>Added Quantity</th>
+                            <th>Updated Stock</th>
+                            <th>Update Inventory</th>
+                          <!--   <th>Created date</th>
+                            <th>product_details</th> -->
+                            </tr>
+                    </thead>
+                    <tbody id="body_id">
+                            {% for book in Report %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+<div id="update_info" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Alert!</h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure, You want to update inventory?</p>
+      </div>
+      <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger dew" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#id_mine_id").addClass('form-control');       
+        $('#myTable').DataTable();
+
+        $('td:nth-child(11)').hide();
+        $('td:nth-child(12)').hide();
+        $("#product_details_id").hide();
+
+    });
+
+
+$('#reloadpage').click(function() {
+ 
+     location.reload(true);
+ 
+});
+
+$("#id_mine_id").on("change",function(){
+    mine_id=this.value;
+     $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_category_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                console.log(data.result);
+                fill_dropdown(data.result);
+
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+});
+
+function fill_dropdown(result){
+    $("#id_category_list").html("<option>--Select Category--</option>");
+    for (index = 0; index < result.length; index++) {
+    //alert(result[index]);
+    var str_array = result[index].split(',');
+    //alert("id="+str_array[0]+":name="+str_array[1]);
+    $("#id_category_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+$("#id_category_list").on("change",function(){
+    id_category=this.value;
+    $("#body_id").empty();
+    $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_product_ajax' %}",
+            data: {
+                     'id': id_category
+                   },
+            success: function(data) {
+                //console.log(data.result);
+                // alert(data.result[0]);
+                fill_dropdown_product(data.result);
+
+                return data;
+                    },
+            error: function(){
+                    console.log("error he ji");
+                 }
+            });
+});
+function fill_dropdown_product(result){
+    $("#id_product_list").html("<option>--Select Product--</option>");
+    for (index = 0; index < result.length; index++) {
+    var str_array = result[index].split(',');
+    $("#id_product_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+$("#id_product_list").on("change",function(){
+    id_product=this.value;
+    $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_batch_ajax' %}",
+            data: {
+                     'id': id_product
+                   },
+            success: function(data) {
+                //console.log(data.result);
+                // alert(data.result[0]);
+                fill_dropdown_batch(data.result);
+
+                return data;
+                    },
+            error: function(){
+                    console.log("error he ji");
+                 }
+            });
+});
+function fill_dropdown_batch(result){
+    $("#id_batch_list").html("<option>--Select Batch--</option>");
+    for (index = 0; index < result.length; index++) {
+    var str_array = result[index].split(',');
+    $("#id_batch_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+
+$("#btn_search_prod").click(function(){
+    id_category=$("#id_category_list").val();
+    id_Product=$("#id_product_list").val();
+    batch=$("#id_batch_list").text();
+    // var str = id_batch;
+    var id_batch = batch.slice(16);
+    // id_batch=$("--Select Batch--:selected").text();
+    // $("select option:selected").text();
+    if(id_category!="--Select Category--")
+    {
+            
+                 $("#Table_data").empty();//empty the table on each click
+                  $.ajax({
+                    type:"get",
+                    url: "{% url 'inventory_management:fetch_inventory_reorder_ajax' %}",
+                    data: {
+                              'id': id_category,
+                              'id_prod':id_Product,
+                              'id_bat':id_batch,
+
+                           },
+                    success: function(data) {
+                             console.log(data.result);
+
+                             fill_reorder_table(data.result);
+                             // alert(data)
+                             return data;
+                            },
+                    error: function(){
+                            console.log("error");
+                         }
+
+                    });
+            }
+     else
+     {
+        alert("Please Select Mine then Category");
+     }
+});
+
+
+
+function fill_reorder_table(result){
+    for (index = 0; index <= result.length; index++) {
+    var str_array = result[index].split(',');
+
+    var textInputBox = '<input type="text"  id="addedGoods" class="form-control"  size="16" />'; 
+    // var btn='<input type="button" id="btn_save_inv" class="btn btn-warning btn-circle dew" style="width:150px" value="Save Inventory"/>'; 
+    var btn='<button type="button" id="btn_save_inv" data-toggle="modal"    class="btn btn-warning btn-circle dew1">Save Inventory!</button>';  
+    var textQuantity = '<input type="text"  id="id_quantity" class="form-control"  readonly size="16" />';  
+    stock=str_array[7];
+    var texTotaladded = '<input type="text"  id="totaladded" class="form-control"  size="16" />';
+     $("#Table_content").append($("<tr><td><input type='hidden' id='date_id' value='"+str_array[1]+"'>"+str_array[1]+"</td><td><input type='hidden' id='mine_id' value='"+str_array[2]+"'>"+str_array[2]+"</td><td><input type='hidden' id='category_id' value='"+str_array[3]+"'>"+str_array[3]+"</td><td><input type='hidden' id='product_id' value='"+str_array[4]+"'>"+str_array[4]+"</td><td><input type='hidden' id='batch_id' value='"+str_array[5]+"'>"+str_array[5]+"</td><td><input type='hidden' id='barcode_id' value='"+str_array[6]+"'>"+str_array[6]+"</td><td><input type='hidden' id='stock_id' value='"+str_array[7]+"'>"+str_array[7]+"</td><td>"+textInputBox+"</td><td>"+texTotaladded+"</td><td>"+btn+"</td><td style='display:none;'><input type='hidden' id='created_id' value='"+str_array[8]+"'>"+"</td><td style='display:none;'><input type='hidden' id='product_details_id' value='"+str_array[0]+"'>"+"</td></tr>"));
+    dataManupulation(stock);
+    $("#product_details_id").hide();
+
+
+    }
+}
+$(document.body).on("click", ".dew1", function ()
+      {
+         // $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+function dataManupulation(stock) {
+        stockInt=parseInt(stock)
+        // alert(stockInt)
+        $(document.body).on('keyup','#addedGoods,#totaladded',function() {
+        var added =$('#addedGoods').val();
+        added=parseInt(added)
+        // alert(added) ; 
+        var sumtotal= stockInt +added;    
+        $("#totaladded").val(sumtotal);
+        // alert(sumtotal) ; 
+        // // alert($("#totaladded").val(sumtotal);
+            
+         }); 
+    }
+
+
+    // $(document.body).on("click", ".dew", function () {
+
+    //     $("#sureDelete").attr("href", $(this).data('url'));
+    //     $('#update_info').modal('show');
+
+    // });
+$(document.body).on("click", ".dew", function () {
+    //alert("ok");
+    date=$("#date_id").val();
+    mine=$("#mine_id").val();
+    category=$("#category_id").val();
+    product=$("#product_id").val();
+    batch=$("#batch_id").val();
+    barcode=$("#barcode_id").val();
+    stock=$("#stock_id").val();
+    addedGood=$("#addedGoods").val();
+    totaladded=$("#totaladded").val();
+    createddate=$("#created_id").val();
+    product_details_id=$("#product_details_id").val();
+
+  
+
+    
+    m_id=$("#id_mine_id").val();
+    c_id=$("#id_category_list").val();
+
+    $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:update_inventory_ajax_add' %}",
+            data: {
+                     'id_date': date,
+                     'id_mine': mine,
+                     'id_category': category,
+                     'id_product': product,
+                     'id_batch': batch,
+                     'id_barcode': barcode,
+                     'id_stock': stock,
+                     'id_addedgoods': addedGood,
+                     'id_totaladd': totaladded,
+                     'id_createddate': createddate,
+                     'id_product_details': product_details_id,
+
+
+                     'idd_mine': m_id,
+                     'idd_category': c_id,
+                     // 'idd_product': p_id,
+                   },
+            success: function(data) {
+                console.log(data.result);
+                // $('#message').html("<h2>Inventory Updated Successfully!</h2>") 
+                    // alert(data);
+                    alert("Inventory Updated Successfully");
+                    return data;
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+      $('#update_info').modal('hide');
+
+});
+
+
+$("#btn_print").click(function(){
+    window.print();
+});       
+</script>
+{% endblock %}

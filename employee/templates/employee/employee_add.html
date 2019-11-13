@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Employee</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'employee:employee_manage' %}">Manage Employee</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            {{form.mining_role}}
+            <div class="row">
+                <div class="form-group">
+                    <form method="post">{% csrf_token %}
+
+
+                        <div class="form-group">
+                            <table  class="table table-responsive table-bordered">
+                            {{ form.as_table }}
+                            <!--{{form.fname}}-->
+                                </table>
+                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $("#id_fname").addClass("form-control");
+        $("#id_fname").attr("placeholder","First Name");
+    });
+</script>
+
+{% endblock %}
+

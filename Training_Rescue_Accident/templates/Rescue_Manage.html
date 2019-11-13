@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<style>
+    .container{width:95% !important;}
+</style>
+<div class="container">
+    <div class="row">
+        <h3 class="text-center page-header">Rescue Record Management</h3>
+        <div class="col-md-12">
+
+            <form method="post" action="{% url 'Training_Rescue_Accident:Rescue_index' %}" enctype="multipart/form-data">{% csrf_token %}
+                <div class="table-responsive">
+                <table class="table table-striped table-bordered responsive" id="att_table">
+                    <thead>
+                    <tr>
+                        <th>SL No.</th>
+                        <th>Mine</th>
+                        <th>Shift</th>
+                        <th>Exact Area/Location area</th>
+                        <th>Date &amp; Time (From) (Approx.)</th>
+                        <th>Date &amp; Time (To) (Approx.)</th>
+                        <th>Rescue Person(s) Deployed</th>
+                        <th>Rescue Person Name(s)</th>
+                        <th>Type of Incident</th>
+                        <th>Employee(s) Rescued</th>
+                        <th>Rescued Person's Name(s)</th>
+                    </tr>
+                    </thead>
+                        <tbody>
+                            {% for key,emp_show in dt_store.items %}
+                            <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{emp_show.mine_name}}</td>
+                            <td>{{emp_show.shift_name}}</td>
+                            <td>{{emp_show.area}}</td>
+                            <td>{{emp_show.date_fr}}</td>
+                            <td>{{emp_show.date_to}}</td>
+                            <td>{{emp_show.rescue_dep_num}}</td>
+                            <td>{{emp_show.rescue_person_name}}</td>
+                            <td>{{emp_show.incident_type}}</td>
+                            <td>{{emp_show.employee_rescued_num}}</td>
+                            <td> {{emp_show.rescued_employees_name}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+            </form>
+            <center>
+                <hr>
+                    <a href="{% url 'Training_Rescue_Accident:Rescue_index' %}" class="btn btn-primary" role="button">Go Back To Submit Rescue Records</a>
+                <hr>
+            </center>
+        </div>
+    </div>
+</div>
+<script>
+ $(document).ready(function(){
+    $('#att_table').DataTable();
+ });
+</script>
+{% endblock %}

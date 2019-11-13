@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Comparision of different fire ratios with CO</h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                   <div id="linechart_material">
+
+                   </div>
+                    See also <span class="btn btn-success btn-xs"><a href="{% url 'FireExp:young_co_ratio_page' %}">Young's ratio with CO</a></span>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+<script>
+    google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Days');
+      data.addColumn('number', 'CO');
+      data.addColumn('number', 'Graham-s');
+      data.addColumn('number', 'CO/CO2');
+      data.addColumn('number', 'Jones&T');
+
+      var endpoint = '{% url 'FireExp:fetch_gas_ratios_ajax' %}';
+      var defaultData = [];
+        $.ajax({
+            method: "GET",
+            url:endpoint,
+            success: function(data_ajax){
+                 //alert(data_ajax);
+                 defaultData = data_ajax.default;
+                 //alert(defaultData);
+                 data.addRows(defaultData);
+
+
+             },
+             error: function(error_data){
+                  console.log("error he ji")
+                  console.log(error_data)
+                 }
+          });
+      <!--data.addRows([-->
+        <!--['1-Sep',  37.8, 80.8, 41.8, 23.89],-->
+        <!--['2-Sep',  30.9, 69.5, 32.4, 22.89],-->
+        <!--['3-Sep',  25.4,   57, 25.7, 11.67],-->
+        <!--['4-Sep',  11.7, 18.8, 10.5, 22.33],-->
+        <!--[5,  11.9, 17.6, 10.4],-->
+        <!--[6,   8.8, 13.6,  7.7],-->
+        <!--[7,   7.6, 12.3,  9.6],-->
+        <!--[8,  12.3, 29.2, 10.6],-->
+        <!--[9,  16.9, 42.9, 14.8],-->
+        <!--[10, 12.8, 30.9, 11.6],-->
+        <!--[11,  5.3,  7.9,  4.7],-->
+        <!--[12,  6.6,  8.4,  5.2],-->
+        <!--[13,  4.8,  6.3,  3.6],-->
+        <!--[14,  4.2,  6.2,  3.4]-->
+      <!--]);-->
+
+      var options = {
+        <!--chart: {-->
+          <!--title: 'Box Office Earnings in First Two Weeks of Opening',-->
+          <!--subtitle: 'in millions of dollars (USD)'-->
+        <!--},-->
+        hAxis: {
+          title: 'Days',
+          textStyle: {
+            color: '#01579b',
+            fontSize: 20,
+            fontName: 'Arial',
+            bold: true,
+            italic: true
+          },
+          titleTextStyle: {
+            color: '#01579b',
+            fontSize: 16,
+            fontName: 'Arial',
+            bold: false,
+            italic: true
+          }
+        },
+        vAxis: {
+          title: 'Ratio & CO ,per cent',
+          textStyle: {
+            color: '#1a237e',
+            fontSize: 24,
+            bold: true
+          },
+          titleTextStyle: {
+            color: '#1a237e',
+            fontSize: 24,
+            bold: true
+          }
+        },
+
+        width: 1200,
+        height: 700
+      };
+
+      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+</script>
+{% endblock %}

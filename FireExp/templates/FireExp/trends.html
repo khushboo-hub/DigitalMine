@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Explosibility values for the next {{ lastday }} days</h1>
+            <!-- Table content -->
+            <div class="row">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" class="btn btn-primary" name="predictbutton" value="Predict" />
+                </form>
+                <br>
+            </div><!--end Table content -->
+            <div class="row">
+                <table class="table table-responsive">
+                    <tr style="vertical-align:middle">
+                        {% for datasett in date_list %}
+                        <td>
+                            {{ datasett }}
+                        </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr style="vertical-align:bottom">
+                        {% for datasett in explos_list %}
+                        <td>
+                            {% if datasett == 0 %} Not explosive {% endif %}
+                            {% if datasett == 1 %} Potentially explosive if mixed with air {% endif %}
+                            {% if datasett == 2 %} Potentially explosive if mixed with combustible gases{% endif %}
+                            {% if datasett == 3 %} Explosive {% endif %}
+                            {% if datasett == 4 %} Impossible Mixture {% endif %}
+                            {% if datasett == 5 %} Unidentified {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        //$("#id_startdate").addClass('form-control');
+        $("#id_startdate").datepicker();
+        $("#id_enddate").datepicker();
+    });
+</script>
+
+{% endblock %}

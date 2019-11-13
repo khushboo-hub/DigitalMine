@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<!-- <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+
+
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <center><h1 class="page-header">Add a Category</h1></center>
+
+            <div class="row text-center">
+                <div class="col-md-12">
+                    
+                     <a class="btn btn-primary" href="{% url 'inventory_management:category_manage' %}">Manage Category</a>
+                     <a class="btn btn-primary" href="{% url 'inventory_management:category_add' %}">Add Category</a>
+                </div>
+            </div>
+
+            <hr>
+
+
+            <div class="row">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+             <!--     <strong>Category already available !</strong> <u><i>Change category name </i></u> and try submitting again -->
+            <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" >{% csrf_token %}
+
+                    <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Add Category of Product</font></legend>
+                            <centre>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <label for="prod_category" class="" id="">Product Category</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.prod_category}}
+                                    </div>
+                                    <div class="col-md-4">
+                                    <input list="allCategorylist" name="category"  class="form-control"  placeholder="Click to View Available Categories"  >
+
+                                    <datalist id="allCategorylist" >
+                            
+                                        {% for category in DatalistQS %}
+                                    <option value="{{ category.prod_category}}">{{category.prod_category}}</option>
+                                        {% endfor %}
+                               
+                                   
+                                    </datalist>
+
+                                
+                                    </div>
+                                </div>
+                            </div>
+<!-- 
+                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <label for="prod_category" class="" id="">Search Category</label>
+                                    </div>
+                                    <div class="col-md-8">
+                        <input list="allCategorylist" name="category" class="form-control" TYPE="Text" >
+                                    <datalist id="allCategorylist" >
+                            
+                                        {% for category in DatalistQS %}
+                                    <option value="{{ category.prod_category}}">{{category.prod_category}}</option>
+                                        {% endfor %}
+                               
+                                   
+                                    </datalist>
+                                
+                                    </div> -->
+                                </div>
+
+                            </div>
+
+
+                               </centre>
+                            </div>
+                                                   
+                            <!-- {{ form.as_table }} -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary" value="Submit"  id="button" >Submit</button>
+                          <!--   <input type="submit" class="btn btn-primary" value="Submit"  id="button"  /> -->
+                        </div>
+                    </form>
+                </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+<style>
+
+fieldset.scheduler-border {
+border: solid 1px #DDD !important;
+padding: 0 10px 10px 10px;
+border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+fieldset ul {list-style:none}
+
+/*.alert{
+  display:none;
+}*/
+
+</style>
+
+<script >
+
+
+// $("#button").click(function(){
+//     $('.alert').show('medium');
+  // $(".alert").show().delay(2000).addClass("in").fadeOut(10000000000);
+   // $(".alert").hide().show('medium');
+   // $(".alert").hide().show('medium');
+   // $().alert('close')
+
+        // {% if not "vars" in msg %}
+        //              Entered category is already present .Please enter new category !
+        //           {% else %}
+        //              Entered category is already present .Please enter new category !
+        //           {% endif %}
+// });
+
+
+</script>
+
+{% endblock %}
+

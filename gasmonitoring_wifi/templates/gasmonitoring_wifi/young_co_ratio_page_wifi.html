@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Young's Ratio with CO</h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="linechart_material">
+
+                    </div>
+
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+<script>
+    google.charts.load('current', {'packages':['line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+
+      var data = new google.visualization.DataTable();
+      data.addColumn('string', 'Days');
+      data.addColumn('number', 'Youngs');
+      data.addColumn('number', 'CO');
+
+      var endpoint = '{% url 'gasmonitoring_wifi:fetch_young_co_ajax_wifi' %}';
+      var defaultData = [];
+        $.ajax({
+            method: "GET",
+            url:endpoint,
+            success: function(data_ajax){
+                 //alert(data_ajax);
+                 defaultData = data_ajax.default;
+                 //alert(defaultData);
+                 data.addRows(defaultData);
+
+
+             },
+             error: function(error_data){
+                  console.log("error he ji")
+                  console.log(error_data)
+                 }
+          });
+
+      var options = {
+        <!--chart: {-->
+          <!--title: 'Box Office Earnings in First Two Weeks of Opening',-->
+          <!--subtitle: 'in millions of dollars (USD)'-->
+        <!--},-->
+        hAxis: {
+          title: 'Days',
+          textStyle: {
+            color: '#01579b',
+            fontSize: 20,
+            fontName: 'Arial',
+            bold: true,
+            italic: true
+          },
+          titleTextStyle: {
+            color: '#01579b',
+            fontSize: 16,
+            fontName: 'Arial',
+            bold: false,
+            italic: true
+          }
+        },
+        vAxis: {
+          title: 'Ratio & CO ,per cent',
+          textStyle: {
+            color: '#1a237e',
+            fontSize: 24,
+            bold: true
+          },
+          titleTextStyle: {
+            color: '#1a237e',
+            fontSize: 24,
+            bold: true
+          }
+        },
+
+        width: 1200,
+        height: 700
+      };
+
+      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+      chart.draw(data, google.charts.Line.convertOptions(options));
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container-fluid">
+    <div class="row">
+        <section class="col-md-12">
+  
+    <center>
+            <h1 class="page-header"><centre> Out of Stock Products  <small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+
+
+
+<div class="row text-center">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{% url 'inventory_management:outlet_viewall' %}"> Back</a>
+         <!--    <a class="btn btn-primary" href="{% url 'inventory_management:supplier_add' %}"> Assign Supplier</a> -->
+            <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table " id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Mine Name</th> 
+                            <th>Branch Name</th>
+                            <th>Prod Category</th>
+                            <th>Product Name</th>
+                           <!--  <th>In Stock</th> -->
+                           <!--  <th>Available Alternate Product</th> -->
+                             <th>Available Alternate</th>
+                            <th>Reorder Product</th>
+                         
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in object_list %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.0 }}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.2 }}</td>
+                            <td>{{ book.3 }}</td>
+                           <!--  <td>{{ book.5 }}</td> -->
+                           <!--  <td>{{ book.5 }}</td> -->
+                            <td>
+                            <select class="form-control" id="id_alternate_list">
+                                {% for entry in book.4 %}
+
+                                   <option value="{{ entry.quantity }}">{{ entry }}</option>
+                                {% endfor %}
+                            </select>
+                            </td>
+                            <td> <a class="btn btn-warning btn-circle" href="{% url 'inventory_management:inventory_reorder' %}"> Reorder Product</a></td>
+ 
+
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+<style>
+#id_alternate_list{
+ width:250px;  
+ height: 20px; 
+}
+#id_alternate_listt{
+ width:350px;  
+ height: 20px; 
+}
+
+#id_quantity{
+ width:350px;  
+ height: 20px; 
+}
+</style>
+<script>
+    $(document).ready(function(){
+        $('#myTable').DataTable();
+        // $('#wgtmsr')
+        
+    });
+$("#btn_print").click(function(){
+    window.print();
+}); 
+
+
+
+
+</script>
+{% endblock %}

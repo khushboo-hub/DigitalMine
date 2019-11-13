@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Goaf Area Location
+                <small>&nbsp&nbsp&nbsp Here you can add different Location of Underground Mine</small>
+            </h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">1. Choose Mine:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.mine_id}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">2. Location/Area name:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.areaName}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">3. Any Desc:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.desc}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">4. IP Address:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.IpAddress}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <input type="submit" id="btn_show" class="btn btn-primary" value="Submit" onclick="return Validate()"/>
+                            <!--<input type="submit" value="Validate" onclick="return Validate()" />-->
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+
+</style>
+<script>
+$(document).ready(function(){
+    $("#id_mine_id").addClass('form-control');
+
+});
+
+function Validate() {
+        var id_mine_id = document.getElementById("id_mine_id");
+        if (id_mine_id.value == "") {
+            //If the "Please Select" option is selected display error.
+            alert("Please select a Mine!");
+            return false;
+        }
+        return true;
+    }
+
+</script>
+
+{% endblock %}
+

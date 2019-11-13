@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* CSS used here will be applied after bootstrap.css */
+
+body{ padding-top:50px;}
+.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
+.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
+.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }
+.tab-pane .list-group input[type="checkbox"]{ margin-top: 2px; }
+.tab-pane .list-group .glyphicon { margin-right:5px; }
+.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
+a.list-group-item.read { color: #222;background-color: #F3F3F3; }
+hr { margin-top: 5px;margin-bottom: 10px; }
+.nav-pills>li>a {padding: 5px 10px;}
+
+.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }
+.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
+.ad a.url {color: #093;text-decoration: none;}
+
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+/* Button used to open the chat form - fixed at the bottom of the page */
+.open-button {
+  background-color: #555;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  position: fixed;
+  bottom: 23px;
+  right: 28px;
+  width: 280px;
+}
+
+/* The popup chat - hidden by default */
+.chat-popup {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  right: 15px;
+  border: 3px solid #f1f1f1;
+  z-index: 9;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width textarea */
+.form-container textarea {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+  resize: none;
+  min-height: 200px;
+}
+
+/* When the textarea gets focus, do something */
+.form-container textarea:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/send button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}
+</style>
+<div class="container" style="padding-top:20px;">
+    <div class="row">
+        <div class="col-sm-3 col-md-2">
+            <div class="btn-group">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button">
+                    Mail <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Mail</a></li>
+                    <li><a href="#">Contacts</a></li>
+                    <li><a href="#">Tasks</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-9 col-md-10">
+            <!-- Split button -->
+            <div class="btn-group">
+                <button class="select_all btn btn-default" type="button">
+                    <div class="checkbox" style="margin: 0;">
+                        <label>
+                            <input id="checkall" type="checkbox">
+                        </label>
+                    </div>
+                </button>
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+                    <span class="caret"></span><span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">All</a></li>
+                    <li><a href="#">None</a></li>
+                    <li><a href="#">Read</a></li>
+                    <li><a href="#">Unread</a></li>
+                    <li><a href="#">Starred</a></li>
+                    <li><a href="#">Unstarred</a></li>
+                </ul>
+            </div>
+            <button class="refresh btn btn-default" data-toggle="tooltip" title="Refresh" type="button">
+                &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-refresh"></span>&nbsp;&nbsp;&nbsp;
+            </button>
+            <!-- Single button -->
+            <div class="btn-group">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" type="button">
+                    More <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Mark all as read</a></li>
+                    <li class="divider"></li>
+                    <li class="text-center"><small class="text-muted">Select messages to see more actions</small></li>
+                </ul>
+            </div>
+            <div class="pull-right">
+                <span class="text-muted"><b>1</b>–<b>50</b> of <b>160</b></span>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-default" type="button">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                    </button>
+                    <button class="btn btn-default" type="button">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-sm-3 col-md-2">
+            <a class="compose-email btn btn-danger btn-sm btn-block" href="#" role="button"><i class="glyphicon glyphicon-edit"></i>
+                Compose</a>
+            <hr>
+            <ul class="nav nav-pills nav-stacked">
+                <li class="active"><a href="#"><span class="badge pull-right">{{email.count}}</span> Inbox </a>
+                </li>
+                <li><a href="#">Starred</a></li>
+                <li><a href="#">Important</a></li>
+                <li><a href="#">Sent Mail</a></li>
+                <li><a href="#"><span class="badge pull-right">3</span>Drafts</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-10">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#home"><span class="glyphicon glyphicon-inbox">
+                </span>Primary</a></li>
+                <li><a data-toggle="tab" href="#profile"><span class="glyphicon glyphicon-user"></span>
+                    Social</a></li>
+                <li><a data-toggle="tab" href="#messages"><span class="glyphicon glyphicon-tags"></span>
+                    Promotions</a></li>
+                <li><a data-toggle="tab" href="#settings"><span class="glyphicon glyphicon-plus no-margin">
+                </span></a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+                    <div class="list-group">
+                        {% for e in email %}
+                        {% if e.type == 'primary' %}
+                        <a class="list-group-item read" href="#">
+                            <div class="checkbox">
+                                <label>
+                                    <input class="check" type="checkbox">
+                                </label>
+                            </div>
+                            <span class="glyphicon glyphicon-star-empty" id="star"></span>
+                            <span class="name" style="min-width: 120px;display: inline-block;">{{e.user_id.first_name}}</span>
+                            <span class="">{{e.subject}}</span>
+                            <span class="text-muted" style="font-size: 11px;">- {{e.email|slice:"0:90"}}...</span>
+                            <span class="badge">{{e.sent_on}}</span>
+                            <span class="pull-right">
+                                <span class="glyphicon glyphicon-paperclip"></span>
+                            </span>
+                        </a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="profile">
+                    <div class="list-group">
+
+                        <div class="list-group-item">
+                           {% for e in email %}
+                            {% if e.type == 'social' %}
+                            <a class="list-group-item read" href="#">
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="check" type="checkbox">
+                                    </label>
+                                </div>
+                                <span class="glyphicon glyphicon-star-empty" id="star"></span>
+                                <span class="name" style="min-width: 120px;display: inline-block;">{{e.user_id.first_name}}</span>
+                                <span class="">{{e.subject}}</span>
+                                <span class="text-muted" style="font-size: 11px;">- {{e.email|slice:"0:90"}}...</span>
+                                <span class="badge">{{e.sent_on}}</span>
+                                <span class="pull-right">
+                                    <span class="glyphicon glyphicon-paperclip"></span>
+                                </span>
+                            </a>
+                            {% endif %}
+                        {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="messages">
+                    <div class="list-group">
+
+                        <div class="list-group-item">
+                           {% for e in email %}
+                            {% if e.type == 'promotion' %}
+                            <a class="list-group-item read" href="#">
+                                <div class="checkbox">
+                                    <label>
+                                        <input class="check" type="checkbox">
+                                    </label>
+                                </div>
+                                <span class="glyphicon glyphicon-star-empty" id="star"></span>
+                                <span class="name" style="min-width: 120px;display: inline-block;">{{e.user_id.first_name}}</span>
+                                <span class="">{{e.subject}}</span>
+                                <span class="text-muted" style="font-size: 11px;">- {{e.email|slice:"0:90"}}...</span>
+                                <span class="badge">{{e.sent_on}}</span>
+                                <span class="pull-right">
+                                    <span class="glyphicon glyphicon-paperclip"></span>
+                                </span>
+                            </a>
+
+                            {% endif %}
+                        {% endfor %}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane faCde in" id="settings">
+                    This tab is empty.
+                </div>
+            </div>
+
+
+            <div class="row-md-12">
+
+                <div class="well">
+                    <a href="http://www.cimfr.nic.in">Digital Mine(IOT)</a>
+                </div>
+
+            </div>
+        </div>
+<!--        <span class="open-button">New Message</span>-->
+
+            <div class="chat-popup" id="myForm">
+                <p class="" style="padding:12px;background-color:black;color:white;">New Message <span onclick="closeForm()" style="float:right;padding:5px;" class="glyphicon glyphicon-remove"></span><i style="float:right;padding-top:3px;" class="fa fa-window-minimize"></i></p>
+                <form action="/action_page.php" class="form-container">
+                    <input type="email" placeholder="Receipent" class="form-control" style="margin-bottom:5px;"/>
+                    <input type="text" placeholder="Subject" class="form-control"/>
+                    <textarea placeholder="Type message.." name="msg" required></textarea>
+
+                    <button type="submit" class="btn">Send</button>
+<!--                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button>-->
+              </form>
+            </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+      $("span#star").click(function(){
+        $(this).toggleClass("glyphicon-star-empty glyphicon-star")
+      });
+
+      $('button.refresh').click(function(){
+         $('span.glyphicon.glyphicon-refresh').attr('id','loading')
+         location.reload();
+      });
+
+      $("#checkall").change(function(){
+         var checked = $(this).is(':checked');
+         if(checked){
+           $(".check").each(function(){
+             $(this).prop("checked",true);
+           });
+         }else{
+           $(".check").each(function(){
+             $(this).prop("checked",false);
+           });
+         }
+       });
+    });
+
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("myForm").style.display = "none";
+}
+
+
+$("a.compose-email").clickToggle(function() {
+    openForm();
+}, function() {
+     closeForm()
+});
+
+
+
+
+</script>
+{% endblock %}

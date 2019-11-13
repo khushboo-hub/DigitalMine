@@ -1,0 +1,600 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Employee
+                <small>&nbsp&nbsp&nbspHere you can add/edit basic info of miners</small>
+                </sma></h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" data-toggle="tooltip" href="{% url 'employee1:employee_manage' %}"
+                       title="Click Here to Manage Employees">Manage Employee</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" enctype="multipart/form-data" method="post">{% csrf_token %}
+
+
+                        <!--<div class="form-group">-->
+                        <!--<table  class="table table-responsive table-bordered">-->
+                        <!--{{ form.as_table }}-->
+                        <!--&lt;!&ndash;{{form.fname}}&ndash;&gt;-->
+                        <!--</table>-->
+                        <!--<input type="submit" class="btn btn-primary" value="Submit"/>-->
+                        <!--</div>-->
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue"> Personal Details</font></legend>
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_empid" id="id_empid">Emp-ID / आए डी<font
+                                                color="red">*</font>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.empid}}
+                                        <span style="color:red">{{form.empid.errors|striptags}}</span>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_name" id="id_name">Name / नाम<font color="red">*</font>
+                                        </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.name}}
+                                        <span style="color:red">{{form.name.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_father_name" id="id_father_name">Father's Name / पिता का
+                                            नाम </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.father_name}}
+                                        <span style="color:red">{{form.father_name.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_email" id="id_email">Email / ईमेल <font
+                                                color="red">*</font></label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.email}}
+                                        <span style="color:red">{{form.email.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_dob" id="id_dob">Date of Birth / जन्म तिथि </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class='input-group date' id='dob_date_time_picker'>
+                                            {{form.dob}}
+
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                        </div>
+                                        <span style="color:red">{{form.dob.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_mob" id="id_mob">Mobile No / मोबाइल </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mob}}
+                                        <span style="color:red">{{form.mob.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_gender" id="id_gender">Gender / लिंग </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.gender}}
+                                        <span style="color:red">{{form.gender.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_marital_status" id="id_marital_status">Marital Status /
+                                            वैवाहिक
+                                            स्थिति </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.marital_status}}
+                                        <span style="color:red">{{form.marital_status.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_address" id="id_address">Address / पता </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.address}}
+                                        <span style="color:red">{{form.address.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_state" id="id_state">State / राज्य </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.state}}
+                                        <span style="color:red">{{form.state.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_city" id="id_city">City / शहर </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.city}}
+                                        <span style="color:red">{{form.city.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_pin" id="id_pin">Pin / पिन </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.pin}}
+                                        <span style="color:red">{{form.pin.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_photo" id="id_photo">Image / फोटो </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8" id="CurrentPhotoCheck">
+                                        {{form.photo}}
+                                        <span style="color:red">{{form.photo.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <br/><br/>
+
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Mining Info</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_mine" id="id_mine"> Select Mine / खदान चुने </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mine}}
+                                        <span style="color:red">{{form.mine.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_rfid" id="id_rfid">RFID / आर.एफ.आइ.डी </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.rfid}}
+                                        <span style="color:red">{{form.rfid.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+
+                                    <div class="col-md-4">
+                                        <label class="" for="id_date_of_joining" id="id_date_of_joining">Date of Joining
+                                            / </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class='input-group date' id='doj_date_time_picker'>
+                                            {{form.date_of_joining}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                            <!--                                        {{form.date_of_joining}}-->
+                                        </div>
+                                        <span style="color:red">{{form.date_of_joining.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_retirement_date" id="id_retirement_date">Retirement Date
+                                            / </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class='input-group date' id='dor_date_time_picker'>
+                                            {{form.retirement_date}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                        </div>
+                                        <span style="color:red">{{form.retirement_date.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_job_type" id="id_job_type">Job Type </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.job_type}}
+                                        <span style="color:red">{{form.job_type.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.is_rescue}}
+                                        <span style="color:red">{{form.is_rescue.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_mining_role" id="id_mining_role">Mining Role </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mining_role}}
+                                        <span style="color:red">{{form.mining_role.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_immediate_staff" id="id_immediate_staff">Immediate
+                                            Staff</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.immediate_staff}}
+                                        <span style="color:red">{{form.immediate_staff.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_token_no" id="id_token_no">Token No / टोकन No. </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.token_no}}
+                                        <span style="color:red">{{form.token_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_cat_type" id="id_cat_type">Mining Type/Category </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.cat_type}}
+                                        <span style="color:red">{{form.cat_type.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_designation" id="id_designation">Designation /
+                                            पद </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.designation}}
+                                        <span style="color:red">{{form.designation.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_blood_group" id="id_blood_group">Blood Group</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.blood_group}}
+                                        <span style="color:red">{{form.blood_group.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_medical_status" id="id_medical_status">Medical
+                                            Status/Description</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.medical_status}}
+                                        <span style="color:red">{{form.medical_status.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+
+                                    </div>
+                                    <div class="col-md-8">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </fieldset>
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Additional Info</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_aadhaar_no" id="id_aadhaar_no">Aadhar No/आधार नं</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.aadhaar_no}}
+                                        <span style="color:red">{{form.aadhaar_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_pan_no" id="id_pan_no">PAN No/पेन संख्या</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.pan_no}}
+                                        <span style="color:red">{{form.pan_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_votar_id_no" id="id_votar_id_no">Votar ID No</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.voter_id_no}}
+                                        <span style="color:red">{{form.voter_id_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_medical_ins_no" id="id_medical_ins_no">Medical Ins.
+                                            No</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.medical_ins_no}}
+                                        <span style="color:red">{{form.medical_ins_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Last Qualification</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_edu_course_name" id="id_edu_course_name">Course/Exam/Degree
+                                            Name</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.edu_course_name}}
+                                        <span style="color:red">{{form.edu_course_name.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_edu_board_name" id="id_edu_board_name">Board/University
+                                            Name</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.edu_board_name}}
+                                        <span style="color:red">{{form.edu_board_name.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_edu_year" id="id_edu_year">Passing Year</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.edu_year}}
+                                        <span style="color:red">{{form.edu_year.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_edu_percent" id="id_edu_percent">Percentage %</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.edu_percent}}
+                                        <span style="color:red">{{form.edu_percent.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Bank Details</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_bank_name" id="id_bank_name">Bank Name</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.bank_name}}
+                                        <span style="color:red">{{form.bank_name.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_bank_ac_no" id="id_bank_ac_no">A/C No</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.bank_ac_no}}
+                                        <span style="color:red">{{form.bank_ac_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_bank_ifsc" id="id_bank_ifsc">IFSC Code</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.bank_ifsc}}
+                                        <span style="color:red">{{form.bank_ifsc.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label class="" for="id_bank_pf_no" id="id_bank_pf_no">PF No</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.bank_pf_no}}
+                                        <span style="color:red">{{form.bank_pf_no.errors|striptags}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <br/><br/>
+                        <div class="text-center">
+                            <input class="btn btn-primary" type="submit" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+    fieldset.scheduler-border {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+fieldset ul {list-style:none}
+
+
+
+
+</style>
+<script>
+$(document).ready(function(){
+    $('select#id_mine').addClass('form-control');
+     $('select#id_immediate_staff').addClass('form-control');
+      $('select#id_mining_role').addClass('form-control');
+});
+
+
+$(function () {
+
+                var date_from=$('#doj_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+                });
+                date_from.children()[0].id="id_date_fr";
+                date_from.children()[0].required="true";
+
+                var date_to= $('#dor_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#dob_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    useCurrent: false //Important! See issue #1075
+                });
+
+                date_to.children()[0].id="id_date_to";
+                date_to.children()[0].required="true";
+
+                $("#doj_date_time_picker").on("dp.change", function (e) {
+                    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                });
+                $("#dor_date_time_picker").on("dp.change", function (e) {
+                    $('#doj_date_time_picker').data("DateTimePicker").maxDate(e.date);
+                });
+        });
+
+   if( $('div#CurrentPhotoCheck').children('img').length>0 ){
+          $( "#CurrentPhotoCheck" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover')
+          $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="'+$('#CurrentPhotoCheckOnHover').attr("href")+'" />').insertAfter('#CurrentPhotoCheckOnHover');
+
+          $('img#CurrentPhotoCheckOnHover').attr('data-toggle','tooltip');
+
+          $('img#CurrentPhotoCheckOnHover').attr('class','red-tooltip');
+          $('img#CurrentPhotoCheckOnHover').attr('title',"<img width='250px' src='"+$('#CurrentPhotoCheckOnHover').attr("href")+"' />");
+          $("a#CurrentPhotoCheckOnHover").remove();
+          $('img[data-toggle="tooltip"]').tooltip({
+                animated: 'fade',
+                placement: 'bottom',
+                html: true
+          });
+   }
+
+
+
+</script>
+<style>
+    .red-tooltip + .tooltip > .tooltip-inner {background-color: #fff;}
+    .red-tooltip + .tooltip > .tooltip-arrow { border-bottom-color:#fff; }
+
+</style>
+{% endblock %}
+

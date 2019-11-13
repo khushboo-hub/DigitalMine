@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<style>
+    .container{width:90% !important;}
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-header">Employee Training Record Management</h3>
+            <form method="post" action="{% url 'Training_Rescue_Accident:add_Training_Rescue_Accident' %}" enctype="multipart/form-data">{% csrf_token %}
+                <div class="table-responsive">
+                <table class="table table-striped table-bordered responsive" id="att_table">
+                    <thead>
+                    <tr>
+                        <th>SL No.</th>
+                        <th>Mine</th>
+                        <th>Shift</th>
+                        <th>Employee Name</th>
+                        <th>Training Type</th>
+                        <th>Training Date</th>
+                        <th>Present / Absent</th>
+                        <th>Absent From</th>
+                        <th>Absent To</th>
+                        <th>No. of Training Attended</th>
+                        <th>Remarks</th>
+                    </tr>
+                    </thead>
+                        <tbody>
+                            {% for key,emp_show in dt_store.items %}
+                            <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>Mine {{emp_show.mine_name}}</td>
+                            <td>Shift {{emp_show.shift_id}}</td>
+                            <td>Employee {{emp_show.emp_id}}</td>
+                            <td>{{emp_show.training_type}}</td>
+                            <td>{{emp_show.training_date}}</td>
+                            <td>{{emp_show.is_ab_pr}}</td>
+                            <td>{{emp_show.training_ab_pr_from}}</td>
+                            <td>{{emp_show.training_ab_pr_to}}</td>
+                            <td>{{emp_show.training_count}}</td>
+                            <td>{{emp_show.training_remarks}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
+            </form>
+            <center>
+                <hr>
+                    <a href="{% url 'Training_Rescue_Accident:index' %}" class="btn btn-primary" role="button">Go Back To Submit Training Records</a>
+                <hr>
+            </center>
+        </div>
+    </div>
+</div>
+<script>
+    $('#att_table').DataTable();
+</script>
+{% endblock %}

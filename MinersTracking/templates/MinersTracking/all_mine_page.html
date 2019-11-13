@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Live Tracking in Map</h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="content">
+                            <thead>
+                            <tr>
+                                <th class="text-center">SL No</th>
+                                <th class="text-center">Name</th>
+                                <th class="text-center">State</th>
+                                <th class="text-center">Map</th>
+                                <th class="text-center">Track</th>
+                                <!--<th class="text-center" colspan="4">Action</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in object_list %}
+                            <tr>
+                                <td class="text-center">{{forloop.counter}}</td>
+                                <td class="text-center">{{ book.name }}</td>
+                                <td class="text-center">{{ book.state }}</td>
+
+                                <td class="text-center"><span class="btn btn-info btn-sm map_details"
+                                                              data-url="{{book.latitude}}" id="{{book.longitude}}">Google Map</span>&nbsp;<span
+                                        class="btn btn-info btn-sm mine_map"
+                                        data-url="{{book.mine_map_image}}">Mine Map</span></td>
+                                <td class="text-center"><a
+                                        href="{% url 'MinersTracking:live_tracking_in_map' book.id %}"
+                                        title="Edit Mine.">
+                                    <button class="btn btn-success">Live Tracking</button>
+                                </a></td>
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--end Table content -->
+            <div id="map" style="width:100%;height:400px"></div>
+
+        </section>
+    </div>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSCjDrQyZpBPQOEXexNLeOW9RLRWVkw9o"></script>
+
+<!-- Map Details Modal -->
+
+<script>
+        $(document.body).on("click", ".map_details", function () {
+        lat=$(this).data('url');
+        long=parseFloat(this.id);
+        myMap(lat,long);
+        <!--$('#myModal').modal('show');-->
+
+    });
+
+    $(document.body).on("click", ".mine_map", function () {
+
+        img=$(this).data('url');
+        //alert(img);
+
+        if(img){
+        $('#map').css("background-image", "url(/media/"+img+")");
+        $("#map").html("ok");
+        }
+        else{
+            $("#map").css("");
+            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+        }
+
+
+    });
+
+
+        function myMap(lat,long) {
+            console.log(lat,long);
+            var mapOptions = {
+                center: new google.maps.LatLng(lat, long),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.HYBRID
+            }
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        }
+
+
+
+</script>
+{% endblock %}

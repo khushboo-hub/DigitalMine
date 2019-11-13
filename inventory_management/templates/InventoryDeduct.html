@@ -1,0 +1,332 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+      
+        <section class="col-md-12">
+          
+           <center>
+            <h1 class="page-header"><centre>Deduct Inventory/ Lost Goods and Stock Adjustment<small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+
+            <!-- Table content -->
+                                 <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                              <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">Choose Mine:</label>
+
+                                    </div>
+                                    <div class="col-md-2">
+
+                                        {{form.mine_id}}
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">Choose Category:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_category_list">
+                                            <option>--Select Category--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">Choose Product:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_product_list">
+                                            <option>--Select Product--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                               
+                                
+                            </div>
+
+                    </form>
+
+
+<div class="col-md-1"></div>
+<div class="row text-center">
+        <div class="col-md-12">
+              <div class="col-md-1"></div>
+            <!-- <a class="btn btn-primary" href="{% url 'inventory_management:product_manage' %}"> Product Wise</a> -->
+             <input type="submit" id="btn_search_prod" class="btn btn-primary" style="width:150px" value="Search Product"/>
+             
+            <button type="button" id="reloadpage" class="btn btn-primary"> <span class="glyphicon glyphicon-refresh"></span>Refresh</button>
+            <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+        </div>
+    </div>
+
+        <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="table-responsive">
+              <!--   <table class="table" id="myTable"> -->
+                     <table class="table table-bordered" id="Table_content">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Today's Date</th>
+                            <th>Mine Name</th>
+                            <th>Prod Category</th>
+                            <th>Product Name</th>
+                            <th>Batch Number</th>
+                            <th>Barcode</th>
+                            <th>Current Stock</th>
+                            <th>Lost Goods/Stock Adjustment</th>
+                           <!--  <th>Stock Adjustment</th> -->
+                            <th>Updated Stock</th>
+                            <th>Update Inventory</th>
+                            </tr>
+                    </thead>
+                    <tbody id="body_id">
+                            {% for book in Report %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function(){
+        $("#id_mine_id").addClass('form-control');
+        $('#myTable').DataTable();
+      
+    });
+
+$('#reloadpage').click(function() {
+ 
+     location.reload(true);
+ 
+});
+
+$("#id_mine_id").on("change",function(){
+    mine_id=this.value;
+     $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_category_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                console.log(data.result);
+               //alert(data.result[0]);
+                fill_dropdown(data.result);
+
+
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+});
+
+function fill_dropdown(result){
+    $("#id_category_list").html("<option>--Select Category--</option>");
+    for (index = 0; index < result.length; index++) {
+    //alert(result[index]);
+    var str_array = result[index].split(',');
+    //alert("id="+str_array[0]+":name="+str_array[1]);
+    $("#id_category_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+$("#id_category_list").on("change",function(){
+    id_category=this.value;
+    $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_product_ajax' %}",
+            data: {
+                     'id': id_category
+                   },
+            success: function(data) {
+                //console.log(data.result);
+                // alert(data.result[0]);
+                fill_dropdown_product(data.result);
+
+                return data;
+                    },
+            error: function(){
+                    console.log("error he ji");
+                 }
+            });
+});
+function fill_dropdown_product(result){
+    $("#id_product_list").html("<option>--Select Product--</option>");
+    for (index = 0; index < result.length; index++) {
+    var str_array = result[index].split(',');
+    $("#id_product_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+$("#btn_search_prod").click(function(){
+    id_category=$("#id_category_list").val();
+    id_Product=$("#id_product_list").val();
+    $("#body_id").empty();
+
+    if(id_category!="--Select Category--")
+    {
+            
+                 $("#Table_data").empty();//empty the table on each click
+                  $.ajax({
+                    type:"get",
+                    url: "{% url 'inventory_management:fetch_inventory_deduct_ajax' %}",
+                    data: {
+                              'id': id_category,
+                              'id_prod':id_Product,
+                           },
+                    success: function(data) {
+                             console.log(data.result);
+
+                             fill_Deduct_table(data.result);
+                             // alert(data)
+                             return data;
+                            },
+                    error: function(){
+                            console.log("error");
+                         }
+
+                    });
+            }
+     else
+     {
+        alert("Please Select Mine then Category");
+     }
+});
+
+
+
+function fill_Deduct_table(result){
+    for (index = 0; index <= result.length; index++) {
+    var str_array = result[index].split(',');
+
+    var textInputBox = '<input type="text"  id="lostGoods" class="form-control"  size="16" />'; 
+    // var btn='<input type="button" id="btn_save_inv" class="btn btn-warning btn-circle dew" style="width:150px" value="Save Inventory"/>'; 
+    var btn='<button type="button" id="btn_save_inv" class="btn btn-warning btn-circle dew">Save Inventory!</button>';  
+    var textQuantity = '<input type="text"  id="id_quantity" class="form-control"  readonly size="16" />';  
+    stock=str_array[7];
+    var texTotaldeduct = '<input type="text"  id="totaldeduct" class="form-control"  size="16" />';
+     $("#Table_content").append($("<tr><td><input type='hidden' id='serial_id' value='"+str_array[0]+"'>"+str_array[0]+"</td><td><input type='hidden' id='date_id' value='"+str_array[1]+"'>"+str_array[1]+"</td><td><input type='hidden' id='mine_id' value='"+str_array[2]+"'>"+str_array[2]+"</td><td><input type='hidden' id='category_id' value='"+str_array[3]+"'>"+str_array[3]+"</td><td><input type='hidden' id='product_id' value='"+str_array[4]+"'>"+str_array[4]+"</td><td><input type='hidden' id='batch_id' value='"+str_array[5]+"'>"+str_array[5]+"</td><td><input type='hidden' id='barcode_id' value='"+str_array[6]+"'>"+str_array[6]+"</td><td><input type='hidden' id='stock_id' value='"+str_array[7]+"'>"+str_array[7]+"</td><td>"+textInputBox+"</td><td>"+texTotaldeduct+"</td><td>"+btn+"</td><td style='display:none;'><input type='hidden' id='created_id' value='"+str_array[8]+"'>"+"</td><td style='display:none;'><input type='hidden' id='product_details_id' value='"+str_array[0]+"'>"+"</td></tr>"));
+    dataManupulation(stock);
+
+    }
+}
+
+
+function dataManupulation(stock) {
+        // alert(stock);
+        stockInt=parseInt(stock)
+        $(document.body).on('keyup','#lostGoods,#totaldeduct',function() {
+          var lost =$('#lostGoods').val();
+          // alert(lost)
+
+        if(stockInt<lost)
+           {
+            alert("Lost Stock must be greater than InStock");
+            
+           }
+        else if(stockInt==0)
+        {
+         $("#totaldeduct").val(0);
+        }
+          else
+          { 
+            $("#totaldeduct").val(stockInt-lost);
+          }
+              
+         }); 
+    }
+
+
+    // $(document.body).on("click", ".dew", function () {
+
+    //     $("#sureDelete").attr("href", $(this).data('url'));
+    //     $('#update_info').modal('show');
+
+    // });
+$(document.body).on("click", ".dew", function () {
+    date=$("#date_id").val();
+    mine=$("#mine_id").val();
+    category=$("#category_id").val();
+    product=$("#product_id").val();
+    batch=$("#batch_id").val();
+    barcode=$("#barcode_id").val();
+    stock=$("#stock_id").val();
+    lostGood=$("#lostGoods").val();
+    totaldeducts=$("#totaldeduct").val();
+    createdd=$("#created_id").val();
+    product_details_ids=$("#product_details_id").val();
+    // alert(createdd);
+    // alert(product_details_ids);
+
+   
+    
+
+    
+    m_id=$("#id_mine_id").val();
+    c_id=$("#id_category_list").val();
+    // p_id=$("#id_product_list").val();
+    
+    // alert(m_id);
+    // alert(c_id);
+    // alert(lostGood);
+    // alert(totaldeducts);
+    // alert(date + mine + category+product + batch + barcode+stock + lostGood + totaldeducts+m_id+c_id+p_id);
+
+    $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:update_inventory_ajax' %}",
+            data: {
+                     'id_date': date,
+                     'id_mine': mine,
+                     'id_category': category,
+                     'id_product': product,
+                     'id_batch': batch,
+                     'id_barcode': barcode,
+                     'id_stock': stock,
+                     'id_lostgoods': lostGood,
+                     'id_totaldeduct': totaldeducts,
+                     'id_createdd': createdd,
+                     'product_details_idss': product_details_ids,
+
+
+                     'idd_mine': m_id,
+                     'idd_category': c_id,
+                     // 'idd_product': p_id,
+                   },
+            success: function(data) {
+                console.log(data.result);
+                // $('#message').html("<h2>Inventory Updated Successfully!</h2>") 
+                    // alert(data);
+                    return data;
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+
+});
+
+
+$("#btn_print").click(function(){
+    window.print();
+});       
+</script>
+{% endblock %}

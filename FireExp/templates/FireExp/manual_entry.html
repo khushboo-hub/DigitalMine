@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h2 class="page-header">Determine Fire Status and Explosibility in Sealed Off Areas in Mines(Manual Entry)</h2>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+
+                        <div class="form-group">
+                            <table class="table table-responsive table-bordered">
+                                {{ form.as_table }}
+                                {{form.date}}
+                            </table>
+                            {{form.date}}
+                            <input type="submit" name="showbutton" class="btn btn-primary"
+                                   value="         Show         "/>
+                            <input type="submit" name="addbutton" class="btn btn-success" value="Add To Database"/>
+                            <a href="/FireExp/show_database" title="Display Database."><span class="btn btn-warning">Show Table</span></a>
+                            <a href="/FireExp/analysis_button" title="Ellicott's Extension."><span class="btn btn-danger">Ellicott's Extension</span></a>
+                            <a target="_blank" href="{% static '/image/Sealed_off_formula.pdf' %}" title="Explosibility Formulae"><span class="btn btn-primary disabled">Explosibility Formulae</span></a>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+
+
+            <div class="row">
+                <br>
+
+                <div class="boxed">
+                    <table class="table table-responsive table-bordered">
+                        <thead>
+                        <tr>
+                            <th> Graham's Ratio</th>
+                            <th> Young's Ratio</th>
+                            <th> CO/CO2 Ratio</th>
+                            <th> JTR Ratio</th>
+                            <th> C/H Ratio</th>
+                            <th style="color:red;"> Explosibility</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{% if graham %}{{graham}}{% endif %}</td>
+                            <td>{% if young %}{{young}}{% endif %}</td>
+                            <td>{% if coco2 %}{{coco2}}{% endif %}</td>
+                            <td>{% if jtr %}{{jtr}}{% endif %}</td>
+                            <td>{% if chra %}{{chra}}{% endif %}</td>
+                            <td>{{explosm}}</td>
+                        </tr>
+                        <tr>
+                            <td>{% if graham %}{{grahamm}}{% endif %}</td>
+                            <td>{% if young %}{{youngm}}{% endif %}</td>
+                            <td>{% if coco2 %}{{coco2m}}{% endif %}</td>
+                            <td>{% if jtr %}{{jtrm}}{% endif %}</td>
+                            <td>{% if chra %}{{chram}}{% endif %}</td>
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <br>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+            $("#datetimepicker1").datetimepicker({
+      format: 'DD/MM/YYYY HH:mm',
+    });
+    });
+</script>
+
+{% endblock %}
+

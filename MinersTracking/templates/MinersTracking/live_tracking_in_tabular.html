@@ -1,0 +1,300 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header text-center">Miners' Tracking</h1>
+            <p class="text-center text-muted">&nbsp&nbsp&nbspHere you can see the live status of miner in tabular
+                format</p>
+
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">1. Choose Mine:</label>
+                                </div>
+                                <div class="col-md-9">
+                                    {{form.mine_id}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center" id="liveOrSaved">
+                            <div class="btn-group text-center" data-toggle="buttons">
+                                <label class="btn btn-success active">
+                                    <input type="radio" name="liveOrSaved" checked="checked" value="1"> Live Data
+                                </label>
+                                <label class="btn btn-info">
+                                    <input type="radio" name="liveOrSaved" value="2"> Saved Data
+                                </label>
+
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" id="dataAndTime">
+                        <div class="col-md-3"></div>
+                            <div class="col-md-3" style="">
+
+                                <label>Date &amp; Time (From) (Approx.)</label>
+
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker6'>
+                                        <input type='text' class="form-control"/>
+                                        <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3" style="">
+
+                                <label>Date &amp; Time (To) (Approx.)</label>
+
+                                <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker7'>
+                                        <input type='text' class="form-control"/>
+                                        <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12"><div class="text-center">
+                            <button type="button" id="show" class="btn btn-success" value="Show">Show</button>
+                        </div></div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="miners_table">
+                    <thead>
+                    <tr>
+                        <th>Date Time</th>
+                        <!--<th>Mine Name</th>-->
+                        <th>Miner Name</th>
+                        <th>MinerID(rfid)</th>
+                        <th>Router ID</th>
+                        <th>Router Address</th>
+                        <th>Emergency</th>
+                        <th>IP Address</th>
+                    </tr>
+                    </thead>
+                    <tbody id="miner_body">
+
+                    </tbody>
+                </table>
+                <div>
+                    <span id="no_data" class="blinking text-center"></span>
+                    <!--<span class="blinking text-center"><h2><b>Live Data Updating</b></h2></span>-->
+                </div>
+            </div>
+
+
+        </section>
+
+    </div>
+
+</div>
+
+
+<style>
+.blinking{
+    animation:blinkingText 1.0s infinite;
+}
+@keyframes blinkingText{
+    0%{     color: #24D52C;    }
+    49%{    color: transparent; }
+    50%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #F10F27;    }
+}
+
+
+
+
+
+</style>
+<script>
+var TabularData;
+$(document).ready(function(){
+        $("#id_mine_id").addClass('form-control');
+        $('#show').addClass('disabled')
+        $("#id_mine_id").on("change",function(){
+            //$('#show').unbind('click');
+                $('#show').html("Show");
+                $(".Loadingcontainer").addClass("hide");
+                clearInterval(TabularData);
+            if($(this).val()==''){$('#show').addClass('disabled');}else{$('#show').removeClass('disabled');}
+        });
+         $(function () {
+        //Date And Time Picker Initialization
+                var date_from=$('#datetimepicker6').datetimepicker({
+                     format: 'YYYY-MM-DD HH:mm:ss'
+                });
+                date_from.children()[0].id="id_date_fr";
+                date_from.children()[0].required="true";
+
+                var date_to= $('#datetimepicker7').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false //Important! See issue #1075
+                });
+
+                date_to.children()[0].id="id_date_to";
+                date_to.children()[0].required="true";
+
+                $("#datetimepicker6").on("dp.change", function (e) {
+                    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker7").on("dp.change", function (e) {
+                    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+                });
+        });
+        //Date and Time Picker Initialization End
+
+
+        //Catch Event on Live or Saved Options Changed
+        $('div#dataAndTime').hide();
+        $('input[name=liveOrSaved]').on('change', function() {
+                    console.log( this.value );
+                    clearInterval(TabularData);
+                     $('#show').html("Show");
+                    if(this.value=='2'){
+                    $('div#dataAndTime').show();
+                    }
+                    else{
+                        $('div#dataAndTime').hide();
+                    }
+
+            });
+        // Event on LIve or Saved OPtions Changed
+});
+var Curr_Time,Last_Time;
+$("#show").click(function(event){
+    Last_Time=new Date();
+     mine_id=$("#id_mine_id").val();
+     var liveOrSaved=$('input[name=liveOrSaved]:checked').val();
+     console.log(mine_id+" "+liveOrSaved);
+     if(mine_id==''){
+        return false;
+        $('#show').addClass('disabled');
+     }
+    date_from=$('#id_date_fr').val();
+    date_to=$('#id_date_to').val();
+
+    today=new Date();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    var hh=String(today.getHours()).padStart(2, '0');;
+    var min=String(today.getMinutes()).padStart(2, '0');;
+    var sec=String(today.getSeconds()).padStart(2, '0');
+
+
+    if(isEmpty(date_from)){
+        if(liveOrSaved=='1'){
+            date_from=yyyy+"-"+mm+"-"+dd+" "+hh+":"+min+":"+sec;
+
+        }
+        else{
+            date_from="1999-01-01 00:00:00";
+        }
+        console.log(date_from);
+    }
+    if(isEmpty(date_to)){
+        date_to="2999-01-01 00:00:00";
+    }
+    $(".Loadingcontainer").removeClass("hide");
+    $(this).html('<span id="loading" class="glyphicon glyphicon-refresh"></span><span> Showing</span>');
+        $("#miner_body").html("");
+        //--------5-sec Function Start----------
+      var HashDataPrev="";
+      var HashDataCurr=""
+      var counter=0;
+
+    TabularData=setInterval(function(event)
+    {
+        //call ajax
+
+        <!--$("#miner_body").html("");-->
+         $.ajax({
+            url: "/MinersTracking/ajax_tracking_data",
+            data: {
+                     'id': mine_id,
+                     'date_from':date_from,
+                     'date_to':date_to
+                   },
+            success: function(data) {
+                 var today = new Date();
+                 var diff = (today.getTime()-Last_Time.getTime()); //Time in milliseconds
+                 <!--var diffDays = Math.floor(diff / 86400000); // days-->
+                 <!--var diffHrs = Math.floor((diff % 86400000) / 3600000); // hours-->
+
+                 var diffMins = Math.round(((diff % 86400000) % 3600000) / 60000); // minutes
+
+                 <!--var diffSeconds = Math.round(diff/60000); // seconds-->
+                 <!--console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes "+diffSeconds+" seconds");-->
+
+                if(diffMins>5){
+                    toastr.info('Data has not been received since '+diffMins+' minutes ');
+
+                }
+                 //console.log(time);
+                 HashDataPrev="";
+                 HashDataPrev=HashDataCurr;
+                 HashDataCurr="";
+                 dd=data.result;
+                 if(isEmpty(data.result)){
+                    toastr.info('No data Found');
+                    return data;
+                 }
+                 var t;
+                 for(d in dd){t+=dd[d].emergency.toString()+dd[d].id.toString();}
+
+                 HashDataCurr=$.MD5(t);
+
+
+                 if(counter>1){$(".Loadingcontainer").addClass("hide");}
+                 if(HashDataPrev!=HashDataCurr){
+                    Last_Time=new Date();
+                    $("#miner_body").html("");
+                    fill_table_miner(data.result);
+                    counter=0;
+                    <!--$(".Loadingcontainer").removeClass("hide");-->
+                 }
+                 counter++;
+                // $(".Loadingcontainer").addClass("hide");
+                 return data;
+                    }
+            });
+        //end call ajax
+    }, 2000);//time in milliseconds
+
+    //--------5-sec Function End----------
+function fill_table_miner(result){
+    console.log(result)
+
+    var response_data,emergency,item,emergency_class;
+     for(r in result){
+        emergency=(result[r].emergency==0)?"NO":"YES";
+        emergency_class=(result[r].emergency==0)?"label-primary":"label-danger";
+       item=$("<tr><td>"+result[r].time+"</td><td>"+result[r].emp_name+"</td><td>"+result[r].miner_id+"</td><td>"+result[r].router_id+"</td><td>"+result[r].router_location+"</td><td><span class='label "+emergency_class+"'>"+emergency+"</span></td><td>"+result[r].ip_add+"</td></tr>")
+        .hide()
+        .fadeIn(1000);
+        $("#miner_body").append(item);
+    }}
+});
+var XX;
+
+
+
+</script>
+
+{% endblock %}
+

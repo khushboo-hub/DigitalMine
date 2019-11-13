@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+          <h1 class="page-header"><b>Add Water Level Sensor </b><small>Here you can add water level sensor and alarm level</small></h1>
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">1. Choose Mine:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.mine_id}}
+                                </div>
+                            </div>
+                        </div>
+                      <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">2. Location/Area name:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.area_name}}
+                                </div>
+                            </div>
+                      </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">3. Distance bet<sup>n</sup> roof and ground level:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.distance_bet_roof_and_water}}
+                                </div>
+                            </div>
+                      </div>
+                      <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">4. First alarm water level :</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.alarm_water_level_1}}
+                                </div>
+                            </div>
+                      </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">5. Second alarm water level:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.alarm_water_level_2}}
+                                </div>
+                            </div>
+                      </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">6. Third alarm water level:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.alarm_water_level_3}}
+                                </div>
+                            </div>
+                      </div>
+                        <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">7. Level-1 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.level_1_msg}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">8. Level-2 Message:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.level_2_msg}}
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">9. Level-3 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.level_3_msg}}
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">10. Audio Play Type:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.audio_play_type}}
+                                        </div>
+                                    </div>
+                            </div>
+                        <!-- -------------------------Audio upload ----------------------------------------------------- -->
+                            <div id="audio_container" style="display:None">
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id=""> (A) Level-1 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.level_1_audio}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id=""> (B) Level-2 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.level_2_audio}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id=""> (C) Level-3 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.level_3_audio}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <!---------------End upoladed audio---------------------------------->
+                      <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">11. IP Address:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.ip_address}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">12. Water Pump Start:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.moter_start_level}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">13. Water Pump Stop:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.moter_stop_level}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">14. Any Desc:</label>
+                                </div>
+                                <div class="col-md-8">
+                                    {{form.desc}}
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="text-center">
+                            <input type="submit" id="btn_show" class="btn btn-primary" value="Submit" onclick="return Validate()"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+
+</style>
+<script>
+$(document).ready(function(){
+    $("#id_mine_id").addClass('form-control');
+
+});
+
+function Validate() {
+        var id_mine_id = document.getElementById("id_mine_id");
+        if (id_mine_id.value == "") {
+            //If the "Please Select" option is selected display error.
+            alert("Please select a Mine!");
+            return false;
+        }
+        return true;
+    }
+$(document).ready(function(){
+    $("input[name$='audio_play_type']").change(function() {
+
+        var is_value = $(this).val();
+        if(is_value == "text2voice"){
+            $("#audio_container").hide();
+        }else{
+            $("#audio_container").show();
+        }
+
+    });
+});
+</script>
+
+{% endblock %}
+

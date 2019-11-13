@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Yearly Entry of Coal/Ore
+
+
+                </h1>
+
+
+            <div class="row text-center">
+
+            </div>
+            <!--<hr>-->
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                         <!--{{form.as_table}}-->
+                            <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Yearly Entry</font></legend>
+                               <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="id_mine" class="" id=""> Select Mine </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mine_id}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Production Type<font color="red">*</font> </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                         {{form.production_type}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                       <label for="" class="" id="">Total Weight<font color="red">*</font> </label>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{form.total_weight}}
+                                    </div>
+                                <div class="col-md-1">
+                                    in
+                                </div>
+                                    <div class="col-md-3">
+                                        {{form.weight_unit}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Year</label>
+                                        </label>
+                                    </div>
+                                     <div class="col-md-8">
+                                            {{form.years}}
+
+                                     </div>
+                                </div>
+                            </div>
+
+
+
+                            </fieldset>
+                        <br/><br/>
+                        <br/><br/>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+    fieldset.scheduler-border {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+fieldset ul {list-style:none}
+
+</style>
+<script>
+
+
+$(document).ready(function(){
+    $("#id_mine_id").addClass('form-control');
+
+
+});
+
+</script>
+
+{% endblock %}
+
+
+
+
+
+

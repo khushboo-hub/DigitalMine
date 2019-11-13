@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Fire Exp Details</h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>O2</th>
+                                <th>CO</th>
+                                <th>CH4</th>
+                                <th>CO2</th>
+                                <th>H2</th>
+                                <th>N2</th>
+                                <th>C2H4</th>
+                                <th>Date</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in object_list %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{ book.o2 }}</td>
+                                <td>{{ book.co }}</td>
+                                <td>{{ book.ch4 }}</td>
+                                <td>{{ book.co2 }}</td>
+                                <td>{{ book.h2 }}</td>
+                                <td>{{ book.n2 }}</td>
+                                <td>{{ book.c2h4 }}</td>
+                                <td>{{book.date}}</td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+{% endblock %}

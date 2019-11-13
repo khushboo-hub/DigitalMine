@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<style type="text/css">
+    .table th {
+    width: auto !important;
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container-fluid">
+    <div class="row">
+        <section class="col-md-12">
+            
+            <center>
+            <h1 class="page-header"><centre>Detailed Information<small></small></centre></h1>
+
+            <!-- Table content -->
+           </center>
+
+
+
+<div class="row text-center">
+        <div class="col-md-12">
+
+
+             <a class="btn btn-primary" href="{% url 'inventory_management:abtExpired' %}"> Nearby Expiry Report</a>
+             <a class="btn btn-primary" href="{% url 'inventory_management:abtOutOfStock' %}"> Nearby OutOfStock Report</a>
+        <a class="btn btn-primary" href="{% url 'inventory_management:OutletExpiredView' %}"> Expired Product Report</a>
+
+            
+                     <a class="btn btn-primary" href="{% url 'inventory_management:OutletOutOfStock' %}"> OutOfStock Report</a>
+            <!--    <a class="btn btn-primary" href="{% url 'inventory_management:OutletOutOfStock' %}"> Branch OutOfStock</a> -->
+          <!--   <a class="btn btn-primary" href="{% url 'inventory_management:OutletExpiredView' %}"> Expired Report</a> utilizationReport-->
+
+           <a class="btn btn-primary" href="{% url 'inventory_management:utilizationReport' %}"> Utilization Report</a>
+ <a class="btn btn-primary" href="{% url 'inventory_management:CategoryWiseViewAll' %}"> Categorywise Report</a>
+             <a class="btn btn-primary" href="{% url 'inventory_management:BatchWiseViewAll' %}"> Batchwise Report</a>
+
+            <a class="btn btn-primary" href="{% url 'inventory_management:view_expiredReport' %}"> Custom Reports</a>
+               <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:100px" value="Print"/>
+               <br>
+                 <br>           
+        </div>
+        <div class="col-md-2">
+    </div>
+    </div>
+    
+            <div class="row">
+                
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table " id="myTable" >
+                     
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Invoice Number</th>
+                            <th>Mine Name</th> 
+                            <th>Branch Name</th>
+                            <th>Prod Category</th>
+                            <th>Product Batch</th>
+                            <th>Prod Name </th>
+                            <th>In Stock</th>
+                            <th>Per Unit Price</th>
+                            <th>Prod Expiry</th>
+                            <th>Daysleft to Expire</th>
+                            <th>Product Status</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="body_id">
+                        {% for book in object_list %}
+                            {% if book.11 == "Expired" %} 
+                                <tr style="background-color: #e6ffff">
+                                    <td>{{forloop.counter}}</td>
+                                        <td>{{ book.1 }}</td>
+                                        <td>{{ book.2 }}</td>
+                                        <td>{{ book.3 }}</td>
+                                        <td>{{ book.4 }}</td>
+                                        <td>{{ book.5 }}</td>
+                                        <td>{{ book.6 }}</td>
+                                        <td>{{ book.7 }} </td>
+                                        <td>{{ book.8 }} </td>
+                                        <td>{{ book.9 }} </td>
+                                        <td>{{ book.10 }} </td>
+                                        <td>{{ book.11 }} </td>
+                                       
+
+                                </tr>
+                            {% elif book.11 == "Expiring Soon"  %}
+                                <tr style="background-color: #ffe6e6" >
+                                  <td>{{forloop.counter}}</td>
+                                         <td>{{ book.1 }}</td>
+                                        <td>{{ book.2 }}</td>
+                                        <td>{{ book.3 }}</td>
+                                        <td>{{ book.4 }}</td>
+                                        <td>{{ book.5 }}</td>
+                                        <td>{{ book.6 }}</td>
+                                        <td>{{ book.7 }} </td>
+                                        <td>{{ book.8 }} </td>
+                                        <td>{{ book.9 }} </td>
+                                        <td>{{ book.10 }} </td> 
+                                        <td>{{ book.11 }} </td>
+                                                                                                                          
+                                </tr>
+                            {% else %}
+                                <tr style="background-color: #ffffff">
+                                       <td>{{forloop.counter}}</td>
+                                        <td>{{ book.1 }}</td>
+                                        <td>{{ book.2 }}</td>
+                                        <td>{{ book.3 }}</td>
+                                        <td>{{ book.4 }}</td>
+                                        <td>{{ book.5 }}</td>
+                                        <td>{{ book.6 }}</td>
+                                        <td>{{ book.7 }} </td>
+                                        <td>{{ book.8 }} </td>
+                                        <td>{{ book.9 }} </td>
+                                        <td>{{ book.10 }} </td>
+                                        <td>{{ book.11 }} </td>
+                                      
+                                </tr>
+
+                            {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+<style type="text/css">
+.NegativeTransaction {
+  color: #FF0000;
+}
+
+.PositiveTransaction.green {
+  color: #33FF3C;
+}
+
+</style>
+
+
+
+<script>
+    $(document).ready(function(){
+
+        $('#myTable').DataTable();
+    });
+
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+$("#btn_print").click(function(){
+    window.print();
+});
+    
+</script>
+{% endblock %}

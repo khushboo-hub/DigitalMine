@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+<section class="col-md-12">
+
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="content">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>RFID</th>
+                            <th>DateTimeIN</th>
+                            <th>DateTimeOut</th>
+                            <th>TripTime</th>
+                            <th>Vehicle Reg</th>
+                            <th>TM Name</th>
+                            <th>WB Code</th>
+                            <th>First Weight</th>
+                            <th>Second Weight</th>
+                            <th>Net Weight</th>
+                            <th>Type</th>
+
+
+
+
+
+                            <!--<th>Mining Role</th>-->
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in result %}
+                        <tr>
+                            <!-- 0-mine_id,1-,5-id -->
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.0 }}</td>
+                            <td>{{ book.3 }}</td>
+                            <td>{{ book.4 }}</td>
+                            <td>{{ book.5 }}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.6 }}</td>
+                            <td>{{ book.2 }}</td>
+                            <td>{{ book.7 }}</td>
+                            <td>{{ book.8 }}</td>
+                            <td>{{ book.9 }}</td>
+                            <td>{{ book.10 }}</td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- More Details Modal -->
+<!--<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <!--<div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">More Info</h4>
+      </div>
+      <div class="modal-body">
+        <div id="more_details_data">Some text in the modal.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>-->
+
+<script>
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+
+
+
+    $(document.body).on("click", ".more_details", function () {
+
+        url=$(this).data('url');
+        id=this.id;
+
+        $.ajax({
+        url: url,
+        dataType: 'json',
+            data: {
+                'id': id
+                },
+            success: function(data) {
+
+              <!--alert(data.result);-->
+              console.log(data)
+              $("#more_details_data").html(data.name);
+              $('#myModal').modal('show');
+        }});
+
+
+        <!--$('#myModal').modal('show');-->
+
+    });
+</script>
+<style>
+    .glyphicon-plus-sign{
+        color:red !important;
+    }
+</style>
+<!--$("#id_show").on("click",function(){-->
+   <!--var mine_id = $("#id_mine_id").val();-->
+   <!--var weighbridge_id = $("#id_weighbridge_id").val();-->
+   <!--var entry_date = $("#id_entry_date").val();-->
+   <!--var production_type=$("#id_production_type").val();-->
+
+    <!--$.ajax({-->
+            <!--type:"post",-->
+            <!--url: "{% url 'ProductionMonitoring:fetch_report_ajax' %}",-->
+            <!--data: {-->
+                     <!--'mine_ID': mine_id,-->
+                     <!--'weighbridge_ID':weighbridge_id,-->
+                     <!--'entry_DATE':entry_date,-->
+                     <!--'production_TYPE':production_type-->
+                   <!--},-->
+            <!--success: function(data) {-->
+                <!--console.log(data);-->
+                <!--//alert(data.result[0]);-->
+                <!--//fill_dropdown(data.result);-->
+
+                <!--//return data;-->
+                    <!--},-->
+            <!--error: function(){-->
+                    <!--console.log("error he ji");-->
+                 <!--}-->
+            <!--});-->
+<!--});-->
+
+{% endblock %}

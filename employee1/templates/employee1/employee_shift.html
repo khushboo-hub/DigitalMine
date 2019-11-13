@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Update Employee Shift<small>&nbsp&nbsp&nbspHere you can update/change mining shift of a miner</small></h1>
+
+
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" action="/employee1/save_updated_shift">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <input type="hidden" name="employee_id" value="{{emp_id}}">
+                                        <label for="" class="" id="">Miner's/Employee Name
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" value="{{emp_name}}" class="form-control" readonly id="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Mine Name </label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                         <input type="text" value="{{mine_name}}" class="form-control" readonly id="">
+                                    </div>
+                                </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Assign Date
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" value="{% now 'jS F Y H:i' %}" class="form-control" readonly id="">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Choose Shift</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {% for ms in mine_shift_table %}
+                                            <span><input type="radio" name="mine_shift_id" required="true" value="{{ms.0}}">&nbsp;{{ms.1}}({{ms.3}}-{{ms.4}})</span><br>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="form-group text-center">
+                            <input type="submit" class="btn btn-primary" value="Assign"/>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<style>
+    ul {list-style:none}
+    .bootstrap-timepicker-widget>table>td>input{
+        width:40px;
+    }
+</style>
+{% endblock %}

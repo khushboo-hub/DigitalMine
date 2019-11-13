@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+           <center> <h1 class="page-header">CategoryWise Reports<small></small></sma></h1></center>
+
+            <!-- Table content -->
+                                 <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                              <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">Choose Mine:</label>
+
+                                    </div>
+                                    <div class="col-md-2">
+
+                                        {{form.mine_id}}
+                                    </div>
+                                    
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">Choose Category:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_category_list">
+                                            <option>--Select Category--</option>
+                                        </select>
+                                
+                                 <div class="col-md-1"></div>
+                            </div>
+
+                              <div class="col-md-1"></div>
+
+                    </form>
+
+
+  <div class="col-md-1"></div>
+   <div class="col-md-1"></div>
+<div class="row text-center">
+        
+              <div class="col-md-12" style="margin-top:30px;">
+            <!-- <a class="btn btn-primary" href="{% url 'inventory_management:product_manage' %}"> Product Wise</a> -->
+             <input type="submit" id="btn_report" class="btn btn-primary" style="width:150px" value="CaregoryWise Report">
+<!--             <a class="btn btn-primary" href="{% url 'inventory_management:OutOfStock' %}"> CategoryWise Report</a>
+             <a class="btn btn-primary" href="{% url 'inventory_management:product_manage' %}"> SupplierWise Report</a> -->
+            <button type="button" id="reloadpage" class="btn btn-primary"> <span class="glyphicon glyphicon-refresh"></span>Refresh</button>
+        </div>
+    </div>
+
+        <div class="row">
+        <div class="col-md-12" style="margin-top:20px;">
+            <div class="table-responsive">
+              <!--   <table class="table" id="myTable"> -->
+                     <table class="table table-bordered" id="Table_content">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Mine Name</th>
+                            <th>Category</th>
+                            <th>No of Product Available</th>
+                            <th>Total Stock</th>
+                            <th>No of Expired Products</th>
+                      
+                            </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in Report %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.1 }}</td>
+                            <td>{{ book.entry_date }}</td>
+                            <td>{{ book.prod_category }}</td>
+                            <td>{{ book.prod_name }}</td>
+                            <td>{{ book.quantity }}</td>
+                           <!--  <td>{{ book.prod_expiry }}</td>
+                            <td>{{ book.total_tax }}</td>
+                            <td>{{ book.net_amount }}</td> -->  
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    $(document).ready(function(){
+        $("#id_mine_id").addClass('form-control');
+        $('#myTable').DataTable();
+    });
+
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+$('#reloadpage').click(function() {
+ 
+     location.reload(true);
+ 
+});
+;
+
+$("#id_mine_id").on("change",function(){
+    mine_id=this.value;
+     $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_category_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                console.log(data.result);
+               //alert(data.result[0]);
+                fill_dropdown(data.result);
+
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+});
+function fill_dropdown(result){
+    $("#id_category_list").html("<option>--Select Category--</option>");
+    for (index = 0; index < result.length; index++) {
+    //alert(result[index]);
+    var str_array = result[index].split(',');
+    //alert("id="+str_array[0]+":name="+str_array[1]);
+    $("#id_category_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+
+$("#btn_report").click(function(){
+    id_category=$("#id_category_list").val();
+    // alert(id_category)
+    id_Product=$("#id_product_list").val();
+    // alert(id_Product)
+    if(id_category!="--Select Category--")
+    {
+                 $("#Table_data").empty();//empty the table on each click
+                  $.ajax({
+                    type:"get",
+                    url: "{% url 'inventory_management:fetch_CategoryWiseReport_ajax' %}",
+                    data: {
+                              'id': id_category,
+                              'id_prod':id_Product,
+                           },
+                    success: function(data) {
+                             console.log(data.result);
+                             fill_Report_table(data.result);
+                             alert(data)
+                             return data;
+                            },
+                    error: function(){
+                            console.log("error");
+                         }
+
+                    });
+            }
+     else
+     {
+        alert("Please Select Mine then Category");
+     }
+});
+
+function fill_Report_table(result){
+ //alert(TodayDate);
+    for (index = 0; index <= result.length; index++) {
+    var str_array = result[index].split(',');    
+        $("#Table_content").append($("<tr><td>"+str_array[0]+"</td><td>"+str_array[1]+"</td><td>"+str_array[2]+"</td><td>"+str_array[3]+"</td><td>"+str_array[4]+"</td><td>"+str_array[5]+"</td><td>"+str_array[5]+"</td><td>"+daystoexpire+"</td><td>"+status+"</td></tr>"));
+
+
+                  // $("#results").append($("<tr><td>"+result[index][0]+"</td><td>"+result[index][1]+"</td><td>"+result[index][2]+"</td><td>"+result[index][3]+"</td><td>"+str[0]+"</td></tr>"))
+
+      //$("#ip_hidden").val(str_array[17]);
+
+    }
+}
+
+</script>
+{% endblock %}

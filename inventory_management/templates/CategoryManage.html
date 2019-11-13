@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+<section class="col-md-12">
+    <h1 class="page-header">Manage Category</h1>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{% url 'inventory_management:product_add' %}">Add Product</a>
+        </div>
+    </div>
+    <hr>
+                <div class="row">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+             <!--     <strong>Category already available !</strong> <u><i>Change category name </i></u> and try submitting again -->
+            <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="content">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>Category Name</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for book in object_list %}
+                        <tr>
+                            <td>{{forloop.counter}}</td>
+                            <td>{{ book.prod_category }}</td>
+                            <td class="text-center"><a href="{% url 'inventory_management:category_edit' book.id %}" title="Edit Category."><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'inventory_management:category_delete' book.id %}" title="Delete Category"><span class="glyphicon glyphicon-trash"></span></a></td>
+                        </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+     $(document.body).on("click", ".delete", function ()
+      {
+         $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+ 
+
+    });
+
+
+</script>
+
+
+<style>
+    .glyphicon-plus-sign{
+        color:red !important;
+    }
+</style>
+{% endblock %}

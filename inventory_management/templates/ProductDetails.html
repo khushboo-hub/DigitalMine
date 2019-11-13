@@ -1,0 +1,369 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <center><h1 class="page-header">Add a Product</h1></center>
+
+
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a>
+                    <a class="btn btn-primary" href="{% url 'inventory_management:product_manage' %}">Manage Product</a>
+                    
+                    <a class="btn btn-primary" href="{% url 'inventory_management:category_add' %}">Add Category</a>
+                          <a class="btn btn-primary" href="{% url 'inventory_management:altProd_manage' %}">Manage Alternate Prod</a>
+                </div>
+                </div>
+            </div>
+            <hr>
+             <div class="row">
+                {% if form.errors %}
+                <div class="alert alert-success">
+                    <ul>{% for key,value in form.errors.items %} 
+                        {{ key}} : {{ value }}
+                    {% endfor %}
+                    </ul>
+                {% endif %} 
+            </div>
+
+
+            <div class="row">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+
+            <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+ <div class="row">
+        
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data" >{% csrf_token %}
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Business Details</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                          <label for="mine_name"  class="" id="id_mine" name="mine_name" >Choose Mine: <font color="red">*</font></label>
+                                          
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mine_id}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="id_business_website" class="" id="">Choose Supplier:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="id_business_name" name="business_name">
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </fieldset>
+                    <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Product Details</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                         <label for="" class="" id="">Choose Category: <font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                      <!--    <select class="form-control" id="id_category_list"> -->
+                                           <!--   <option value="">--Select Category--</option>
+                                                {% for book in category %}
+                                                <option value="{{ book.prod_category }}">{{ book.prod_category}}</option>
+                                                {% endfor %} -->
+
+                                        <!-- </select> -->
+                                        {{form.prod_category}}
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="prod_Name" class="" id="id_prod" name="prod_name" >Product Name<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8" >
+                                        {{form.prod_name}}
+                                    </div>
+                                </div>
+                            </div>
+
+                            </div>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><font color="blue">Purchase As</font></legend>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-6">
+                                              <div class="col-md-4">
+                                                <label for="net_weight"  class="" id="" >Choose Alternate Prod</label>
+                                            </div>
+                                            <div class="col-md-8">
+
+                                           <!--   {{form.alternate_prod}} -->
+                                            <select multiple class="form-control" id="id_prod_list" name="alternate_prod_name">
+                                               <!--  <option>--Choose Alernate--</option> -->
+                                            {% for product in ProductQS %}
+                                                <option value="{{ product.prod_name}}">{{ product.prod_name}}</option>
+                                                    {% endfor %}
+                                            </select>
+
+                                            </div>
+                                           
+                                        </div>
+                                        <div class="col-md-6">
+                                             <div class="col-md-4">
+                                                <label for="unit" class="" id="">Select Unit of Measurement <font color="red">*</font></label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                   {{form.unit}}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                        </fieldset>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><font color="blue">Pricing And Inventory</font></legend>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="invoice" class="" id="">Invoice no:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.invoice_no}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <label for="prod_expiry" class="" id="form-control"  >Product Expiry:  <font color="red">*</font></label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{ form.prod_expiry }}
+                                            </div>
+                                        </div>
+                                </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="quantity" class="" >Quantity:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.quantity}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="price" class="" id="price_id">Price: (Rs.)<font color="red">*</font></label>
+
+                                    </div>
+                                    <div class="col-md-8">
+                                         {{form.price}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                          <label for="batch_number"  id="batch_number" name="batch_name" >Batch Number:<font color="red">*</font></label>
+                                         
+                                    </div>
+                                    <div class="col-md-8">
+                                         {{form.batch_number}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="barcode" class="" id="">Barcode:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                         {{form.barcode}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                          <label for="tax" class="" id="">Tax <font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                         {{form.tax}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="rate" class="" id="">Rate %:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                    {{ form.rate }}
+                                    </div>
+                                </div>
+                            </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="total_tax" class="" id="">Total Tax: (Rs.)</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                           {{form.total_tax}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="total_amount" class="" id="">Net Amount: (Rs.)</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                             {{form.net_amount}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><font color="blue">Additional Info:</font></legend>
+                                    <div class="form-group col-md-12">
+                                        <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <label for="info_any" class="" id="">Other Specification:</label>
+                                            </div>
+                                            <div class="col-md-8">
+                                                {{form.info_any}}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="col-md-4">
+                                                <label for="entry_date" class="" id="form-control">Entry Date:  <font color="red">*</font></label>
+
+                                            </div>
+                                            <div class="col-md-8">
+                                                 <!--    <input type="text"  id="id_entry" class="form-control" name="" > -->
+                                                  {{ form.entry_date }}
+                                            </div>
+                                        </div>
+                                    </div>
+                            </fieldset>
+
+                             <!-- {{ form.as_table }} -->
+                        <div class="text-center">
+                            <input type="submit" id="submit_btn" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+                    
+                </div>
+    </div>
+        </section>
+    </div>
+</div>
+
+<style>
+
+    fieldset.scheduler-border {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+fieldset ul {list-style:none}
+
+</style>
+<script>
+
+$(document).ready(function(){
+        $("#id_mine_id").addClass('form-control');
+        $("#id_prod_category").addClass('form-control');
+        $("#id_business_name").addClass('form-control');
+});
+
+$(function() {
+$("#id_prod_expiry").datepicker();
+$("#id_entry").datepicker();
+});
+
+$(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2012",
+      // You can put more options here.
+
+    });
+  });
+
+         
+$(document.body).on('keyup','#id_rate,#id_quantity,#id_price',function() {
+            var rate =$('#id_rate').val();
+            var quantity =$('#id_quantity').val();
+            var price =$('#id_price').val();
+            //alert(rate+"/"+quantity+"/"+price);
+            var amount=price*quantity;
+            var tax=((amount)*(rate/100));
+            $("#id_total_tax").val(tax);
+            net_amount=amount+tax;
+            //alert(net_amount);
+            $("#id_net_amount").val(net_amount);
+         });     
+         
+
+$("#id_mine_id").on("change",function(){
+    mine_id=this.value;
+     $("#id_business_name").empty();
+     $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_supplier_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                console.log(data.result);
+               // alert(data.result[0]);
+                fill_dropdown(data.result);
+
+
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+});
+
+
+function fill_dropdown(result){
+    $("#id_area_id").html("<option>--Select Supplier--</option>");
+    for (index = 0; index < result.length; index++) {
+    //alert(result[index]);
+    var str_array = result[index].split(',');
+ 
+    $("#id_business_name").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+
+
+// $("#submit_btn").click(function(){
+//     // product=$("#id_prod").val();
+//     id_prod_list=$("#id_prod_list").val();
+//     // batch_number=$("#id_batch").val();
+//     // alert(product)
+//     alert(id_prod_list)
+
+// });
+
+</script>
+
+{% endblock %}
+

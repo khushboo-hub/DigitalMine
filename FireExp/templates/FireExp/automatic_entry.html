@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2" >
+                        <div class="row" style="height:100%; overflow-y:scroll;margin-top:40px;">
+                            <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <label for="" class="" id="">Arduino Port No:</label>
+                                        {{form.port_no}}
+                                </div>
+                                <div class="col-md-12">
+                                        <label for="" class="" id="">Baud Rate: </label>
+                                        {{form.baud_rate}}
+                                </div>
+                                <div class="col-md-12" style="margin-top:30px;">
+                                    <input type="submit" name="addbutton" class="btn btn-success" value="Reading from sensors"/>
+                                </div>
+                                <div class="col-md-12" style="margin-top:30px;">
+                                    <a href="/FireExp/trends" title="Explosibility Prediction"><span class="btn btn-info">Explosibility Prediction</span></a>
+                                </div>
+                            </div>
+                             <div class="col-md-12">
+                                 <hr/>
+                                 <a target="_blank" href="{% static '/image/Sealed_off_formula.pdf' %}" title="Explosibility Formulae"><span class="btn btn-primary disabled">Explosibility Formulae</span></a>
+                                 <hr/>
+                                 <a target="_blank" href="{% static '/image/sealed_off_arduino.txt' %}" title="Hardware Code"><span class="btn btn-primary disabled">Hardware Code</span></a>
+                                 <hr/>
+                                 <a href="{% url 'FireExp:line_chart_gas_ratios' %}" title="Ratio's Graph"><span class="btn btn-info">Ratio's Graph</span></a>
+                             </div>
+                             </form>
+                        </div>
+        </div>
+
+
+
+
+
+
+        <section class="col-md-10">
+            <h2 class="page-header">Determine Fire Status and Explosibility in Sealed Off Areas in Mines(Automatic:using Sensors)</h2>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="content">
+                                        <thead>
+                                        <tr>
+                                            <th>SL No</th>
+                                            <th>Date</th>
+                                            <th>O2</th>
+                                            <th>CO</th>
+                                            <th>CH4</th>
+                                            <th>CO2</th>
+                                            <th>H2</th>
+                                            <th>N2</th>
+                                            <th>C2H4</th>
+                                            <th>Graham's Ratio <br> (Message)</th>
+                                            <th>Young's Ratio <br> (Message)</th>
+                                            <th>COCO2's Ratio <br> (Message)</th>
+                                            <th>JTR Ratio <br> (Message)</th>
+                                            <th>C/H Ratio <br> (Message)</th>
+                                            <th><font color="red"> Explosibility(Result)</font></th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for book in gases_db %}
+                                        <tr>
+                                            <td>{{forloop.counter}}</td>
+                                            <td>{{book.date}}</td>
+                                            <td>{{ book.o2 }}</td>
+                                            <td>{{ book.co }}</td>
+                                            <td>{{ book.ch4 }}</td>
+                                            <td>{{ book.co2 }}</td>
+                                            <td>{{ book.h2 }}</td>
+                                            <td>{{ book.n2 }}</td>
+                                            <td>{{ book.c2h4 }}</td>
+                                            <td>{{ book.graham_ratio }}<br>({{ book.graham_msg }})</td>
+                                            <td>{{ book.young_ratio }}<br>({{ book.young_msg }})</td>
+                                            <td>{{ book.coco2_ratio }}<br>({{ book.coco2_msg }})</td>
+                                            <td>{{ book.jtr_ratio }}<br>({{ book.jtr_msg }})</td>
+                                            <td>{{ book.chra_ratio }}<br>({{ book.chra_msg }})</td>
+                                            <td>{{ book.explosm_result }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <iframe src="/FireExp/analysis/1" height=530 width=1000>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+                </div>
+            </div><!--end Table content -->
+
+
+        </section>
+    </div>
+</div>
+<script>
+</script>
+
+{% endblock %}
+

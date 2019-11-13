@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+<br>
+<div class="container">
+    <div id="chart"></div>
+        <script>
+              setInterval(function (){
+                $.ajax({
+                    url:"../gasmonitoring_live/so2",
+                    success: function(result){
+                    function getData() {
+                    x = result;
+                    return x ;
+                    }
+
+                    Plotly.plot('chart',[{
+                        y:[getData()],
+                        type:'line'
+                    }]);
+
+                    var cnt = 0;
+
+                        Plotly.extendTraces('chart',{ y:[[getData()]]}, [0]);
+                        cnt++;
+
+                        if(cnt > 500) {
+                                Plotly.relayout('chart',{
+                                    xaxis: {
+                                        range: [cnt-500,cnt]
+                                    }
+                               });
+                            }
+                    }});
+               },1000);
+        </script>
+ </div>
+</body>
+{% endblock %}

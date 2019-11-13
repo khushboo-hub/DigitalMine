@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Manage Goaf Area</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf Area</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Mine Id</th>
+                                <th>Area Name</th>
+                                <th>IP</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                <th>Ellicott Graph</th>
+                                <!--<th class="text-center" colspan="4">Action</th>-->
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for book in object_list %}
+                            <tr>
+                                <td>{{forloop.counter}}</td>
+                                <td>{{ book.mine_id }}</td>
+                                <td>{{ book.areaName }}</td>
+                                <td>{{ book.IpAddress }}</td>
+                                <td class="text-center"><a href="{% url 'gasmonitoring_wifi:edit_area' book.id %}"
+                                                           title="Edit Mine."><span
+                                        class="glyphicon glyphicon-pencil"></span></a></td>
+                                <td class="text-center"><a href="#" class="delete"
+                                                           data-url="{% url 'gasmonitoring_wifi:delete_area' book.id %}"
+                                                           title="Delete Mine."><span
+                                        class="glyphicon glyphicon-trash"></span></a></td>
+                                <td class="text-center"><a href="{% url 'gasmonitoring_wifi:analysis_wifi' book.id %}"
+                                                           title="Generate Graph." ><span
+                                        class="glyphicon glyphicon-picture"></span></a></td>
+
+                            </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!--end Table content -->
+            <div class="col-md-10">
+                            <div id="linechart_material">
+                                <!--LINE CHART GOES HERE-->
+                            </div>
+
+            <!--<div id="mine_map" style="width:100%;height:400px"></div>-->
+        </section>
+    </div>
+</div>
+
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a id="sureDelete">
+                    <button type="button" class="btn btn-danger">Yes</button>
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+     $(document.body).on("click", ".delete", function ()
+      {
+         $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+
+
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=100">
+<!--   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> -->
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <center><h1 class="page-header">Search</h1></center>
+<form>
+    <label class="control-label">Supplier/Product/Category</label>
+<div class="input-group">
+<input  class="form-control input-lg" id="inputlg"  type="text" placeholder="Start typing Product name" data-toggle="popover" title="Search Product/Supplier/Category" data-content="Before adding any product Search in inventory db" data-placement="auto bottom" data-trigger="hover" > 
+    <span class="input-group-addon">
+        <i class="glyphicon glyphicon-search"></i>
+    </span>
+</div>
+
+<!-- <div class="input-group md-form form-sm form-1 pl-0">
+  <div class="input-group-prepend">
+    <span class="input-group-text purple lighten-3" id="basic-text1"><i class="fas fa-search text-white"
+        aria-hidden="true"></i></span>
+  </div>
+  <input class="form-control my-0 py-1" type="text" placeholder="Search" aria-label="Search">
+</div>
+ -->
+</form>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'inventory_management:product_add' %}">Add Product</a>
+                    <a class="btn btn-primary" href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a>
+                    <a class="btn btn-primary" href="{% url 'inventory_management:category_add' %}">Add Category</a>                        
+                </div>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+          
+    </div>
+        </section>
+    </div>
+</div>
+
+
+<script>
+$(document).ready(function(){
+  // $('[data-toggle="tooltip"]').tooltip(); 
+   $('[data-toggle="popover"]').popover(); 
+});
+
+
+
+$("#inputlg").on("change",function(){
+    search_id=this.value;
+     $.ajax({
+            type:"get",
+            url: "{% url 'inventory_management:fetch_search_ajax' %}",
+            data: {
+                     'id': search_id
+                   },
+            success: function(data) {
+                console.log(data.result);
+               // alert(data.result[0]);
+                fill_dropdown(data.result);
+
+
+                    },
+            error: function(){
+                    console.log("error");
+                 }
+            });
+});
+
+
+function fill_dropdown(result){
+    $("#inputlg").html("<option>--Select Supplier--</option>");
+    for (index = 0; index < result.length; index++) {
+    //alert(result[index]);
+    var str_array = result[index].split(',');
+ 
+    $("#id_business_name").append($("<option />").val(str_array[0]).text(str_array[1]));
+    }
+}
+</script>
+
+
+{% endblock %}
+

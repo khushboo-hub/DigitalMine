@@ -1,0 +1,537 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<div class="container-fluid">
+<!--    <button data-toggle="collapse" data-target="#demo">Collapsible</button>-->
+    <div class="row">
+
+        <div class="col-md-2" id="demo" style="height:100%;background-color: powderblue;margin-top:20px;margin-left:10px;box-shadow:10px 10px 5px #aaaaaa">
+            <div class="row" style="">
+
+                <div class="form-group col-md-12">
+                    <div class="col-md-12">
+                        <label class="" id="select_mine">Select Mine:</label>
+                        <select id="id_mine_id" name="mine_id" class="form-control">
+                            <option value="">--Select Mine--</option>
+                            {% for x in object_list %}
+                            <option value="{{x.id}}">{{ x.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="" id="select_miner">Select Miner: </label>
+                        <select id="id_miner_id" name="" class="form-control">
+                            <option value="0">--Select Miner--</option>
+                        </select>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-md-12">
+
+                <label>Date &amp; Time (From) (Approx.)</label>
+
+                <div class="form-group">
+                    <div class='input-group date form-group' id='datetimepicker6'>
+                        <input type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+
+                <label>Date &amp; Time (To) (Approx.)</label>
+
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker7'>
+                        <input type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" style="">
+                <button type="submit" class="btn btn-primary" id="show_path">
+                    <span class="glyphicon glyphicon-eye-open"></span> Show Path
+                </button>
+            </div>
+            <div class="col-md-12" style="margin-top:30px;">
+                <li class="MinerWorkerIcon">Worker</li>
+                <li class="MinerOfficerIcon">Officer</li>
+            </div>
+
+        </div>
+
+
+        <section class="KBmap" id="KBtestmap" style="margin-top:20px;">
+
+        </section>
+
+        <!-- <section id="ZoomButtons">
+             <div class="buttons">
+                 <button class="zoom-in btn btn-info btn-sm"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true">ZoomIn</span></button>
+                 <button class="zoom-out btn btn-info btn-sm"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true">ZoomOut</span></button>
+                 <div class="slidecontainer">
+                     <input type="range" class="zoom-range slider">
+                 </div>
+                 <button class="reset btn btn-primary" value="Reset">Reset</button>
+             </div>
+         </section>-->
+    </div>
+</div>
+
+<script>
+var KB_flag=0;
+var pk=0;
+var BumpAutomate;
+$( document ).ready(function() {
+    $('#show_path').prop("disabled", true);
+    toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "100",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",  
+                    }
+
+                    $(function () {
+
+
+            //Date And Time Picker Initialization
+                var date_from=$('#datetimepicker6').datetimepicker({
+                     format: 'YYYY-MM-DD HH:mm:ss'
+                });
+                date_from.children()[0].id="id_date_fr";
+                date_from.children()[0].required="true";
+
+                var date_to= $('#datetimepicker7').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    useCurrent: false //Important! See issue #1075
+                });
+
+                date_to.children()[0].id="id_date_to";
+                date_to.children()[0].required="true";
+
+                $("#datetimepicker6").on("dp.change", function (e) {
+                    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                });
+                $("#datetimepicker7").on("dp.change", function (e) {
+                    $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+                });
+        });
+        //Date and Time Picker Initialization End
+
+});
+
+
+    $("#id_mine_id").on("change",function(){
+        pk=0;
+        $('#show_path').html('<span class="glyphicon glyphicon-eye-open"></span> Show Path');
+        if($(this).val()!=''){
+        clearInterval(BumpAutomate);
+        setImageData(this.value);
+        FillDropDown(this.value);}
+        else{$('#show_path').prop("disabled", true);}
+});
+    $("#id_miner_id").on("change",function(){
+        KB_flag=0;
+
+        $('#show_path').html('<span class="glyphicon glyphicon-eye-open"></span> Show Path');
+        clearInterval(BumpAutomate);
+        ClearMapMarkers(0,pk);
+
+        if($(this).val()!=''){$('#show_path').prop("disabled", false);}
+        else{$('#show_path').prop("disabled", true);}
+    });
+function FillDropDown(mine_id){
+    $.ajax({
+            type:"get",
+            url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                fill_dropdown(data.result);
+
+                fill_map_with_routers(data.mine,data.routers);
+                return data;
+                    },
+            error: function(){
+                    toastr.warning("Something Went Wrong :(");
+                    console.log("Something Went Wrong :(");
+                 }
+            });
+}
+function setImageData(mine_id){
+    FULLSCREEN();
+    url=$("#get_url").data('url');
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'Strata:fetch_map_image' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                // CreateMapModel(data.result.image_url,data.result.name);
+                tempData=data;
+                CreateKBtestMap(data.result.image_url);
+                //console.log(data.result.name);
+                //console.log(data.result.image_url);
+                    },
+            error: function(){
+                    toastr.warning("something is not right.please contact admin - 1");
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+}
+
+
+	function CreateKBtestMap(data){
+            var img=data;
+            //console.log(url);
+         if(addedKBmaps.length>0){
+            addedKBmaps.pop();
+            $('.KBmap__mapContainer').remove();
+         }
+
+        //alert(img);
+
+        if(img){
+            createKBmap('KBtestmap', '/media/'+img);
+		}
+        else{
+            $("#map").css("");
+            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+        }
+
+
+    };
+function fill_dropdown(result){
+
+    $("#id_miner_id").html("<option value=''>--Select Miner--</option>");
+    for (x in result) {
+    $("#id_miner_id").append($("<option></option>")
+                    .attr("value",result[x].rfid)
+                    .text(result[x].name));
+    }
+}
+function fill_map_with_routers(mine,routers){
+    var img=mine.image_url;
+            //console.log(url);
+    if(addedKBmaps.length>0){
+        addedKBmaps.pop();
+        $('.KBmap__mapContainer').remove();
+    }
+
+    if(img){
+        createKBmap('KBtestmap', '/media/'+img);
+
+		KBtestmap.importJSON(routers);
+		KBtestmap.showAllMapMarkers();
+
+	}
+    else{
+        $("#map").css("");
+        $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+    }
+}
+
+$("#show_path").click(function(){
+    $(this).html('<span id="loading" class="glyphicon glyphicon-refresh"></span><span> Showing</span>');
+    FULLSCREEN();
+    miner_id=$("#id_miner_id").val();
+    mine_id=$("#id_mine_id").val()
+    date_from=$('#id_date_fr').val();
+    date_to=$('#id_date_to').val();
+    if(isEmpty(date_from)){
+        date_from="1999-01-01 00:00:00";
+    }
+    if(isEmpty(date_to)){
+        date_to="2999-01-01 00:00:00";
+    }
+
+        //call ajax
+    $.ajax({
+        data:{  'mine_id':mine_id,
+                'miner_id':miner_id,
+                'date_from':date_from,
+                'date_to':date_to
+        },
+        url: "/MinersTracking/get_single_miner_path_data",
+        success: function(data) {
+            console.log(data);
+            if(isEmpty(data.result))return data;
+                       // console.log(data.result);
+            PointsDraw(data.result);
+                        //KBtestmap.importJSON(data.result);
+                       // var i=0;
+                       // for(id in data.result){
+                           // if(i%2!=0){$('.KBmap__mapContainer').append('<svg id="svg"><line class="line'+id+'" id="line"/></svg>');}i++;
+                         //   KBtestmap.mapMarkers[id].cordX=data.result[id].cordX;
+                           // KBtestmap.mapMarkers[id].cordY=data.result[id].cordY;
+                            //KBtestmap.mapMarkers[id].show();
+                        //}
+                       // LineDraw(data.result);
+
+			return data;
+
+        },
+        error:function(){
+                toastr.warning("Something Went Wrong:(");
+            }
+    });
+    //end call ajax
+});
+
+var dataToDraw={}
+function PointsDraw(data){
+    var P1=[0,0];
+    var P2=[0,0];
+    var N=10;
+
+    for(d in data){
+
+        P2=[parseFloat((data[d].cordX).substring(0,data[d].cordX.length)),parseFloat((data[d].cordY).substring(0,data[d].cordY.length))];
+        if(P1[0]==P2[0] && P1[1]==P2[1]){
+                pointDraw(P2,P2,-1,data[d].icon); // If the Miner is in the same Position for some time then it skips the position
+        }
+        else if(P1[0]!=0){
+                pointDraw(P1,P2,N,data[d].icon); //Call Function To Draw the points between P1 & P2 with N points in between.
+        }
+        else {
+                pointDraw(P2,P2,0,data[d].icon);
+        }
+        P1=P2;
+    }
+    KBtestmap.importJSON(dataToDraw);
+    // Click Full Screen
+	//KBtestmap.showAllMapMarkers();
+	BumpMiners(0);
+}
+
+function pointDraw(P1,P2,N,icon){  //Point Draw Between Interval   N=NO of points between two Points
+	var T1=P1[0];
+	var T2=P1[1];
+    var diff1=P2[0]-P1[0];
+	var diff2=P2[1]-P1[1];
+	diff1/=N;
+	diff2/=N;
+
+	for(var i=0;i<=N;i++){
+		dataToDraw[pk]={"cordX":T1.toString(),
+		                "cordY":T2.toString(),
+		                "icon":icon,
+		                "modal":{"title":"path","content":pk.toString()}
+		                };
+
+		pk++;
+
+		T1+=diff1;
+		T2+=diff2;
+	}
+}
+
+function BumpMiners(i){
+          BumpAutomate=setInterval(function(){
+           // console.log(i);
+            if(i>=pk-1)clearInterval(BumpAutomate); // Clear the Interval When it reaches the End.
+            KBtestmap.mapMarkers[i].show();
+        $('.KBmap__marker.'+i+' img').addClass("anim").delay(1000).queue(function(){
+           //  KBtestmap.mapMarkers[i].removeMarker();
+            $(this).removeClass("anim").dequeue();
+
+
+        });i++;
+        }, 1000);
+
+}
+function BumpMiners_new(i){
+          BumpAutomate=setInterval(function(){
+
+
+            if(i>=pk-1)clearInterval(BumpAutomate); // Clear the Interval When it reaches the End.
+            KBtestmap.mapMarkers[i].show();
+
+        $('.KBmap__marker.'+i).delay(500).queue(function(){
+          KBtestmap.mapMarkers[i].removeMarker();
+        });
+            i++;
+        }, 1000);
+}
+function LineDraw(data){
+    var line;
+    var div1;
+    var div2;
+    var x1;
+    var y1;
+    var x2;
+    var y2;
+    var i=0;
+    for(ln in data){
+        if(i%2!=0){
+            line =$('.line'+ln);
+        }
+        if(i%2!=0){
+            div1 = $('.KBmap__marker.'+ln);}
+        else{
+            div2 = $('.KBmap__marker.'+ln);}
+
+        if(i%2!=0){
+            x1 = div1[0].style.left;
+            y1 =div1[0].style.top;
+            x2 = div2[0].style.left;
+            y2 = div2[0].style.top;
+
+            if(parseFloat(x1.substr(0,x1.length-1))>parseFloat(x2.substr(0,x2.length-1))
+                && parseFloat(y1.substr(0,y1.length-1))>parseFloat(y2.substr(0,x2.length-1))){
+
+                x2=[x1,x1=x2][0];
+                y2=[y1,y1=y2][0];
+            }
+            if(x1==x2 && y1==y2){
+            x1=(parseFloat(x1.substr(0,x1.length-1))*1.06521)+"%";
+            y1=(parseFloat(y1.substr(0,y1.length-1))+4)+"%";
+            x2=(parseFloat(x2.substr(0,x2.length-1))*1.06521)+"%";
+            y2=(parseFloat(y2.substr(0,y2.length-1))+4)+"%";}
+            else{
+            x1=(parseFloat(x1.substr(0,x1.length-1))*1.06521)+"%";
+            y1=(parseFloat(y1.substr(0,y1.length-1))+0)+"%";
+        //50 50  13 17
+            x2=(parseFloat(x2.substr(0,x2.length-1))*1.07142)+"%";
+            y2=(parseFloat(y2.substr(0,y2.length-1))*1.090909)+"%";}
+
+        line.attr('x1',x1).attr('y1',y1).attr('x2',x2).attr('y2',y2);
+        }
+        i++;
+        }
+}
+
+
+function ClearMapMarkers(start,end){
+    for(var i=start;i<end;i++){
+        KBtestmap.mapMarkers[i].removeMarker();
+    }
+    pk=0;
+}
+function ZoomButtonsInitialization(){
+       console.log("Zoom Inititlaization");
+
+          var $section = $('#KBtestmap');
+          var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
+            increment       : 0.1,
+            minScale        : 1,
+            maxScale        : 10,
+            startTransform  : 'scale(1.0)',
+            disablePan: false,
+            contain: 'invert',
+            });
+          $panzoom.parent().on('mousewheel.focal', function( e ) {
+            e.preventDefault();
+            console.log(e.scale);
+            var delta = e.delta || e.originalEvent.wheelDelta;
+            console.log(delta);
+            var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+            $panzoom.panzoom('zoom', zoomOut, {
+              animate: false,
+              focal: e
+            });
+          });
+         // var $section = $('#KBtestmap').first();
+          //var $section1=$('#ZoomButtons').first();
+        //$section.find('.KBmap__mapContainer').panzoom({
+          //  $zoomIn: $section1.find(".zoom-in"),
+           // $zoomOut: $section1.find(".zoom-out"),
+            //$zoomRange: $section1.find(".zoom-range"),
+            //$reset: $section1.find(".reset"),
+          //});
+}
+
+
+
+
+(function($) {
+    $.fn.clickToggle = function(func1, func2) {
+        var funcs = [func1, func2];
+        this.data('toggleclicked', 0);
+        this.click(function() {
+            var data = $(this).data();
+            var tc = data.toggleclicked;
+            $.proxy(funcs[tc], this)();
+            data.toggleclicked = (tc + 1) % 2;
+        });
+        return this;
+    };
+}(jQuery));
+var zoomflag=0;
+$(".zoom-in").click(function(){
+    if(zoomflag==0)ZoomButtonsInitialization();zoomflag=1;
+});
+
+
+function openNav() {
+  document.getElementById("demo").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+  document.getElementById("demo").style.width = "0";
+  document.getElementById("main").style.marginLeft= "0";
+}
+</script>
+
+<style>
+  .pin{
+position:absolute;
+height:25px;
+width:25px;
+background:green;
+}
+section { text-align: center; margin: 50px 0; }
+      .panzoom-parent { border: 2px solid #333; }
+      .panzoom-parent .panzoom { border: 2px dashed #666; }
+      .buttons { margin: 40px 0 0; }
+#map_div{
+<!--background-position: center;-->
+<!--background-size: contain;-->
+background-repeat: no-repeat;
+}
+
+.buttons {
+  position:relative;
+  width:50%;
+  margin-left:-25%;
+  bottom:0px;
+  left:50%;
+}
+
+.anim{
+
+   -webkit-animation-name: mapMarkerAnimation;
+              animation-name: mapMarkerAnimation;
+      -webkit-animation-duration: .5s;
+              animation-duration: .5s;
+      -webkit-animation-iteration-count: infinite;
+              animation-iteration-count: infinite;-
+}
+.MinerWorkerIcon  { list-style-image:url('/static/image/miner_worker.svg') }
+.MinerOfficerIcon  { list-style-image:url('/static/image/miner_officer.svg') }
+
+</style>
+{% endblock %}
+
