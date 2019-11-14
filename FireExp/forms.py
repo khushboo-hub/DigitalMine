@@ -1,4 +1,5 @@
 from django import forms
+from .models import  Fire_exp_gases
 
 class FireForm(forms.Form):
     o2 = forms.FloatField(label=' O2%',widget=forms.NumberInput(attrs={
@@ -34,6 +35,10 @@ class FireForm(forms.Form):
             'class': 'form-control datetimepicker-input',
             'data-target': '#datetimepicker1'
         }))
+
+    class Meta():
+        model = Fire_exp_gases
+        fields = ['o2', 'co', 'ch4', 'co2', 'h2', 'n2', 'c2h4', 'date']
 
 
 class EraseForm(forms.Form):

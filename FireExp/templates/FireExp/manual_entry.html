@@ -2,6 +2,7 @@
 
 {% block content %}
 {% load staticfiles %}
+
 <div class="container">
     <div class="row">
         <section class="col-md-12">
@@ -14,10 +15,82 @@
 
                         <div class="form-group">
                             <table class="table table-responsive table-bordered">
-                                {{ form.as_table }}
-                                {{form.date}}
+                                <tbody>
+                                <tr>
+                                    <th>
+                                        <label for="id_o2"> O2%:</label>
+                                    </th>
+                                    <td>
+                                        {{ form.o2 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_co"> CO%:</label>
+                                    </th>
+                                    <td>
+                                        {{ form.co }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_ch4"> CH4%:</label>
+                                    </th>
+                                    <td>
+                                        {{ form.ch4 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_co2"> CO2%:</label>
+                                    </th>
+                                    <td>
+                                       {{ form.co2 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_h2"> H2%:</label>
+                                    </th>
+                                    <td>
+                                       {{ form.h2 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_n2"> N2%:</label>
+                                    </th>
+                                    <td>
+                                       {{ form.n2 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_c2h4"> C2H4%:</label>
+                                    </th>
+                                    <td>
+                                       {{ form.c2h4 }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <label for="id_date">Entry Date:</label>
+                                    </th>
+                                    <td>
+                                        <div class="input-group date" id="entry_date_time_picker">
+                                            {{ form.date }}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+{#                                {{ form.as_table }}#}
+
+
                             </table>
-                            {{form.date}}
                             <input type="submit" name="showbutton" class="btn btn-primary"
                                    value="         Show         "/>
                             <input type="submit" name="addbutton" class="btn btn-success" value="Add To Database"/>
@@ -73,10 +146,11 @@
 </div>
 <script>
     $(document).ready(function(){
-            $("#datetimepicker1").datetimepicker({
-      format: 'DD/MM/YYYY HH:mm',
+        $('#entry_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+                });
     });
-    });
+
 </script>
 
 {% endblock %}
