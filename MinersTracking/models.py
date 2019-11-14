@@ -29,7 +29,7 @@ class TrackingRouter(models.Model):
 
 class MinerTracking(models.Model):
     mine_id = models.IntegerField(default=0)
-    router_id=models.CharField(max_length=200)
+    router_id=models.ForeignKey(TrackingRouter,on_delete=models.CASCADE)
     transmitter_id=models.CharField(max_length=200)
     emergency=models.IntegerField(default=0)
     ip_add = models.CharField(max_length=200, null=True, blank=True)
