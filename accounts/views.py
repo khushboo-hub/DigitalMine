@@ -122,17 +122,18 @@ def profile(request,action="overview", template_name='profile.html'):
     if action=='overview':
         form = ProfileForm(request.POST or None, instance=book)
     elif action == 'setting':
-        form = PasswordChangeCustomForm(request.user, request.POST)
+        form = PasswordChangeCustomForm(request.user)
         try:
             if request.method == 'POST':
+                form=PasswordChangeCustomForm(request.user,request.POST)
                 if form.is_valid():
                     form.save()
                     return render(request, template_name,
                                   {'form': form, 'form_extension': form_extension, 'active': active})
-            else:
-                print('I am Here')
-                form = PasswordChangeCustomForm()
-                return render(request, template_name,
+                else:
+                    print('I am Here')
+                     # form = PasswordChangeCustomForm(request.user)
+                    return render(request, template_name,
                               {'form': form, 'form_extension': form_extension, 'active': active})
         except:
             pass

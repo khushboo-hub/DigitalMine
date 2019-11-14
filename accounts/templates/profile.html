@@ -163,7 +163,7 @@
                                 </div>
                                 <h3>Change Password</h3>
                                 <div class="form-group">
-                                    <div class="alert alert-danger">{{form.old_password.errors|escape}}</div>
+                                    {{form.old_password.errors|escape}}
                                     <label class="col-lg-3 control-label">Old Password:</label>
                                     <div class="col-lg-8">
 
@@ -174,7 +174,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="alert alert-danger">{{form.new_password1.errors}}</div>
+                                    {{form.new_password1.errors}}
                                     <label class="col-lg-3 control-label">New Password:</label>
 
                                     <div class="col-lg-8">
@@ -185,7 +185,7 @@
 
                                 </div>
                                 <div class="form-group">
-                                    <div class="alert alert-danger">{{form.new_password2.errors}}</div>
+                                    {{form.new_password2.errors}}
                                     <label class="col-lg-3 control-label">Confirm Password:</label>
                                     <div class="col-lg-8">
                                         <!--              <input class="form-control" type="text" value="Bishop">-->
