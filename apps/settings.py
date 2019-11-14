@@ -118,9 +118,9 @@ DATABASES = {
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'IOT',
-        'NAME': 'cimfr_iot',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'myiot',
+        'USER': 'csir',
+        'PASSWORD': 'tpo4pf9KlQEBGkNo',
         'HOST': '127.0.0.1',
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
@@ -195,7 +195,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/accounts/login'
 LOGOUT_REDIRECT_URL = "/"

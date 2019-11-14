@@ -364,6 +364,24 @@
               </div>
             </div>
 
+              <!-- Earnings (Monthly) Card Example -->
+            <div class="col-xl-3 col-md-6 mb-4">
+              <div class="card border-left-primary shadow h-100 py-2">
+                <div class="card-body">
+                  <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Node X (CH<sub>4</sub>)</div>
+                      <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>
+                    </div>
+                    <div class="col-auto">
+                      <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-success shadow h-100 py-2">
@@ -506,28 +524,28 @@
               <!-- Project Card Example -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
+                  <h6 class="m-0 font-weight-bold text-primary">Gas Monitoring</h6>
                 </div>
                 <div class="card-body">
-                  <h4 class="small font-weight-bold">Server Migration <span class="float-right">20%</span></h4>
+                  <h4 class="small font-weight-bold">Carbon Dioxide <span id="waterLevel" class="float-right">20%</span></h4>
                   <div class="progress mb-4">
-                    <div class="progress-bar bg-danger" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-danger" role="progressbar" id="waterLevel" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Sales Tracking <span class="float-right">40%</span></h4>
+                  <h4 class="small font-weight-bold">Nitrogen <span id="nitrogen" class="float-right">40%</span></h4>
                   <div class="progress mb-4">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" id="nitrogen" style="width: 40%" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Customer Database <span class="float-right">60%</span></h4>
+                  <h4 class="small font-weight-bold">Oxygen <span id="oxygen" class="float-right">60%</span></h4>
                   <div class="progress mb-4">
-                    <div class="progress-bar" role="progressbar" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar" role="progressbar" id="oxygen" style="width: 60%" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Payout Details <span class="float-right">80%</span></h4>
+                  <h4 class="small font-weight-bold">Methane <span id="methane" class="float-right">80%</span></h4>
                   <div class="progress mb-4">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-info" role="progressbar" id="methane" style="width: 80%" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
-                  <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
+                  <h4 class="small font-weight-bold">Hydrogen <span id="hydrogen" class="float-right">Complete!</span></h4>
                   <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-success" id="hydrogen" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                   </div>
                 </div>
               </div>
@@ -678,6 +696,73 @@
   <!-- Page level custom scripts -->
   <script src="{% static 'dashboard/js/demo/chart-area-demo.js' %}"></script>
   <script src="{% static 'dashboard/js/demo/chart-pie-demo.js' %}"></script>
+  <script>
+      var T;
+      $(document).ready(function(){
+
+          setInterval(function(){
+           $.ajax({
+            type:"get",
+            url: "{% url 'dashboard:fetchwl' %}",
+            success: function(data) {
+                {#console.log(data)#}
+                StrataMonitoring(data.result,208);
+                waterLevelUpdate(data.result,208,"waterLevel");
+                waterLevelUpdate(getRandomIntInclusive(1, 100),100,"nitrogen");
+                waterLevelUpdate(getRandomIntInclusive(1, 100),100,"oxygen");
+                waterLevelUpdate(getRandomIntInclusive(1, 100),100,"methane");
+                waterLevelUpdate(getRandomIntInclusive(1, 100),100,"hydrogen");
+                    },
+            error: function(){
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+      },1000);
+
+      });
+
+    function StrataMonitoring(strata,UpperLimit){
+        strata=parseFloat(strata);
+        strata=scale(strata,0,UpperLimit,100,0);
+        strata=strata.toFixed(2);
+        var dt = new Date();
+        var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+        {#myLineChart.data.labels.push("Post " + postId++);#}
+        myLineChart.data.labels.push(time);
+        myLineChart.data.datasets[0].data.push(strata);
+        myLineChart.update()
+    }
+
+      function waterLevelUpdate(waterLevel,UpperLimit,Id){
+          waterLevelPercentage=parseFloat(waterLevel);
+           {#console.log(waterLevelPercentage);#}
+          {#waterLevelPercentage=(waterLevelPercentage/UpperLimit)*100;#}
+          {#console.log(waterLevelPercentage);#}
+          waterLevelPercentage=scale(waterLevelPercentage,0,UpperLimit,100,0);
+          waterLevelPercentage=waterLevelPercentage.toFixed(2);
+          if(waterLevelPercentage<50){
+             $('div#'+Id).removeClass('bg-danger').addClass('bg-success');
+          }
+          else{
+              $('div#'+Id).removeClass('bg-success').addClass('bg-danger');
+          }
+
+          waterLevelPercentage=waterLevelPercentage+"%";
+          {#console.log(waterLevelPercentage);#}
+
+          $('div#'+Id).width(waterLevelPercentage);
+
+          $('span#'+Id).html(waterLevelPercentage);
+      }
+      const scale = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+  </script>
 
 </body>
 
