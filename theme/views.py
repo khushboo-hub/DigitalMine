@@ -24,9 +24,6 @@ def home(request):
     ip = get_client_ip(request)
     print("IP Address: ", ip)
 
-
-
-
     try:
         profile = profile_extension.objects.get(user_id=book)
     except:
