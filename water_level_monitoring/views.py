@@ -99,7 +99,7 @@ def fetch_water_level_ajax(request):
     if request.is_ajax():
         sensor_data = []
         id = request.POST.get('id', None)
-        sensor_details = water_level_monitoring_model.objects.get(id=id)
+        sensor_details = water_level_monitoring_model.objects.get(id=2)#here id is fixed due to urgent requriment
         mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
 
         ok_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

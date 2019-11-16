@@ -216,10 +216,10 @@
                 <div class="carousel-inner">
 
                   <div class="item active">
-                    <img src="static/image/bg_img.jpg" alt="Los Angeles" style="width:100%;">
+                    <img src="static/image/underground_mine.jpg" alt="Los Angeles" style="width:100%;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
-                      <p>LA is always so much fun!</p>
+                      <!-- <p>LA is always so much fun!</p> -->
                     </div>
                   </div>
 
@@ -227,7 +227,7 @@
                     <img src="static/image/bg_img.jpg" alt="Chicago" style="width:100%;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
-                      <p>Thank you, Chicago!</p>
+                      <!-- <p>Thank you, Chicago!</p> -->
                     </div>
                   </div>
 
@@ -235,7 +235,7 @@
                     <img src="static/image/bg_img.jpg" alt="New York" style="width:100%;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
-                      <p>We love the Big Apple!</p>
+                      <!-- <p>We love the Big Apple!</p> -->
                     </div>
                   </div>
 
@@ -253,8 +253,9 @@
               </div>
 <!--            <div class="img-src" style="background-image: url('static/image/bg_img.jpg')"></div>-->
             <div class="row">
-                <div class="col-md-12" style="margin-top:60px;">
-                    <div class="col-md-1" style="margin-left:20px;width:5%;">
+                    <div class="col-md-4" style="margin-top:60px;"></div>
+                <div class="col-md-8">
+                    <div class="col-md-1" style="">
                         <div class="row">
                             <img class="logo img-responsive" src="{% static '/image/meity.svg' %}" alt=""/>
                         </div>
@@ -262,7 +263,7 @@
                             <strong>सत्यमेव जयते</strong>
                         </div>
                     </div>
-                    <div class="col-md-2 logo-text" style="margin-top:20px;">
+                    <div class="col-md-4 logo-text" style="margin-top:20px;">
 
                         <strong>Ministry of Electronics and Information Technology Government of India.</strong>
                     </div>
@@ -447,7 +448,7 @@
                         html+='<strong>New</strong>';
                         html+='</span>';
                         link=(isEmpty(data[b].fields.download_link))?'#':'media/'+data[b].fields.download_link;
-                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:white;">'+data[b].fields.news+'</a>';
+                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:green;">'+data[b].fields.news+'</a>';
                         html+='</span>&nbsp;&nbsp;&nbsp;&nbsp';
 
                     $('marquee#news_bulletin').append(html);

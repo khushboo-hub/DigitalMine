@@ -12,7 +12,7 @@ class TrackingRouterForm(forms.ModelForm):
                                   choices=MineDetails.objects.all().values_list('id', 'name'),
                                   attrs={
                                       'class': 'form-control',
-                                      'disabled':'true'
+                                      
                                   }
                               ))
 
