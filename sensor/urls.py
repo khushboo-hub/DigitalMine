@@ -53,8 +53,8 @@ urlpatterns = [
   path('fetch_ip', views.fetch_ip, name='fetch_ip'),
   path('save_connection', views.save_connection, name='save_connection'),
 
-  path('manage_sensor/<int:node_id>', views.manage_sensor, name='manage_sensor'),
-  path('add_sensor/<int:node_id>', views.add_sensor, name='add_sensor'),
+  path('manage_sensor/<int:mine_id>/<int:node_id>', views.manage_sensor, name='manage_sensor'),
+  path('add_sensor/<int:mine_id>/<int:node_id>', views.add_sensor, name='add_sensor'),
   # path('sensor_edit/<int:pk>', views.add_sensor, name='edit sensor'),
   path('delete_sensor/<int:pk>/<int:node_id>', views.delete_sensor, name='delete_sensor'),
   path('edit_sensor/<int:pk>/<int:node_id>', views.edit_sensor, name='edit_sensor'),
