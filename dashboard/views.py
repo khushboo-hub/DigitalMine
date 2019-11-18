@@ -34,10 +34,26 @@ def fetchwl(request):
         try:
             response = requests.get('http://192.168.1.181')
             sensor_val = strip_tags(response.text)
-            print("Sensor Value=>",sensor_val)
-        except Exception as e:
-            print("Error=>",e)
+            print("Water Level Sensor Value=>",sensor_val)
+        except requests.exceptions.ConnectionError:
             sensor_val=-1
+            pass
+
+    data['result'] = str(sensor_val)
+    return JsonResponse(data)
+
+def fetchsl(request):
+
+    data={}
+    sensor_val=-1
+    if request.is_ajax():
+
+        try:
+            response = requests.get('http://192.168.1.201')
+            sensor_val = strip_tags(response.text)
+            print(" Strata Sensor Value=>",sensor_val)
+        except requests.exceptions.ConnectionError:
+            sensor_val = -1
             pass
 
     data['result'] = str(sensor_val)
