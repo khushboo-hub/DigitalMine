@@ -432,6 +432,7 @@
 
 
         $.ajax({
+        $.ajax({
            url: "{% url 'news:get_news_ajax' %}",
            success:function(data){
                 data=JSON.parse(data.result);
