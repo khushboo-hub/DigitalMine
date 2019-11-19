@@ -49,6 +49,7 @@ def front_page(request, template_name='front_page.html'):
     C = []
     for c in carousal:
         C.append(c.file)
+        print('Carousal Image=>',c.file)
 
     return render(request, template_name,{'Carousal':C})
 
@@ -69,10 +70,10 @@ def upload_picture(request, uid=None):
         picture = Carousal()
         picture.file = pic
         picture.user_id = request.user
-        print
+
         profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
         picture.mine = profile_ex.mine_id
-        print(profile_ex.mine_id)
+        print('Profile Ex',profile_ex.mine_id)
         picture.save()
         return HttpResponse('Image upload succeeded.')
     return HttpResponseBadRequest("Image is not valid.")

@@ -167,12 +167,7 @@
 
 <body>
 <div class="se-pre-con"></div>
-<!-- Google Tag Manager (noscript) -->
-<noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6"
-            height="0" width="0" style="display:none;visibility:hidden"></iframe>
-</noscript>
-<!-- End Google Tag Manager (noscript) -->
+
 <div id="navbar-full">
     <div id="navbar">
         <nav class="navbar navbar-ct-blue navbar-fixed-top navbar-transparent" role="navigation">
@@ -399,15 +394,19 @@ $(document).ready(function(){
             $.ajax({
            url: "{% url 'theme:get_all_carousal_images_ajax' %}",
            success:function(data){
+
                  if(data.hasOwnProperty('result') ){
                     data=JSON.parse(data.result);
+
                     active=[];
                     for(d in data){
                         file=data[d].fields.file;
+                        console.log(file);
                         id=data[d].pk;
                         if(data[d].fields.active=='1'){
                             active.push(id);
                         }
+
                     $('select.image-picker.show-html').append('<option data-img-src="/media/'+file+'" value="'+id+'">Cute Kitten 1</option>')
                    }
                 }

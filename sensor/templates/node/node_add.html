@@ -154,8 +154,8 @@
                                 <td><img class="image image-responsive" src="/media/{{ book.photo1 }}" height="100" width="100"/> </td>
                                  <td><img class="image image-responsive" src="/media/{{ book.photo2 }}" height="100" width="100"/> </td>
 
-                                <td class="text-center"><a href="{% url 'sensor:manage_sensor' book.id %}" class="manageSensor"
-                                                           data-url="{% url 'sensor:manage_sensor' book.id %}"0
+                                <td class="text-center"><a href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" class="manageSensor"
+                                                           data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"0
                                                            title="Manage Sensor"><span
                                         class="glyphicon glyphicon-plus"></span></a></td>
 

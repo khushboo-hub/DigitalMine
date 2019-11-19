@@ -386,12 +386,13 @@
           <div class="row">
 
             <!-- Earnings (Monthly) Card Example -->
+          {% for node in nodes %}
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Node 1 (CH<sub>4</sub>)</div>
+                      <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ node.name }}</div>
                       <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>
                     </div>
                     <div class="col-auto">
@@ -401,6 +402,7 @@
                 </div>
               </div>
             </div>
+              {% endfor %}
 
               <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
@@ -742,42 +744,53 @@
   <script>
       var T;
       $(document).ready(function(){
-            document.getElementById("overlay").style.display = "block";
-          setInterval(function(){
-           $.ajax({
-                type:"get",
+              document.getElementById("overlay").style.display = "block";
+              setInterval(function(){
+                   $.ajax({
+                        type:"get",
 
-                url: "{% url 'dashboard:fetchwl' %}",
-                success: function(data) {
-                    {#console.log(data)#}
-                    StrataMonitoring(data.result,208);
-                    GasMonitoring(data.result,208,"waterLevel");
-                    GasMonitoring(getRandomIntInclusive(1, 100),100,"nitrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100),100,"oxygen");
-                    GasMonitoring(getRandomIntInclusive(1, 100),100,"methane");
-                    GasMonitoring(getRandomIntInclusive(1, 100),100,"hydrogen");
-                },
-                error: function(){
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
+                        url: "{% url 'dashboard:fetchsl' %}",
+                        success: function(data) {
+                            console.log(data)
+                            StrataMonitoring(data.result,100);
+                        },
+                        error: function(){
+                            console.log("something is not right.please contact admin - 1");
+                        }
+                    });
+
+                   $.ajax({
+                        type:"get",
+                        url: "{% url 'dashboard:fetchwl' %}",
+                        success: function(data) {
+                            console.log(data)
+                            {#StrataMonitoring(data.result,208);#}
+                            GasMonitoring(data.result,208,"waterLevel");
+                            GasMonitoring(getRandomIntInclusive(1, 100),100,"nitrogen");
+                            GasMonitoring(getRandomIntInclusive(1, 100),100,"oxygen");
+                            GasMonitoring(getRandomIntInclusive(1, 100),100,"methane");
+                            GasMonitoring(getRandomIntInclusive(1, 100),100,"hydrogen");
+                        },
+                        error: function(){
+                            console.log("something is not right.please contact admin - 1");
+                        }
+                    });
       },1000);
 
-
           function StrataMonitoring(strata,UpperLimit){
-        strata=parseFloat(strata);
-        strata=scale(strata,0,UpperLimit,100,0);
-        strata=strata.toFixed(2);
-        var dt = new Date();
-        var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-        {#myLineChart.data.labels.push("Post " + postId++);#}
-        if (myLineChart.data.labels.length>20){
-            myLineChart.data.labels.shift();
-            myLineChart.data.datasets[0].data.shift();
-        }
-        myLineChart.data.labels.push(time);
-        myLineChart.data.datasets[0].data.push(strata);
-        myLineChart.update()
+                strata=parseFloat(strata);
+                {#strata=scale(strata,0,UpperLimit,100,0);#}
+                strata=strata.toFixed(2);
+                var dt = new Date();
+                var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                {#myLineChart.data.labels.push("Post " + postId++);#}
+                if (myLineChart.data.labels.length>20){
+                    myLineChart.data.labels.shift();
+                    myLineChart.data.datasets[0].data.shift();
+                }
+                myLineChart.data.labels.push(time);
+                myLineChart.data.datasets[0].data.push(strata);
+                myLineChart.update()
     }
 
       function GasMonitoring(waterLevel,UpperLimit,Id){
@@ -815,9 +828,7 @@
           max = Math.floor(max);
           return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-
       });
-
 
   </script>
 

@@ -293,12 +293,18 @@ def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
+<<<<<<< HEAD
     
+=======
+>>>>>>> b5033a7c9a64c16e97732f0803faafbdf776e3a2
     if current_user.is_superuser:
         book = Node.objects.all()
     else:
         book = Node.objects.filter(mine_id=profile.mine_id.id)
+<<<<<<< HEAD
     
+=======
+>>>>>>> b5033a7c9a64c16e97732f0803faafbdf776e3a2
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
         # print("+++++++++++++++++")
@@ -461,11 +467,11 @@ def load_map(request):
 #         return redirect('sensor:node_manage')
 #     return render(request, template_name, {'form': form})
 
-def manage_sensor(request, node_id, template_name='Sensor_Node/manage_sensor.html'):
+def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     if current_user.is_superuser:
-        book = Sensor_Node.objects.all()
+        book = Sensor_Node.objects.filter(mine_id=mine_id,node_id=node_id)
     else:
         book = Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node_id)
     data = {}
@@ -478,6 +484,7 @@ def manage_sensor(request, node_id, template_name='Sensor_Node/manage_sensor.htm
     data['node_id']=node_id
     mine_table1 = MineDetails.objects.get(id=node_mine_id)
     data['mine_name1'] = mine_table1.name
+    data['mine']=mine_table1.id
     return render(request, template_name, data)
 
 
@@ -508,7 +515,7 @@ def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
 
 
-def add_sensor(request, node_id, template_name='Sensor_Node/add_sensor.html'):
+def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     node_mine_id = mine_table.mine_id_id
@@ -544,13 +551,13 @@ def add_sensor(request, node_id, template_name='Sensor_Node/add_sensor.html'):
         object.node_id = node_id
         object.mine_id = node_mine_id
         object.save()
-        return redirect('/sensor/manage_sensor/' + str(node_id))
+        return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
     else:
         print("&&&&&&&&&")
     print(node_name)
     return render(request, template_name,
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id,
-                   'minename': mine_name})
+                   'minename': mine_name,'mine':mine_id})
 
 
 def delete_sensor(request, pk, node_id):
