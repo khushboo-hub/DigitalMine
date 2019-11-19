@@ -106,6 +106,10 @@
 
           color: #fff;
         }
+    .navbar .navbar-brand-logo .brand {
+        margin-top: 20px;
+        width: 500px;
+    }
     </style>
 
      <script>
@@ -205,16 +209,14 @@
         </nav>
         <div class="blurred-container">
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                  <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-                  <li data-target="#myCarousel" data-slide-to="1"></li>
-                  <li data-target="#myCarousel" data-slide-to="2"></li>
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#myCarousel" data-slide-to="1"></li>
+                    <li data-target="#myCarousel" data-slide-to="2"></li>
                 </ol>
-
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
-
                   <div class="item active">
                     <img src="static/image/underground_mine.jpg" alt="Los Angeles" style="width:100%;">
                     <div class="carousel-caption">
@@ -265,13 +267,20 @@
                     </div>
                     <div class="col-md-4 logo-text" style="margin-top:20px;">
 
+                <div class="row">
+                    
+                    
+                        <br>
                         <strong>Ministry of Electronics and Information Technology Government of India.</strong>
+                </div>
+                </div>
+                    <div class="col-md-2">
                     </div>
                 </div>
+</div>
             </div>
         </div>
     </div><!--  end navbar -->
-
 </div> <!-- end menu-dropdown -->
 
 <div class="main">
@@ -306,9 +315,7 @@
                                     <a href="{% url 'MinersTracking:single_miner_page' %}">Single Miner Tracking</a>
                                     <a href="{% url 'MinersTracking:miner_path_history_page' %}">Miner's Path
                                         history</a>
-                                    <a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Miner&#39;s
-                                        Tracking(Tabular)</a>
-<!--                                    <br><br><br>-->
+                                    <a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Miner&#39;s Tracking(Tabular)</a>
                                 </div>
                             </div>
                         </div>
@@ -324,7 +331,6 @@
                                     <!--<a href="{% url 'sensor:live_data_graph' %}">Live Data (Graph)</a>-->
                                     <a href="{% url 'sensor:live_map' %}">Live Data(Map)</a>
                                     <a href="{% url 'temp_monitoring:index' %}">Show Temperature Information</a>
-<!--                                    <br><br><br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -340,7 +346,6 @@
                                         Annual Annexure I
                                         (Coal Mine)</a>
                                     <a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a>
-<!--                                    <br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -357,7 +362,6 @@
                                     <a href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
                                     <a href="{% url 'Strata:live_data_tabular' %}">Live Data(Tabular)</a>
                                     <a href="{% url 'Strata:show_sensor_graph' %}">Live Data(Graph)</a>
-<!--                                    <br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -366,16 +370,11 @@
                                 <span class="icon fa fa-fire" aria-hidden="true"></span>
                                 <h4>Fire Monitoring</h4>
                                 <div class="ots-btn-group">
-<!--                                    <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
+                                    <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
                                     <a href="{% url 'FireExp:manual_entry' %}">Manual</a>
-<!--                                     <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
+                                    <!--<a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
                                     <a href="{% url 'FireExp:automatic_entry' %}">Automatic</a>
                                     <a href="{% url 'FireExp:automatic_entry' %}">Automatic</a>
-
-
-
-
-<!--                                    <br><br><br><br><br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -388,7 +387,6 @@
                                     <a href="{% url 'ProductionMonitoring:container_details_add' %}">Tub Information</a>
                                     <a href="{% url 'ProductionMonitoring:production_tub_add' %}" >Production Using Tub</a>
                                     <a href="{% url 'ProductionMonitoring:report_dailyprod_dispatch' %}">Daily Production Dispatch Report</a>
-<!--                                    <br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -403,7 +401,6 @@
                                     <a href="{% url 'inventory_management:settings' %}">Add Branch</a>
                                     <a href="{% url 'inventory_management:manageAll' %}">Manage All</a>
                                     <a href="{% url 'inventory_management:outlet_viewall' %}">Reports</a>
-<!--                                    <br><br><br>-->
                                 </div>
                             </div>
                         </div>
@@ -413,9 +410,7 @@
         </div><!--main row end-->
     </div>
 </div>
-<p class="text-center">Powered By <a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> | Copyright &copy;
-    Protected | All Rights Reserved.</p>
-
+<p class="text-center">Powered By <a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> | Copyright &copy; Protected | All Rights Reserved.</p>
 </body>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
 <script>
@@ -423,7 +418,6 @@
         $.ajax({
            url: "{% url 'employee1:checkifuserfieldempty' %}",
            success:function(data){
-<!--                console.log(data.result);-->
                 if(data.result=='1'){
                  $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
                 }
@@ -441,7 +435,6 @@
            url: "{% url 'news:get_news_ajax' %}",
            success:function(data){
                 data=JSON.parse(data.result);
-
                 for(b in data){
                     var html='<span style="color:white">';
                         html+='<span class="label label-danger" style="position:relative;right:5px;">';
@@ -477,9 +470,7 @@
                     }
                 });
             });
-
 });
-
 </script>
 </html>
 {% endblock %}

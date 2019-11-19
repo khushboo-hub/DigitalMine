@@ -602,7 +602,7 @@ h1 { text-align: center; margin-top: 150px; }
 
                                 <ul class="dropdown-menu navbar-color" role="menu">
                                    <li class="divider"></li>
-                                <li class="text-center"><img src="" id="profile_avatar" width="100px" height="100px" class="avatar img-circle"></li>
+                                <li class="text-center"><img src="" id="profile_avatar" onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';" width="100px" height="100px" class="avatar img-circle"></li>
                                     <li class="text-center profile-usertitle-job" style="color:white;" id="mine_name">Hello World</li>
                                 <li class="divider"></li>
                                     <li><a href="{% url 'dashboard:dashboard_calling' %}"><span class="glyphicon glyphicon-dashboard"></span>
