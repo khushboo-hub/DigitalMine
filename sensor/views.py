@@ -511,35 +511,17 @@ def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
 
 
 def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
-    Node_Obj = Node.objects.get(id=node_id)
-    node_name = Node_Obj.name
+    node = Node.objects.get(id=node_id)
+    node_name = node.name
     mine = MineDetails.objects.get(pk=mine_id)
     mine_name = mine.name
     form = Sensor_NodeForm(request.POST or None, request.FILES)
 
-    print(form.errors)
-    object = Sensor_Node()
-
     if form.is_valid():
-        print("form is valid")
-        object.sensorid = request.POST.get("sensorid")
-        object.ip_add = request.POST.get("ip_add")
-        object.sensorname = request.POST.get("sensorname")
-        object.sensorunit = request.POST.get("sensorunit")
-        object.thresholdlimit = request.POST.get("thresholdlimit")
-        object.sensorunit1 = request.POST.get("sensorunit1")
-        object.sensorunit2 = request.POST.get("sensorunit2")
-        object.sensorunit3 = request.POST.get("sensorunit3")
-        object.sensormsg1 = request.POST.get("sensormsg1")
-        object.sensormsg2 = request.POST.get("sensormsg2")
-        object.sensormsg3 = request.POST.get("sensormsg3")
-        object.greenlevel = request.POST.get("greenlevel")
-        object.yellowlevel = request.POST.get("yellowlevel")
-        object.redlevel = request.POST.get("redlevel")
-        object.description = request.POST.get("description")
-        object.node_id = Node_Obj
-        object.mine_id = mine
-        object.save()
+        SensorModel = form.save(commit=False)
+        SensorModel.node_id = node
+        SensorModel.mine_id = mine
+        SensorModel.save()
         return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
     else:
         print("&&&&&&&&&")
