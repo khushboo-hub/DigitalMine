@@ -13,6 +13,7 @@ class news_bulletin(models.Model):
     created_on = models.DateField(max_length=255, null=True, blank=True,default=now, editable=False)
     updated_on = models.DateField(max_length=255, null=True, blank=True)
     valid_till = models.DateField(max_length=255, null=True, blank=True)
+    color = models.CharField('News Color', default='0', max_length=200)
     download_link = models.FileField(upload_to="news_bulletin", null=True,blank=True)
     download_number=models.IntegerField(null=True, blank=True,default=0)
 

@@ -13,10 +13,14 @@ class NewsBulletInForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Valid Till',
     }))
+    color = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': "form-control jscolor {onFineChange:' setNewsColor(this)'}",
+        'value': "FF0000",
+    }))
     download_link = forms.FileField(required=False)
     class Meta():
         model = news_bulletin
-        fields = ['news','valid_till','download_link','download_number']
+        fields = ['news','valid_till','download_link','download_number','color']
         widgets = {
             'download_number': forms.NumberInput(attrs={'min': '0', 'class': 'yourClass', 'id': 'blah'}),
         }

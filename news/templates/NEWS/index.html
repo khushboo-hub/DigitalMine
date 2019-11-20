@@ -6,6 +6,7 @@
 <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
 <!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <script src="{% static 'js/jscolor.js' %}"></script>
 <div class="container">
     <div class="row">
 
@@ -40,11 +41,11 @@
                             </div>
                         </div>
                         <div class="form-group col-md-12">
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <div class="col-md-3">
                                     <label>Valid Till</label>
                                 </div>
-                                <div class='col-md-9 input-group date' id='doo_date_time_picker' style="padding-left:17px;">
+                                <div class='col-md-9 input-group date' id='doo_date_time_picker' style="padding-left:107px;">
                                             {{form.valid_till}}
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -52,6 +53,16 @@
                                         </div>
 
                             </div>
+                            <div class="col-md-4">
+
+                                <div class='col-md-6'>
+                                    {{form.color}}
+                                </div>
+
+
+                            </div>
+
+
                             <div class="col-md-4">
                                 <div class="col-md-4">
                                     <label>Download Link</label>
@@ -161,5 +172,9 @@
             }});
         });
     });
+
+    function setNewsColor(picker) {
+		$("#id_redlevel").val( '#' + picker.toString());
+	}
 </script>
 {% endblock %}
