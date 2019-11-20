@@ -466,13 +466,16 @@
            url: "{% url 'news:get_news_ajax' %}",
            success:function(data){
                 data=JSON.parse(data.result);
+                console.log(data);
                 for(b in data){
                     var html='<span style="color:white">';
                         html+='<span class="label label-danger" style="position:relative;right:5px;">';
                         html+='<strong>New</strong>';
                         html+='</span>';
                         link=(isEmpty(data[b].fields.download_link))?'#':'media/'+data[b].fields.download_link;
-                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:green;">'+data[b].fields.news+'</a>';
+                        color=(isEmpty(data[b].fields.color))?"#FFFFFF":"#"+data[b].fields.color;
+                        console.log(color);
+                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:'+color+';">'+data[b].fields.news+'</a>';
                         html+='</span>&nbsp;&nbsp;&nbsp;&nbsp';
 
                     $('marquee#news_bulletin').append(html);

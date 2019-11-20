@@ -38,7 +38,7 @@ def get_news_ajax(request):
     data = {}
 
     if request.is_ajax():
-        data['result'] = serializers.serialize('json', news_bulletin.objects.filter(valid_till__gte=datetime.date.today()), fields=('news', 'download_link'))
+        data['result'] = serializers.serialize('json', news_bulletin.objects.filter(valid_till__gte=datetime.date.today()), fields=('news', 'download_link','color'))
         return JsonResponse(data)
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
