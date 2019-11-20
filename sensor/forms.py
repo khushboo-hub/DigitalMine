@@ -102,7 +102,7 @@ class Sensor_NodeForm(forms.ModelForm):
     }))
     class Meta():
         model = Sensor_Node
-        fields = ['mine_id', 'node_id', 'ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']
+        fields = ['ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']
 
 class SensorForm(forms.ModelForm):
     sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={

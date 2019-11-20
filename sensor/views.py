@@ -466,6 +466,7 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     if current_user.is_superuser:
         book = Sensor_Node.objects.filter(mine_id=mine_id,node_id=node_id)
+        print(book)
     else:
         book = Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node_id)
     data = {}
@@ -510,20 +511,14 @@ def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
 
 
 def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
-    mine_table = Node.objects.get(id=node_id)
-    node_name = mine_table.name
-    node_mine_id = mine_table.mine_id_id
-    mine_table1 = MineDetails.objects.get(id=node_mine_id)
-    mine_name = mine_table1.name
+    Node_Obj = Node.objects.get(id=node_id)
+    node_name = Node_Obj.name
+    mine = MineDetails.objects.get(pk=mine_id)
+    mine_name = mine.name
     form = Sensor_NodeForm(request.POST or None, request.FILES)
+
+    print(form.errors)
     object = Sensor_Node()
-    # node_name={}
-    # for i in node_table:
-    #     node_name = Node.objects.get(id=str(i[0]))
-    #     mine_table = MineDetails.objects.get(id=str(i[1]))
-    #     print("******")
-    #     print(node_name)
-    #     print(mine_table)
 
     if form.is_valid():
         print("form is valid")
@@ -542,15 +537,15 @@ def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.h
         object.yellowlevel = request.POST.get("yellowlevel")
         object.redlevel = request.POST.get("redlevel")
         object.description = request.POST.get("description")
-        object.node_id = node_id
-        object.mine_id = node_mine_id
+        object.node_id = Node_Obj
+        object.mine_id = mine
         object.save()
         return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
     else:
         print("&&&&&&&&&")
     print(node_name)
     return render(request, template_name,
-                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id,
+                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': mine_id,
                    'minename': mine_name,'mine':mine_id})
 
 
@@ -560,7 +555,7 @@ def delete_sensor(request, pk, node_id):
     return redirect('/sensor/manage_sensor/' + str(node_id))
 
 
-def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html'):
+def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html'): #pk is Sensor Id of a node, node_id=> id the of wirelss node
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     node_mine_id = mine_table.mine_id_id
@@ -568,41 +563,30 @@ def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html
     mine_name = mine_table1.name
     book = get_object_or_404(Sensor_Node, pk=pk)
     form = Sensor_NodeForm(request.POST or None, request.FILES or None, instance=book)
-    object = Sensor_Node(pk=pk)
-    print("**********")
-    print(object)
-    # node_name={}
-    # for i in node_table:
-    #     node_name = Node.objects.get(id=str(i[0]))
-    #     mine_table = MineDetails.objects.get(id=str(i[1]))
-    #     print("******")
-    #     print(node_name)
-    #     print(mine_table)
+    # object = Sensor_Node(pk=pk)
 
     if form.is_valid():
-        print("form is valid")
-        object.sensorid = request.POST.get("sensorid")
-        object.ip_add = request.POST.get("ip_add")
-        object.sensorname = request.POST.get("sensorname")
-        object.sensorunit = request.POST.get("sensorunit")
-        object.thresholdlimit = request.POST.get("thresholdlimit")
-        object.sensorunit1 = request.POST.get("sensorunit1")
-        object.sensorunit2 = request.POST.get("sensorunit2")
-        object.sensorunit3 = request.POST.get("sensorunit3")
-        object.sensormsg1 = request.POST.get("sensormsg1")
-        object.sensormsg2 = request.POST.get("sensormsg2")
-        object.sensormsg3 = request.POST.get("sensormsg3")
-        object.greenlevel = request.POST.get("greenlevel")
-        object.yellowlevel = request.POST.get("yellowlevel")
-        object.redlevel = request.POST.get("redlevel")
-        object.description = request.POST.get("description")
-        object.node_id = node_id
-        object.mine_id = node_mine_id
-        object.save()
-        return redirect('/sensor/manage_sensor/' + str(node_id))
+        form.save()
+        # object.sensorid = request.POST.get("sensorid")
+        # object.ip_add = request.POST.get("ip_add")
+        # object.sensorname = request.POST.get("sensorname")
+        # object.sensorunit = request.POST.get("sensorunit")
+        # object.thresholdlimit = request.POST.get("thresholdlimit")
+        # object.sensorunit1 = request.POST.get("sensorunit1")
+        # object.sensorunit2 = request.POST.get("sensorunit2")
+        # object.sensorunit3 = request.POST.get("sensorunit3")
+        # object.sensormsg1 = request.POST.get("sensormsg1")
+        # object.sensormsg2 = request.POST.get("sensormsg2")
+        # object.sensormsg3 = request.POST.get("sensormsg3")
+        # object.greenlevel = request.POST.get("greenlevel")
+        # object.yellowlevel = request.POST.get("yellowlevel")
+        # object.redlevel = request.POST.get("redlevel")
+        # object.description = request.POST.get("description")
+        # object.save()
+        return redirect('/sensor/manage_sensor/' +str(node_mine_id) +"/"+ str(node_id))
     return render(request, template_name,
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id,
-                   'minename': mine_name})
+                   'minename': mine_name, 'mine': node_mine_id})
 
 
 # def add_id(request,pk )
