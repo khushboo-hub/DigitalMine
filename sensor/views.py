@@ -85,10 +85,10 @@ def sensor1_manage(request, wireless_id, template_name='sensor/sensor1_manage.ht
 
 
 def sensor1_add(request, wireless_id, template_name='sensor/sensor1_add.html'):
-    print(wireless_id)
+    # print(wireless_id)
     mine_table = Wireless.objects.get(id=wireless_id)
     wireless_name = mine_table.name
-    print(wireless_name)
+    # print(wireless_name)
     form = SensorForm(request.POST or None, request.FILES)
     object = Sensor()
     if form.is_valid():
@@ -188,11 +188,11 @@ def choose_connection(request, template_name='arduino/choose_connection.html'):
 def arduino_getdata(request, arduino_dd):
     # arduino_id = request.POST.get("arduino_id")
     table_data = Arduino.objects.values_list().filter(id=arduino_dd)[0]
-    print(arduino_dd)
-    print(table_data)
+    # print(arduino_dd)
+    # print(table_data)
     a = table_data[5]
     b = table_data[6]
-    print(a, b)
+    # print(a, b)
     try:
         while True:
             sr = serial.Serial(a, b)
@@ -255,7 +255,7 @@ def wireless_add(request, node_id, template_name='wireless/wireless_add.html'):
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     node_mine_id = mine_table.mine_id
-    print(node_name)
+    # print(node_name)
     object = Wireless()
     if form.is_valid():
         object.ipaddress = request.POST.get("ipaddress")
@@ -326,7 +326,7 @@ def node_manage(request, pk, template_name='node/node_manage.html'):
 
             return redirect(reverse('sensor:node_add') + '?err=err')
         except Exception as e:
-            print(e)
+            # print(e)
             return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk})
     return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk})
     # book = Node.objects.all()
@@ -349,8 +349,8 @@ def node_edit(request):
             # print(book)
 
             form = NodeForm(data=request.POST, files=request.FILES, instance=pk)
-            print(form)
-            print(form.errors)
+            # print(form)
+            # print(form.errors)
             if form.is_valid():
                 print('form is valid')
                 try:
@@ -411,10 +411,10 @@ def node_delete(request):
     if request.is_ajax():
         if request.method == 'POST':
             pk = request.POST.get('id')
-            print(pk)
+            # print(pk)
             try:
                 book = Node.objects.get(pk=pk)
-                print(book)
+                # print(book)
                 book.delete()
                 data['success'] = "Router Deteled Successfully!"
                 return JsonResponse(data)
@@ -466,7 +466,7 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     if current_user.is_superuser:
         book = Sensor_Node.objects.filter(mine_id=mine_id,node_id=node_id)
-        print(book)
+        # print(book)
     else:
         book = Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node_id)
     data = {}
@@ -525,7 +525,7 @@ def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.h
         return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
     else:
         print("&&&&&&&&&")
-    print(node_name)
+    # print(node_name)
     return render(request, template_name,
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': mine_id,
                    'minename': mine_name,'mine':mine_id})
@@ -623,7 +623,7 @@ def load_map(request):
         data['routers'] = routers
     mine_table = MineDetails.objects.all()
     data['object_list'] = mine_table
-    print(data)
+    # print(data)
     return render(request, "MinersTracking/load_map.html", data)
 
 
@@ -651,7 +651,7 @@ def connection_manage(request, template_name='connection/connection_manage.html'
             id=str(i[1]))  # 3 means :mine_id (mine_id is refferenced to connection table)
         node_table = Node.objects.get(id=str(i[2]))
         connect_type = (str(i[3]))
-        print(connect_type)
+        # print(connect_type)
         prepared_data.append([])
         # prepared_data[r].append(mine_table.name)
         # prepared_data[r].append(node_table.nodeid)
@@ -689,7 +689,7 @@ def connection_manage(request, template_name='connection/connection_manage.html'
     # print(prepared_data)
     # print(wireless_table)
     data['object_list'] = prepared_data  ##data['object_list'] = book
-    print(data)
+    # print(data)
     return render(request, template_name, data)
     # return HttpResponse('Ok....')
 
@@ -819,7 +819,7 @@ def save_connection(request, template_name='connection/connection_manage.html'):
     object.arduino_id = request.POST.get("arduino_id")
     object.wireless_id = request.POST.get("wireless_id")
     # print(request.POST)
-    print(object.mine_id)
+    # print(object.mine_id)
     object.save()
     # form.save()
     return redirect('sensor:connection_manage')
@@ -837,9 +837,9 @@ def getsensordata(ip, mine_id, node_id, gas_name):
     try:
         object = gasModel_auto()
         wireless_data = requests.get('http://' + str(ip))
-        print(wireless_data)
+        # print(wireless_data)
         wirelessString = wireless_data.text  # read the line of text from the serial port
-        print(wirelessString)
+        # print(wirelessString)
 
         object.mine_id = mine_id
         object.node_id = node_id
@@ -857,7 +857,7 @@ def background_view(request, pk, template_name='node/node_manage.html'):
     data['object_list'] = book
     node_details = Sensor_Node.objects.values_list().filter(node_id=pk)
     print("*************")
-    print(node_details)
+    # print(node_details)
     for r in node_details:
         mine_id = str(r[1])
         node_id = str(r[2])
@@ -866,7 +866,7 @@ def background_view(request, pk, template_name='node/node_manage.html'):
             ip = str(r[3])
 
             if (ip != 'NULL'):
-                print(ip)
+                # print(ip)
                 getsensordata(ip, mine_id, node_id, gas_name, repeat=1)
                 print("Hi..............")
         except:
@@ -885,7 +885,7 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
 #########demo
 def background_data(request):
     live = gasModel_auto.objects.values_list()
-    print(live)
+    # print(live)
 
     return render(request)
 
@@ -895,7 +895,7 @@ def fetch_mine_ajax(request):
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         node_details = Node.objects.values_list().filter(mine_id_id=mine_id)
-        print(node_details)
+        # print(node_details)
         data = {}
         i = 0
         node_data = []
@@ -904,7 +904,7 @@ def fetch_mine_ajax(request):
             i = i + 1
         data['result'] = node_data
         print("############")
-        print(data)
+        # print(data)
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -918,7 +918,7 @@ def fetch_sensor_values_ajax_p(request):
 
         node_id2 = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=node_id2)
-        print(sensor_details)
+        # print(sensor_details)
 
         for r1 in sensor_details:
             location_details1 = str(r1[2])
@@ -1082,7 +1082,7 @@ def fetch_sensor_values_ajax_p(request):
 
         data['result'] = sensor_data
         data['result1'] = sensor_data1
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1096,7 +1096,7 @@ def fetch_sensor_values_ajax_h(request):
         sensor_data_h = []
         node_id2 = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=node_id2)
-        print(sensor_details)
+        # print(sensor_details)
         sensor_data_h.append('Date Time')
         sensor_data_h.append('Mine Name')
         sensor_data_h.append('Node name')
@@ -1104,7 +1104,7 @@ def fetch_sensor_values_ajax_h(request):
             sensor_data_h.append(str(r1[5]))
 
         data['result'] = sensor_data_h
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1116,7 +1116,7 @@ def fetch_sensor_values(request):
     if request.is_ajax():
         node_id = request.GET.get('id', None)
         data['result'] = node_id
-    print(data)
+    # print(data)
     return JsonResponse(data)
 
 
@@ -1132,7 +1132,7 @@ def fetch_sensor_ajax(request):
     if request.is_ajax():
         node_id1 = request.GET.get('id', None)
         node_details = Sensor_Node.objects.values_list().filter(node_id=node_id1)
-        print(node_details)
+        # print(node_details)
         data = {}
         node_data = []
 
@@ -1140,8 +1140,8 @@ def fetch_sensor_ajax(request):
             node_data.append(str(r[0]) + ',' + str(r[5]))
 
         data['result'] = node_data
-        print("############")
-        print(data)
+        # print("############")
+        # print(data)
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -1155,12 +1155,12 @@ def fetch_sensor_values_ajax(request):
         sensor_data2 = []
         sensor_id = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.get(id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
         try:
             response = requests.get('http://' + str(sensor_details.ip_add))
-            print(sensor_details.ip_add)
+            # print(sensor_details.ip_add)
             sensor_val = strip_tags(response.text)
             if (int(sensor_val) < int(sensor_details.sensorunit1)):
                 sensor_data1.append('#1216f6')
@@ -1189,7 +1189,7 @@ def fetch_sensor_values_ajax(request):
         data['result'] = sensor_data
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
-        print(data)
+        # print(data)
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -1201,11 +1201,11 @@ def fetch_sensor_ajax_sensor(request):
         sensor_data = []
         sensor_id = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.get(id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.sensorname) + ',' + str(
             sensor_details.sensorunit) + ',' + '#1216f6')
         data['result1'] = sensor_data
-        print(data)
+        # print(data)
     else:
         data['result1'] = "Not Ajax"
     return JsonResponse(data)
@@ -1217,7 +1217,7 @@ def fetch_sensor_values_all_ajax(request):
         sensor_data = []
         sensor_id = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         # now = datetime.now()
         # ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
         # sensor_data.append(ok_date)
@@ -1267,7 +1267,7 @@ def fetch_sensor_values_all_ajax(request):
                 sensor_data.append('Network Error')
 
         data['result'] = sensor_data
-        print(data)
+        # print(data)
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -1283,7 +1283,7 @@ def fetch_sensor_values_ajax_CH4(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1300,7 +1300,7 @@ def fetch_sensor_values_ajax_CH4(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1325,7 +1325,7 @@ def fetch_sensor_values_ajax_CH4(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1343,7 +1343,7 @@ def fetch_sensor_values_ajax_CO(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1360,7 +1360,7 @@ def fetch_sensor_values_ajax_CO(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1385,7 +1385,7 @@ def fetch_sensor_values_ajax_CO(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1403,7 +1403,7 @@ def fetch_sensor_values_ajax_CO2(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1420,7 +1420,7 @@ def fetch_sensor_values_ajax_CO2(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1445,7 +1445,7 @@ def fetch_sensor_values_ajax_CO2(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1462,7 +1462,8 @@ def fetch_sensor_values_ajax_O2(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
+
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1479,7 +1480,7 @@ def fetch_sensor_values_ajax_O2(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1504,7 +1505,7 @@ def fetch_sensor_values_ajax_O2(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1521,7 +1522,7 @@ def fetch_sensor_values_ajax_H2S(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1538,7 +1539,7 @@ def fetch_sensor_values_ajax_H2S(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1563,7 +1564,7 @@ def fetch_sensor_values_ajax_H2S(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1580,7 +1581,7 @@ def fetch_sensor_values_ajax_NO2(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1597,7 +1598,7 @@ def fetch_sensor_values_ajax_NO2(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1622,7 +1623,7 @@ def fetch_sensor_values_ajax_NO2(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1639,7 +1640,7 @@ def fetch_sensor_values_ajax_SO2(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1656,7 +1657,7 @@ def fetch_sensor_values_ajax_SO2(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1681,7 +1682,7 @@ def fetch_sensor_values_ajax_SO2(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1698,7 +1699,7 @@ def fetch_sensor_values_ajax_H2(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1715,7 +1716,7 @@ def fetch_sensor_values_ajax_H2(request):
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
-                    print(ip_add)
+                    # print(ip_add)
                     sensor_val = strip_tags(response.text)
                     if (int(sensor_val) < int(sensorunit1)):
                         sensor_data3.append('#1216f6')
@@ -1740,7 +1741,7 @@ def fetch_sensor_values_ajax_H2(request):
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
         data['result3'] = sensor_data3
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1760,7 +1761,7 @@ def sensor_wise_node(request):
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
         sensor_details = Sensor_Node.objects.values_list().filter(mine_id=sensor_id1, sensorname=sensor_id)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1781,7 +1782,7 @@ def sensor_wise_node(request):
 
             try:
                 response = requests.get('http://' + ip_add)
-                print(ip_add)
+                # print(ip_add)
                 sensor_val = strip_tags(response.text)
                 if (int(sensor_val) < int(sensorunit1)):
                     sensor_data4.append('#1216f6')
@@ -1809,7 +1810,7 @@ def sensor_wise_node(request):
         data['result4'] = sensor_data4
         data['result5'] = sensor_data5
 
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1833,7 +1834,7 @@ def fetch_map_ajax(request):
         mine_detail = MineDetails.objects.get(id=sensor_id)
         sensor_data.append(str(mine_detail.mine_map_image))
         data['result'] = sensor_data
-        print(data)
+        # print(data)
     else:
         data['result'] = "Not Ajax"
 
@@ -1853,7 +1854,7 @@ def sensor_wise_popup(request):
         sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
         sensor_details1 = Node.objects.get(id=sensor_id)
         sensor_data2.append(sensor_details1.name)
-        print(sensor_details)
+        # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
             sensor_name = str(r[5])
@@ -1861,7 +1862,7 @@ def sensor_wise_popup(request):
 
             try:
                 response = requests.get('http://' + ip_add)
-                print(ip_add)
+                # print(ip_add)
                 sensor_val = strip_tags(response.text)
                 sensor_data.append(str(sensor_val))
 
@@ -1873,7 +1874,7 @@ def sensor_wise_popup(request):
         data['result'] = sensor_data
         data['result1'] = sensor_data1
         data['result2'] = sensor_data2
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1888,7 +1889,7 @@ def fetch_sensor_values_ajax_sensor_table(request):
         sensor_data = []
         node_id1 = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.values_list().filter(sensorname=node_id1)
-        print(sensor_details)
+        # print(sensor_details)
         sensor_data.append('Date Time')
         sensor_data.append('Mine Name')
         sensor_data.append('Node name')
@@ -1897,7 +1898,7 @@ def fetch_sensor_values_ajax_sensor_table(request):
             sensor_data.append(node_details.name)
 
         data['result'] = sensor_data
-        print(data)
+        # print(data)
 
     else:
         data['result'] = "Not Ajax"
@@ -1912,7 +1913,7 @@ def fetch_sensor_values_ajax_sensor_body(request):
 
         node_id = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.values_list().filter(sensorname=node_id)
-        print(sensor_details)
+        # print(sensor_details)
 
         for r1 in sensor_details:
             mine_details = str(r1[1])
@@ -2120,17 +2121,17 @@ def fetch_map_image(request):
 
 def WarningLevel(gasValue, AWarning, BWarning, CWarning):
     warning = 0
-    print(gasValue, AWarning, BWarning, CWarning)
+    # print(gasValue, AWarning, BWarning, CWarning)
     if float(gasValue) > float(AWarning):
         warning = 1
-        print('warn1')
+        # print('warn1')
     if float(gasValue) > float(BWarning):
         warning = 2
-        print('warn2')
+        # print('warn2')
 
     if float(gasValue) > float(CWarning):
         print('warn3')
-        warning = 3
+        # warning = 3
 
     return warning
 
@@ -2153,12 +2154,13 @@ def node_sensor_data(request):
         sensor_data = {}
         sensor_details = Sensor_Node.objects.filter(node_id=node_id, mine_id=mine_id)
         for sd in sensor_details:
-
             try:
                 response = requests.get('http://' + sd.ip_add)
+
                 gasValue = strip_tags(response.text)
                 warning = str(WarningLevel(gasValue, sd.sensorunit1, sd.sensorunit2, sd.sensorunit3))
                 sensor_data[str(sd.sensorname)] = {'value': gasValue, 'unit': sd.sensorunit, 'warning': warning}
+                print(sensor_data)
             except:
                 data['error'] = "Connection Error!"
                 return JsonResponse(data)
