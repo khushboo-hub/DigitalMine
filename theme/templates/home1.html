@@ -110,6 +110,36 @@
         margin-top: 20px;
         width: 500px;
     }
+    @media(max-width: 992px){
+     .navbar .navbar-brand-logo .brand {
+        margin-top: 20px;
+        width: 400px;
+    }
+}
+    @media(max-width: 526px){
+     .navbar .navbar-brand-logo .brand {
+        margin-top: 20px;
+        width: 300px;
+    }
+}
+    @media(max-width: 426px){
+     .navbar .navbar-brand-logo .brand {
+        margin-top: 10px;
+        width: 250px;
+    }
+}
+    @media(max-width: 376px){
+     .navbar .navbar-brand-logo .brand {
+        margin-top: 0px;
+        width: 200px;
+    }
+}
+     @media(max-width: 326px){
+     .navbar .navbar-brand-logo .brand {
+        margin-top: -5px;
+        width: 150px;
+    }
+}
     </style>
 
      <script>
@@ -218,7 +248,7 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                   <div class="item active">
-                    <img src="static/image/underground_mine.jpg" alt="Los Angeles" style="width:100%;">
+                    <img src="static/image/underground_mine.jpg" alt="Los Angeles" style="width:100%;height:600px;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
                       <!-- <p>LA is always so much fun!</p> -->
@@ -226,7 +256,7 @@
                   </div>
 
                   <div class="item">
-                    <img src="static/image/bg_img.jpg" alt="Chicago" style="width:100%;">
+                    <img src="static/image/bg_img.jpg" alt="Chicago" style="width:100%; height:600px;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
                       <!-- <p>Thank you, Chicago!</p> -->
@@ -234,7 +264,7 @@
                   </div>
 
                   <div class="item">
-                    <img src="static/image/bg_img.jpg" alt="New York" style="width:100%;">
+                    <img src="static/image/bg_img.jpg" alt="New York" style="width:100%;height:600px;">
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
                       <!-- <p>We love the Big Apple!</p> -->
@@ -255,19 +285,19 @@
               </div>
 <!--            <div class="img-src" style="background-image: url('static/image/bg_img.jpg')"></div>-->
             <div class="row">
-                    <div class="col-md-4" style="margin-top:60px;"></div>
-                <div class="col-md-8">
-                    <div class="col-md-1" style="">
+                    <div class="col-md-5"></div>
+                <div class="col-md-7">
+                    <div class="col-md-1">
                         <div class="row">
-                            <img class="logo img-responsive" src="{% static '/image/meity.svg' %}" alt=""/>
+                            <center><img class="logo img-responsive" src="{% static '/image/meity.svg' %}" alt=""/><center>
                         </div>
-                        <div class="row">
+                        <div class="row text-center">
                             <strong>सत्यमेव जयते</strong>
                         </div>
                     </div>
-                    <div class="col-md-4 logo-text" style="margin-top:20px;">
+                    <div class="col-md-4 logo-text">
 
-                <div class="row">
+                <div class="row text-center">
                     
                     
                         <br>
@@ -431,17 +461,21 @@
         });
 
 
+
         $.ajax({
            url: "{% url 'news:get_news_ajax' %}",
            success:function(data){
                 data=JSON.parse(data.result);
+                console.log(data);
                 for(b in data){
                     var html='<span style="color:white">';
                         html+='<span class="label label-danger" style="position:relative;right:5px;">';
                         html+='<strong>New</strong>';
                         html+='</span>';
                         link=(isEmpty(data[b].fields.download_link))?'#':'media/'+data[b].fields.download_link;
-                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:green;">'+data[b].fields.news+'</a>';
+                        color=(isEmpty(data[b].fields.color))?"#FFFFFF":"#"+data[b].fields.color;
+                        console.log(color);
+                        html+='<a id="'+data[b].pk+'" class="newsClass" href="'+link+'" target="__blank" style="color:'+color+';">'+data[b].fields.news+'</a>';
                         html+='</span>&nbsp;&nbsp;&nbsp;&nbsp';
 
                     $('marquee#news_bulletin').append(html);

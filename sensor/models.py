@@ -91,9 +91,11 @@ class Sensor(models.Model):
 
 class Sensor_Node(models.Model):
     id = models.AutoField(primary_key=True)
-    mine_id = models.IntegerField(null=True, blank=True)
-    node_id = models.IntegerField(null=True, blank=True)
-    ip_add = models.CharField('IP Address', max_length=200)
+    # mine_id = models.IntegerField(null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE)
+    # node_id = models.IntegerField(null=True, blank=True)
+    node_id = models.ForeignKey(Node, on_delete=models.CASCADE)
+    ip_add = models.CharField('IP Addressss', max_length=200)
     sensorid = models.CharField('Sensor Id', max_length=200)
     sensorname = models.CharField('Sensor Name', max_length=200)
     sensorunit = models.CharField('Sensor Unit', max_length=200)
@@ -108,6 +110,9 @@ class Sensor_Node(models.Model):
     yellowlevel = models.CharField('Yellow Level Limit', default='0', max_length=200)
     redlevel = models.CharField('Red Level Limit', default='0', max_length=200)
     description = models.TextField('Description', max_length=200)
+    class Meta:
+        db_table="sensor_sensor_node"
+        unique_together = ('mine_id','node_id','sensorid')
 
 
 class Wireless(models.Model):

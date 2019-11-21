@@ -84,15 +84,14 @@ function setImageData(mine_id){
                 // CreateMapModel(data.mine.image_url,data.result.name);
                 tempData1=data;
                   CreateKBtestMap(data);
-                      $('div.KBmap__marker').click(function(){
-                            console.log('here');
+                  $(document).on("click","div.KBmap__marker",function() {
+                         console.log('here');
                             var NodeId=this.id;
                             var NodeName=this.dataset.markerName;
                             var mine_id=$("#id_mine_id").val();
                             console.log(NodeId+" "+NodeName+" "+mine_id);
                             Show_Live_Sensor_Values(mine_id,NodeId,NodeName);
-                        });
-
+                    });
                     },
             error: function(){
                     console.log("something is not right.please contact admin - 1");
@@ -117,7 +116,8 @@ function CreateKBtestMap(data){
 
 				KBtestmap.showAllMapMarkers();
 				for(d in data.node){
-			         $('div.KBmap__marker.'+d)[0]['id']=data.node[d]['id'];
+				    console.log(d);
+			         $('div.KBmap__marker.'+d.split(' ').join('.'))[0]['id']=data.node[d]['id'];
 			    }
 				}
         else{
