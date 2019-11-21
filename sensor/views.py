@@ -292,19 +292,12 @@ def node_add(request, template_name='node/node_add.html'):
 
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    form = NodeForm(initial={'mine_id': profile.mine_id.id})
-<<<<<<< HEAD
-    
-=======
->>>>>>> b5033a7c9a64c16e97732f0803faafbdf776e3a2
+    form = NodeForm(initial={'mine_id': profile.mine_id.id})  
     if current_user.is_superuser:
         book = Node.objects.all()
     else:
         book = Node.objects.filter(mine_id=profile.mine_id.id)
-<<<<<<< HEAD
     
-=======
->>>>>>> b5033a7c9a64c16e97732f0803faafbdf776e3a2
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
         # print("+++++++++++++++++")
