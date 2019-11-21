@@ -14,23 +14,7 @@
 
         <link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">
         <link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">
-
-
-
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-
-
-
-
-
-
-
-
-
-
-
-
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <div class="container">
     <div class="row">
         <section class="col-md-12">
@@ -63,6 +47,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.mine_id}}
+                                         <span style="color:red">{{form.mine_id.errors|striptags}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -70,8 +55,8 @@
                                         <label for="" class="" id="">Select Weighbridge<font color="red">*</font></label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="form-control" id="id_weighbridge_id" name="weighbridge_id">
-                                            <option>----Select Weighbridge----</option>
+                                        <select class="form-control" required id="id_weighbridge_id" name="weighbridge_id">
+                                            <option value="">----Select Weighbridge----</option>
                                         </select>
                                     </div>
                                 </div>
@@ -82,8 +67,8 @@
                                         <label for="" class="" id="">Select Vehicle<font color="red">*</font></label>
                                     </div>
                                     <div class="col-md-8">
-                                         <select class="form-control" id="id_vehicle_id" name="vehicle_id">
-                                            <option>----Select Vehicle----</option>
+                                         <select class="form-control" required id="id_vehicle_id" name="vehicle_id">
+                                            <option value="">----Select Vehicle----</option>
                                         </select>
                                     </div>
                                 </div>
@@ -93,6 +78,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.datetime_in}}
+                                         <span style="color:red">{{form.datetime_in.errors|striptags}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -103,6 +89,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.datetime_out}}
+                                         <span style="color:red">{{form.datetime_out.errors|striptags}}</span>
                                     </div>
                                 </div>
                                  <div class="col-md-6">
@@ -111,6 +98,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.trip_time}}
+                                         <span style="color:red">{{form.trip_time.errors|striptags}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -121,6 +109,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.tm_name}}
+                                         <span style="color:red">{{form.tm_name.errors|striptags}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -129,6 +118,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.wb_code}}
+                                         <span style="color:red">{{form.wb_code.errors|striptags}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +129,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.first_wt}}
+                                         <span style="color:red">{{form.first_wt.errors|striptags}}</span>
                                     </div>
 
                                 </div>
@@ -148,6 +139,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.second_wt}}
+                                         <span style="color:red">{{form.second_wt.errors|striptags}}</span>
                                     </div>
 
 
@@ -161,6 +153,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.net_wt}}
+                                         <span style="color:red">{{form.net_wt.errors|striptags}}</span>
                                     </div>
 
                                 </div>
@@ -170,6 +163,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.weight_unit}}
+                                         <span style="color:red">{{form.wieght_unit.errors|striptags}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -180,6 +174,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.production_type}}
+                                         <span style="color:red">{{form.production_type.errors|striptags}}</span>
                                     </div>
                                 </div>
                                  <div class="col-md-6">
@@ -188,6 +183,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.entry_date}}
+                                         <span style="color:red">{{form.entry_date.errors|striptags}}</span>
                                     </div>
                                 </div>
 
@@ -199,6 +195,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.type}}
+                                         <span style="color:red">{{form.type.errors|striptags}}</span>
                                     </div>
                                 </div>
                                 </div>
@@ -261,7 +258,7 @@ $("#id_mine_id").on("change",function(){
             });
 });
 function fill_dropdown(result){
-    $("#id_weighbridge_id").html("<option>----Select Weighbridge----</option>");
+    $("#id_weighbridge_id").html("<option value=''>----Select Weighbridge----</option>");
     for (index = 0; index < result.length; index++) {
     //alert(result[index]);
     var str_array = result[index].split(',');
@@ -291,7 +288,7 @@ $("#id_mine_id").on("change",function(){
 });
 
 function fill_dropdown2(result){
-    $("#id_vehicle_id").html("<option>----Select vehicle----</option>");
+    $("#id_vehicle_id").html("<option value=''>----Select vehicle----</option>");
     for (index = 0; index < result.length; index++) {
     //alert(result[index]);
     var str_array = result[index].split(',');

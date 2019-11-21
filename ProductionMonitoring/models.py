@@ -7,7 +7,7 @@ from datetime import date, datetime
 
 # Create your models here.
 class Production_Vehicle(models.Model):
-    mine_id = models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=True,blank=True)
+    mine_id = models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=False,blank=False)
     rfid = models.TextField(max_length=200, blank=True, null=True)
     vehicle_reg_no=models.CharField(max_length=200,null=True,blank=True)
     type_of_vehicle=models.CharField(max_length=200,null=True,blank=True)
@@ -47,7 +47,7 @@ class Production_Vehicle(models.Model):
 
 
 class Production_Weighbridge(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     w_name= models.CharField(max_length=100, default='')
     location= models.CharField(max_length=100, default='')
     desc= models.CharField(max_length=100,null=True,blank=True)
@@ -63,9 +63,9 @@ class Production_Weighbridge(models.Model):
 #####manualentry#######
 
 class Production_Manualentry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    weighbridge_id= models.CharField(max_length=100, default='')
-    vehicle_id= models.CharField(max_length=100, default='')
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
+    weighbridge_id= models.CharField(max_length=100, null=False,blank=False)
+    vehicle_id= models.CharField(max_length=100, null=False,blank=False)
     datetime_in=models.DateTimeField(default=datetime.now, blank=True)
     datetime_out=models.DateTimeField(default=datetime.now, blank=True)
     trip_time=models.CharField(max_length=200, null=True, blank=True)

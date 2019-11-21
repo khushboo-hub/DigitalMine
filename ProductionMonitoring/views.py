@@ -60,11 +60,14 @@ def weighbridge_manage(request, template_name='weighbridge_manage.html'):
 
 @login_required
 def weighbridge_add(request, template_name='weighbridge_add.html'):
-    form = WeighbridgeForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:weighbridge_manage')
+    if request.method == "POST":
+        form = WeighbridgeForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:weighbridge_manage')
+
+    form = WeighbridgeForm1()
     return render(request, template_name, {'form': form})
 
 
@@ -136,11 +139,14 @@ def manualentry_manage(request, template_name='manualentry_manage.html'):
 
 @login_required
 def manualentry_add(request, template_name='manualentry_add.html'):
-    form = ManualentryForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:manualentry_manage')
+    if request.method == "POST":
+        form = ManualentryForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:manualentry_manage')
+        return render(request, template_name, {'form': form})
+    form=ManualentryForm1()
     return render(request, template_name, {'form': form})
 
 
