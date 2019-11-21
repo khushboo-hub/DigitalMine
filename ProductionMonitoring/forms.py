@@ -134,17 +134,18 @@ class VehicleForm1(forms.ModelForm):
     # }))
     end_date_of_order = forms.DateField(widget=forms.TextInput(attrs=
     {
-        'class': 'form-control datepicker',
+        'class': 'form-control',
         'value': date.today()
     }))
-    value_of_order = forms.DateField(widget=forms.TextInput(attrs=
+    value_of_order = forms.DecimalField(max_digits=6,decimal_places=2, widget=forms.NumberInput(attrs=
     {
-        'class': 'form-control datepicker',
-        'value': date.today()
+        'class': 'form-control',
+        'min':'0.0'
+
     }))
     validity_of_tag = forms.DateField(widget=forms.TextInput(attrs=
     {
-        'class': 'form-control datepicker',
+        'class': 'form-control',
         'value': date.today()
     }))
     trip_cycle = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={

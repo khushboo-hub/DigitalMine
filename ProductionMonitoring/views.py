@@ -19,11 +19,16 @@ def vehicle_manage(request, template_name='vehicle_manage.html'):
 
 @login_required
 def vehicle_add(request, template_name='vehicle_add.html'):
-    form = VehicleForm1(request.POST, request.FILES)
-    # print(request.POST)
-    if form.is_valid():
-        form.save()
-        return redirect('ProductionMonitoring:vehicle_manage')
+
+    if request.method == "POST":
+        form = VehicleForm1(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:vehicle_manage')
+        else:
+            return render(request, template_name, {'form': form})
+
+    form = VehicleForm1()
     return render(request, template_name, {'form': form})
 
 
