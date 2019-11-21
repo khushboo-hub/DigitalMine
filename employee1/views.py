@@ -353,19 +353,23 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     form = MiningRoleForm(profile.mine_id.id,request.POST)  # Passed Mine id as an argument
+    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
     if form.is_valid():
         fs=form.save(commit=False)
         fs.mine_id=profile.mine_id.id
         fs.save()
         return redirect('employee1:manage_mining_role')
 
-    return render(request, template_name, {'form': form})
+    return render(request, template_name, {'form': form,'mine_name':mine_name})
 
 
 @login_required
 def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
     # book = Employee1.objects.all()
     book = MiningRole.objects.all()
+    current_user = request.user
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
     try:
         current_user=request.user
         profile=get_object_or_404(profile_extension,user_id=current_user.id)
@@ -375,6 +379,7 @@ def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
         pass
     data = {}
     data['object_list'] = book
+    data['mine_name']=mine_name
     return render(request, template_name, data)
 
 
@@ -384,6 +389,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(MiningRole, pk=pk)
     form = MiningRoleForm(request.POST or None, instance=book)
+    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
     if profile.mine_id is None:
         roles=MiningRole.objects.all()
     else:
@@ -397,7 +403,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
     if form.is_valid():
         form.save()
         return redirect('employee1:manage_mining_role')
-    return render(request, template_name, {'form': form,'roles':roles,'selected_role':selected_role})
+    return render(request, template_name, {'form': form,'roles':roles,'selected_role':selected_role,'mine_name':mine_name})
 
 
 @login_required
