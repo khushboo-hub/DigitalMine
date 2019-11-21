@@ -236,6 +236,7 @@ h1 .subtitle{
 [class*="navbar-ct"] .label{
     background-color: #FFFFFF;
     color: #FF4C40;
+    position:relative;
 }
 .navbar-default:not(.navbar-transparent) .btn-default:hover{
     color: #2C93FF;

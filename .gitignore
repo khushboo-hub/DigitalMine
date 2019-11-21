@@ -2,5 +2,5 @@
 migrations
 __pycache__
 .pdf
-media/*
-apps/*
+media/
+apps/
