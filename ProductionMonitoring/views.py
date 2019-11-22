@@ -110,30 +110,35 @@ def weighbridge_delete(request, pk):
 
 def manualentry_manage(request, template_name='manualentry_manage.html'):
 
-        manual_entry_table = Production_Manualentry.objects.values_list().filter()
+        manual_entry = Production_Manualentry.objects.all()
+        prepared_data = []
+        for entry in manual_entry:
+            print('wn id',entry.weighbridge_id)
+            wb=Production_Weighbridge.objects.get(id=entry.weighbridge_id)
+            vechicle=Production_Vehicle.objects.get(id=entry.vehicle_id)
+            print('wb name',wb.w_name)
+            prepared_data.append({'id':entry,'mine':entry.mine_id,'wb_name':wb.w_name,'vechile':vechicle.vehicle_reg_no,'wb_code':wb.wb_code,'type':entry.production_type})
         # print(manual_entry_table)
         data = {}
-        prepared_data = []
-        i = 0
-        for r in manual_entry_table:
-            wb_table = Production_Weighbridge.objects.get(id=str(r[2]))
 
-
-            v_table=Production_Vehicle.objects.get(id=str(r[3]))
-            #m_table=Production_Manualentry.objects.get(id=str(r[13]))
-            prepared_data.append([])
-            prepared_data[i].append(wb_table. mine_id)
-            prepared_data[i].append(wb_table.w_name)
-            prepared_data[i].append(v_table.vehicle_reg_no)
-            prepared_data[i].append(wb_table.wb_code)
-            prepared_data[i].append(str(r[13]))
-            prepared_data[i].append(str(r[0]))
-            i = i + 1
-
-        # return HttpResponse("ok")
-        print(prepared_data)
-        data['result'] = prepared_data
-        print(data)
+        # i = 0
+        # for r in manual_entry_table:
+        #     print('id',r[2])
+        #     wb_table = Production_Weighbridge.objects.get(id=str(r[2]))
+        #     v_table=Production_Vehicle.objects.get(id=str(r[3]))
+        #     #m_table=Production_Manualentry.objects.get(id=str(r[13]))
+        #     prepared_data.append([])
+        #     prepared_data[i].append(wb_table.mine_id)
+        #     prepared_data[i].append(wb_table.w_name)
+        #     prepared_data[i].append(v_table.vehicle_reg_no)
+        #     prepared_data[i].append(wb_table.wb_code)
+        #     prepared_data[i].append(str(r[13]))
+        #     prepared_data[i].append(str(r[0]))
+        #     i = i + 1
+        #
+        # # return HttpResponse("ok")
+        # print(prepared_data)
+        data['manual_entry'] = prepared_data
         return render(request, template_name, data)
 
 

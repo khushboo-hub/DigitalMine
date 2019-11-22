@@ -30,21 +30,23 @@
 
 
                             <th class="text-center" colspan="5">Action</th>
+{#                            <th class="text-center" colspan="5">Delete</th>#}
                         </tr>
                     </thead>
                     <tbody>
-                            {% for book in result %}
+                            {% for entry in manual_entry %}
                         <tr>
                             <!-- 0-mine_id,1-,5-id -->
                             <td>{{forloop.counter}}</td>
-                            <td>{{ book.0 }}</td>
-                            <td>{{ book.1 }}</td>
-                            <td>{{ book.2 }}</td>
-                            <td>{{ book.3 }}</td>
-                            <td>{{ book.4 }}</td>
+                            <td>{{ entry.mine.name }}</td>
+                            <td>{{ entry.wb_name }}</td>
+                            <td>{{ entry.vechile }}</td>
+                            <td>{{ entry.wb_code }}</td>
+                            <td>{{ entry.type }}</td>
 
+                            <td class="text-center"><a href="{% url 'ProductionMonitoring:manualentry_edit' entry.id.id %}" title="Edit Prodcution."><span class="glyphicon glyphicon-pencil"></span></a></td>
 
-                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'ProductionMonitoring:manualentry_delete' book.5 %}" title="Delete Manual Entry."><span class="glyphicon glyphicon-trash"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'ProductionMonitoring:manualentry_delete' entry.id.id %}" title="Delete Manual Entry."><span class="glyphicon glyphicon-trash"></span></a></td>
 
 
 
@@ -60,65 +62,6 @@
 </section>
         </div>
 </div>
-
-
-
-
-
-<div class="modal fade" id="update_info" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">
-                    Alert!
-                </h4>
-            </div>
-            <div class="modal-body">Are you sure, You want to delete?
-            </div>
-            <div class="modal-footer">
-                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- More Details Modal -->
-<!--<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <!--<div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">More Info</h4>
-      </div>
-      <div class="modal-body">
-        <div id="more_details_data">Some text in the modal.</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>-->
-
 <script>
     $(document.body).on("click", ".delete", function () {
 

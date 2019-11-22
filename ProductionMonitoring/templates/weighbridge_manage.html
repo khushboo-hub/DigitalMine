@@ -22,12 +22,6 @@
                             <th>Mine</th>
                             <th>Weighbridge Name</th>
                             <th>Location</th>
-
-
-
-                            <!--<th>Mining Role</th>-->
-
-
                             <th class="text-center" colspan="5">Action</th>
                         </tr>
                     </thead>
@@ -36,20 +30,10 @@
                         <tr>
                             <td>{{forloop.counter}}</td>
                             <!--<td>{{ book.id }}</td>-->
-                            <td>{{ book.mine_id }}</td>
+                            <td>{{ book.mine_id.name }}</td>
                              <td>{{ book.w_name }}</td>
                             <td>{{ book.location }}</td>
-
-
-
-
-                           <!-- <img class="image image-responsive" src="/media/{{ book.d_photo }}" height="100" width="100"/>-->
-
-
-                            <!--<span class="btn btn-info btn-sm more_details" data-url="{% url 'employee1:more_details_ajax' %}" id="{{book.id}}">More Details</span></td>-->
-                            <!--<td class="text-center"><a href="{% url 'employee1:update_shift_link' book.id %}"> <span class="btn btn-success btn-sm update_shift" data-url="" id="">Update Shift</span></a><br><br><a href="{% url 'employee1:details_employee_shift_assign' book.id %}"><small>Check Report</small></a> </td>-->
-                            <!--<td class="text-center"><a href="{% url 'employee1:update_medical' book.id %}"> <span class="glyphicon glyphicon-plus-sign"></span></a> </td>-->
-                            <td class="text-center"><a href="{% url 'ProductionMonitoring:weighbridge_edit' book.id %}" title="Edit Weighbridge."><span class="glyphicon glyphicon-pencil"></span></a></td>
+                             <td class="text-center"><a href="{% url 'ProductionMonitoring:weighbridge_edit' book.id %}" title="Edit Weighbridge."><span class="glyphicon glyphicon-pencil"></span></a></td>
                             <td class="text-center"><a href="#" class="delete" data-url="{% url 'ProductionMonitoring:weighbridge_delete' book.id %}" title="Delete Weighbridge."><span class="glyphicon glyphicon-trash"></span></a></td>
 
                         </tr>
@@ -63,103 +47,11 @@
 </section>
         </div>
 </div>
-
-
-
-
-
-<div class="modal fade" id="update_info" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">
-                    Alert!
-                </h4>
-            </div>
-            <div class="modal-body">Are you sure, You want to delete?
-            </div>
-            <div class="modal-footer">
-                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- More Details Modal -->
-<!--<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <!--<div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">More Info</h4>
-      </div>
-      <div class="modal-body">
-        <div id="more_details_data">Some text in the modal.</div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>-->
-
 <script>
     $(document.body).on("click", ".delete", function () {
-
         $("#sureDelete").attr("href", $(this).data('url'));
         $('#update_info').modal('show');
 
     });
-
-
-
-
-    $(document.body).on("click", ".more_details", function () {
-
-        url=$(this).data('url');
-        id=this.id;
-
-        $.ajax({
-        url: url,
-        dataType: 'json',
-            data: {
-                'id': id
-                },
-            success: function(data) {
-
-              <!--alert(data.result);-->
-              console.log(data)
-              $("#more_details_data").html(data.name);
-              $('#myModal').modal('show');
-        }});
-
-
-        <!--$('#myModal').modal('show');-->
-
-    });
 </script>
-<style>
-    .glyphicon-plus-sign{
-        color:red !important;
-    }
-</style>
 {% endblock %}
