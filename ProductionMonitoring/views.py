@@ -271,11 +271,14 @@ def fetch_report_ajax(request):
 
 @login_required
 def container_details_add(request, template_name='container_details_add.html'):
-    form = ContainerdetailsForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:container_details_add')
+    if request.method == "POST":
+        form = ContainerdetailsForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:container_details_manage')
+        return render(request,template_name,{'form':form})
+    form = ContainerdetailsForm1()
     return render(request, template_name, {'form': form})
 
 @login_required
@@ -378,11 +381,13 @@ def fetch_report_dispatch_ajax(request):
 
 @login_required
 def production_tub_add(request, template_name='production_tub_add.html'):
-    form = Production_Tub_Form1(request.POST)
-    if form.is_valid():
-        form.save()
-
-        return redirect('ProductionMonitoring:production_tub_add')
+    if request.method == "POST":
+        form = Production_Tub_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:production_tub_add')
+        return render(request,template_name,{'form':form})
+    form=Production_Tub_Form1()
     return render(request, template_name, {'form': form})
 
 @login_required
@@ -759,6 +764,7 @@ def container_details_edit(request, pk, template_name='container_details_add.htm
     if form.is_valid():
         form.save()
         return redirect('ProductionMonitoring:container_details_manage')
+
     return render(request, template_name, {'form': form})
 
 
