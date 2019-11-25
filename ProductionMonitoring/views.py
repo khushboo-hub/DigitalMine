@@ -407,22 +407,18 @@ def production_dailyentry_add(request, template_name='production_dailyentry_add.
     form = Production_DailyEntry_Form1()
     return render(request, template_name, {'form': form})
 
-# @login_required
-# def production_monthlyentry_add(request, template_name='production_dailyentry_add.html'):
-#     form = Production_MonthlyEntry_Form1(request.POST)
-#     if form.is_valid():
-#         form.save()
-#
-#         return redirect('ProductionMonitoring:production_monthlyentry_add')
-#     return render(request, template_name, {'form': form})
-
 @login_required
 def production_monthly_add(request, template_name='production_monthlyentry_add.html'):
-    form = Production_Monthly_Form1(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == "POST":
+        form = Production_Monthly_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Production Tub added successfully')
+            return redirect('ProductionMonitoring:production_monthly_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
 
-        return redirect('ProductionMonitoring:production_monthly_add')
+    form = Production_Monthly_Form1()
     return render(request, template_name, {'form': form})
 
 #####daily dispatch####

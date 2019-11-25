@@ -139,7 +139,7 @@ class Production_Material_Waste(models.Model):
 #######Daily enty of coal/ore###########
 
 class Production_DailyEntry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     shift_name = models.CharField(max_length=100, null=True, blank=True)
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
@@ -155,7 +155,7 @@ class Production_DailyEntry(models.Model):
 
 ####monthly entry of coal/ore########
 class Production_Monthly(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
     month = models.CharField(max_length=100, null=True, blank=True)
@@ -167,7 +167,7 @@ class Production_Monthly(models.Model):
 
 ####daily dispatch######
 class Production_DailyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     shift_name = models.CharField(max_length=100, null=True, blank=True)
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
@@ -185,12 +185,12 @@ class Production_DailyDispatch(models.Model):
 #####monthly dispatch######
 
 class Production_MonthlyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    month = models.CharField(max_length=100, null=True, blank=True)
-    years = models.CharField(max_length=100, null=True, blank=True)
+    month = models.DateTimeField(default=datetime.now,max_length=100, null=True, blank=True)
+    years = models.DateTimeField(default=datetime.now,max_length=100, null=True, blank=True)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -200,7 +200,7 @@ class Production_MonthlyDispatch(models.Model):
 
 ####Yearly dispatch#######
 class Production_YearlyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
@@ -214,7 +214,7 @@ class Production_YearlyDispatch(models.Model):
 
 
 class Production_YearlyEntry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
