@@ -348,13 +348,17 @@ def fetch_report_dispatch_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('mine_ID', None)
-
         from_date = request.GET.get('from', None)
         to_date = request.GET.get('to', None)
-        data = {}
-        data['result'] = serializers.serialize('json', Production_Tub.objects.filter(mine_id=mine_id,datetime_in__range=(from_date, to_date)),
-                                               fields=('mine_id', 'name_of_the_tub', 'laden_weight', 'no_of_trip', 'total_weight','datetime_in'))
+        tubs=[];
+        ProductionTub=Production_Tub.objects.filter(mine_id=mine_id, datetime_in__range=(from_date, to_date))
+        for PD in ProductionTub:
+            mine = get_object_or_404(MineDetails,pk=str(PD.mine_id.id))
+            Tub=get_object_or_404(Container_Details,pk=PD.name_of_the_tub_id)
+            tubs.append({'mine':str(mine.name), 'name_of_the_tub':Tub.name_of_the_tub, 'laden_weight':str(PD.laden_weight),
+                         'no_of_trip':str(PD.no_of_trip), 'total_weight':str(PD.total_weight),'datetime_in':str(PD.datetime_in)})
 
+        data['result'] = tubs
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
