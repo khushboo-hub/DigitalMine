@@ -11,14 +11,6 @@ from .models import Production_Vehicle, Production_Weighbridge,Production_Manual
 
 
 class VehicleForm1(forms.ModelForm):
-    mine_id = forms.CharField(label='Select Mine',
-                              widget=forms.Select(
-                                  choices=MineDetails.objects.all().values_list('id', 'name'),
-                                  attrs={
-                                      'class': 'form-control',
-
-                                  }
-                              ))
 
     rfid = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -374,7 +366,6 @@ class Production_WasteMaterial_Form1(forms.ModelForm):
         'placeholder': 'Net Weight'
     }))
 
-
     PRODUCTION_TYPE = (
     ('Coal', 'Coal'),
     ('Ore', 'Ore'),
@@ -388,9 +379,10 @@ class Production_WasteMaterial_Form1(forms.ModelForm):
     {
         'class': 'form-control'
     }))
+
     class Meta():
         model = Production_Material_Waste
-        fields = ['mine_id','vehicle_id','weighbridge_id','net_weight','unit','production_type','datetime_in']
+        fields = ['mine_id','vehicle_id','weighbridge_id','net_weight','production_type','datetime_in']
 
 
 ######production_dailyentry#######

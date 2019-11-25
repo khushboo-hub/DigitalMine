@@ -121,7 +121,7 @@ class Production_Tub(models.Model):
 
 
 class Production_Material_Waste(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     vehicle_id = models.CharField(max_length=100, default='')
     weighbridge_id = models.CharField(max_length=100, default='')
     net_weight = models.IntegerField(null=True, blank=True)

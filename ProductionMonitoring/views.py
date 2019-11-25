@@ -379,25 +379,32 @@ def production_tub_add(request, template_name='production_tub_add.html'):
 
 @login_required
 def production_wastematerial_add(request, template_name='production_wastematerial_add.html'):
-    form = Production_WasteMaterial_Form1(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == "POST":
+        form = Production_WasteMaterial_Form1(request.POST or None)
+        print('form errors',form.errors)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Production Tub added successfully')
+            return redirect('ProductionMonitoring:production_wastematerial_add')
 
-        return redirect('ProductionMonitoring:production_wastematerial_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request,template_name,{'form':form})
+
+    form = Production_WasteMaterial_Form1()
     return render(request, template_name, {'form': form})
 
 @login_required
 def production_dailyentry_add(request, template_name='production_dailyentry_add.html'):
     if request.method == "POST":
-        print(request.POST)
         form = Production_DailyEntry_Form1(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Production Tub added successfully')
             return redirect('ProductionMonitoring:production_dailyentry_add')
-        else:
-            print("Invalid")
-    else:
-        form = Production_DailyEntry_Form1
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
+
+    form = Production_DailyEntry_Form1()
     return render(request, template_name, {'form': form})
 
 # @login_required
