@@ -3,12 +3,23 @@ from datetime import date
 from django import forms
 from django.db import models
 from datetime import date, datetime
+
+from employee1.models import MineDetails
 from .models import Production_Vehicle, Production_Weighbridge,Production_Manualentry, Container_Details,Production_Tub,Production_Material_Waste,Production_DailyEntry,Production_Monthly,Production_DailyDispatch,Production_MonthlyDispatch,Production_YearlyDispatch,Production_YearlyEntry
 
 
 
 
 class VehicleForm1(forms.ModelForm):
+    mine_id = forms.CharField(label='Select Mine',
+                              widget=forms.Select(
+                                  choices=MineDetails.objects.all().values_list('id', 'name'),
+                                  attrs={
+                                      'class': 'form-control',
+
+                                  }
+                              ))
+
     rfid = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'RFID /  आर.एफ.आइ.डी '

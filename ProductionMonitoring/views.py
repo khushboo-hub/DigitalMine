@@ -1,5 +1,6 @@
 import cv2
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from .forms import VehicleForm1, WeighbridgeForm1, ManualentryForm1,ContainerdetailsForm1,Production_Tub_Form1,Production_WasteMaterial_Form1,Production_DailyEntry_Form1,Production_Monthly_Form1,Production_DailyDispatch_Form1,Production_MonthlyDispatch_Form1,Production_YearlyDispatch_Form1,Production_YearlyEntry_Form1
@@ -8,6 +9,7 @@ from .models import Production_Vehicle, Production_Weighbridge, Production_Manua
 from employee1.models import MineShift
 from employee1.models import MineDetails
 from django.db import connection
+from django.contrib import messages
 
 @login_required
 def vehicle_manage(request, template_name='vehicle_manage.html'):
@@ -347,32 +349,11 @@ def fetch_report_dispatch_ajax(request):
     if request.is_ajax():
         mine_id = request.GET.get('mine_ID', None)
 
-        from_date = request.GET.get('newdate_ID', None)
-        to_date = request.GET.get('newdate1_ID', None)
-
-        location_details = Production_Tub.objects.values_list().filter(datetime_in__range=(from_date, to_date),
-                                                                               mine_id=mine_id)
+        from_date = request.GET.get('from', None)
+        to_date = request.GET.get('to', None)
         data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
-
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[3]))
-            # location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[5]))
-            location_data[i].append(str(r[7]))
-
-            i = i + 1
-
-        data['result'] = location_data
-        print(data)
-
+        data['result'] = serializers.serialize('json', Production_Tub.objects.filter(mine_id=mine_id,datetime_in__range=(from_date, to_date)),
+                                               fields=('mine_id', 'name_of_the_tub', 'laden_weight', 'no_of_trip', 'total_weight','datetime_in'))
 
     else:
         data['result'] = "Not Ajax"
@@ -385,7 +366,9 @@ def production_tub_add(request, template_name='production_tub_add.html'):
         form = Production_Tub_Form1(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Production Tub added successfully')
             return redirect('ProductionMonitoring:production_tub_add')
+        messages.error(request, 'Something Went Wrong!')
         return render(request,template_name,{'form':form})
     form=Production_Tub_Form1()
     return render(request, template_name, {'form': form})

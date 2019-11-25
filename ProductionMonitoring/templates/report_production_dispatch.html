@@ -1,17 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 {% load staticfiles %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-        <!--<script src="{% static 'dateandtime/jquery-ui.js' %}"></script>-->
-        <!--<script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">-->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <div class="container">
     <div class="row">
         <section class="col-md-12">
+            <h1 class="page-header">Report On Production Dispatch
+                </h1>
             <!-- Table content -->
             <div class="row">
                 <div class="form-group">
@@ -32,7 +26,14 @@
                                          <label for="id_dates" class="" id="">From Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.dates}}
+                                        <div class="input-group date" id="from_date_time_picker">
+                                            {{form.dates}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red">{{form.dates.errors|striptags}}</span>
+
                                     </div>
                                 </div>
                                 </div>
@@ -42,7 +43,15 @@
                                         <label for="id_dates1" class="" id="">To Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.end_date_of_order}}
+                                        <div class="input-group date" id="to_date_time_picker">
+                                             {{form.end_date_of_order}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red"> {{form.end_date_of_order.errors|striptags}}</span>
+
+
                                     </div>
                                 </div>
                             </div>
@@ -128,102 +137,52 @@ fieldset ul {list-style:none}
 $(document).ready(function(){
         $("#id_mine_id").addClass('form-control');
 
-
+        var from=$('#from_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD HH:mm:ss'
+                });
+        var to=$('#to_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD HH:mm:ss'
+                });
 });
 
-$(function() {
-    $( "#id_dates" ).datepicker({
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
-
-    });
-  });
-  $(function() {
-    $( "#id_end_date_of_order" ).datepicker({
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
-
-    });
-  });
-
  $("#id_show").click(function(){
-
-      var mine_id = $("#id_mine_id").val();
-      var dates =$('#id_dates').val();
-
-
-      var tym=00;
-
-      var newdate=dates+" "+tym+tym+":"+tym+tym+":"+tym+tym+"."+tym+tym+tym+tym+tym+tym;
-      alert(newdate);
-
-
-
-
-      var end_date =$('#id_end_date_of_order').val();
-      var newdate1=end_date+" "+tym+tym+":"+tym+tym+":"+tym+tym+"."+tym+tym+tym+tym+tym+tym;
-
-
-
-        var production_type=$("#id_production_type").val();
+     var mine_id = $("#id_mine_id").val();
+     var from =$('#id_dates').val();
+     var to =$('#id_end_date_of_order').val();
+     {#var production_type=$("#id_production_type").val();#}
            $.ajax({
             type:"get",
             url: "{% url 'ProductionMonitoring:fetch_report_dispatch_ajax' %}",
             data: {
                      'mine_ID': mine_id,
-                     'newdate_ID':newdate,
-                     'newdate1_ID':newdate1,
+                     'from':from,
+                     'to':to,
 
                    },
             success: function(data) {
+                console.log(data)
 
-                console.log(data.result);
-                //alert(data.result);
-                fill_table(data.result);
-
-
-
-
-                    //return false;
-                    },
+                dispatch_detail=JSON.parse(data.result)
+                if(!isEmpty(dispatch_detail)){
+                    fill_table(dispatch_detail);}
+                else {
+                    toastr.info('No Data Found!');
+                }
+                return data;
+            },
             error: function(){
                     console.log("Error!");
                  }
             });
 });
 function fill_table(result){
-    <!--alert(result);-->
-
-   var  sum=0;
-   for (index = 0; index <= result.length; index++) {
-            <!--alert(result[index][0]);-->
-         <!--var str_array = result[index].split(',');-->
-            <!--alert(str_array);-->
-        var str = result[index][4].split('+');
-
-
-
-
-          $("#results").append($("<tr><td>"+result[index][0]+"</td><td>"+result[index][1]+"</td><td>"+result[index][2]+"</td><td>"+result[index][3]+"</td><td>"+str[0]+"</td></tr>"));
-
-         <!--sum+=parseInt(str_array[1]);-->
-         <!--$("#total_weight").val(sum);-->
-
+     $("#results").empty();
+    for(dispatch=0;dispatch<dispatch_detail.length;dispatch++){
+        var D=dispatch_detail[dispatch].fields;
+        var mine_name=$("#id_mine_id option[value="+D.mine_id+"]").text();
+         $("#results").append($("<tr><td>"+mine_name+"</td><td>"+D.name_of_the_tub+"</td><td>"+D.laden_weight+"</td><td>"+D.total_weight+"</td><td>"+D.datetime_in+"</td></tr>"));
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 function myFunction() {
   window.print();
 }
