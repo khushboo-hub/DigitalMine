@@ -3,48 +3,12 @@
 {% block content %}
 
 {% load staticfiles %}
-<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-        <!--<script src="{% static 'dateandtime/jquery-ui.js' %}"></script>-->
-        <!--<script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">-->
-
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">-->
-
-
-
-        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-
-
-
-
-
-
-
-
 
 <div class="container">
     <div class="row">
         <section class="col-md-12">
-            <h1 class="page-header">Report Of Daily Entry Of Coal/Ore
-                </h1>
-            <div class="row text-center">
+            <h1 class="page-header">Report Of Daily Entry Of Coal/Ore</h1>
 
-            </div>
-
-<!--<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Manual Entry Of Coal/Ore Weighbridge</h1>-->
             <!-- Table content -->
             <div class="row">
                 <div class="form-group">
@@ -77,10 +41,16 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                      <div class="col-md-4">
-                                        <label for="" class="" id="">From month</label>
+                                        <label for="" class="" id="">From Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control datepicker" id="from_dates">
+                                        <div class="input-group date" id="from_date_time_picker">
+                                                {{ form.dates }}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red">{{form.dates.errors|striptags}}</span>
                                     </div>
 
                                  </div>
@@ -89,16 +59,16 @@
                                         <label for="" class="" id="">To Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control datepicker" id="to_dates">
+                                        <div class="input-group date" id="to_date_time_picker">
+                                                {{ form.dates }}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red">{{form.dates.errors|striptags}}</span>
                                     </div>
-
                                  </div>
-
-
-
                             </div>
-
-
                         </fieldset>
                         <br/><br/>
                          <div class="text-center">
@@ -118,7 +88,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered" id="content">
+                <table class="table table-bordered"  id="ProductionTable">
                     <thead>
                         <tr>
                             <th>Mine Name</th>
@@ -164,16 +134,31 @@ fieldset ul {list-style:none}
 <script>
 $(document).ready(function(){
         $("#id_mine_id").addClass('form-control');
-
         $("#id_vehicle_id").addClass('form-control');
         $("#id_name_of_the_tub").addClass('form-control');
-         $("#id_shift_name").addClass('form-control');
-
-
-
+        $("#id_shift_name").addClass('form-control');
+        var from=$('#from_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+             });
+        var to=$('#to_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+             });
+        $("#id_mine_id").on("change",function(){
+                fill_dropdown(this.value);
+        });
+        if(!isEmpty($('#id_mine_id').val())){
+                fill_dropdown($('#id_mine_id').val());
+        }
+        $('#ProductionTable').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ],
+                }
+            )
 });
-$("#id_mine_id").on("change",function(){
-    mine_id=this.value;
+
+function fill_dropdown(mine_id){
     $.ajax({
             type:"get",
             url: "{% url 'ProductionMonitoring:fetch_shift_ajax' %}",
@@ -181,46 +166,23 @@ $("#id_mine_id").on("change",function(){
                      'id': mine_id
                    },
             success: function(data) {
-                console.log(data);
-                //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                //return data;
-                    },
+                 $("#id_shift_name").html("<option value='0'>All</option>");
+                for (index = 0; index < data.result.length; index++) {
+                    var shift = data.result[index].split(',');
+                    $("#id_shift_name").append($("<option />").val(shift[0]).text(shift[1]));
+                }
+            },
             error: function(){
-                    console.log("error he ji");
+                    console.log("Something Went Wrong!");
                  }
             });
-});
-function fill_dropdown(result){
-    $("#id_shift_name").html("<option value='0'>All</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_shift_name").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
 }
 
-
-
-$(function() {
-    $( ".datepicker" ).datepicker({
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "1900:2012",
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
-
-    });
-  });
   $("#id_show").click(function(){
-
         var mine_id = $("#id_mine_id").val();
         var shift_id = $("#id_shift_name").val();
-        var from_id =$('#from_dates').val();
-        var to_id=$("#to_dates").val();
-        alert(to_id);
+        var from_id =$('#from_date_time_picker input').val()
+        var to_id=$('#to_date_time_picker input').val()
            $.ajax({
             type:"get",
             url: "{% url 'ProductionMonitoring:fetch_report_daily_ajax' %}",
@@ -231,45 +193,25 @@ $(function() {
                      'to_ID':to_id,
                    },
             success: function(data) {
-                console.log(data.result);
-                <!--alert(data.result);-->
                 fill_table(data.result);
-
-
-
-
-                    //return false;
-                    },
+            },
             error: function(){
                     console.log("Error!");
                  }
             });
 });
-function fill_table(result){
-  // alert(result);
-   <!--var count=0;-->
-   <!--var  sum=0;-->
-   for (index = 0; index < result.length; index++) {
-
-        <!--alert(result[index][0]);-->
-
-         <!--var str_array = result[index].split(',');-->
-        <!--alert(str_array);-->
-
-          $("#results").append($("<tr><td>"+result[index][0]+"</td><td>"+result[index][1]+"</td><td>"+result[index][2]+"</td><td>"+result[index][3]+"</td><td>"+result[index][4]+"</td></tr>"));
-
-    }
-}
-
+function fill_table(entry_detail) {
+            datatable = $('#ProductionTable').DataTable();
+            datatable.clear().draw();
+            for (entry = 0; entry < entry_detail.length; entry++) {
+                var E = entry_detail[entry];
+                var row = datatable.row.add([E.mine, E.shift, E.date, E.total_production, E.unit]).draw().node();
+                          }
+        }
 
 function myFunction() {
   window.print();
 }
-
-
-
-
-
 
 </script>
 
