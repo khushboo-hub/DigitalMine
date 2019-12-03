@@ -3,34 +3,6 @@
 {% block content %}
 
 {% load staticfiles %}
-<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-        <!--<script src="{% static 'dateandtime/jquery-ui.js' %}"></script>-->
-        <!--<script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">-->
-
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">-->
-
-
-
-        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-
-
-
-
-
-
-
-
-
 <div class="container">
     <div class="row">
         <section class="col-md-12">
@@ -39,13 +11,6 @@
             <div class="row text-center">
 
             </div>
-
-<!--<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Manual Entry Of Coal/Ore Weighbridge</h1>-->
-            <!-- Table content -->
             <div class="row">
                 <div class="form-group">
                     <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -202,19 +167,6 @@ function fill_dropdown(result){
     $("#id_shift_name").append($("<option />").val(str_array[0]).text(str_array[1]));
     }
 }
-
-
-
-$(function() {
-    $( ".datepicker" ).datepicker({
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "1900:2012",
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
-
-    });
-  });
   $("#id_show").click(function(){
 
         var mine_id = $("#id_mine_id").val();
