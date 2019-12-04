@@ -604,31 +604,26 @@ def report_yearlydispatch(request, template_name='report_yearlydispatch.html'):
 def fetch_report_dailydispatch_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
-        shift_id = request.GET.get('shift_ID', None)
-        from_date = request.GET.get('from_ID', None)
-        to_date = request.GET.get('to_ID', None)
-        location_details =Production_DailyDispatch.objects.values_list().filter(dates__range=(from_date,to_date),mine_id=mine_id,shift_name=shift_id)
-        data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        mine = request.GET.get('mine', None)
+        shift = request.GET.get('shift', None)
+        print('shiftt=>',shift)
+        from_date = request.GET.get('from', None)
+        to_date = request.GET.get('to', None)
+        DailyProduction =Production_DailyDispatch.objects.filter(mine_id=mine,shift_name=shift,dates__range=(from_date,to_date))
+        Production_data = []
+        for Production in DailyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
+            if Production.shift_name == '0':
+                shift_name = 'All'
+            else:
+                shift = MineShift.objects.get(id=Production.shift_name)
+                shift_name = shift.shift_name
 
-            shift_table = MineShift.objects.get(id=str(r[2]))
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-            location_data[i].append(shift_table.shift_name)
-            location_data[i].append(str(r[5]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[6]))
-            location_data[i].append(str(r[3]))
-            i = i + 1
+            Production_data.append(
+                {'mine': mine_table.name,'shift':shift_name, 'date': Production.dates, 'type': Production.production_type,
+                 'total': Production.total_weight, 'unit': Production.weight_unit})
 
-        data['result'] = location_data
-        print(data)
-
-
+        data['result'] = Production_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)

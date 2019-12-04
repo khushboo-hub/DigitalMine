@@ -158,8 +158,8 @@ class Production_Monthly(models.Model):
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     production_type = models.CharField(max_length=100, null=True,blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    month = models.IntegerField(max_length=2, null=False, blank=False)
-    years = models.IntegerField(max_length=4, null=False, blank=False)
+    month = models.IntegerField(null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     class Meta:
         db_table = "production_monthly"
@@ -189,8 +189,8 @@ class Production_MonthlyDispatch(models.Model):
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    month = models.IntegerField(max_length=2, null=False, blank=False)
-    years = models.IntegerField(max_length=4, null=False, blank=False)
+    month = models.IntegerField(null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -204,7 +204,7 @@ class Production_YearlyDispatch(models.Model):
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    years = models.IntegerField(max_length=4, null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -218,7 +218,7 @@ class Production_YearlyEntry(models.Model):
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    years = models.IntegerField(max_length=4, null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
