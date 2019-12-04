@@ -194,7 +194,8 @@
           </button>
 
           <!-- Topbar Search -->
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <form method="POST" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          {% csrf_token %}
             <div class="input-group">
               <!-- <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
               <div class="input-group-append">
@@ -202,9 +203,10 @@
                   <i class="fas fa-search fa-sm"></i>
                 </button>
               </div> -->
-              <select name="" id="" class="form-control">
+              <select name="mine_name" onchange="this.form.submit()" id="" class="form-control">
                 {% for x in mine_table %}
-                <option value="{{x.id}}" >{{ x.name}}</option>
+                    {% firstof var1 var2 var3 %}
+                <option {% if selected == x.id %} selected {% endif %} value="{{x.id}}" >{{ x.name}}</option>
                 {% endfor %} 
               </select>
             </div>
@@ -378,7 +380,7 @@
 
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Dashboard for : {{ first_mine_name }}{{ first_mine_id }} </h1>
+            <h1 class="h3 mb-0 text-gray-800">Dashboard for : {{ first_mine_name }}</h1>
             <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
           </div>
 

@@ -12,23 +12,31 @@ from django.http import HttpResponse, JsonResponse
 
 @login_required
 def dashboard_calling(request):
+
+    if request.method == "POST":
+        mine_name = request.POST.get("mine_name", None)
+        mine= get_object_or_404(MineDetails,pk=mine_name)
+    else:
+        mine=MineDetails.objects.all()[:1].get()
+
+    print(mine)
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    data={}
+    data = {}
     mine_table = MineDetails.objects.all()
     data['mine_table'] = mine_table
-    strata=Strata_location.objects.filter(mine_name=profile.mine_id.id)
+    strata=Strata_location.objects.filter(mine_name=mine.id)
     # print("Strata",strata)
-    first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
-    data['first_mine_id']=first_mine[0]
-    data['first_mine_name'] = first_mine[1]
+    # first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
+    data['first_mine_id']=mine.id
+    data['first_mine_name'] = mine.name
+    data['selected'] = mine.id
+
     data['strata'] = strata
-    nodes=Node.objects.filter(mine_id=profile.mine_id.id)
+    nodes=Node.objects.filter(mine_id=mine.id)
     data['nodes'] =  nodes
     for node in nodes:
-        print("Node Id",node.id,profile.mine_id.id)
         sensors=Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node.id)
-        print(sensors)
 
     return render(request, "index.html",data)
 
