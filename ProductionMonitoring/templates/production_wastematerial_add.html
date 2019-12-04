@@ -2,255 +2,237 @@
 
 {% block content %}
 
-{% load staticfiles %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    {% load staticfiles %}
 
-
-
-        <script src="{% static 'dateandtime/jquery-ui.js' %}"></script>
-        <script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>
-        <link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">
-        <link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">
-
-        <link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">
-        <link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">
-
-
-
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Production Using Waste Material
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header">Production Using Waste Material
                 </h1>
-
-
-<!--<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Manual Entry Of Coal/Ore Weighbridge</h1>-->
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Production Using Waste Material</font></legend>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        {% if messages %}
+                                        <ul class="messages">
+                                            {% for message in messages %}
+                                            <li{% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissable"{% endif %} style="box-shadow:10px 10px 5px #aaaaaa";>
+                                            <a class="panel-close close" data-dismiss="alert">×</a>
+                                                {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                                                {{ message }}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        {% endif %}
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><font color="blue">Production Using Waste
+                                    Material</font></legend>
                                 <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="" class="" id="">Select Mine:<font color="red">*</font> </label>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Select Mine:<font color="red">*</font> </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.mine_id }}
+                                            <span style="color:red">{{form.mine_id.errors|striptags}}</span>
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        {{form.mine_id}}
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="" class="" id="">Select Weighbridge<font color="red">*</font></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <select class="form-control" id="id_weighbridge_id" name="weighbridge_id">
-                                            <option>----Select Weighbridge----</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                 <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="" class="" id="">Net Weight<font color="red">*</font> </label>
-                                    </div>
-                                    <div class="col-md-5">
-                                        {{form.net_weight}}
-                                    </div>
-                                     <div class="col-md-1">
-                                        in
-                                    </div>
-                                     <div class="col-md-2">
-                                         <label for="" class="" id="" >m<sup>3</sup>/t</label>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Select Weighbridge<font
+                                                    color="red">*</font></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select class="form-control" required id="id_weighbridge_id" name="weighbridge_id">
+                                                <option value="">----Select Weighbridge----</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                  <div class="col-md-6">
-                                     <div class="col-md-4">
-                                        <label for="" class="" id="">DateTime</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.datetime_in}}
-                                    </div>
-
-                                 </div>
-                            </div>
-
 
                                 <div class="form-group col-md-12">
-                                 <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="" class="" id="">Select Vehicle<font color="red">*</font></label>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Net Weight<font color="red">*</font> </label>
+                                        </div>
+                                        <div class="col-md-5">
+                                            {{ form.net_weight }}
+                                            <span style="color:red">{{form.net_weight.errors|striptags}}</span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            in
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="" class="" id="">m<sup>3</sup>/t</label>
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                         <select class="form-control" id="id_vehicle_id" name="vehicle_id">
-                                            <option>----Select Vehicle----</option>
-                                        </select>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">DateTime</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="input-group date" id="in_date_time_picker">
+                                                {{ form.datetime_in }}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red">{{form.datetime_in.errors|striptags}}</span>
+
+                                        </div>
+
                                     </div>
                                 </div>
 
+
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Select Vehicle<font
+                                                    color="red">*</font></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select class="form-control" id="id_vehicle_id" name="vehicle_id">
+                                                <option>----Select Vehicle----</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Production Type<font
+                                                    color="red">*</font></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.production_type }}
+                                            <span style="color:red">{{form.production_type.errors|striptags}}</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </fieldset>
+                            <br/><br/>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit"/>
+
                             </div>
-
-
-
-                        </fieldset>
-                        <br/><br/>
-                        <div class="text-center">
-                            <input type="submit" class="btn btn-primary" value="Submit"/>
-
-                        </div>
-                    </form>
-                </div>
-            </div><!--end Table content -->
-        </section>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
     </div>
-</div>
-<style>
+    <style>
 
-    fieldset.scheduler-border {
-    border: solid 1px #DDD !important;
-    padding: 0 10px 10px 10px;
-    border-bottom: none;
-}
+        fieldset.scheduler-border {
+            border: solid 1px #DDD !important;
+            padding: 0 10px 10px 10px;
+            border-bottom: none;
+        }
 
-legend.scheduler-border {
-    width: auto !important;
-    border: none;
-    font-size: 14px;
-}
-fieldset ul {list-style:none}
+        legend.scheduler-border {
+            width: auto !important;
+            border: none;
+            font-size: 14px;
+        }
+
+        fieldset ul {
+            list-style: none
+        }
 
 
-</style>
-<script>
-$(document).ready(function(){
-        $("#id_mine_id").addClass('form-control');
-        $("#id_weighbridge_id").addClass('form-control');
-         $("#id_name_of_the_tub").addClass('form-control');
-        $("#id_production_type").addClass('form-control');
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_id").addClass('form-control');
+            $("#id_weighbridge_id").addClass('form-control');
+            $("#id_name_of_the_tub").addClass('form-control');
+            $("#id_production_type").addClass('form-control');
+            var in_date=$('#in_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD HH:mm:ss'
+             });
 
-});
-$("#id_mine_id").on("change",function(){
-    mine_id=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'ProductionMonitoring:fetch_location_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                console.log(data);
-                //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                //return data;
-                    },
-            error: function(){
-                    console.log("error he ji");
-                 }
+            $("#id_mine_id").on("change",function(){
+                fill_wb_dropdown(this.value);
+                fill_vechile_dropdown(this.value);
             });
-});
-function fill_dropdown(result){
-    $("#id_weighbridge_id").html("<option>----Select Weighbridge----</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_weighbridge_id").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
+            if(!isEmpty($('#id_mine_id').val())){
+                fill_wb_dropdown($('#id_mine_id').val());
+                fill_vechile_dropdown($('#id_mine_id').val());
+            }
+        });
 
+        function fill_wb_dropdown(mine_id) {
+            $.ajax({
+                type: "get",
+                url: "{% url 'ProductionMonitoring:fetch_location_ajax' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    console.log(data);
+                   $("#id_weighbridge_id").html("<option value=''>----Select Weighbridge----</option>");
+                   for (index = 0; index < data.result.length; index++) {
+                       var wb = data.result[index].split(',');
+                       $("#id_weighbridge_id").append($("<option />").val(wb[0]).text(wb[1]));
+                    }
+                },
+                error: function () {
+                    console.log("error he ji");
+                }
+            });
+        }
 
-
-
-
-
-
-
-$('#id_datetime_in').datetimepicker();
-
-$("#id_name_of_the_tub").on("change",function(){
-    name_tub=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'ProductionMonitoring:fetch_laden_ajax' %}",
-            data: {
-                     'id': name_tub
-                   },
-            success: function(data) {
-                console.log(data);
-                //alert('NO ERROR ENCOUNTERED!');
-                //alert(data.result[0]);
-                $("#id_laden_weight").val(data.result);
-
-                //return data;
-                    },
-            error: function(){
+        $("#id_name_of_the_tub").on("change", function () {
+            name_tub = this.value;
+            $.ajax({
+                type: "get",
+                url: "{% url 'ProductionMonitoring:fetch_laden_ajax' %}",
+                data: {
+                    'id': name_tub
+                },
+                success: function (data) {
+                    $("#id_laden_weight").val(data.result);
+                },
+                error: function () {
                     alert('ERROR ENCOUNTERED!');
                     console.log(data);
-                 }
+                }
             });
-});
-$("#id_laden_weight").prop('readonly', true);
+        });
+        $("#id_laden_weight").prop('readonly', true);
 
-$(document.body).on('blur change paste keyup','#id_no_of_trip',function() {
+        $(document.body).on('blur change paste keyup', '#id_no_of_trip', function () {
             var n1 = parseInt($('#id_laden_weight').val());
             var n2 = parseInt($('#id_no_of_trip').val());
-            //var x = (n1 ? n1 : 0) - (n2 ? n2 : 0);
-            var x =n2*n1;
-             $("#id_total_weight").val(x);
-         });
- $("#id_mine_id").on("change",function(){
-    mine_id=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'ProductionMonitoring:fetch_vehicle_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                console.log(data);
-                //alert(data.result[0]);
-                fill_dropdown2(data.result);
+            var x = n2 * n1;
+            $("#id_total_weight").val(x);
+        });
+        function fill_vechile_dropdown(mine_id) {
+            $.ajax({
+                type: "get",
+                url: "{% url 'ProductionMonitoring:fetch_vehicle_ajax' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    $("#id_vehicle_id").html("<option>----Select vehicle----</option>");
+                    for (index = 0; index < data.result.length; index++) {
+                        var vechile = data.result[index].split(',');
+                        $("#id_vehicle_id").append($("<option />").val(vechile[0]).text(vechile[1]));
+                    }
 
-                //return data;
-                    },
-            error: function(){
+                },
+                error: function () {
                     console.log("error");
-                 }
+                }
             });
-});
 
-function fill_dropdown2(result){
-    $("#id_vehicle_id").html("<option>----Select vehicle----</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_vehicle_id").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
+        }
 
-</script>
+    </script>
 
 {% endblock %}

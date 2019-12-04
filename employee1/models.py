@@ -86,7 +86,7 @@ class Employee1(models.Model):
     photo = models.ImageField(upload_to='employee_image/',null=True,blank=True)
 
     #########   Mining Details   #################
-    mine=models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=True,blank=True)
+    mine=models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=False,blank=False)
     rfid=models.TextField(max_length=200,blank=True,null=True)
     designation = models.TextField(max_length=200, blank=True, null=True)
     token_no = models.TextField(max_length=200, blank=True, null=True)

@@ -3,12 +3,12 @@ from datetime import date
 from django import forms
 from django.db import models
 from datetime import date, datetime
+
+from employee1.models import MineDetails
 from .models import Production_Vehicle, Production_Weighbridge,Production_Manualentry, Container_Details,Production_Tub,Production_Material_Waste,Production_DailyEntry,Production_Monthly,Production_DailyDispatch,Production_MonthlyDispatch,Production_YearlyDispatch,Production_YearlyEntry
 
-
-
-
 class VehicleForm1(forms.ModelForm):
+
     rfid = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'RFID /  आर.एफ.आइ.डी '
@@ -127,24 +127,21 @@ class VehicleForm1(forms.ModelForm):
         'class': 'form-control datepicker',
         'value': date.today()
     }))
-    # start_date_of_order=forms.DateField(widget=forms.TextInput(attrs=
-    # {
-    #     'class': 'form-control datepicker',
-    #      #'value': date.today()
-    # }))
+
     end_date_of_order = forms.DateField(widget=forms.TextInput(attrs=
     {
-        'class': 'form-control datepicker',
+        'class': 'form-control',
         'value': date.today()
     }))
-    value_of_order = forms.DateField(widget=forms.TextInput(attrs=
+    value_of_order = forms.DecimalField(max_digits=6,decimal_places=2, widget=forms.NumberInput(attrs=
     {
-        'class': 'form-control datepicker',
-        'value': date.today()
+        'class': 'form-control',
+        'min':'0.0'
+
     }))
     validity_of_tag = forms.DateField(widget=forms.TextInput(attrs=
     {
-        'class': 'form-control datepicker',
+        'class': 'form-control',
         'value': date.today()
     }))
     trip_cycle = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
@@ -191,14 +188,6 @@ class WeighbridgeForm1(forms.ModelForm):
 #####manualentry######
 
 class ManualentryForm1(forms.ModelForm):
-    # weighbridge_id=forms.CharField(label='Name', max_length=100, widget=forms.TextInput(attrs={
-    #     'class': 'form-control',
-    #     'placeholder': 'Weighbridge ID'
-    # }))
-    # vehicle_id=forms.CharField(label='Name', max_length=100, widget=forms.TextInput(attrs={
-    #     'class': 'form-control',
-    #     'placeholder': 'Vehicle Id '
-    # }))
     datetime_in=forms.DateTimeField(widget=forms.TextInput(attrs=
     {
         'class':  'form-control'
@@ -221,15 +210,18 @@ class ManualentryForm1(forms.ModelForm):
     }))
     first_wt=forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'First weight'
+        'placeholder': 'First weight',
+        'type': 'number'
     }))
     second_wt=forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Second weight'
+        'placeholder': 'Second weight',
+        'type': 'number'
     }))
     net_wt=forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Net weight'
+        'placeholder': 'Net weight',
+        'type': 'number'
     }))
     weight_unit = forms.CharField(label='Name', max_length=100, widget=forms.TextInput( attrs={
             'class': 'form-control',
@@ -267,12 +259,15 @@ class ContainerdetailsForm1(forms.ModelForm):
 
     initial_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Initial Weight'
+        'placeholder': 'Initial Weight',
+        'type': 'number'
+
     }))
 
     laden_weight =  forms.IntegerField(label='Name',widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'laden Weight'
+        'placeholder': 'laden Weight',
+        'type': 'number'
     }))
     WEIGHT_UNIT = (
         ('Tonne', 'Tonne'),
@@ -291,21 +286,21 @@ class ContainerdetailsForm1(forms.ModelForm):
 #####Weighbridge_despatch######
 
 class Production_Tub_Form1(forms.ModelForm):
-    # no_of_trip = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
-    #     'class': 'form-control',
-    #     'placeholder': 'Initial Weight'
-    # }))
+
     laden_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Average Weight'
+        'placeholder': 'Average Weight',
+        'type': 'number'
     }))
     no_of_trip=forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Initial Weight'
+        'placeholder': 'Initial Weight',
+        'type': 'number'
     }))
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     destination = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -319,49 +314,14 @@ class Production_Tub_Form1(forms.ModelForm):
         model = Production_Tub
         fields = ['mine_id','name_of_the_tub','laden_weight','no_of_trip', 'total_weight', 'destination','datetime_in']
 
-######production_using_tub############
-# class Production_Tub_Form1(forms.ModelForm):
-#
-#     laden_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Average Weight'
-#     }))
-#     no_of_trip=forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Initial Weight'
-#     }))
-#     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Total Weight'
-#     }))
-#     PRODUCTION_TYPE = (
-#         ('Coal', 'Coal'),
-#         ('Ore', 'Ore'),
-#     )
-#     production_type = forms.CharField(widget=forms.Select(choices=PRODUCTION_TYPE, attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Production Type'
-#     }))
-#
-#     datetime_in = forms.DateTimeField(widget=forms.TextInput(attrs=
-#     {
-#         'class': 'form-control'
-#     }))
-#     destination = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Destination '
-#     }))
-#     class Meta():
-#         model = Production_Tub
-#         fields = ['mine_id','vehicle_id','name_of_the_tub','laden_weight','no_of_trip', 'total_weight', 'production_type','datetime_in','destination']
 
 ######production_using_wastematerial#######
 class Production_WasteMaterial_Form1(forms.ModelForm):
     net_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Net Weight'
+        'placeholder': 'Net Weight',
+        'type': 'number'
     }))
-
 
     PRODUCTION_TYPE = (
     ('Coal', 'Coal'),
@@ -376,9 +336,10 @@ class Production_WasteMaterial_Form1(forms.ModelForm):
     {
         'class': 'form-control'
     }))
+
     class Meta():
         model = Production_Material_Waste
-        fields = ['mine_id','vehicle_id','weighbridge_id','net_weight','unit','production_type','datetime_in']
+        fields = ['mine_id','vehicle_id','weighbridge_id','net_weight','production_type','datetime_in']
 
 
 ######production_dailyentry#######
@@ -387,7 +348,8 @@ class Production_WasteMaterial_Form1(forms.ModelForm):
 class Production_DailyEntry_Form1(forms.ModelForm):
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -398,10 +360,6 @@ class Production_DailyEntry_Form1(forms.ModelForm):
         'placeholder': 'Production Type'
     }))
 
-    # datetime_in = forms.DateTimeField(widget=forms.TextInput(attrs=
-    # {
-    #     'class': 'form-control'
-    # }))
     dates = forms.DateField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control datepicker',
@@ -422,31 +380,6 @@ class Production_DailyEntry_Form1(forms.ModelForm):
         model = Production_DailyEntry
         fields = ['mine_id','shift_name','total_weight','weight_unit','production_type', 'dates']
 
-# class Production_MonthlyEntry_Form1(forms.ModelForm):
-#     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Total Weight'
-#     }))
-#     PRODUCTION_TYPE = (
-#         ('Coal', 'Coal'),
-#         ('Ore', 'Ore'),
-#     )
-#     production_type = forms.CharField(widget=forms.Select(choices=PRODUCTION_TYPE, attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Production Type'
-#     }))
-#     month_year = forms.DateField(widget=forms.TextInput(attrs=
-#     {
-#         'class': 'form-control datepicker',
-#         'value': date.today()
-#     }))
-#
-#
-#     class Meta():
-#         model = Production_DailyEntry
-#         fields = ['mine_id','total_weight','month_year','production_type']
-
-
 class Production_Monthly_Form1(forms.ModelForm):
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -458,32 +391,29 @@ class Production_Monthly_Form1(forms.ModelForm):
     }))
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
-    MONTH = (
-        ('1', 'January'),('2','February'),('3','March'),('4','April'),('5','May'),('6','June'),('7','July'),
-        ('8', 'August'),('9','September'),('10','October'),('11','November'),('12','December')
-    )
-    month = forms.CharField(widget=forms.Select(choices=MONTH, attrs={
-        'class': 'form-control xzy',
-        'placeholder': 'Month'
+
+    month = forms.IntegerField(label='Name', max_value=12, min_value=1, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Month',
+        'min': '01',
+        'max': '12',
     }))
-    YEARS = (
-        ('1985', '1985'), ('1986', '1986'), ('1987', '1987'), ('1988', '1988'), ('1989', '1989'), ('1990', '1990'),
-        ('1991', '1991'), ('1992', '1992'), ('1993', '1993'), ('1994', '1994'), ('1995', '1995'), ('1996', '1996'),
-        ('1997', '1997'), ('1998', '1998'), ('1999', '1999'), ('2000', '2000'), ('2001', '2001'), ('2002', '2002'),
-        ('2003', '2003'), ('2004', '2004'), ('2005', '2005'), ('2006', '2006'), ('2007', '2007'), ('2008', '2008'),
-        ('2009', '2009'), ('2010', '2010'), ('2011', '2011'), ('2012', '2012'), ('2013', '2013'), ('2014', '2014'),
-        ('2015', '2015'), ('2016', '2016'), ('2017', '2017'), ('2018', '2018'), ('2019', '2019'), ('2020', '2020'),
-    )
-    years = forms.CharField(widget=forms.Select(choices=YEARS, attrs={
-        'class': 'form-control xzy',
-        'placeholder': 'Year'
+    years = forms.CharField(max_length=4,required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Year',
+        'type': 'number',
+        'min': '1800',
+        'max': '2999'
+
     }))
     WEIGHT_UNIT = (
         ('Tonne', 'Tonne'),
         ('Kg', 'Kg'),
     )
+
     weight_unit = forms.CharField(
         widget=forms.Select(choices=WEIGHT_UNIT, attrs={
             'class': 'form-control',
@@ -497,7 +427,8 @@ class Production_Monthly_Form1(forms.ModelForm):
 class Production_DailyDispatch_Form1(forms.ModelForm):
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -508,10 +439,6 @@ class Production_DailyDispatch_Form1(forms.ModelForm):
         'placeholder': 'Production Type'
     }))
 
-    # datetime_in = forms.DateTimeField(widget=forms.TextInput(attrs=
-    # {
-    #     'class': 'form-control'
-    # }))
     WEIGHT_UNIT = (
         ('Tonne', 'Tonne'),
         ('Kg', 'Kg'),
@@ -536,7 +463,8 @@ class Production_DailyDispatch_Form1(forms.ModelForm):
 class Production_MonthlyDispatch_Form1(forms.ModelForm):
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -546,28 +474,19 @@ class Production_MonthlyDispatch_Form1(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Production Type'
     }))
-    MONTH = (
-        ('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'),
-        ('6', 'June'), ('7', 'July'),
-        ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'),
-        ('12', 'December')
-    )
-    month = forms.CharField(widget=forms.Select(choices=MONTH, attrs={
-        'class': 'form-control xzy',
-        'placeholder': 'Month'
-    }))
 
-    YEARS = (
-        ('1985', '1985'), ('1986', '1986'), ('1987', '1987'), ('1988', '1988'), ('1989', '1989'), ('1990', '1990'),
-        ('1991', '1991'), ('1992', '1992'), ('1993', '1993'), ('1994', '1994'), ('1995', '1995'), ('1996', '1996'),
-        ('1997', '1997'), ('1998', '1998'), ('1999', '1999'), ('2000', '2000'), ('2001', '2001'), ('2002', '2002'),
-        ('2003', '2003'), ('2004', '2004'), ('2005', '2005'), ('2006', '2006'), ('2007', '2007'), ('2008', '2008'),
-        ('2009', '2009'), ('2010', '2010'), ('2011', '2011'), ('2012', '2012'), ('2013', '2013'), ('2014', '2014'),
-        ('2015', '2015'), ('2016', '2016'), ('2017', '2017'), ('2018', '2018'), ('2019', '2019'), ('2020', '2020'),
-    )
-    years = forms.CharField(widget=forms.Select(choices=YEARS, attrs={
+    month = forms.IntegerField(label='Name',max_value=12,min_value=1, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Year'
+        'placeholder': 'Month',
+        'min': '01',
+        'max': '12',
+    }))
+    years = forms.CharField(max_length=4, required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Year',
+        'type': 'number',
+        'min': '1800',
+        'max': '2999'
     }))
 
     WEIGHT_UNIT = (
@@ -588,7 +507,8 @@ class Production_MonthlyDispatch_Form1(forms.ModelForm):
 class Production_YearlyDispatch_Form1(forms.ModelForm):
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -598,17 +518,12 @@ class Production_YearlyDispatch_Form1(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Production Type'
     }))
-    YEARS = (
-        ('1985', '1985'), ('1986', '1986'), ('1987', '1987'), ('1988', '1988'), ('1989', '1989'), ('1990', '1990'),
-        ('1991', '1991'), ('1992', '1992'), ('1993', '1993'), ('1994', '1994'), ('1995', '1995'), ('1996', '1996'),
-        ('1997', '1997'), ('1998', '1998'), ('1999', '1999'), ('2000', '2000'), ('2001', '2001'), ('2002', '2002'),
-        ('2003', '2003'), ('2004', '2004'), ('2005', '2005'), ('2006', '2006'), ('2007', '2007'), ('2008', '2008'),
-        ('2009', '2009'), ('2010', '2010'), ('2011', '2011'), ('2012', '2012'), ('2013', '2013'), ('2014', '2014'),
-        ('2015', '2015'), ('2016', '2016'), ('2017', '2017'), ('2018', '2018'), ('2019', '2019'), ('2020', '2020'),
-    )
-    years = forms.CharField(widget=forms.Select(choices=YEARS, attrs={
-        'class': 'form-control xzy',
-        'placeholder': 'Year'
+    years = forms.CharField(max_length=4, required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Year',
+        'type': 'number',
+        'min':'1800',
+        'max':'2999'
     }))
     WEIGHT_UNIT = (
         ('Tonne', 'Tonne'),
@@ -627,7 +542,8 @@ class Production_YearlyDispatch_Form1(forms.ModelForm):
 class Production_YearlyEntry_Form1(forms.ModelForm):
     total_weight = forms.IntegerField(label='Name', widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Total Weight'
+        'placeholder': 'Total Weight',
+        'type': 'number'
     }))
     PRODUCTION_TYPE = (
         ('Coal', 'Coal'),
@@ -637,17 +553,13 @@ class Production_YearlyEntry_Form1(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Production Type'
     }))
-    YEARS = (
-        ('1985', '1985'), ('1986', '1986'), ('1987', '1987'), ('1988', '1988'), ('1989', '1989'), ('1990', '1990'),
-        ('1991', '1991'), ('1992', '1992'), ('1993', '1993'), ('1994', '1994'), ('1995', '1995'), ('1996', '1996'),
-        ('1997', '1997'), ('1998', '1998'), ('1999', '1999'), ('2000', '2000'), ('2001', '2001'), ('2002', '2002'),
-        ('2003', '2003'), ('2004', '2004'), ('2005', '2005'), ('2006', '2006'), ('2007', '2007'), ('2008', '2008'),
-        ('2009', '2009'), ('2010', '2010'), ('2011', '2011'), ('2012', '2012'), ('2013', '2013'), ('2014', '2014'),
-        ('2015', '2015'), ('2016', '2016'), ('2017', '2017'), ('2018', '2018'), ('2019', '2019'), ('2020', '2020'),
-    )
-    years = forms.CharField(widget=forms.Select(choices=YEARS, attrs={
-        'class': 'form-control xzy',
-        'placeholder': 'Year'
+
+    years = forms.CharField(max_length=4, required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Year',
+        'type':'number',
+        'min': '1800',
+        'max': '2999'
     }))
     WEIGHT_UNIT = (
         ('Tonne', 'Tonne'),

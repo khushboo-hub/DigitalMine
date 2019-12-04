@@ -2,23 +2,27 @@
 
 {% block content %}
 {% load staticfiles %}
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
 <div class="container">
     <div class="row">
         <section class="col-md-12">
             <h1 class="page-header">Monthly Entry of Coal/Ore
-
-
                 </h1>
-
-
             <div class="row text-center">
-
             </div>
-            <!--<hr>-->
             <!-- Table content -->
             <div class="row">
                 <div class="form-group">
+                    {% if messages %}
+                         <ul class="messages">
+                             {% for message in messages %}
+                                 <li{% if message.tags %} class="alert alert-{{ message.tags }} alert-dismissable"{% endif %} style="box-shadow:10px 10px 5px #aaaaaa";>
+                                     <a class="panel-close close" data-dismiss="alert">×</a>
+                                     {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+                                        {{ message }}
+                                 </li>
+                             {% endfor %}
+                         </ul>
+                     {% endif %}
                     <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
 
                          <!--{{form.as_table}}-->
@@ -31,6 +35,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{form.mine_id}}
+                                        <span style="color:red">{{form.mine_id.errors|striptags}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -39,6 +44,7 @@
                                     </div>
                                     <div class="col-md-8">
                                          {{form.production_type}}
+                                        <span style="color:red">{{form.production_type.errors|striptags}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -50,12 +56,14 @@
                                     </div>
                                     <div class="col-md-4">
                                         {{form.total_weight}}
+                                        <span style="color:red">{{form.total_weight.errors|striptags}}</span>
                                     </div>
                                 <div class="col-md-1">
                                     in
                                 </div>
                                     <div class="col-md-3">
                                         {{form.weight_unit}}
+                                        <span style="color:red">{{form.weight_unit.errors|striptags}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -64,8 +72,14 @@
                                         </label>
                                     </div>
                                      <div class="col-md-8">
-                                            {{form.month}}
 
+                                         <div class="input-group date" id="month_picker">
+                                                  {{form.month}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                         <span style="color:red">{{form.month.errors|striptags}}</span>
                                      </div>
                                 </div>
                             </div>
@@ -76,23 +90,17 @@
 
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.years}}
+                                        <div class="input-group date" id="year_picker">
+                                                  {{form.years}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                        <span style="color:red">{{form.years.errors|striptags}}</span>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
 
-                                        </label>
-                                    </div>
-                                     <div class="col-md-8">
-
-
-                                     </div>
-                                </div>
                             </div>
-
-
-
                             </fieldset>
                         <br/><br/>
                         <br/><br/>
@@ -122,11 +130,14 @@ fieldset ul {list-style:none}
 </style>
 <script>
 
-
 $(document).ready(function(){
     $("#id_mine_id").addClass('form-control');
-
-
+     $('#month_picker').datetimepicker({
+         format: 'MM'
+     });
+    $('#year_picker').datetimepicker({
+        format: 'YYYY'
+    });
 });
 
 </script>

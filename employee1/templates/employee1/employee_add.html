@@ -565,7 +565,7 @@ $(function () {
                 date_to.children()[0].required="true";
 
                 $("#doj_date_time_picker").on("dp.change", function (e) {
-                    $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+                    $('#dor_date_time_picker').data("DateTimePicker").minDate(e.date);
                 });
                 $("#dor_date_time_picker").on("dp.change", function (e) {
                     $('#doj_date_time_picker').data("DateTimePicker").maxDate(e.date);

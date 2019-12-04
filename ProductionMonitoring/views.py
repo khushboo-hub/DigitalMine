@@ -1,5 +1,6 @@
 import cv2
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.http import HttpResponse,JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, render_to_response
 from .forms import VehicleForm1, WeighbridgeForm1, ManualentryForm1,ContainerdetailsForm1,Production_Tub_Form1,Production_WasteMaterial_Form1,Production_DailyEntry_Form1,Production_Monthly_Form1,Production_DailyDispatch_Form1,Production_MonthlyDispatch_Form1,Production_YearlyDispatch_Form1,Production_YearlyEntry_Form1
@@ -8,6 +9,7 @@ from .models import Production_Vehicle, Production_Weighbridge, Production_Manua
 from employee1.models import MineShift
 from employee1.models import MineDetails
 from django.db import connection
+from django.contrib import messages
 
 @login_required
 def vehicle_manage(request, template_name='vehicle_manage.html'):
@@ -19,11 +21,16 @@ def vehicle_manage(request, template_name='vehicle_manage.html'):
 
 @login_required
 def vehicle_add(request, template_name='vehicle_add.html'):
-    form = VehicleForm1(request.POST, request.FILES)
-    # print(request.POST)
-    if form.is_valid():
-        form.save()
-        return redirect('ProductionMonitoring:vehicle_manage')
+
+    if request.method == "POST":
+        form = VehicleForm1(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:vehicle_manage')
+        else:
+            return render(request, template_name, {'form': form})
+
+    form = VehicleForm1()
     return render(request, template_name, {'form': form})
 
 
@@ -55,11 +62,14 @@ def weighbridge_manage(request, template_name='weighbridge_manage.html'):
 
 @login_required
 def weighbridge_add(request, template_name='weighbridge_add.html'):
-    form = WeighbridgeForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:weighbridge_manage')
+    if request.method == "POST":
+        form = WeighbridgeForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:weighbridge_manage')
+
+    form = WeighbridgeForm1()
     return render(request, template_name, {'form': form})
 
 
@@ -102,40 +112,48 @@ def weighbridge_delete(request, pk):
 
 def manualentry_manage(request, template_name='manualentry_manage.html'):
 
-        manual_entry_table = Production_Manualentry.objects.values_list().filter()
+        manual_entry = Production_Manualentry.objects.all()
+        prepared_data = []
+        for entry in manual_entry:
+            print('wn id',entry.weighbridge_id)
+            wb=Production_Weighbridge.objects.get(id=entry.weighbridge_id)
+            vechicle=Production_Vehicle.objects.get(id=entry.vehicle_id)
+            print('wb name',wb.w_name)
+            prepared_data.append({'id':entry,'mine':entry.mine_id,'wb_name':wb.w_name,'vechile':vechicle.vehicle_reg_no,'wb_code':wb.wb_code,'type':entry.production_type})
         # print(manual_entry_table)
         data = {}
-        prepared_data = []
-        i = 0
-        for r in manual_entry_table:
-            wb_table = Production_Weighbridge.objects.get(id=str(r[2]))
 
-
-            v_table=Production_Vehicle.objects.get(id=str(r[3]))
-            #m_table=Production_Manualentry.objects.get(id=str(r[13]))
-            prepared_data.append([])
-            prepared_data[i].append(wb_table. mine_id)
-            prepared_data[i].append(wb_table.w_name)
-            prepared_data[i].append(v_table.vehicle_reg_no)
-            prepared_data[i].append(wb_table.wb_code)
-            prepared_data[i].append(str(r[13]))
-            prepared_data[i].append(str(r[0]))
-            i = i + 1
-
-        # return HttpResponse("ok")
-        print(prepared_data)
-        data['result'] = prepared_data
-        print(data)
+        # i = 0
+        # for r in manual_entry_table:
+        #     print('id',r[2])
+        #     wb_table = Production_Weighbridge.objects.get(id=str(r[2]))
+        #     v_table=Production_Vehicle.objects.get(id=str(r[3]))
+        #     #m_table=Production_Manualentry.objects.get(id=str(r[13]))
+        #     prepared_data.append([])
+        #     prepared_data[i].append(wb_table.mine_id)
+        #     prepared_data[i].append(wb_table.w_name)
+        #     prepared_data[i].append(v_table.vehicle_reg_no)
+        #     prepared_data[i].append(wb_table.wb_code)
+        #     prepared_data[i].append(str(r[13]))
+        #     prepared_data[i].append(str(r[0]))
+        #     i = i + 1
+        #
+        # # return HttpResponse("ok")
+        # print(prepared_data)
+        data['manual_entry'] = prepared_data
         return render(request, template_name, data)
 
 
 @login_required
 def manualentry_add(request, template_name='manualentry_add.html'):
-    form = ManualentryForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:manualentry_manage')
+    if request.method == "POST":
+        form = ManualentryForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:manualentry_manage')
+        return render(request, template_name, {'form': form})
+    form=ManualentryForm1()
     return render(request, template_name, {'form': form})
 
 
@@ -255,11 +273,14 @@ def fetch_report_ajax(request):
 
 @login_required
 def container_details_add(request, template_name='container_details_add.html'):
-    form = ContainerdetailsForm1(request.POST)
-    if form.is_valid():
-        form.save()
 
-        return redirect('ProductionMonitoring:container_details_add')
+    if request.method == "POST":
+        form = ContainerdetailsForm1(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('ProductionMonitoring:container_details_manage')
+        return render(request,template_name,{'form':form})
+    form = ContainerdetailsForm1()
     return render(request, template_name, {'form': form})
 
 @login_required
@@ -327,34 +348,17 @@ def fetch_report_dispatch_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('mine_ID', None)
+        from_date = request.GET.get('from', None)
+        to_date = request.GET.get('to', None)
+        tubs=[];
+        ProductionTub=Production_Tub.objects.filter(mine_id=mine_id, datetime_in__range=(from_date, to_date))
+        for PD in ProductionTub:
+            mine = get_object_or_404(MineDetails,pk=str(PD.mine_id.id))
+            Tub=get_object_or_404(Container_Details,pk=PD.name_of_the_tub_id)
+            tubs.append({'mine':str(mine.name), 'name_of_the_tub':Tub.name_of_the_tub, 'laden_weight':str(PD.laden_weight),
+                         'no_of_trip':str(PD.no_of_trip), 'total_weight':str(PD.total_weight),'datetime_in':str(PD.datetime_in)})
 
-        from_date = request.GET.get('newdate_ID', None)
-        to_date = request.GET.get('newdate1_ID', None)
-
-        location_details = Production_Tub.objects.values_list().filter(datetime_in__range=(from_date, to_date),
-                                                                               mine_id=mine_id)
-        data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
-
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[3]))
-            # location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[5]))
-            location_data[i].append(str(r[7]))
-
-            i = i + 1
-
-        data['result'] = location_data
-        print(data)
-
-
+        data['result'] = tubs
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -362,83 +366,102 @@ def fetch_report_dispatch_ajax(request):
 
 @login_required
 def production_tub_add(request, template_name='production_tub_add.html'):
-    form = Production_Tub_Form1(request.POST)
-    if form.is_valid():
-        form.save()
-
-        return redirect('ProductionMonitoring:production_tub_add')
+    if request.method == "POST":
+        form = Production_Tub_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Production Tub added successfully')
+            return redirect('ProductionMonitoring:production_tub_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request,template_name,{'form':form})
+    form=Production_Tub_Form1()
     return render(request, template_name, {'form': form})
 
 @login_required
 def production_wastematerial_add(request, template_name='production_wastematerial_add.html'):
-    form = Production_WasteMaterial_Form1(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == "POST":
+        form = Production_WasteMaterial_Form1(request.POST or None)
+        print('form errors',form.errors)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Production Tub added successfully')
+            return redirect('ProductionMonitoring:production_wastematerial_add')
 
-        return redirect('ProductionMonitoring:production_wastematerial_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request,template_name,{'form':form})
+
+    form = Production_WasteMaterial_Form1()
     return render(request, template_name, {'form': form})
 
 @login_required
 def production_dailyentry_add(request, template_name='production_dailyentry_add.html'):
     if request.method == "POST":
-        print(request.POST)
         form = Production_DailyEntry_Form1(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Daily production entry added successfully')
             return redirect('ProductionMonitoring:production_dailyentry_add')
-        else:
-            print("Invalid")
-    else:
-        form = Production_DailyEntry_Form1
-    return render(request, template_name, {'form': form})
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
 
-# @login_required
-# def production_monthlyentry_add(request, template_name='production_dailyentry_add.html'):
-#     form = Production_MonthlyEntry_Form1(request.POST)
-#     if form.is_valid():
-#         form.save()
-#
-#         return redirect('ProductionMonitoring:production_monthlyentry_add')
-#     return render(request, template_name, {'form': form})
+    form = Production_DailyEntry_Form1()
+    return render(request, template_name, {'form': form})
 
 @login_required
 def production_monthly_add(request, template_name='production_monthlyentry_add.html'):
-    form = Production_Monthly_Form1(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == "POST":
+        form = Production_Monthly_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Monthly production record added successfully')
+            return redirect('ProductionMonitoring:production_monthly_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
 
-        return redirect('ProductionMonitoring:production_monthly_add')
+    form = Production_Monthly_Form1()
     return render(request, template_name, {'form': form})
 
 #####daily dispatch####
 @login_required
 def production_dailydispatch_add(request, template_name='production_dailydispatch_add.html'):
-    form = Production_DailyDispatch_Form1(request.POST)
-    if form.is_valid():
-        form.save()
-
-        return redirect('ProductionMonitoring:production_dailydispatch_add')
+    if request.method == "POST":
+        form = Production_DailyDispatch_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Daily production dispatch record added successfully')
+            return redirect('ProductionMonitoring:production_dailydispatch_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
+    form = Production_DailyDispatch_Form1()
     return render(request, template_name, {'form': form})
+
 ####monthly dispatch#####
 @login_required
 def production_monthlydispatch_add(request, template_name='production_monthlydispatch_add.html'):
-    form = Production_MonthlyDispatch_Form1(request.POST)
-    if form.is_valid():
-        form.save()
-
-        return redirect('ProductionMonitoring:production_monthlydispatch_add')
+    if request.method == "POST":
+        form = Production_MonthlyDispatch_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Monthly production dispatch record added successfully')
+            return redirect('ProductionMonitoring:production_monthlydispatch_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
+    form = Production_MonthlyDispatch_Form1()
     return render(request, template_name, {'form': form})
+
 ####yearly dispatch####
 @login_required
 def production_yearlydispatch_add(request, template_name='production_yearlydispatch_add.html'):
-    form = Production_YearlyDispatch_Form1(request.POST)
-    if form.is_valid():
-        form.save()
-
-        return redirect('ProductionMonitoring:production_yearlydispatch_add')
+    if request.method == "POST":
+        form = Production_YearlyDispatch_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Yearly production dispatch record added successfully')
+            return redirect('ProductionMonitoring:production_yearlydispatch_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
+    form = Production_YearlyDispatch_Form1()
     return render(request, template_name, {'form': form})
-
-
 
 def fetch_shift_ajax(request):
     data = {}
@@ -461,12 +484,18 @@ def fetch_shift_ajax(request):
 ###Yearly entry#####
 @login_required
 def production_yearlyentry_add(request, template_name='production_yearlyentry_add.html'):
-    form = Production_YearlyEntry_Form1(request.POST)
-    if form.is_valid():
-        form.save()
+    if request.method == "POST":
+        form = Production_YearlyEntry_Form1(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Yearly Entry added successfully')
+            return redirect('ProductionMonitoring:production_yearlyentry_add')
+        messages.error(request, 'Something Went Wrong!')
+        return render(request, template_name, {'form': form})
 
-        return redirect('ProductionMonitoring:production_yearlyentry_add')
+    form = Production_YearlyEntry_Form1()
     return render(request, template_name, {'form': form})
+
 #####Daily entry report#######
 @login_required
 def report_dailyentry(request, template_name='report_dailyentry.html'):
@@ -490,25 +519,21 @@ def fetch_report_daily_ajax(request):
         shift_id = request.GET.get('shift_ID', None)
         from_date = request.GET.get('from_ID', None)
         to_date = request.GET.get('to_ID', None)
-        location_details =Production_DailyEntry.objects.values_list().filter(dates__range=(from_date,to_date),mine_id=mine_id,shift_name=shift_id)
+        DailyEntry = Production_DailyEntry.objects.filter(dates__range=(from_date,to_date),mine_id=mine_id,shift_name=shift_id)
         data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        Daily = []
+        for Entry in DailyEntry:
+            mine = MineDetails.objects.get(id=Entry.mine_id.id)
+            if Entry.shift_name == '0':
+                shift_name= 'All'
+            else:
+                shift = MineShift.objects.get(id=Entry.shift_name)
+                shift_name=shift.shift_name
 
-            shift_table = MineShift.objects.get(id=str(r[2]))
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-            location_data[i].append(shift_table.shift_name)
-            location_data[i].append(str(r[5]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[6]))
-            i = i + 1
 
-        data['result'] = location_data
-        print(data)
+            Daily.append({'mine':mine.name,'shift':shift_name,'date':Entry.dates,'total_production':Entry.total_weight,'unit':Entry.weight_unit})
 
+        data['result'] = Daily
 
     else:
         data['result'] = "Not Ajax"
@@ -519,32 +544,18 @@ def fetch_report_daily_ajax(request):
 def fetch_report_month_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
-        year_id = request.GET.get('year_ID', None)
-        from_month = request.GET.get('from_ID', None)
-        to_month = request.GET.get('to_ID', None)
-        print(to_month)
-        location_details =Production_Monthly.objects.values_list().filter(month__range=(from_month,to_month),mine_id=mine_id,years=year_id)
+        mine = request.GET.get('mine', None)
+        year = request.GET.get('year', None)
+        MonthFrom = request.GET.get('from', None)
+        MonthTo = request.GET.get('to', None)
+        MonthlyProduction =Production_Monthly.objects.filter(mine_id=mine,years=year,month__range=(MonthFrom,MonthTo))
         data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        Production_data = []
+        for Production in MonthlyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
+            Production_data.append({'mine':mine_table.name,'month':Production.month,'type':Production.production_type,'total':Production.total_weight,'unit':Production.weight_unit})
 
-
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-            location_data[i].append(str(r[3]))
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[6]))
-            i = i + 1
-
-        data['result'] = location_data
-        print(data)
-
-
+        data['result'] = Production_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -552,30 +563,20 @@ def fetch_report_month_ajax(request):
 def fetch_report_year_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
+        mine = request.GET.get('mine', None)
+        from_year = request.GET.get('from', None)
+        to_year = request.GET.get('to', None)
 
-        from_year = request.GET.get('from_ID', None)
-        to_year = request.GET.get('to_ID', None)
-
-        location_details =Production_YearlyEntry.objects.values_list().filter(years__range=(from_year,to_year),mine_id=mine_id)
+        YearlyProduction =Production_YearlyEntry.objects.filter(mine_id=mine,years__range=(from_year,to_year))
         data = {}
         i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        Production_data = []
+        for Production in YearlyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
 
+            Production_data.append({'mine':mine_table.name,'year':Production.years,'type':Production.production_type,'total':Production.total_weight,'unit':Production.weight_unit})
 
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-            location_data[i].append(str(r[3]))
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[5]))
-
-            i = i + 1
-
-        data['result'] = location_data
+        data['result'] = Production_data
         print(data)
 
 
@@ -603,31 +604,26 @@ def report_yearlydispatch(request, template_name='report_yearlydispatch.html'):
 def fetch_report_dailydispatch_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
-        shift_id = request.GET.get('shift_ID', None)
-        from_date = request.GET.get('from_ID', None)
-        to_date = request.GET.get('to_ID', None)
-        location_details =Production_DailyDispatch.objects.values_list().filter(dates__range=(from_date,to_date),mine_id=mine_id,shift_name=shift_id)
-        data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        mine = request.GET.get('mine', None)
+        shift = request.GET.get('shift', None)
+        print('shiftt=>',shift)
+        from_date = request.GET.get('from', None)
+        to_date = request.GET.get('to', None)
+        DailyProduction =Production_DailyDispatch.objects.filter(mine_id=mine,shift_name=shift,dates__range=(from_date,to_date))
+        Production_data = []
+        for Production in DailyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
+            if Production.shift_name == '0':
+                shift_name = 'All'
+            else:
+                shift = MineShift.objects.get(id=Production.shift_name)
+                shift_name = shift.shift_name
 
-            shift_table = MineShift.objects.get(id=str(r[2]))
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-            location_data[i].append(shift_table.shift_name)
-            location_data[i].append(str(r[5]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[6]))
-            location_data[i].append(str(r[3]))
-            i = i + 1
+            Production_data.append(
+                {'mine': mine_table.name,'shift':shift_name, 'date': Production.dates, 'type': Production.production_type,
+                 'total': Production.total_weight, 'unit': Production.weight_unit})
 
-        data['result'] = location_data
-        print(data)
-
-
+        data['result'] = Production_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -743,6 +739,7 @@ def container_details_edit(request, pk, template_name='container_details_add.htm
     if form.is_valid():
         form.save()
         return redirect('ProductionMonitoring:container_details_manage')
+
     return render(request, template_name, {'form': form})
 
 

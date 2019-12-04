@@ -50,7 +50,14 @@
                                          <label for="id_dates" class="" id="">Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.entry_date}}
+                                        <div class="input-group date" id="entry_date_time_picker">
+                                            {{form.entry_date}}
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                        </div>
+                                        <span style="color:red">{{form.entry_date.errors|striptags}}</span>
+
                                     </div>
                                 </div>
                                  <div class="col-md-6">
@@ -159,6 +166,9 @@ $(document).ready(function(){
         $("#id_weighbridge_id").addClass('form-control');
         $("#id_vehicle_id").addClass('form-control');
         $("#id_production_type").addClass('form-control');
+         var entry_date=$('#entry_date_time_picker').datetimepicker({
+                     format: 'YYYY-MM-DD'
+                });
 
 });
 $("#id_mine_id").on("change",function(){

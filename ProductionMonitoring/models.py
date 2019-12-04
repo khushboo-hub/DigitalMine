@@ -7,7 +7,7 @@ from datetime import date, datetime
 
 # Create your models here.
 class Production_Vehicle(models.Model):
-    mine_id = models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=True,blank=True)
+    mine_id = models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=False,blank=False)
     rfid = models.TextField(max_length=200, blank=True, null=True)
     vehicle_reg_no=models.CharField(max_length=200,null=True,blank=True)
     type_of_vehicle=models.CharField(max_length=200,null=True,blank=True)
@@ -47,7 +47,7 @@ class Production_Vehicle(models.Model):
 
 
 class Production_Weighbridge(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     w_name= models.CharField(max_length=100, default='')
     location= models.CharField(max_length=100, default='')
     desc= models.CharField(max_length=100,null=True,blank=True)
@@ -63,9 +63,9 @@ class Production_Weighbridge(models.Model):
 #####manualentry#######
 
 class Production_Manualentry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    weighbridge_id= models.CharField(max_length=100, default='')
-    vehicle_id= models.CharField(max_length=100, default='')
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
+    weighbridge_id= models.CharField(max_length=100, null=False,blank=False)
+    vehicle_id= models.CharField(max_length=100, null=False,blank=False)
     datetime_in=models.DateTimeField(default=datetime.now, blank=True)
     datetime_out=models.DateTimeField(default=datetime.now, blank=True)
     trip_time=models.CharField(max_length=200, null=True, blank=True)
@@ -121,7 +121,7 @@ class Production_Tub(models.Model):
 
 
 class Production_Material_Waste(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     vehicle_id = models.CharField(max_length=100, default='')
     weighbridge_id = models.CharField(max_length=100, default='')
     net_weight = models.IntegerField(null=True, blank=True)
@@ -139,7 +139,7 @@ class Production_Material_Waste(models.Model):
 #######Daily enty of coal/ore###########
 
 class Production_DailyEntry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     shift_name = models.CharField(max_length=100, null=True, blank=True)
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
@@ -155,11 +155,11 @@ class Production_DailyEntry(models.Model):
 
 ####monthly entry of coal/ore########
 class Production_Monthly(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    production_type = models.CharField(max_length=100, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
+    production_type = models.CharField(max_length=100, null=True,blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    month = models.CharField(max_length=100, null=True, blank=True)
-    years = models.CharField(max_length=100, null=True, blank=True)
+    month = models.IntegerField(null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     class Meta:
         db_table = "production_monthly"
@@ -167,7 +167,7 @@ class Production_Monthly(models.Model):
 
 ####daily dispatch######
 class Production_DailyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     shift_name = models.CharField(max_length=100, null=True, blank=True)
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
@@ -185,12 +185,12 @@ class Production_DailyDispatch(models.Model):
 #####monthly dispatch######
 
 class Production_MonthlyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    month = models.CharField(max_length=100, null=True, blank=True)
-    years = models.CharField(max_length=100, null=True, blank=True)
+    month = models.IntegerField(null=False, blank=False)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -200,11 +200,11 @@ class Production_MonthlyDispatch(models.Model):
 
 ####Yearly dispatch#######
 class Production_YearlyDispatch(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    years = models.CharField(max_length=100, null=True, blank=True)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
@@ -214,11 +214,11 @@ class Production_YearlyDispatch(models.Model):
 
 
 class Production_YearlyEntry(models.Model):
-    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
 
     production_type = models.CharField(max_length=100, null=True, blank=True)
     total_weight = models.IntegerField(null=True, blank=True)
-    years = models.CharField(max_length=100, null=True, blank=True)
+    years = models.IntegerField(null=False, blank=False)
     weight_unit = models.CharField(max_length=200, null=True, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(default=datetime.now, blank=True)
