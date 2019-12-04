@@ -746,12 +746,28 @@
   <script>
       var T;
       $(document).ready(function(){
+
+          window.onunload = function(){
+                $.xhrPool.abortAll()
+            }
+            $.xhrPool = []; // array of uncompleted requests
+            $.xhrPool.abortAll = function() { // our abort function
+                $(this).each(function(idx, jqXHR) {
+                    jqXHR.abort();
+                });
+                $.xhrPool.length = 0
+            };
+
+
               document.getElementById("overlay").style.display = "block";
               setInterval(function(){
                    $.ajax({
                         type:"get",
 
                         url: "{% url 'dashboard:fetchsl' %}",
+                       beforeSend: function( jqXHR ){
+                            $.xhrPool.push(jqXHR);
+                       },
                         success: function(data) {
                             console.log(data)
                             StrataMonitoring(data.result,100);
@@ -764,6 +780,10 @@
                    $.ajax({
                         type:"get",
                         url: "{% url 'dashboard:fetchwl' %}",
+
+                        beforeSend: function( jqXHR ){
+                            $.xhrPool.push(jqXHR);
+                        },
                         success: function(data) {
                             console.log(data)
                             {#StrataMonitoring(data.result,208);#}
