@@ -631,32 +631,21 @@ def fetch_report_dailydispatch_ajax(request):
 def fetch_report_monthlydispatch_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
-        year_id = request.GET.get('year_ID', None)
-        from_month = request.GET.get('from_ID', None)
-        to_month = request.GET.get('to_ID', None)
-        print(to_month)
-        location_details =Production_MonthlyDispatch.objects.values_list().filter(month__range=(from_month,to_month),mine_id=mine_id,years=year_id)
+        mine = request.GET.get('mine', None)
+        year = request.GET.get('year', None)
+        MonthFrom = request.GET.get('from', None)
+        MonthTo = request.GET.get('to', None)
+        MonthlyProduction = Production_MonthlyDispatch.objects.filter(mine_id=mine, years=year,
+                                                              month__range=(MonthFrom, MonthTo))
         data = {}
-        i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        Production_data = []
+        for Production in MonthlyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
+            Production_data.append(
+                {'mine': mine_table.name, 'month': Production.month, 'type': Production.production_type,
+                 'total': Production.total_weight, 'unit': Production.weight_unit})
 
-
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-            location_data[i].append(str(r[3]))
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[6]))
-            i = i + 1
-
-        data['result'] = location_data
-        print(data)
-
-
+        data['result'] = Production_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -665,36 +654,29 @@ def fetch_report_monthlydispatch_ajax(request):
 def fetch_report_yearlydispatch_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
+        mine = request.GET.get('mine', None)
+        from_year = request.GET.get('from', None)
+        to_year = request.GET.get('to', None)
 
-        from_year = request.GET.get('from_ID', None)
-        to_year = request.GET.get('to_ID', None)
-
-        location_details =Production_YearlyDispatch.objects.values_list().filter(years__range=(from_year,to_year),mine_id=mine_id)
+        YearlyProduction = Production_YearlyDispatch.objects.filter(mine_id=mine, years__range=(from_year, to_year))
         data = {}
         i = 0
-        location_data = []
-        for r in location_details:
-            mine_table = MineDetails.objects.get(id=str(r[1]))
+        Production_data = []
+        for Production in YearlyProduction:
+            mine_table = MineDetails.objects.get(id=mine)
 
+            Production_data.append(
+                {'mine': mine_table.name, 'year': Production.years, 'type': Production.production_type,
+                 'total': Production.total_weight, 'unit': Production.weight_unit})
 
-            location_data.append([])
-            location_data[i].append(mine_table.name)
-
-            location_data[i].append(str(r[3]))
-            location_data[i].append(str(r[2]))
-            location_data[i].append(str(r[4]))
-            location_data[i].append(str(r[5]))
-
-            i = i + 1
-
-        data['result'] = location_data
+        data['result'] = Production_data
         print(data)
 
 
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
 
 def fetch_laden_weight_ajax (request):
     data = {}

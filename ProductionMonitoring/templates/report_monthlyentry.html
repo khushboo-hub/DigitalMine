@@ -176,6 +176,7 @@ $(document).ready(function(){
         {#if (isEmpty(mine)) {#}
         {#    $('select#id_mine_id option').setCustomValidity("Wrong. It's 'Ivy'.");#}
         {#}#}
+
         if(isEmpty(mine) || isEmpty(year) || isEmpty(from) || isEmpty(to)){
             return;
         }
@@ -197,7 +198,8 @@ $(document).ready(function(){
                     console.log("Error!");
                  }
             });
-});
+    });
+
     function fill_table(monthly_report){
         var MonthName=['January','February','March','April','May','June','July','August','September','October','November','December'];
         datatable = $('#ProductionTable').DataTable();
