@@ -758,17 +758,34 @@ def report_dailyprod_dispatch(request, template_name='report_dailyprod_dispatch.
 def fetch_report_daily_prod_dispatch_ajax(request):
     data = {}
     if request.is_ajax():
-        mine_id = request.GET.get('mine_ID', None)
-        shift_id = request.GET.get('shift_ID', None)
-        from_date = request.GET.get('from_ID', None)
-        to_date = request.GET.get('to_ID', None)
-        query = "SELECT a.shift_name, a.production_type, a.total_weight, a.mine_id_id, a.weight_unit, a.dates, b.total_weight FROM production_dailyentry as a JOIN production_dailydispatch as b  on a.mine_id_id = b.mine_id_id where a.mine_id_id = '"+mine_id+"' AND a.shift_name = '"+shift_id+"' AND a.dates BETWEEN '"+from_date+"' and '"+to_date+"' group by a.dates, a.shift_name"
+        mine_id = request.GET.get('mine', None)
+        shift_id = request.GET.get('shift', None)
+        from_date = request.GET.get('from', None)
+        to_date = request.GET.get('to', None)
+        Production=[]
+        query = "SELECT a.shift_name, a.production_type, a.total_weight, a.mine_id_id, a.weight_unit, a.dates, b.total_weight FROM production_dailyentry as a JOIN production_dailydispatch as b  on a.mine_id_id = b.mine_id_id where a.mine_id_id = '"+str(mine_id)+"' AND a.shift_name = '"+str(shift_id)+"' AND a.dates BETWEEN '"+str(from_date)+"' and '"+str(to_date)+"' group by a.dates, a.shift_name"
+        mine_table = MineDetails.objects.get(id=mine_id)
         with connection.cursor() as cursor:
-           cursor.execute(query)
-           row = cursor.fetchall()
-           print(row)
-           data['result'] = row
-        print(query)
+            cursor.execute(query)
+            result = cursor.fetchall()
+            for row in result:
+                if row[0] == '0':
+                    shift_name = 'All'
+                else:
+                    shift = MineShift.objects.get(id=row[0])
+                    shift_name = shift.shift_name
+
+                Production.append({'mine':str(mine_table.name),
+                                   'shift':str(shift_name),
+                                   'type':row[1],
+                                   'total_production':row[2],
+                                   'total_dispatch':row[6],
+                                   'unit':row[4],
+                                   'date':row[5],
+                                   })
+
+        data['result'] = Production
+        data['mine_name'] = mine_table.name
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)

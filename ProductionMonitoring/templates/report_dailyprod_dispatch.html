@@ -3,53 +3,15 @@
 {% block content %}
 
 {% load staticfiles %}
-<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-        <!--<script src="{% static 'dateandtime/jquery-ui.js' %}"></script>-->
-        <!--<script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">-->
-
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">-->
-
-
-
-        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-<style type="text/css">
-    .table th {
-    width: auto !important;
-}
-</style>
-
-
-
-
-
-
-
 
 <div class="container">
     <div class="row">
         <section class="col-md-12">
-            <h1 class="page-header">Production and Dispatches Report Of Coal/Ore
+            <h1 class="page-header">Production and Dispatch Report Of Coal/Ore
                 </h1>
             <div class="row text-center">
 
             </div>
-
-<!--<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Manual Entry Of Coal/Ore Weighbridge</h1>-->
-            <!-- Table content -->
             <div class="row">
                 <div class="form-group">
                     <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -84,7 +46,13 @@
                                         <label for="" class="" id="">From date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control datepicker" id="from_dates">
+                                        <div class="input-group date" id="from_date_picker">
+                                                {{form.dates}}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red"> {{ form.dates.errors|striptags }}</span>
                                     </div>
 
                                  </div>
@@ -93,16 +61,18 @@
                                         <label for="" class="" id="">To Date</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" class="form-control datepicker" id="to_dates">
+                                       <div class="input-group date" id="to_date_picker">
+                                                {{form.dates}}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red"> {{ form.dates.errors|striptags }}</span>
+
                                     </div>
 
                                  </div>
-
-
-
                             </div>
-
-
                         </fieldset>
                         <br/><br/>
                          <div class="text-center">
@@ -123,25 +93,25 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered" id="content">
+                <table class="table table-bordered" id="ProductionTable">
 
                     <thead>
-                    <tr>
-                        <th colspan="6"></th>
-                    </tr>
-                     <tr>
-                         <th colspan="6"><center >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mine Name:<span id=""></span></center></th>
-                     </tr>
-                     <tr>
-                       <td rowspan="2" width="10%"><center><img src="{% static '/image/csir_logo.jpg' %}" height="50" width="50"/></center></td>
-                         <th colspan="5" ><center>उत्पादन & विक्रय रिपोर्ट</center></th>
-                     </tr>
-                     <tr>
-                         <th colspan="6"><center>Production And Dispatch Report</center></th>
-                     </tr>
-                    <tr>
-                        <th colspan="6"></colspan></th>
-                    </tr>
+{#                    <tr>#}
+{#                        <th colspan="6"></th>#}
+{#                    </tr>#}
+{#                     <tr>#}
+{#                         <th colspan="6">Mine Name:<span id="mine_name"></span></th>#}
+{#                     </tr>#}
+{#                     <tr>#}
+{#                       <td rowspan="2" width="10%"><img src="{% static '/image/csir_logo.jpg' %}" height="50" width="50"/></td>#}
+{#                         <th colspan="5" >उत्पादन & विक्रय रिपोर्ट</th>#}
+{#                     </tr>#}
+{#                     <tr>#}
+{#                         <th colspan="6">Production And Dispatch Report</th>#}
+{#                     </tr>#}
+{#                    <tr>#}
+{#                        <th colspan="6"></th>#}
+{#                    </tr>#}
                         <tr>
                             <th>Mine Name</th>
                             <th>Shift Name</th>
@@ -185,115 +155,90 @@ fieldset ul {list-style:none}
 
 </style>
 <script>
-$(document).ready(function(){
-        $("#id_mine_id").addClass('form-control');
+    $(document).ready(function(){
+            $("#id_mine_id").addClass('form-control');
 
-        $("#id_vehicle_id").addClass('form-control');
-        $("#id_name_of_the_tub").addClass('form-control');
-         $("#id_shift_name").addClass('form-control');
-
-
-
-});
-$("#id_mine_id").on("change",function(){
-    mine_id=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'ProductionMonitoring:fetch_shift_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                console.log(data);
-                //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                //return data;
-                    },
-            error: function(){
-                    console.log("error he ji");
-                 }
-            });
-});
-function fill_dropdown(result){
-    $("#id_shift_name").html("<option value='0'>All</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_shift_name").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
-
-
-
-$(function() {
-    $( ".datepicker" ).datepicker({
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "1900:2012",
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
+            $("#id_vehicle_id").addClass('form-control');
+            $("#id_name_of_the_tub").addClass('form-control');
+             $("#id_shift_name").addClass('form-control');
+              var from = $('#from_date_picker').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+             var to = $('#to_date_picker').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+             $('#ProductionTable').DataTable({
+                        dom: 'Bfrtip',
+                        buttons: [
+                            'copy', 'csv', 'excel', 'pdf', 'print'
+                        ]
+                    }
+                )
 
     });
-  });
+    $("#id_mine_id").on("change",function(){
+        mine_id=this.value;
+        $.ajax({
+                type:"get",
+                url: "{% url 'ProductionMonitoring:fetch_shift_ajax' %}",
+                data: {
+                         'id': mine_id
+                       },
+                success: function(data) {
+                    console.log(data);
+                    fill_dropdown(data.result);
+
+                        },
+                error: function(){
+                        console.log("error he ji");
+                     }
+                });
+    });
+    function fill_dropdown(result){
+        $("#id_shift_name").html("<option value='0'>All</option>");
+        for (index = 0; index < result.length; index++) {
+        var str_array = result[index].split(',');
+        $("#id_shift_name").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
   $("#id_show").click(function(){
 
-        var mine_id = $("#id_mine_id").val();
-        var shift_id = $("#id_shift_name").val();
-        var from_id =$('#from_dates').val();
-        var to_id=$("#to_dates").val();
-        alert(to_id);
+        var mine = $("#id_mine_id").val();
+        var shift = $("#id_shift_name").val();
+        var from = $('#from_date_picker input').val();
+        var to = $('#to_date_picker input').val();
            $.ajax({
             type:"get",
             url: "{% url 'ProductionMonitoring:fetch_report_daily_prod_dispatch_ajax' %}",
             data: {
-                     'mine_ID': mine_id,
-                     'shift_ID':shift_id,
-                     'from_ID':from_id,
-                     'to_ID':to_id,
+                     'mine': mine,
+                     'shift':shift,
+                     'from':from,
+                     'to':to,
                    },
             success: function(data) {
-                console.log(data.result);
-                <!--alert(data.result);-->
                 fill_table(data.result);
+                $('span#mine_name').text(data.mine_name);
 
-
-
-
-                    //return false;
                     },
             error: function(){
                     console.log("Error!");
                  }
             });
 });
-function fill_table(result){
-   alert(result);
-   <!--var count=0;-->
-   <!--var  sum=0;-->
-   for (index = 0; index < result.length; index++) {
+    function fill_table(daily_report){
+            datatable = $('#ProductionTable').DataTable();
+            datatable.clear().draw();
+            for (report = 0; report < daily_report.length; report++) {
+                var D = daily_report[report];
+                var row = datatable.row.add([D.mine, D.shift, D.date, D.total_production,D.total_dispatch, D.unit]).draw().node();
+            }
+        }
 
-        <!--alert(result[index][0]);-->
-
-         <!--var str_array = result[index].split(',');-->
-        <!--alert(str_array);-->
-
-          $("#results").append($("<tr><td>"+result[index][3]+"</td><td>"+result[index][0]+"</td><td>"+result[index][5]+"</td><td>"+result[index][2]+"</td><td>"+result[index][6]+"</td><td>"+result[index][4]+"</td></tr>"));
-
+    function myFunction() {
+      window.print();
     }
-}
-
-
-function myFunction() {
-  window.print();
-}
-
-
-
-
-
-
 </script>
 
 {% endblock %}
