@@ -140,7 +140,7 @@
             </a>
             <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
+                <div class="bg-white py-2 collapse-inner rprofile_avatarounded">
                     <h6 class="collapse-header">Custom Utilities:</h6>
                     <a class="collapse-item" href="utilities-color.html">Colors</a>
                     <a class="collapse-item" href="utilities-border.html">Borders</a>
@@ -393,13 +393,13 @@
                     <li class="nav-item dropdown no-arrow">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                            <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome! {{user.username }}</span>
+                            <img id="profile_avatar" class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                              aria-labelledby="userDropdown">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="/accounts/profile/overview/">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Profile
                             </a>
@@ -412,7 +412,7 @@
                                 Activity Log
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                            <a class="dropdown-item" href="/accounts/logout" data-toggle="modal" data-target="#logoutModal">
                                 <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                 Logout
                             </a>
@@ -445,103 +445,113 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ node.name }}</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="nodeprogress">39.78 %</span></div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="progress progress-sm mr-2">
+                                                <div id="nodeprogress" class="progress-bar bg-info" role="progressbar"
+                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     {% endfor %}
 
+{#                    <!-- Earnings (Monthly) Card Example -->#}
+{#                    <div class="col-xl-3 col-md-6 mb-4">#}
+{#                        <div class="card border-left-primary shadow h-100 py-2">#}
+{#                            <div class="card-body">#}
+{#                                <div class="row no-gutters align-items-center">#}
+{#                                    <div class="col mr-2">#}
+{#                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Node X#}
+{#                                            (CH<sub>4</sub>)#}
+{#                                        </div>#}
+{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>#}
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+{#                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{##}
+{#                    <!-- Earnings (Monthly) Card Example -->#}
+{#                    <div class="col-xl-3 col-md-6 mb-4">#}
+{#                        <div class="card border-left-success shadow h-100 py-2">#}
+{#                            <div class="card-body">#}
+{#                                <div class="row no-gutters align-items-center">#}
+{#                                    <div class="col mr-2">#}
+{#                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Node 1#}
+{#                                            (CO<sub>2</sub>)#}
+{#                                        </div>#}
+{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">12 ppm</div>#}
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+{#                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
                     <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-primary shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Node X
-                                            (CH<sub>4</sub>)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-success shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Node 1
-                                            (CO<sub>2</sub>)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">12 ppm</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Earnings (Monthly) Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-info shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Node 1
-                                            (h<sub>2</sub>S)
-                                        </div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">30 %</div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm mr-2">
-                                                    <div class="progress-bar bg-info" role="progressbar"
-                                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                         aria-valuemax="100"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pending Requests Card Example -->
-                    <div class="col-xl-3 col-md-6 mb-4">
-                        <div class="card border-left-warning shadow h-100 py-2">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Node 1 (O<sub>2</sub>)
-                                        </div>
-                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18 ppm</div>
-                                    </div>
-                                    <div class="col-auto">
-                                        <i class="fas fa-comments fa-2x text-gray-300"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+{#                    <div class="col-xl-3 col-md-6 mb-4">#}
+{#                        <div class="card border-left-info shadow h-100 py-2">#}
+{#                            <div class="card-body">#}
+{#                                <div class="row no-gutters align-items-center">#}
+{#                                    <div class="col mr-2">#}
+{#                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Node 1#}
+{#                                            (h<sub>2</sub>S)#}
+{#                                        </div>#}
+{#                                        <div class="row no-gutters align-items-center">#}
+{#                                            <div class="col-auto">#}
+{#                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">30 %</div>#}
+{#                                            </div>#}
+{#                                            <div class="col">#}
+{#                                                <div class="progress progress-sm mr-2">#}
+{#                                                    <div class="progress-bar bg-info" role="progressbar"#}
+{#                                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"#}
+{#                                                         aria-valuemax="100">#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+{#                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                    <!-- Pending Requests Card Example -->#}
+{#                    <div class="col-xl-3 col-md-6 mb-4">#}
+{#                        <div class="card border-left-warning shadow h-100 py-2">#}
+{#                            <div class="card-body">#}
+{#                                <div class="row no-gutters align-items-center">#}
+{#                                    <div class="col mr-2">#}
+{#                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Node 1 (O<sub>2</sub>)#}
+{#                                        </div>#}
+{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18 ppm</div>#}
+{#                                    </div>#}
+{#                                    <div class="col-auto">#}
+{#                                        <i class="fas fa-comments fa-2x text-gray-300"></i>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                 </div>
 
                 <!-- Content Row -->
@@ -566,7 +576,7 @@
                                         <a class="dropdown-item" href="#">Another action</a>
                                         <div class="dropdown-divider"></div>
                                         {% for strata in strata %}
-                                            <a class="dropdown-item" href="#">{{ strata.location_name }}</a>
+                                            <a class="dropdown-item strata location" href="#" id="{{ strata.id}}">{{ strata.location_name }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -808,7 +818,7 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="login.html">Logout</a>
+                <a class="btn btn-primary" href="/accounts/logout">Logout</a>
             </div>
         </div>
     </div>
@@ -845,25 +855,59 @@
             $.xhrPool.length = 0
         };
 
+        $.ajax({
+           url: "{% url 'employee1:profile_ajax' %}",
+           success:function(data){
+               T=data;
+                if(data.hasOwnProperty('profile_avatar') ){
+                    $('img#profile_avatar').attr('src','/media/'+data.profile_avatar);
 
-        document.getElementById("overlay").style.display = "block";
-        setInterval(function () {
+                }
+               if(data.hasOwnProperty('mine')){
+
+                   $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(')+1,data.mine.indexOf(')')));
+               }
+           },
+           error:function(){
+                console.log('Something Went Wrong!');
+                 $('img#profile_avatar').attr('src','/media/employee_image/male_alt_photo.svg');
+
+
+           }
+
+        });
+
+        $('a.strata.location').click(function(){
+                strata = this.id;
+                console.log('strata=> ',strata);
+                $.xhrPool.abortAll();
+
+            var StrataCalling = setInterval(function () {
+                STRATA(strata);
+                WATER();
+            }, 5000,strata);
+
+        });
+        function STRATA(strata){
             $.ajax({
                 type: "get",
-
                 url: "{% url 'dashboard:fetchsl' %}",
+                data:{
+                 'strata':strata
+                },
                 beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },
                 success: function (data) {
-                    console.log(data)
+                    console.log(data);
                     StrataMonitoring(data.result, 100);
                 },
                 error: function () {
                     console.log("something is not right.please contact admin - 1");
                 }
             });
-
+        }
+        function WATER(){
             $.ajax({
                 type: "get",
                 url: "{% url 'dashboard:fetchwl' %}",
@@ -879,12 +923,18 @@
                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
                 },
                 error: function () {
                     console.log("something is not right.please contact admin - 1");
                 }
             });
-        }, 1000);
+        }
+        document.getElementById("overlay").style.display = "block";
+        {#var StrataCalling = setInterval(function () {#}
+        {#    #}
+        {##}
+        {#}, 1000);#}
 
         function StrataMonitoring(strata, UpperLimit) {
             strata = parseFloat(strata);
@@ -901,33 +951,6 @@
             myLineChart.data.datasets[0].data.push(strata);
             myLineChart.update()
         }
-
-        function GasMonitoring(waterLevel, UpperLimit, Id) {
-            waterLevelPercentage = parseFloat(waterLevel);
-            if (waterLevelPercentage < 0.00) {
-                document.getElementById("overlay").style.display = "block";
-            } else {
-                document.getElementById("overlay").style.display = "none";
-            }
-            {#console.log(waterLevelPercentage);#}
-            {#waterLevelPercentage=(waterLevelPercentage/UpperLimit)*100;#}
-            {#console.log(waterLevelPercentage);#}
-            waterLevelPercentage = scale(waterLevelPercentage, 0, UpperLimit, 100, 0);
-            waterLevelPercentage = waterLevelPercentage.toFixed(2);
-            if (waterLevelPercentage < 50) {
-                $('div#' + Id).removeClass('bg-danger').addClass('bg-success');
-            } else {
-                $('div#' + Id).removeClass('bg-success').addClass('bg-danger');
-            }
-
-            waterLevelPercentage = waterLevelPercentage + "%";
-            {#console.log(waterLevelPercentage);#}
-
-            $('div#' + Id).width(waterLevelPercentage);
-
-            $('span#' + Id).html(waterLevelPercentage);
-        }
-
         const scale = (num, in_min, in_max, out_min, out_max) => {
             return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
@@ -937,6 +960,30 @@
             max = Math.floor(max);
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
+
+        function GasMonitoring(waterLevel, UpperLimit, Id) {
+            waterLevelPercentage = parseFloat(waterLevel);
+            if (waterLevelPercentage < 0.00) {
+                document.getElementById("overlay").style.display = "block";
+            } else {
+                document.getElementById("overlay").style.display = "none";
+            }
+            waterLevelPercentage = scale(waterLevelPercentage, 0, UpperLimit, 100, 0);
+            waterLevelPercentage = waterLevelPercentage.toFixed(2);
+            if (waterLevelPercentage < 50) {
+                $('div#' + Id).removeClass('bg-danger').addClass('bg-success');
+            } else {
+                $('div#' + Id).removeClass('bg-success').addClass('bg-danger');
+            }
+
+            waterLevelPercentage = waterLevelPercentage + "%";
+
+            $('div#' + Id).width(waterLevelPercentage);
+
+            $('span#' + Id).html(waterLevelPercentage);
+        }
+
+
     });
 
 </script>

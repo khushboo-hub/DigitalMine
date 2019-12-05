@@ -59,10 +59,12 @@ def fetchwl(request):
 
 def fetchsl(request):
 
+
     data={}
     sensor_val=-1
     if request.is_ajax():
-
+        strata = request.GET.get('strata', None)
+        print('strata',strata)
         try:
             response = requests.get('http://192.168.1.201')
             sensor_val = strip_tags(response.text)
