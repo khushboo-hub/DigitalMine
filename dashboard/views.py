@@ -12,11 +12,14 @@ from django.http import HttpResponse, JsonResponse
 
 @login_required
 def dashboard_calling(request):
+    print('calling..........')
 
     if request.method == "POST":
+        print('calling post')
         mine_name = request.POST.get("mine_name", None)
         mine= get_object_or_404(MineDetails,pk=mine_name)
     else:
+        print('calling else')
         mine=MineDetails.objects.all()[:1].get()
 
     print(mine)
@@ -34,7 +37,20 @@ def dashboard_calling(request):
 
     data['strata'] = strata
     nodes=Node.objects.filter(mine_id=mine.id)
-    data['nodes'] =  nodes
+    print('---------------------------------')
+    NODES=[]
+
+    for node in nodes:
+        SENSORS = []
+        Sensors = Sensor_Node.objects.filter(mine_id=mine.id,node_id=node.id)
+        for sensor in Sensors:
+            SENSORS.append({'mine':sensor.mine_id, 'ip':sensor.ip_add,'sensor_name':sensor.sensorname,'sensor_id':sensor.id})
+            print('IP=>', sensor.ip_add)
+        NODES.append({str(node.name): SENSORS})
+
+    print(nodes)
+    data['nodes'] = NODES
+
     for node in nodes:
         sensors=Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node.id)
 
