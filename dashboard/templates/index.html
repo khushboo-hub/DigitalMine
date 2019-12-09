@@ -439,12 +439,18 @@
 
                     <!-- Earnings (Monthly) Card Example -->
                     {% for node in nodes %}
+{#                        <h1>{{ key }}</h1>#}
+{#                        <h1>{{ node }}</h1>#}
+                        {% for key,sensors in node.items %}
+{#                            <h1>{{ sensors}}</h1>#}
+                            {% for sensor in sensors %}
+{#                                <h1>{{ sensor.mine }}</h1>#}
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ node.name }}</div>
+                                            <div id="{{ sensor.sensor_id }}" class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ key }}({{ sensor.sensor_name }})</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="nodeprogress">39.78 %</span></div>
                                         </div>
                                         <div class="col">
@@ -463,6 +469,8 @@
                                 </div>
                             </div>
                         </div>
+                                {% endfor %}
+                            {% endfor %}
                     {% endfor %}
 
 {#                    <!-- Earnings (Monthly) Card Example -->#}

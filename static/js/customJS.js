@@ -135,9 +135,10 @@ function getUrlVars() {
     return vars;
 }
 
+var ZoomLevel=1;
 function ZoomButtonsInitialization(){
        console.log("Zoom Inititlaization");
-
+        ZoomLevel=0;
           var $section = $('#KBtestmap');
           var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
             increment       : 0.1,
@@ -149,9 +150,20 @@ function ZoomButtonsInitialization(){
             });
           $panzoom.parent().on('mousewheel.focal', function( e ) {
             e.preventDefault();
-            console.log(e.scale);
+            console.log('value',ZoomLevel);
+
             var delta = e.delta || e.originalEvent.wheelDelta;
             console.log(delta);
+            if(parseInt(delta) == -120){
+                ZoomLevel--;
+                if(ZoomLevel<0)ZoomLevel=1;
+            }
+            else{
+                ZoomLevel++;
+                if(ZoomLevel>20)ZoomLevel=20;
+
+            }
+
             var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
             $panzoom.panzoom('zoom', zoomOut, {
               animate: false,
