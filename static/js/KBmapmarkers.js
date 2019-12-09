@@ -363,16 +363,15 @@ jQuery( document ).ready(function() {
 		var container_height=100+0.5*ZoomLevel;
 		var close_height=80-ZoomLevel;
 		var close_width=80-ZoomLevel;
-            console.log('font size',font_size);
-            console.log('width',container_width);
-            console.log('height',container_height);
-            $('div.KBmap__markerContentItem').css('font-size',font_size+"px");
-            $('h6.KBmap__markerTitle').css('font-size',font_size+"px");
-            $('div.KBmap__markerContent').css('width',container_width+"px" );
-            $('div.KBmap__markerContent').css('height',container_height+"px" );
-
-            $('div.KBmap__markerClose').css('width',close_width+"px" );
-            $('div.KBmap__markerClose').css('height',close_height+"px" );
+		console.log('font size',font_size);
+		console.log('width',container_width);
+		console.log('height',container_height);
+		$('div.KBmap__markerContentItem').css('font-size',font_size+"px");
+		$('h6.KBmap__markerTitle').css('font-size',font_size+"px");
+		$('div.KBmap__markerContent').css('width',container_width+"px" );
+		$('div.KBmap__markerContent').css('height',container_height+"px" );
+ 		$('div.KBmap__markerClose').css('width',close_width+"px" );
+ 		$('div.KBmap__markerClose').css('height',close_height+"px" );
 
 
 	});
