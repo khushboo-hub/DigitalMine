@@ -8,8 +8,8 @@
             <h1 class="page-header"><b>STRATA LIVE DATA</b><small> Here we can view live strata data</small></h1>
             <div class="row">
                 <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
                         <div class="row">
                             <div class="col-md-2">
                                  <label for="" class="" id="">Choose Mine:</label>
@@ -29,7 +29,7 @@
                         <br>
                         <div class="row">
                             <div class="col-md-2">
-                                 <label for="" class="" id="">Choose Sensor:</label>
+                                 <label> Choose Sensor:</label>
                             </div>
                             <div class="col-md-4">
                                <select class="form-control" id="id_sensor_list">
@@ -82,7 +82,7 @@
         </section>
     </div>
 </div>
- <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
+
  <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
  <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
  <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
@@ -91,37 +91,32 @@
  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
  <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
  <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+
 <script>
     $("#id_mine_name").addClass('form-control');
     $("#id_mine_name").on("change",function(){
-    mine_id=this.value;
-    $.ajax({
+        mine_id=this.value;
+        $.ajax({
             type:"get",
             url: "{% url 'Strata:fetch_location_ajax' %}",
             data: {
                      'id': mine_id
                    },
             success: function(data) {
-                //console.log(data.result);
-                //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                //return data;
+                        fill_dropdown(data.result);
                     },
             error: function(){
                     console.log("error he ji");
                  }
-            });
-});
-function fill_dropdown(result){
-    $("#id_location_list").html("<option>--Select Location--</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        });
+    });
+    function fill_dropdown(result){
+        $("#id_location_list").html("<option>--Select Location--</option>");
+        for (index = 0; index < result.length; index++) {
+            var str_array = result[index].split(',');
+            $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
     }
-}
     $("#id_location_list").on("change",function(){
     location_id=this.value;
     $.ajax({
@@ -131,8 +126,6 @@ function fill_dropdown(result){
                      'id': location_id
                    },
             success: function(data) {
-                //console.log(data.result);
-                //alert(data.result[0]);
                 fill_dropdown_sensor(data.result);
 
                 return data;
@@ -145,50 +138,95 @@ function fill_dropdown(result){
 function fill_dropdown_sensor(result){
     $("#id_sensor_list").html("<option value=''>--Select Sensor--</option>");
     for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_sensor_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        var str_array = result[index].split(',');
+        $("#id_sensor_list").append($("<option />").val(str_array[0]).text(str_array[1]));
     }
 }
-var interval_time=0;
-$("#btn_show").click(function(){
-    $("#btn_show").val("Please wait...");
-    $("#btn_show").prop('disabled', true);
-    interval_time=($("#id_interval").val()* 1000);
-    sensor_id=$("#id_sensor_list").val();
-    if(sensor_id == ""){
-        alert("Please Choose Sensor");
-        $("#btn_show").val("Show");
-        $("#btn_show").prop('disabled', false);
-    }else{
-        $("#ip_hidden").val("");//empty the IP address on each click
-        $("#sensor_content_body").empty();//empty the table on each click
 
-        setInterval(function(){
-                $.ajax({
+//======================================================================================================================
+var l_value ="";
+var m_value = "";
+var h_value = "";
+var audio_type =  "";
+var first_warning =   "";
+var second_warning =  "";
+var third_warning =  "";
+
+var first_audio =   "";
+var second_audio = "";
+var third_audio =   "";
+
+   $("#id_sensor_list").on("change",function(){
+        sensor_id=this.value;
+        $.ajax({
                 type:"get",
-                url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
+                url: "{% url 'Strata:fetch_sensor_details' %}",
                 data: {
-                         'id': sensor_id
-                       },
+                    'sensor_id': sensor_id
+                    },
                 success: function(data) {
-                    console.log(data.result);
-                    //alert(data.result[0]);
-                    //document.getElementById('sensor_content_body').style.backgroundColor='#FFFFFF';
-                     $('tr').css({ 'background-color' : '#FFFFFF'});
-                    fill_table_sensor(data.result);
+                     for(index = 0; index < data.result.length; index++) {
+                            var str_array = data.result[index].split('@#');
+                            l_value = str_array[0];
+                            m_value = str_array[1];
+                            h_value = str_array[2];
 
-                    return data;
-                        },
+                            audio_type = str_array[9];
+                            first_warning =  str_array[3];
+                            second_warning = str_array[4];
+                            third_warning = str_array[5];
+
+                            first_audio =  str_array[6];
+                            second_audio = str_array[7];
+                            third_audio =  str_array[8];
+                        }
+                 },
                 error: function(){
-                        console.log("error he ji");
+                        console.log("something went worng");
                      }
-                });
-        }, interval_time);//time in milliseconds
-    }
+         });
+    });
 
-});
+//====================================================================================================================
+
+
+    var interval_time=0;
+    $("#btn_show").click(function(){
+         var warning_validation = 2;
+        $("#btn_show").val("Please wait...");
+        $("#btn_show").prop('disabled', true);
+        interval_time=($("#id_interval").val()* 1000);
+        sensor_id=$("#id_sensor_list").val();
+        if(sensor_id == ""){
+            alert("Please Choose Sensor");
+            $("#btn_show").val("Show");
+            $("#btn_show").prop('disabled', false);
+        }else{
+            $("#ip_hidden").val("");//empty the IP address on each click
+            $("#sensor_content_body").empty();//empty the table on each click
+
+            setInterval(function(){
+                    $.ajax({
+                    type:"get",
+                    url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
+                    data: {
+                             'id': sensor_id
+                           },
+                    success: function(data) {
+                        console.log(data.result);
+                        $('tr').css({ 'background-color' : '#FFFFFF'});
+                        fill_table_sensor(data.result);
+
+                        return data;
+                            },
+                    error: function(){
+                            console.log("error he ji");
+                         }
+                    });
+            }, interval_time);//time in milliseconds
+        }
+
+    });
     function fill_table_sensor(result){
 
         if ( $.fn.DataTable.isDataTable('#sensor_content') ) {
@@ -197,9 +235,12 @@ $("#btn_show").click(function(){
 
         for (index = 0; index < result.length; index++) {
             var str_array = result[index].split(',');
+            console.log(str_array);
             $("#ip_hidden").val(str_array[1]);
             $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[2]+"</td><td>"+str_array[3]+"</td><td>"+str_array[4]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td><td>"+str_array[8]+"</td></tr>"));
+            checkAndPlay(str_array[6])
         }
+
         d_table();
         $("#btn_show").val("Show");
         $("#btn_show").prop('disabled', false);
@@ -220,8 +261,71 @@ $("#btn_show").click(function(){
          });
     }
 
-$(document).ready(function() {
-   d_table();
-} );
+    $(document).ready(function() {
+         $("#id_mine_name").addClass('form-control');
+        d_table();
+    } );
+
+
+
+    function checkAndPlay(sensorValue){
+
+        var loc = window.location;
+        var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/media/" ;
+
+        if((parseFloat(l_value) < parseFloat(sensorValue))&&(parseFloat(sensorValue) < parseFloat(m_value))){//low level
+            $.toast({
+                heading: '<b>Strata Monitoring : First Level Warning</b>',
+                text: first_warning,
+                showHideTransition: 'fade',
+                position: 'bottom-right',
+                icon: 'error'
+            })
+            if(audio_type =="text2voice"){
+                 Speak(first_warning,9,0.5);
+            }else{
+                path = baseUrl+first_audio;
+                var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+        if((parseFloat(m_value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_value))){//middle level
+            $.toast({
+                heading: '<b>Strata Monitoring : Second Level Warning </b>',
+                text: second_warning,
+                showHideTransition: 'fade',
+                position: 'bottom-right',
+                icon: 'error'
+            })
+             if(audio_type =="text2voice"){
+                 console.log(second_warning)
+                 Speak(second_warning,9,0.5);
+             }else{
+                  path = baseUrl+second_audio;
+                 var playNow = new Audio(path);
+                 playNow.play();
+             }
+        }
+
+        if( parseFloat(h_value) < parseFloat(sensorValue)) {//high level
+
+            $.toast({
+                heading: '<b>Strata Monitoring : Third Level Warning</b> ',
+                text: third_warning,
+                position: 'bottom-right',
+                showHideTransition: 'fade',
+                icon: 'error'
+            })
+            if(audio_type =="text2voice"){
+                  Speak(third_warning, 9, 0.5);
+            }else{
+                 path = baseUrl+third_audio;
+                 var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+    }
+
+
 </script>
 {% endblock %}

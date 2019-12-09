@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .margin_top{
+     margin-top: 15px;
+    }
+</style>
+<div class="container">
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header"><b>STRATA LIVE GRAPH</b><small> Here we can view strata live graph</small></h1>
+            <div class="row margin_top">
+                <div class="col-md-2">
+                     <label for="" class="" id="">Choose Mine:</label>
+                </div>
+                <div class="col-md-4">
+                    {{form.mine_name}}
+                </div>
+                <div class="col-md-2">
+                    <label for="" class="" id="">Choose Location:</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" id="id_location_list">
+                        <option>--Select Location--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row margin_top">
+                <div class="col-md-2">
+                    <label for="" class="" id="">Choose Sensor:</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-control" id="id_sensor_list">
+                        <option value="">--Select Sensor--</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                     <label for="" class="" id="">Wireless data is comming from IP:</label>
+                </div>
+                <div class="col-md-4">
+                     <input type="text" class="form-control" readonly id="ip_hidden">
+                </div>
+            </div>
+            <div class="row margin_top">
+                <div class="text-center">
+                    <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1" style="margin-top:14%;transform: rotate(270deg);font-weight:bold;" id="unit_sensor"></div>
+        <div class="col-md-11" style="margin-top:15px;">
+            <div class="table-responsive">
+                <div id="chartContainer" style="height: 600px; width:100%;"></div>
+                <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#id_mine_name").addClass('form-control');
+    //------------------------------------------------------------------------------------------------------------------
+    $("#id_mine_name").on("change",function(){
+        mine_id=this.value;
+        $.ajax({
+            type:"get",
+            url: "{% url 'Strata:fetch_location_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                fill_dropdown(data.result);
+                return data;
+                    },
+            error: function(){
+                    console.log("something went wrong");
+                 }
+        });
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    function fill_dropdown(result){
+        $("#id_location_list").html("<option value=''>--Select Location--</option>");
+        for (index = 0; index < result.length; index++) {
+            var str_array = result[index].split(',');
+            $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    $("#id_location_list").on("change",function(){
+        location_id=this.value;
+        $.ajax({
+                type:"get",
+                url: "{% url 'Strata:fetch_sensor_ajax' %}",
+                data: {
+                         'id': location_id
+                       },
+                success: function(data) {
+                    //console.log(data.result);
+                    //alert(data.result[0]);
+                    fill_dropdown_sensor(data.result);
+
+                    return data;
+                        },
+                error: function(){
+                        console.log("error he ji");
+                     }
+         });
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    function fill_dropdown_sensor(result){
+        $("#id_sensor_list").html("<option value=''>--Select Sensor--</option>");
+        for (index = 0; index < result.length; index++) {
+            var str_array = result[index].split(',');
+            $("#id_sensor_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    var l_label = "Low";
+    var l_Value ="";
+	var l_color = "";
+
+	var m_label = "Medium";
+	var m_Value ="";
+	var m_color = "";
+
+	var h_label = "High";
+	var h_Value ="";
+	var h_endValue = "";
+	var h_color = "";
+    var unit_sensor = "";
+    var custom_title = "";
+    $("#btn_show").click(function(){
+        $("#ip_hidden").val("");//empty the IP address on each click
+        sensor_id=$("#id_sensor_list").val();
+        if(sensor_id){
+            $.ajax({
+                type:"get",
+                url: "{% url 'Strata:fetch_sensor_comman_values_ajax' %}",
+                data: {
+                         'id': sensor_id
+                       },
+                success: function(data) {
+                    console.log(data);
+                    for(index = 0; index < data.result.length; index++) {
+                        var str_array = data.result[index].split(',');
+                        $("#ip_hidden").val(str_array[8]);
+
+                        l_Value = parseFloat(str_array[2]);
+                        l_color = str_array[5];
+
+                        m_Value = parseFloat(str_array[3]);
+                        m_color = str_array[6];
+
+                        h_Value = parseFloat(str_array[4]);
+                        h_color = str_array[7];
+                        fill_graph_sensor();
+
+
+                       }
+                },
+                error: function(){
+                        console.log("error");
+                }
+            });
+
+        $("#current_date").removeAttr( 'style');
+        }else{
+            alert("Please choose sensor");
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
+
+    function fill_graph_sensor(){
+
+        var custom_name = $("#id_sensor_list").find(":selected").text();
+        var dps = []; // dataPoints
+        var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        title: {
+            text: custom_name+" Live Data"
+        },
+
+        axisX: {
+            title: "Time",
+		    valueFormatString: "hh:mm TT"
+	    },
+        axisY: {
+            title: custom_title,
+
+            stripLines: [
+		    {
+		        label: l_label,
+				startValue:l_Value,
+				endValue:m_Value,
+				color:l_color
+			},
+			{
+		        label: m_label,
+				startValue:m_Value,
+				endValue:h_Value,
+				color:m_color
+			},
+			{
+		        label: h_label,
+				startValue:h_Value,
+				endValue:5000,
+				color:h_color
+			}
+			]
+
+        },
+        data: [{
+            type: "line",
+            name: "CPU Utilization",
+            connectNullData: true,
+            //nullDataLineDashType: "solid",
+            xValueType: "dateTime",
+            xValueFormatString: "DD MMM,YYYY hh:mm TT",
+            yValueFormatString: "#,##0.##\"mm\"",
+            dataPoints: dps
+        }]
+
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    var xVal = 0;
+    var yVal = 100;
+    var updateInterval = 4000;
+    var dataLength = 20; // number of dataPoints visible at any point
+
+    var updateChart = function () {
+
+        $.ajax({
+                type:"get",
+                url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
+                data: {
+                         'id': sensor_id
+                       },
+                success: function(data) {
+                    //console.log(data.result);
+                    for(index = 0; index < data.result.length; index++) {
+                        var str_array = data.result[index].split(',');
+                         $("#unit_sensor").text(str_array[7]);
+                         custom_title = str_array[7];
+                        dps.push({
+                           x: Date.parse(str_array[2]),
+                           y: Number(str_array[6])
+                        });
+
+                       }
+
+                    //return data;
+                        },
+                error: function(){
+                        console.log("error he ji");
+                     }
+                });
+
+
+        if (dps.length > dataLength) {
+            dps.shift();
+        }
+
+        chart.render();
+    };
+    updateChart(dataLength);
+    setInterval(function(){updateChart()}, updateInterval);
+    }
+</script>
+{% endblock %}
+
+

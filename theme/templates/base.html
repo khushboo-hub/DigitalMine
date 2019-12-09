@@ -11,7 +11,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{% static 'image/csir_logo.ico'  %}" type="image/icon type">
+    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
     <!-- Canonical SEO -->
 {#    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>#}
 
@@ -29,112 +29,139 @@
     <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
 
     <style>
-    .navbar.bg-primary{
-        border-radius: 0px; !important;
-        background-color:#3c8e9f;;!important;
-        margin-bottom: 0px;
+        .navbar.bg-primary {
+            border-radius: 0px;
+        !important;
+            background-color: #3c8e9f;;
+        !important;
+            margin-bottom: 0px;
 
-    }
-    .navbar{
-        border-radius: 0px; !important;
-        background-color:#11758a;!important;
-    }
+        }
 
-    .navbar{
-        border-radius: 0px; !important;
-        background-color:#11758a;!important;
-    }
-    .dropdown-menu.navbar-color>li>a{
-        color:#ffffff;
-        background-color:#36acdb;
-    }
-    .dropdown-menu.navbar-color>li>ul>li>a{
-        color:#ffffff;
-        background-color:#36acdb;
-    }
-    .dropdown-menu.navbar-color{
-        background-color:#38aedd;
-         opacity: 1;
-     }
-     .navbar-nav > li > .dropdown-menu{
-        left:auto;
-     }
-     ul.dropdown-menu.dropdown-menu-large.row.navbar-color>li>ul>li>a:hover{
-	background-color:whitesmoke;
-         color:black;
-         border-radius: 5px;
+        .navbar {
+            border-radius: 0px;
+        !important;
+            background-color: #11758a;
+        !important;
+        }
 
-}
+        .navbar {
+            border-radius: 0px;
+        !important;
+            background-color: #11758a;
+        !important;
+        }
 
+        .dropdown-menu.navbar-color > li > a {
+            color: #ffffff;
+            background-color: #36acdb;
+        }
 
-    .wrap {
-        width: 1000px;
-        height: 1000px;
-        padding: 0;
-        overflow: hidden;
-    }
-    .container{
-        margin-top:10px;
-    }
-	body{
-		padding-top: 0px;
-	    height : 100%;
-		overflow-x: visible;
-		margin: 0px;
-		font-family: 'Roboto';
+        .dropdown-menu.navbar-color > li > ul > li > a {
+            color: #ffffff;
+            background-color: #36acdb;
+        }
 
-	}
-	html {
-          height: 100%;
+        .dropdown-menu.navbar-color {
+            background-color: #38aedd;
+            opacity: 1;
+        }
 
-    }
+        .navbar-nav > li > .dropdown-menu {
+            left: auto;
+        }
+
+        ul.dropdown-menu.dropdown-menu-large.row.navbar-color > li > ul > li > a:hover {
+            background-color: whitesmoke;
+            color: black;
+            border-radius: 5px;
+
+        }
 
 
-	@font-face {
-		 font-family: "Times New Roman", Times, serif;
-	    src: url('/static/fonts/thewitcher-4.ttf')  format('truetype')
-	}
+        .wrap {
+            width: 1000px;
+            height: 1000px;
+            padding: 0;
+            overflow: hidden;
+        }
 
-	.KBmap__markerTitle{
-		font-family: witcher;
-		color: #56270c;
-	}
-	.KBmap__mapContainer{
-		height: 100vh;
-		max-height: 100vh;
-	}
-	.KBmap__mapHolder{
-		height: 100%;
-		box-shadow:10px 10px 5px #aaaaaa;
-	}
-	.KBmap__mapHolder img{
-		width: auto;
-	    height: 100%;
-	}
-h1 { text-align: center; margin-top: 150px; }
+        .container {
+            margin-top: 10px;
+        }
 
-    .bootstrap-timepicker-widget table td input{
-        width: 40px;
-    }
-    .blurred-container{
-    height:100px !important;
-    }
-    .blurred-container > .img-src{
-        height:100px !important;
-    }
-    th:last-child,
+        body {
+            padding-top: 0px;
+            height: 100%;
+            overflow-x: visible;
+            margin: 0px;
+            font-family: 'Roboto';
+
+        }
+
+        html {
+            height: 100%;
+        }
+
+
+        @font-face {
+            font-family: "Times New Roman", Times, serif;
+            src: url('/static/fonts/thewitcher-4.ttf') format('truetype')
+        }
+
+        .KBmap__markerTitle {
+            font-family: witcher;
+            color: #56270c;
+        }
+
+        .KBmap__mapContainer {
+            height: 100vh;
+            max-height: 100vh;
+        }
+
+        .KBmap__mapHolder {
+            height: 100%;
+            box-shadow: 10px 10px 5px #aaaaaa;
+        }
+
+        .KBmap__mapHolder img {
+            width: auto;
+            height: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 150px;
+        }
+
+        .bootstrap-timepicker-widget table td input {
+            width: 40px;
+        }
+
+        .blurred-container {
+            height: 100px !important;
+        }
+
+        .blurred-container > .img-src {
+            height: 100px !important;
+        }
+
+        th:last-child,
         td:last-child,
         th:nth-last-child(2),
         td:nth-last-child(2) {
-            text-align:center;
+            text-align: center;
         }
-        @media(min-width: 768px)
-@mdiapadding-top: 220px;
+
+        @media (min-width: 768px)
+            @mdiapadding-top : 220px;
     </style>
     <script>
-        window.onload = function(){
-        if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {document.location = '/mobile';}}
-
+        window.onload = function () {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.location = '/mobile';
+            }
+        }
 
 
     </script>
@@ -154,7 +181,7 @@ h1 { text-align: center; margin-top: 150px; }
     <link rel="stylesheet" href="{% static '/css/custom_style.css' %}">
     <link rel="stylesheet" href="{% static 'tags/css/bootstrap-tagsinput.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
-    <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}" >
+    <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
     <link rel="stylesheet" href="{% static '/css/dataTables.bootstrap.min.css' %}">
 
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
@@ -183,16 +210,16 @@ h1 { text-align: center; margin-top: 150px; }
     <script src="{% static 'js/plotly-latest.min.js' %}"></script>
     <script src="{% static 'js/KBmapmarkers.js' %}"></script>
     <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
-    <script src="{% static 'js/jquery.panzoom.min.js'%}"></script>
-    <script src="{% static 'js/jquery.mousewheel.js'%}"></script>
-    <script src="{% static 'js/ObjectEquate.js'%}"></script>
-    <script src="{% static 'js/jquery.connectingLine.js'%}"></script>
-    <script src="{% static 'js/jquery.svg.min.js'%}"></script>
+    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'js/ObjectEquate.js' %}"></script>
+    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
+    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
     <script src="{% static 'js/jquery.md5.min.js' %}"></script>
 
     <script src="{% static 'datetime/js/moment.js' %}"></script>
     <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
-    <script src="{% static 'datetime/js/collapse.js'%}"></script>
+    <script src="{% static 'datetime/js/collapse.js' %}"></script>
     <script src="{% static 'datetime/js/transition.min.js' %}"></script>
     <script src="{% static 'js/printThis.js' %}"></script>
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
@@ -223,30 +250,31 @@ h1 { text-align: center; margin-top: 150px; }
     <link href='https://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
     <script src="{% static 'js/filepond.js' %}"></script>
     <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>-->
-<!--    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>-->
+    <!--    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.3.2/svg.min.js"></script>
     <script src="{% static 'js/workflowChart.js' %}"></script>
 
 
     <style>
-        .container.tim-container{
-        width:99%;
+        .container.tim-container {
+            width: 99%;
         }
-    .navbar-transparent{
-        background-color:#34ACDC;
-        background-color:rgba(52, 172, 220, 0.98);
 
-    }
+        .navbar-transparent {
+            background-color: #34ACDC;
+            background-color: rgba(52, 172, 220, 0.98);
+
+        }
 
     </style>
 
     <script>
         //paste this code under the head tag or in a separate js file.
-	// Wait for window load
-	$(document).ready(function() {
-		// Animate loader off screen
-		$(".se-pre-con").fadeOut("slow");
-	});
+        // Wait for window load
+        $(document).ready(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+        });
     </script>
 
 </head>
@@ -260,12 +288,10 @@ h1 { text-align: center; margin-top: 150px; }
 <!-- End Google Tag Manager (noscript) -->
 <div id="navbar-full">
     <div id="navbar">
-
         <!--
          navbar-default can be changed with navbar-ct-blue navbar-ct-azzure navbar-ct-red navbar-ct-green navbar-ct-orange
          -->
         <nav class="navbar navbar-ct-blue navbar-fixed-top navbar-transparent" role="navigation">
-
             <div class="container tim-container">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <div class="navbar-header">
@@ -276,7 +302,6 @@ h1 { text-align: center; margin-top: 150px; }
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-
                     <a class="navbar-brand navbar-brand-logo" href="/">
                         <div class="logo">
                             <img src="{% static '/image/csir_logo.svg' %}" width="60px">
@@ -289,9 +314,9 @@ h1 { text-align: center; margin-top: 150px; }
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-<!--                        <li><img src="{% static '/image/csir_logo.svg' %}" height="80" width="80"/></li>-->
+                        <!--                        <li><img src="{% static '/image/csir_logo.svg' %}" height="80" width="80"/></li>-->
                         <li class="active">
-                          <a  href="/">
+                            <a href="/">
                                 <i class="pe-7s-home"></i>
                                 <p>Home</p>
                             </a>
@@ -300,15 +325,13 @@ h1 { text-align: center; margin-top: 150px; }
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-users"></i>
                                 <p>Employee
-                                <span class="caret"></span></p>
+                                    <span class="caret"></span></p>
                             </a>
-
                             <ul class="dropdown-menu  navbar-color">
                                 <li><a href="{% url 'employee1:add_mine' %}">Add Mine</a></li>
                                 <li><a href="{% url 'employee1:manage_mine' %}">Manage Mine</a></li>
                                 <li><a href="{% url 'employee1:add_mining_role' %}">Add Mining Role</a></li>
                                 <li><a href="{% url 'employee1:manage_mining_role' %}">Manage Mining Role</a></li>
-
                                 <li><a href="{% url 'employee1:employee_add' %}">Add Employee</a></li>
                                 <li><a href="{% url 'employee1:employee_manage' %}">Manage Employee</a></li>
                                 <li><a href="{% url 'attendance:index' %}">Add Employee Attendance</a></li>
@@ -335,10 +358,7 @@ h1 { text-align: center; margin-top: 150px; }
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-map-marker"></i>
-                                <p>
-                                    Miners Tracking
-                                   <span class="caret"></span>
-                                </p>
+                                <p>Miners Tracking<span class="caret"></span></p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
 
@@ -364,9 +384,9 @@ h1 { text-align: center; margin-top: 150px; }
                             <ul class="dropdown-menu  navbar-color">
                                 <li><a href="{% url 'sensor:node_add' %}">Add & Manage Wireless Node<sub></sub></a></li>
 
-                                <li><a href="{% url 'sensor:live_data_tabular'%}">Live Data in Tabular</a></li>
-                                <li><a href="{% url 'sensor:live_data_graph'%}">Live Data in Graph</a></li>
-                                <li><a href="{% url 'sensor:live_map'%}">Live Data in Map</a></li>
+                                <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
+                                <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
+                                <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
 
                                 <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf Area<sub></sub></a>
                                 </li>
@@ -381,17 +401,14 @@ h1 { text-align: center; margin-top: 150px; }
                                 <!--<li><a href="{% url 'FireExp:line_chart_gas_ratios' %}">Fire Status and Explosibility(Gas Ratio Chart)</a></li>-->
                                 <!--<li><a href="#"></a></li>-->
                                 <li><a href="{% url 'temp_monitoring:index' %}">Mine Air Analysis <span
-                                        class="label label-default">Manual Mode</span></a>
-                                </li>
+                                        class="label label-default">Manual Mode</span></a></li>
                                 <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
-                                        class="label label-default">Manual Mode</span></a>
-                                </li>
-
+                                        class="label label-default">Manual Mode</span></a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                 <i class="pe-7s-display1"></i>
+                                <i class="pe-7s-display1"></i>
                                 <p>Strata Monitoring
                                     <span class="caret"></span>
                                 </p>
@@ -447,36 +464,53 @@ h1 { text-align: center; margin-top: 150px; }
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
-                                    Annual Annexure I
-                                    (Coal Mine)</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">Manage First
-                                    Schedule Form
-                                    III </a></li>
-                                    <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT (Table A) </a></li>
-                                    <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS (Table B)</a></li>
-                                    <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">MANAGE TYPE AND AGGREGATE HORSE_POWER OF MACHINERY AND EQUIPMENT
-                                        <br> (EXP. ELECTRICAL APPARATUS) (Table C)</a></li>
-                                    <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES, SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
-                                    <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES, SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">Manage
-                                    Annual
-                                    Annexure II (Metalliferous Mines)</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">Manage
-                                    Annual Annexure
-                                    III (Oil Mines)</a></li>
-                                <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Annual
-                                    Report</a></li>
+                                <li><h5><b>Coal Report</b></h5></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">MANAGE
+                                    ANNUAL REPORT</a></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
+                                    SCHEDULE (Form III)</a></li>
+{#                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE#}
+{#                                    (Form V)</a></li>#}
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
+                                    (Table A) </a></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
+                                    AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS (Table B)</a></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">MANAGE TYPE AND
+                                    AGGREGATE HORSE_POWER OF MACHINERY AND EQUIPMENT (OTHER THEN ELECTRICAL APPARATUS)
+                                    (Table C)</a></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
+                                    SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
+{#                                <li><a href="{% url 'DGMS_Forms:L̥Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,#}
+{#                                    SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>#}
+                                <li><h5><b>Metal Report</b></h5></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
+                                    ANNUAL REPORT</a></li>
+                                <li><h5 class="text-left"><b>Oil Report</b></h5></li>
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
+                                    ANNUAL REPORT</a></li>
+                                <li><h5><b>Miscellaneous Report</b></h5></li>
+                                <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on
+                                    PESO)</a></li>
+                                <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission
+                                    Application(on DGMS)</a></li>
+{#                                <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment#}
+{#                                    Permission </a></li>#}
+{#                                <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING#}
+{#                                    PERMISSION </a></li>#}
+{#                                <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>#}
+{#                                <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification#}
+{#                                    Report of the Problem</a></li>#}
+                                <li><h5 class="text-left"><b>Send Report</b></h5></li>
                                 <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
                             </ul>
                         </li>
                         <li class="dropdown ">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-wallet "></i>
-                               <p>
-                                   Inventory Management
-                                   <span class="caret"></span>
-                               </p>
+                                <p>
+                                    Inventory Management
+                                    <span class="caret"></span>
+                                </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color ">
 
@@ -494,12 +528,12 @@ h1 { text-align: center; margin-top: 150px; }
                                 </li>
                                 <li><a href="{% url 'inventory_management:distribute_prod' %}">Distribute Product</a>
                                 </li>
-                                    </ul>
+                            </ul>
                         </li>
 
                         <li class="dropdown  dropdown-large">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                 <i class="pe-7s-display1"></i>
+                                <i class="pe-7s-display1"></i>
                                 <p>
                                     Production Monitoring
                                     <span class="caret"></span>
@@ -507,76 +541,84 @@ h1 { text-align: center; margin-top: 150px; }
                             </a>
                             <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
                                 <li class="col-sm-6">
-						            <ul class="">
+                                    <ul class="">
                                         <li class="dropdown-header" style="color:white;">Sword of Truth</li>
 
                                         <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Add Vehicle</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Manage Vehicle</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Add Weighbridge</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_manage' %}">Manage Weighbridge</a>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Manage Vehicle</a>
                                         </li>
-                                        <li><a href="{% url 'ProductionMonitoring:manualentry_add' %}">Add manual Entry Of
+                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Add
+                                            Weighbridge</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_manage' %}">Manage
+                                            Weighbridge</a>
+                                        </li>
+                                        <li><a href="{% url 'ProductionMonitoring:manualentry_add' %}">Add manual Entry
+                                            Of
                                             Coal/Ore</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:report_data' %}">Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:container_details_add' %}">Tub Information</a>
+                                        <li><a href="{% url 'ProductionMonitoring:container_details_add' %}">Tub
+                                            Information</a>
                                         </li>
                                         <!--<li><a href="{% url 'ProductionMonitoring:production_despatch_add' %}">Production Dispatch</a></li>-->
 
-                                        <li><a href="{% url 'ProductionMonitoring:production_tub_add' %}">Production Using
+                                        <li><a href="{% url 'ProductionMonitoring:production_tub_add' %}">Production
+                                            Using
                                             Tub</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:report_production_dispatch' %}">Report Of
+                                        <li><a href="{% url 'ProductionMonitoring:report_production_dispatch' %}">Report
+                                            Of
                                             Production(coal/ore) using Tub</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:production_wastematerial_add' %}">Production
                                             Using Waste
                                             Material</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:production_dailyentry_add' %}">Daily Entry of
+                                        <li><a href="{% url 'ProductionMonitoring:production_dailyentry_add' %}">Daily
+                                            Entry of
                                             coal/ore</a>
                                         </li>
-                                        <li><a href="{% url 'ProductionMonitoring:production_monthly_add' %}">Monthly Entry of
+                                        <li><a href="{% url 'ProductionMonitoring:production_monthly_add' %}">Monthly
+                                            Entry of
                                             coal/ore</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="col-sm-6">
-						            <ul class="navbar-color">
-                                        <li><a href="{% url 'ProductionMonitoring:production_yearlyentry_add' %}">Yearly Entry
-                                            of
-                                            coal/ore</a></li>
+                                    <ul class="navbar-color">
+                                        <li><a href="{% url 'ProductionMonitoring:production_yearlyentry_add' %}">Yearly
+                                            Entry of coal/ore</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:production_dailydispatch_add' %}">Daily
-                                            Dispatch of
-                                            coal/ore</a></li>
+                                            Dispatch of coal/ore</a></li>
 
                                         <li><a href="{% url 'ProductionMonitoring:production_monthlydispatch_add' %}">Monthly
                                             Dispatch of
                                             coal/ore</a></li>
-
                                         <li><a href="{% url 'ProductionMonitoring:production_yearlydispatch_add' %}">Yearly
                                             Dispatch of
                                             coal/ore</a></li>
 
-                                        <li><a href="{% url 'ProductionMonitoring:report_dailyentry' %}">Daily Entry Report</a>
+                                        <li><a href="{% url 'ProductionMonitoring:report_dailyentry' %}">Daily Entry
+                                            Report</a>
                                         </li>
                                         <li><a href="{% url 'ProductionMonitoring:report_monthlyentry' %}">Monthly Entry
                                             Report</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:report_yearlyentry' %}">Yearly Entry
                                             Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:report_dailydispatch' %}">Daily Dispatch
+                                        <li><a href="{% url 'ProductionMonitoring:report_dailydispatch' %}">Daily
+                                            Dispatch
                                             Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:report_monthlydispatch' %}">Monthly Dispatch
+                                        <li><a href="{% url 'ProductionMonitoring:report_monthlydispatch' %}">Monthly
+                                            Dispatch
                                             Report</a>
                                         </li>
-                                        <li><a href="{% url 'ProductionMonitoring:report_yearlydispatch' %}">Yearly Dispatch
+                                        <li><a href="{% url 'ProductionMonitoring:report_yearlydispatch' %}">Yearly
+                                            Dispatch
                                             Report</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:report_dailyprod_dispatch' %}">Daily
-                                            Production Dispatch
-                                            Report</a></li>
+                                            Production Dispatch Report</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:live_video_ip' %}">Video
-                                            Streaming(IP:192.168.1.250)</a>
-                                        </li>
+                                            Streaming(IP:192.168.1.250)</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:live_video_ip_151' %}">Video
                                             Streaming(IP:192.168.1.251)</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:live_video_webcam' %}">Video Streaming(Web
-                                            Cam)</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:live_video_webcam' %}">Video
+                                            Streaming(Web Cam)</a></li>
                                     </ul>
                                 </li>
 
@@ -596,37 +638,41 @@ h1 { text-align: center; margin-top: 150px; }
                             </ul>
                         </li>
 
-
                         <ul class="nav navbar-nav">
                             {% if user.is_authenticated %}
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                    <i class="pe-7s-user"> <span class="label incomplete_profile_check hidden">Update Profile</span></i>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="pe-7s-user"> <span class="label incomplete_profile_check hidden">Update Profile</span></i>
 
-                                    <p>Welcome! {{user.username }}<b class="caret"></b></p>
-                                </a>
+                                        <p>Welcome! {{ user.username }}<b class="caret"></b></p>
+                                    </a>
 
-                                <ul class="dropdown-menu navbar-color" role="menu">
-                                   <li class="divider"></li>
-                                <li class="text-center"><img src="" id="profile_avatar" onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';" width="100px" height="100px" class="avatar img-circle"></li>
-                                    <li class="text-center profile-usertitle-job" style="color:white;" id="mine_name">Hello World</li>
-                                <li class="divider"></li>
-                                    <li><a href="{% url 'dashboard:dashboard_calling' %}"><span class="glyphicon glyphicon-dashboard"></span>
-                                        Dashboard</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="/accounts/profile/overview/"><span class="glyphicon glyphicon-th"></span>
-                                        Profile</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="/accounts/password_change/"><span
-                                            class="glyphicon glyphicon-refresh"></span>
-                                        Change Password </a></li>
-                                    <li class="divider"></li>
-
-                                    <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
-                                            class="glyphicon glyphicon-off"></span>
-                                        Logout </a></li>
-                                </ul>
-                            </li>
+                                    <ul class="dropdown-menu navbar-color" role="menu">
+                                        <li class="divider"></li>
+                                        <li class="text-center"><img src="" id="profile_avatar"
+                                                                     onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
+                                                                     width="100px" height="100px"
+                                                                     class="avatar img-circle"></li>
+                                        <li class="text-center profile-usertitle-job" style="color:white;"
+                                            id="mine_name">Hello World
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li><a href="{% url 'dashboard:dashboard_calling' %}"><span
+                                                class="glyphicon glyphicon-dashboard"></span>
+                                            Dashboard</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="/accounts/profile/overview/"><span
+                                                class="glyphicon glyphicon-th"></span>
+                                            Profile</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="/accounts/password_change/"><span
+                                                class="glyphicon glyphicon-refresh"></span>
+                                            Change Password </a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="/accounts/logout"><span class="glyphicon glyphicon-off"></span>
+                                            Logout </a></li>
+                                    </ul>
+                                </li>
                             {% endif %}
                         </ul>
 
@@ -690,6 +736,32 @@ h1 { text-align: center; margin-top: 150px; }
     </div>
 </div>
 
+<script>
+    $('ul.nav li.dropdown').hover(function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    }, function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+    });
+
+    toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-bottom-full-width",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "100",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+        }
+
+=======
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -709,123 +781,103 @@ h1 { text-align: center; margin-top: 150px; }
         </div>
     </div>
 </div>
+>>>>>>> ab7492d4bf7463412da55b4ac54dba7dfb7ac2bb
 
 
-<script>
-    $('ul.nav li.dropdown').hover(function() {
+
+
+        <!--var interval_time=10000;-->
+        <!--    setInterval(function(){-->
+        <!--        $.ajax({-->
+        <!--            type:"get",-->
+        <!--                url: "{% url 'Strata:warning_level_information' %}",-->
+        <!--                success: function(data) {-->
+        < !--                //console.log(data);-->
+        < !--                //toastr.warning(data["result"]); // Vikash Changed Here-->
+        < !--                //$("#fill_here").html(data["result"]); //Vikash Changed Here-->
+        <!--                if(data["result"]){-->
+        < !--                   // $("#is_visiable").attr("style",""); //Vikash Changed Here-->
+        <!--                    toastr.warning(data["result"]);-->
+        <!--                    if(data["light_result"]){-->
+        < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+    -- >
+    <!--                    }else{-->
+    < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+    -- >
+    <!--                    }-->
+    <!--                }else{-->
+    <!--                    $("#is_visiable").attr("style","display:none");-->
+    < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+    -- >
+    <!--                }-->
+    <!--                },-->
+    <!--                error: function(){-->
+    <!--                        console.log("something went wrong");-->
+    <!--                }-->
+    <!--        });-->
+    < !--
+    },
+    interval_time
+    )
+    ;//time in milliseconds-->
+
+    <!--    $(document).ready(function(){-->
+    <!--      $('[data-toggle="tooltip"]').tooltip();-->
+    <!--    });-->
+
+    $('ul.nav li.dropdown').hover(function () {
         $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-    }, function() {
-    $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+    }, function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
     });
 
-toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-full-width",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "100",
-                    "timeOut": "3000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",
-                    }
 
-
-
-
-
-<!--var interval_time=10000;-->
-<!--    setInterval(function(){-->
-<!--        $.ajax({-->
-<!--            type:"get",-->
-<!--                url: "{% url 'Strata:warning_level_information' %}",-->
-<!--                success: function(data) {-->
-<!--                //console.log(data);-->
-<!--                //toastr.warning(data["result"]); // Vikash Changed Here-->
-<!--                //$("#fill_here").html(data["result"]); //Vikash Changed Here-->
-<!--                if(data["result"]){-->
-<!--                   // $("#is_visiable").attr("style",""); //Vikash Changed Here-->
-<!--                    toastr.warning(data["result"]);-->
-<!--                    if(data["light_result"]){-->
-<!--                        $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");-->
-<!--                    }else{-->
-<!--                        $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");-->
-<!--                    }-->
-<!--                }else{-->
-<!--                    $("#is_visiable").attr("style","display:none");-->
-<!--                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");-->
-<!--                }-->
-<!--                },-->
-<!--                error: function(){-->
-<!--                        console.log("something went wrong");-->
-<!--                }-->
-<!--        });-->
-<!--    }, interval_time);//time in milliseconds-->
-
-<!--    $(document).ready(function(){-->
-<!--      $('[data-toggle="tooltip"]').tooltip();-->
-<!--    });-->
-
-    $('ul.nav li.dropdown').hover(function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-}, function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-});
-
-
-    $('ul.nav li.dropdown').hover(function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-}, function() {
-  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-});
-
- $(document).ready(function(){
-    $.ajax({
-       url: "{% url 'employee1:checkifuserfieldempty' %}",
-       success:function(data){
-            if(data.result=='1'){
-             $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
-            }
-            else{
-                 $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
-            }
-       },
-       error:function(){
-            console.log('Something Went Wrong!');
-       }
-
+    $('ul.nav li.dropdown').hover(function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    }, function () {
+        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
     });
-});
-var T;
-$(document).ready(function(){
-    $.ajax({
-       url: "{% url 'employee1:profile_ajax' %}",
-       success:function(data){
-           T=data;
-            if(data.hasOwnProperty('profile_avatar') ){
-                $('img#profile_avatar').attr('src','/media/'+data.profile_avatar);
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "{% url 'employee1:checkifuserfieldempty' %}",
+            success: function (data) {
+                if (data.result == '1') {
+                    $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
+                } else {
+                    $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
+                }
+            },
+            error: function () {
+                console.log('Something Went Wrong!');
+            }
+
+        });
+    });
+    var T;
+    $(document).ready(function () {
+        $.ajax({
+            url: "{% url 'employee1:profile_ajax' %}",
+            success: function (data) {
+                T = data;
+                if (data.hasOwnProperty('profile_avatar')) {
+                    $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+
+                }
+                if (data.hasOwnProperty('mine')) {
+
+                    $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                }
+            },
+            error: function () {
+                console.log('Something Went Wrong!');
+                $('img#profile_avatar').attr('src', '/media/employee_image/male_alt_photo.svg');
+
 
             }
-           if(data.hasOwnProperty('mine')){
 
-               $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(')+1,data.mine.indexOf(')')));
-           }
-       },
-       error:function(){
-            console.log('Something Went Wrong!');
-             $('img#profile_avatar').attr('src','/media/employee_image/male_alt_photo.svg');
-
-
-       }
-
+        });
     });
-});
 
 
 </script>

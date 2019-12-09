@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+   {% csrf_token %}
+<div class="container">
+  <div class="row margin">
+     <h2>ADD CONSTANT     <small>Here you can add custom constant</small></h2>
+  </div>
+  <br>
+ <table class="table table-striped">
+    <tbody>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-2">
+               <label for=""> Name </label>
+            </div>
+            <div class="col-md-10">
+                {{form.name}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-2">
+               <label for=""> Value</label>
+            </div>
+            <div class="col-md-10">
+                {{form.value}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-2">
+                <label for=""> Description</label>
+            </div>
+            <div class="col-md-10">
+               {{form.desc}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<div class="row">
+     <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</div>
+</div>
+</form>
+<script>
+    $(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+    });
+</script>
+{% endblock %}

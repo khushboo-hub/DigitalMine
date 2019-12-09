@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .margin {
+        margin-top: 5px;
+    }
+    .text_align {
+       text-align: center;
+    }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="container">
+        <div class="row margin text_align">
+            <b>
+                Identification Report of the Problem
+            </b>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="" class="pull-right">Issue Type</label>
+            </div>
+            <div class="col-md-10">
+                {{form.problem_type}}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="" class="pull-right">Description</label>
+            </div>
+            <div class="col-md-10">
+                {{form.application_desc}}
+            </div>
+        </div>
+        <br>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label for="" class="pull-right">Mine Manager Name</label>
+            </div>
+            <div class="col-md-10">
+                {{form.mine_manager_name}}
+            </div>
+        </div>
+        <br>
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <td>
+                    Sl. No.
+                </td>
+                <td>
+                    Topics
+                </td>
+                <td>
+                    Details
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    1
+                </td>
+                <td>
+                    Problem
+                </td>
+                <td>
+                    {{form.problem}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    2
+                </td>
+                <td>
+                    Nature
+                </td>
+                <td>
+                    {{form.nature}}
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    3
+                </td>
+                <td>
+                    Findings
+                </td>
+                <td>
+                    {{form.findings}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    4
+                </td>
+                <td>
+                    Root cause
+                </td>
+                <td>
+                    {{form.root_cause}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    5
+                </td>
+                <td>
+                    Corrective Action
+                </td>
+                <td>
+                    {{form.corrective_action}}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    6
+                </td>
+                <td>
+                    Result
+                </td>
+                <td>
+                    {{form.result}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="row">
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
