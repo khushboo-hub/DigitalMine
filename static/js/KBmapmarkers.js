@@ -358,6 +358,22 @@ jQuery( document ).ready(function() {
 		var clickedMarkerMapName = jQuery(this).parent().parent().parent().parent().attr('id');
 
 		jQuery.event.trigger('markerClick', getKBmap(clickedMarkerMapName).mapMarkers[clickedMarkerName]);
+		var font_size=25-ZoomLevel;
+		var container_width=250-8*ZoomLevel;
+		var container_height=100+0.5*ZoomLevel;
+		var close_height=80-ZoomLevel;
+		var close_width=80-ZoomLevel;
+            console.log('font size',font_size);
+            console.log('width',container_width);
+            console.log('height',container_height);
+            $('div.KBmap__markerContentItem').css('font-size',font_size+"px");
+            $('h6.KBmap__markerTitle').css('font-size',font_size+"px");
+            $('div.KBmap__markerContent').css('width',container_width+"px" );
+            $('div.KBmap__markerContent').css('height',container_height+"px" );
+
+            $('div.KBmap__markerClose').css('width',close_width+"px" );
+            $('div.KBmap__markerClose').css('height',close_height+"px" );
+
 
 	});
 	jQuery('body').on('mouseout', '.KBmap__marker img', function(){
@@ -376,6 +392,8 @@ jQuery( document ).ready(function() {
 		var clickedMarkerMapName = "KBtestmap";
 		
 		jQuery.event.trigger('markerClick', getKBmap(clickedMarkerMapName).mapMarkers[clickedMarkerName]);
+
+
 
 	});
 	jQuery('body').on('mouseout', '.MinerIcon', function(){
