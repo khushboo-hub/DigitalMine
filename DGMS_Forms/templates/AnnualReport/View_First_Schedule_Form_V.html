@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+    margin-top:10px;
+  }
+</style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <b><center>FIRST SCHEDULE<br>FORM V<br>(see Regulation 10)<br>Notice of Disease notified under section 25</center></b>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-12">
+                            <label> Form : </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            {{form.form_address}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-4">
+                            <label>1. The Chief Inspector of Mines,</label>
+                        </div>
+                        <div class="col-md-6">
+                                {{form.chief_inspector_of_mine}}
+                        </div>
+                        <div class="col-md-2">
+                         <label> Dhanbad,E.Rly</label>
+                        </div>
+                    </div>
+              </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-4">
+                            <label>2. The Regional Inspector of Mines,</label>
+                        </div>
+                        <div class="col-md-6">
+                                {{form.regional_inspector_of_mine}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-4">
+                            <label>3. The Inspector of Mines <small>(in case of elecrtical accidents only, Dhanbad).</small>E.R.</label>
+                        </div>
+                        <div class="col-md-6">
+                            {{form.inspector_of_mine_er}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-4">
+                            <label>4. The District Magistrate/District Collector</label>
+                        </div>
+                        <div class="col-md-6">
+                                {{form.distric_magistrate}}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row margin">
+                        <div class="col-md-12">
+                            <label>
+                            Sir,<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I have to furnish the following particulars with respect to an occupational
+                                disease person employed in the &nbsp;&nbsp;{{form.mine_name}} <br><br>Mine (also state name of mineral produced) of &nbsp;&nbsp;{{form.owner_state}}&nbsp;&nbsp;(owner):&nbsp;&nbsp; {{form.mine_owner}}
+                            </label>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <label>1. PARTICULARS OF THE MINE ETC :</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>(i) Situation of mine</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.situation_of_mine }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Village</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_vill }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Post office</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_po }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Police station</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_ps }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>Sub-Division (Taluq)</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_subdistric }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>District</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_dist }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>State</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mine_state }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>(ii)Mineral worked</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.mineral_workd }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label>(iii)Name and postal address of owner</label>
+                        </div>
+                        <div class="col-md-8">
+                         {{ form.postel_address_of_owner }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>2. PARTICULARS OF PERSON AFFECTED:</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(i) Name(in Block Capitals)</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_affected_name }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(ii) Caste or surname</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_caste }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>(iii) Permanent address</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>Village</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_vill }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>Post office</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_po }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>Police station</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_ps }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>Sub-Division (Taluq)</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_sub_div }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>District</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_dist }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>State</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_state }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(iv)Sex</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_sex }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(v)Date of birth(or age)</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_dob }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(vi)Occuption</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.person_occupation }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>How long engaged ?</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.engage_duration }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(vii)Date of commencement of employment</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.commencement_of_emp_date }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(a)In your mine</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.in_your_mine }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                             <label>(b)In mining</label>
+                        </div>
+                        <div class="col-md-8">
+                            {{ form.in_mining }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>PARTICULARS OF DISEASE ETC:</label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                   <div class="row">
+                        <div class="col-md-8">
+                             <label>(I) NATURE OF DISEASE FROM WHICH THE PERSON IN SUFFERING (STATE STAGE)</label>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.nature_of_disease_state_stage }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                  <div class="row">
+                        <div class="col-md-8">
+                             <label>(II) Date of detection of disease</label>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.disease_detection_date }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                  <div class="row">
+                        <div class="col-md-8">
+                             <label>(III) Name, registration number and address of Medical Practitioner suspecting disease</label>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.medical_practitioner_suspecting_disease }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right">
+                                <label>Signature:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                           <img class="image image-responsive" src="/media/{{ form.signature }}" height="100" width="300"/><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right">
+                                <label>Designation:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                           {{ form.designation }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                         <div class="col-md-2">
+                             <div class="pull-right">
+                                <label>Date:</label>
+                             </div>
+                        </div>
+                        <div class="col-md-4">
+                          {{ form.sig_date }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <!--{{form.as_table}}-->
+    <center><button type="button" class="btn btn-primary">Print</button></center>
+{% endblock %}

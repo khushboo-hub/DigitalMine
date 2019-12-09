@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+
+<div class="container">
+  <div class="row margin">
+    <center><b>TABLE A -EMPLOYMENT</b></center>
+  </div>
+  <br>
+  <div class="row">
+    <div class="form-group">
+      <div class="col-md-8">
+        <label>
+          Maximum number of persons employed on any one day during the year
+        </label>
+      </div>
+      <div class="col-md-3">
+        {{form.year}}
+      </div>
+    </div>
+  </div>
+  <div class="row margin">
+    <div class="form-group">
+      <div class="col-md-3">
+        <label>
+          (i) workings below ground on
+        </label>
+      </div>
+      <div class="col-md-4">
+        {{form.working_below_ground}}
+      </div>
+      <div class="col-md-1">
+        <label>
+          (a)
+        </label>
+      </div>
+      <div class="col-md-3">
+        {{form.working_below_ground_a}}
+      </div>
+    </div>
+  </div>
+  <div class="row margin">
+    <div class="form-group">
+      <div class="col-md-3">
+        <label>
+          (ii) all in the mine on
+        </label>
+      </div>
+      <div class="col-md-4">
+      {{form.all_mine_on}}
+      </div>
+      <div class="col-md-1">
+        <label>
+          (a)
+        </label>
+      </div>
+      <div class="col-md-3">
+       {{form.all_mine_on_a}}
+      </div>
+    </div>
+  </div>
+  <div class="row margin">
+    <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Classification</th>
+        <th colspan="3">Total number of man-days worked during the year (b)</th>
+        <th>Number of days worked during the year</th>
+        <th colspan="4">Average daily number of persons employed (c)</th>
+        <th>Total wages or salary bill for the year (d)</th>
+      </tr>
+      <tr>
+        <th><center>(1)</center></th>
+        <th><center>(2A)</center></th>
+        <th><center>(2B)</center></th>
+        <th><center>(2C)</center></th>
+        <th><center>(3)</center></th>
+        <th><center>(4A)</center></th>
+        <th><center>(4B)</center></th>
+        <th><center>(4C)</center></th>
+        <th><center>(4D)</center></th>
+        <th><center>(5)</center></th>
+        </tr>
+    </thead>
+    <tbody>
+       <tr>
+         <td>
+           <b>Below Ground</b><br><br>
+           (i) Overman & Sirdars<br><br>
+           (ii) Miners & Loaders<br><br>
+           (iii) Others
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_2a}}<br><br>
+           {{ form.below_ground_miners_loader_2a}}<br><br>
+           {{ form.below_ground_others_2a}}
+         </td>
+         <td><br><br>
+            {{ form.below_ground_overman_sirdars_2b}}<br><br>
+           {{ form.below_ground_miners_loader_2b}}<br><br>
+           {{ form.below_ground_others_2b}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_2c}}<br><br>
+           {{ form.below_ground_miners_loader_2c}}<br><br>
+           {{ form.below_ground_others_2c}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_3}}<br><br>
+           {{ form.below_ground_miners_loader_3}}<br><br>
+           {{ form.below_ground_others_3}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_4a}}<br><br>
+           {{ form.below_ground_miners_loader_4a}}<br><br>
+           {{ form.below_ground_others_4a}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_4b}}<br><br>
+           {{ form.below_ground_miners_loader_4b}}<br><br>
+           {{ form.below_ground_others_4b}}
+         </td>
+         <td><br><br>
+          {{ form.below_ground_overman_sirdars_4c}}<br><br>
+          {{ form.below_ground_miners_loader_4c}}<br><br>
+          {{ form.below_ground_others_4c}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_4d}}<br><br>
+          {{ form.below_ground_miners_loader_4d}}<br><br>
+          {{ form.below_ground_others_4d}}
+         </td>
+         <td><br><br>
+           {{ form.below_ground_overman_sirdars_5}}<br><br>
+           {{ form.below_ground_miners_loader_5}}<br><br>
+           {{ form.below_ground_others_5}}
+         </td>
+       </tr>
+    <tr>
+         <td>
+           <b>Opencast Working</b><br><br>
+           (i) Overman & Sirdars<br><br>
+           (ii) Miners & Loaders<br><br>
+           (iii) Others
+         </td>
+         <td><br><br>
+            {{ form.opencast_overman_sirdars_2a}}<br><br>
+           {{ form.opencast_miners_loader_2a}}<br><br>
+           {{ form.opencast_others_2a}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_2b}}<br><br>
+           {{ form.opencast_miners_loader_2b}}<br><br>
+           {{ form.opencast_others_2b}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_2c}}<br><br>
+           {{ form.opencast_miners_loader_2c}}<br><br>
+           {{ form.opencast_others_2c}}
+         </td>
+         <td><br><br>
+          {{ form.opencast_overman_sirdars_3}}<br><br>
+           {{ form.opencast_miners_loader_3}}<br><br>
+           {{ form.opencast_others_3}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_4a}}<br><br>
+           {{ form.opencast_miners_loader_4a}}<br><br>
+           {{ form.opencast_others_4a}}
+         </td>
+         <td><br><br>
+            {{ form.opencast_overman_sirdars_4b}}<br><br>
+           {{ form.opencast_miners_loader_4b}}<br><br>
+           {{ form.opencast_others_4b}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_4c}}<br><br>
+           {{ form.opencast_miners_loader_4c}}<br><br>
+           {{ form.opencast_others_4c}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_4d}}<br><br>
+           {{ form.opencast_miners_loader_4d}}<br><br>
+           {{ form.opencast_others_4d}}
+         </td>
+         <td><br><br>
+           {{ form.opencast_overman_sirdars_5}}<br><br>
+           {{ form.opencast_miners_loader_5}}<br><br>
+           {{ form.opencast_others_5}}
+         </td>
+       </tr>
+    <tr>
+         <td>
+           <b>Above ground</b><br><br>
+           (i) Clerical and Supervisory staff(excuding the superior supervisory staff)<br><br>
+           (ii) Workers in any attached factory,workshop or mineral dressing plant.<br><br>
+           (iii) Others
+         </td>
+         <td><br><br>
+           {{form.aboveground_clerical_supervisory_staff_2a}}<br><br>
+           {{form.aboveground_workers_2a}}<br><br>
+           {{form.aboveground_others_2a}}<br><br>
+         </td>
+         <td><br><br>
+           {{form.aboveground_clerical_supervisory_staff_2b}}<br><br>
+           {{form.aboveground_workers_2b}}<br><br>
+           {{form.aboveground_others_2b}}<br><br>
+         </td>
+         <td><br><br>
+            {{form.aboveground_clerical_supervisory_staff_2c}}<br><br>
+           {{form.aboveground_workers_2c}}<br><br>
+           {{form.aboveground_others_2c}}<br><br>
+         </td>
+         <td><br><br>
+            {{form.aboveground_clerical_supervisory_staff_3}}<br><br>
+           {{form.aboveground_workers_3}}<br><br>
+           {{form.aboveground_others_3}}<br><br>
+         </td>
+         <td><br><br>
+           {{form.aboveground_clerical_supervisory_staff_4a}}<br><br>
+           {{form.aboveground_workers_4a}}<br><br>
+           {{form.aboveground_others_4a}}<br><br>
+         </td>
+         <td><br><br>
+           {{form.aboveground_clerical_supervisory_staff_4b}}<br><br>
+           {{form.aboveground_workers_4b}}<br><br>
+           {{form.aboveground_others_4b}}<br><br>
+         </td>
+         <td><br><br>
+           {{form.aboveground_clerical_supervisory_staff_4c}}<br><br>
+           {{form.aboveground_workers_4c}}<br><br>
+           {{form.aboveground_others_4c}}<br><br>
+         </td>
+         <td><br><br>
+            {{form.aboveground_clerical_supervisory_staff_4d}}<br><br>
+           {{form.aboveground_workers_4d}}<br><br>
+           {{form.aboveground_others_4d}}<br><br>
+         </td>
+         <td><br><br>
+            {{form.aboveground_clerical_supervisory_staff_5}}<br><br>
+           {{form.aboveground_workers_5}}<br><br>
+           {{form.aboveground_others_5}}<br><br>
+         </td>
+       </tr>
+      <tr>
+        <td>Total</td>
+        <td colspan="9">{{form.total_value}}</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="row">
+    <center> <button type="button" class="btn btn-primary" id="print">Print</button></center>
+  </div>
+  <div class="row">
+    <center>INSTRUCTIONS</center>
+    (a) Give day of the week and the date and month.<br>
+    (b) Obtained by adding the daily attendance forthe whole year.<br>
+    (c) Obtained by dividing the number of man-days worked by the number of working days.The total shown in column (4D) should agree with the quotient obtained by dividing the total shown in column (2C) by the number of working days shown in column(3)<br>
+    (d) Includes all cash payments including bonuses.Employer's contributions to provident funds,welfare activities,etc., and concessions in kind should not be included.<br>
+    (e) Persons employed in the removal of overburden should be included among "Others" and not among "Miners and Loaders"<br><br>
+  </div>
+</div>
+
+<script>
+    $(document.body).on('click','#print',function(key){
+    $("#print").hide();
+     window.print();
+     $("#print").show();
+    });
+</script>
+{% endblock %}

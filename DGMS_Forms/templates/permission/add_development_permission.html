@@ -1,0 +1,551 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+   {% csrf_token %}
+<div class="container">
+  <div class="row margin">
+    <center>
+      <b>
+         Development Permission
+      </b>
+    </center>
+  </div>
+  <br>
+ <table class="table table-striped">
+    <tbody>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">1. Name of the mine</label>
+            </div>
+            <div class="col-md-8">
+                {{form.name_of_mine}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">2. Name of the Owner</label>
+            </div>
+            <div class="col-md-8">
+                {{form.name_of_owner}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">3. Particulars of the seam</label>
+            </div>
+            <div class="col-md-8">
+
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">(a) Name of seam proposed to be developed as per above.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.name_of_seam_proposed}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">(b) Total thickness of seam</label>
+            </div>
+            <div class="col-md-8">
+                {{form.total_thickness_seam}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(c) thickness of seam taken during development </label>
+            </div>
+            <div class="col-md-8">
+                {{form.thickness_of_seam_taken_under_devlopment}}
+            </div>
+          </div>
+
+        </td>
+      </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(d) Max. & Min. cover of the working faces at the area applied for above</label>
+            </div>
+            <div class="col-md-8">
+                {{form.max_min_cover_working_faces}}
+            </div>
+          </div>
+
+        </td>
+      </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(e) Are there any geological disturbances within 180 m.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.are_geo_disturbances}}
+            </div>
+          </div>
+        </td>
+      </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(f)Rate of dip.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.rate_of_dip}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">4. Other particulars about the seam / seams</label>
+            </div>
+            <div class="col-md-8">
+
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(a)Degree of gassiness of the seam</label>
+            </div>
+            <div class="col-md-8">
+                {{form.degree_of_gassiness_of_seam}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(b)Degree of gassiness of the overlying & underlying </label>
+            </div>
+            <div class="col-md-8">
+                {{form.degree_of_gassiness_overlying_and_underlying}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(c)Is there history of fire in same seam or adjoining mine. </label>
+            </div>
+            <div class="col-md-8">
+                {{form.history_fire_same_seam}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">5. Condition of the overlying  and underlying seam / section w.e.f area applied for</label>
+            </div>
+            <div class="col-md-8">
+
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(a)Are the seam free from water </label>
+            </div>
+            <div class="col-md-8">
+                {{form.seam_free_from_water}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(b)Are seam extracted / applied standing  on pillars / virgin</label>
+            </div>
+            <div class="col-md-8">
+                {{form.seam_extracted_stand_on_pillars}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">6. Surface features lging above and within 45m. of the property</label>
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(a)Railway </label>
+            </div>
+            <div class="col-md-8">
+                {{form.railway}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(b)Public / Private Road </label>
+            </div>
+            <div class="col-md-8">
+                {{form.public_private_road}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(c)River, Tank or Reservoir.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.river_tank}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(d)Building / Dwelling belong to the Owner. </label>
+            </div>
+            <div class="col-md-8">
+                {{form.building_belong_to_owner}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(e)Building Dwelling not belong to the owner</label>
+            </div>
+            <div class="col-md-8">
+                {{form.building_not_belong_to_owner}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(f)H.T. Transmission line.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.h_t_transmission_line}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(g)Arial Ropeway.</label>
+            </div>
+            <div class="col-md-8">
+                {{form.arial_ropeway}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">7. H.F.L</label>
+            </div>
+            <div class="col-md-8">
+                 {{form.hfl}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">8. (a)Damage to the surface structure apprehended any damage to surface building or structures mentioned in item no.5. </label>
+            </div>
+            <div class="col-md-8">
+                 {{form.damage_to_surface_structure}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(b) subsided report.</label>
+            </div>
+            <div class="col-md-8">
+                 {{form.subsided_report}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(c) Acquisition / fencing of the surface area to prevent inrush of water in the underground through the subsided area.</label>
+            </div>
+            <div class="col-md-8">
+                 {{form.acquistion}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">9. danger inundation.</label>
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(a)Surface water. </label>
+            </div>
+            <div class="col-md-8">
+                 {{form.surface_water}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">(b)Underground Workings:-</label>
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(i)In any seam / section lying above or below the area applied for.</label>
+            </div>
+              <div class="col-md-8">
+                   {{form.any_stream_lying_above_or_below}}
+              </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(ii) From the adjoining mine in the seam same or any other seams/section in the same mine. </label>
+            </div>
+              <div class="col-md-8">
+                   {{form.from_the_adjoining_mine}}
+              </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">(iii) From the same seam/section in the mine. </label>
+            </div>
+              <div class="col-md-8">
+                   {{form.from_the_same_seam}}
+              </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">10. What precautionary measures are suggested to prevent the danger of inundation of water, if any?</label>
+            </div>
+              <div class="col-md-8">
+                   {{form.what_precautionary}}
+              </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">11. Danger from fire: whether there is fire in either overlying or underlying seam section. </label>
+            </div>
+              <div class="col-md-8">
+                   {{form.danger_from_fire}}
+              </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">12. Danger from premature collapsed :- </label>
+            </div>
+
+          </div>
+        </td>
+    </tr>
+     <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">If apprehended in premature collapsed of the workings either the same seam / sections or overlying seam /section as result of proposed operation. </label>
+            </div>
+            <div class="col-md-8">
+                {{form.danger_from_premature_collapsed}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">13. S.S.R. </label>
+            </div>
+
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">Whether SSR been approved by the regional inspector in accordance with the CMR No. 108. </label>
+            </div>
+            <div class="col-md-8">
+                {{form.ssr}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-12">
+               <label for="">14. Working with an dispute area.</label>
+            </div>
+
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">Does the area proposed to be developed lies within or close to the disputed boundary or area or enclosed working within neighbouring mines.  </label>
+            </div>
+            <div class="col-md-8">
+                {{form.does_the_area_proposed}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">15. Whether application has been made as per CMR- 105. Has the copy of the same together with the relevant plan been sent to in the case of Railway to concerned and the case of public works to the authorities owing such works?</label>
+            </div>
+            <div class="col-md-8">
+                {{form.whether_application}}
+            </div>
+          </div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">16. Are the plan up-to date and accurate as per CMR- 65 and have been signed and dated by the Surveyor and counter signed by the manager .</label>
+            </div>
+            <div class="col-md-8">
+                {{form.are_the_plan_up_to_date}}
+            </div>
+          </div>
+        </td>
+    </tr>
+
+    </tbody>
+  </table>
+<div class="row">
+     <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</div>
+</div>
+</form>
+<script>
+    $(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+    });
+</script>
+{% endblock %}

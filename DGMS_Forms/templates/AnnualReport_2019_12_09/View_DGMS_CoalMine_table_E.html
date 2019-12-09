@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+
+   {% csrf_token %}
+  <div class="container">
+    <div class="row margin">
+      <center><b>TABLE E - EXPLOSIVES, SAFETY LAMPS,ROCK DRILLS AND MECHANICAL VENTILATORS</b></center>
+    </div>
+    <br><br>
+    <b> (a) For Coal (including Rubble and Slack)</b>
+    <table class="table table-bordered">
+      <tr>
+        <td>Grade(a)</td>
+        <td>Opening stocks on 1st January {{form.coal_openstock_year}}</td>
+        <td>Coal raised (including colliery consumption and coal used for coke making)</td>
+        <td>Total value of rasing (b) (in Rupees)</td>
+        <td>Total of columns 2 and 3 (c)</td>
+        <td>Coal despatched (including caol despatched to coke factories which should be indicated separately)</td>
+        <td>Colliery consumption (exclusive of coal used for coke making)</td>
+        <td>Coal used for coking,if any,on coalliery</td>
+        <td>Shortage due to fire, rains and other causes</td>
+        <td>Closing stocks on 31st December {{form.coal_endstock_year}}</td>
+        <td>Total of columns 6,7,8,9, and 10(c)</td>
+      </tr>
+      <tr align="center">
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+        <td>11</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Selected A:</td>
+        <td>{{form.selected_a_openstock}}</td>
+        <td>{{form.selected_a_coal_raised}}</td>
+        <td>{{form.selected_a_total_value_of_rasing}}</td>
+        <td>{{form.selected_a_total_of_col_2_3}}</td>
+        <td>{{form.selected_a_coal_despatched}}</td>
+        <td>{{form.selected_a_collery_consumption}}</td>
+        <td>{{form.selected_a_coal_used_for_cooking}}</td>
+        <td>{{form.selected_a_shortage_due_to_cause}}</td>
+        <td>{{form.selected_a_closing_stocks}}</td>
+        <td>{{form.selected_a_total_columns}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Selected B:</td>
+        <td>{{form.selected_b_openstock}}</td>
+        <td>{{form.selected_b_coal_raised}}</td>
+        <td>{{form.selected_b_total_value_of_rasing}}</td>
+        <td>{{form.selected_b_total_of_col_2_3}}</td>
+        <td>{{form.selected_b_coal_despatched}}</td>
+        <td>{{form.selected_b_collery_consumption}}</td>
+        <td>{{form.selected_b_coal_used_for_cooking}}</td>
+        <td>{{form.selected_b_shortage_due_to_cause}}</td>
+        <td>{{form.selected_b_closing_stocks}}</td>
+        <td>{{form.selected_b_total_columns}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Grade I</td>
+        <td>{{form.grade_1_openstock}}</td>
+        <td>{{form.grade_1_coal_raised}}</td>
+        <td>{{form.grade_1_total_value_of_rasing}}</td>
+        <td>{{form.grade_1_total_of_col_2_3}}</td>
+        <td>{{form.grade_1_coal_despatched}}</td>
+        <td>{{form.grade_1_collery_consumption}}</td>
+        <td>{{form.grade_1_coal_used_for_cooking}}</td>
+        <td>{{form.grade_1_shortage_due_to_cause}}</td>
+        <td>{{form.grade_1_closing_stocks}}</td>
+        <td>{{form.grade_1_total_columns}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Grade II</td>
+        <td>{{form.grade_2_openstock}}</td>
+        <td>{{form.grade_2_coal_raised}}</td>
+        <td>{{form.grade_2_total_value_of_rasing}}</td>
+        <td>{{form.grade_2_total_of_col_2_3}}</td>
+        <td>{{form.grade_2_coal_despatched}}</td>
+        <td>{{form.grade_2_collery_consumption}}</td>
+        <td>{{form.grade_2_coal_used_for_cooking}}</td>
+        <td>{{form.grade_2_shortage_due_to_cause}}</td>
+        <td>{{form.grade_2_closing_stocks}}</td>
+        <td>{{form.grade_2_total_columns}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Grade III</td>
+        <td>{{form.grade_3_openstock}}</td>
+        <td>{{form.grade_3_coal_raised}}</td>
+        <td>{{form.grade_3_total_value_of_rasing}}</td>
+        <td>{{form.grade_3_total_of_col_2_3}}</td>
+        <td>{{form.grade_3_coal_despatched}}</td>
+        <td>{{form.grade_3_collery_consumption}}</td>
+        <td>{{form.grade_3_coal_used_for_cooking}}</td>
+        <td>{{form.grade_3_shortage_due_to_cause}}</td>
+        <td>{{form.grade_3_closing_stocks}}</td>
+        <td>{{form.grade_3_total_columns}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Total</td>
+        <td>{{form.openstock_total}}</td>
+        <td>{{form.coal_raised_total}}</td>
+        <td>{{form.total_value_of_rasing_total}}</td>
+        <td>{{form.total_of_col_2_3_total}}</td>
+        <td>{{form.coal_despatched_total}}</td>
+        <td>{{form.collery_consumption_total}}</td>
+        <td>{{form.coal_used_for_cooking_total}}</td>
+        <td>{{form.shortage_due_to_cause_total}}</td>
+        <td>{{form.closing_stocks_total}}</td>
+        <td>{{form.total_columns_total}}</td>
+      </tr>
+    </table>
+    <center><b>INSTRUCTIONS</b></center><br>
+    (a) FIGURES SHOULD BE GIVEN SEPARATELY FOR EACH GRADE OF COAL RAISED.<br>
+    (b) Value means the pit-head value,actual or estimated<br>
+    (c) The total in column 5 must be the same as that in column 11.
+    <hr/>
+    <b>(b) For Coke</b>
+    <table class="table table-bordered">
+      <tr>
+        <td>Type of coke</td>
+         <td>Opening stocks on 1st January {{form.coke_openstock_year}}</td>
+        <td>Coke manufactured</td>
+        <td>Total value of coke made (a)(in Rupees)</td>
+        <td>Total of columns 2 and 3</td>
+        <td>Coke despatched</td>
+        <td>Colliery consumption</td>
+        <td>Shortage,if any</td>
+        <td>Closing stocks on 31st December {{form.coke_endstock_year}}</td>
+        <td>Total of columns 6,7,8,9(b)</td>
+      </tr>
+      <tr align="center">
+        <td>1</td>
+        <td>2</td>
+        <td>3</td>
+        <td>4</td>
+        <td>5</td>
+        <td>6</td>
+        <td>7</td>
+        <td>8</td>
+        <td>9</td>
+        <td>10</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Coke(hard))</td>
+        <td>{{form.coke_hard_opening_stock}}</td>
+        <td>{{form.coke_hard_coke_manufactured}}</td>
+        <td>{{form.coke_hard_total_value_of_coke}}</td>
+        <td>{{form.coke_hard_total_col_2_3}}</td>
+        <td>{{form.coke_hard_coke_despatched}}</td>
+        <td>{{form.coke_hard_colliery_consumption}}</td>
+        <td>{{form.coke_hard_coke_shortage}}</td>
+        <td>{{form.coke_hard_closing_stock}}</td>
+        <td>{{form.coke_hard_total_column_total}}</td>
+      </tr>
+      <tr align="center">
+        <td align="left">Coke(soft)</td>
+        <td>{{form.coke_soft_opening_stock}}</td>
+        <td>{{form.coke_soft_coke_manufactured}}</td>
+        <td>{{form.coke_soft_total_value_of_coke}}</td>
+        <td>{{form.coke_soft_total_col_2_3}}</td>
+        <td>{{form.coke_soft_coke_despatched}}</td>
+        <td>{{form.coke_soft_colliery_consumption}}</td>
+        <td>{{form.coke_soft_coke_shortage}}</td>
+        <td>{{form.coke_soft_closing_stock}}</td>
+        <td>{{form.coke_soft_total_column_total}}</td>
+      </tr>
+    </table>
+     <center><b>INSTRUCTIONS</b></center><br>
+    (a) Value means the ex-mine value.<br>
+    (b) The total in column 5 must be the same as that in column 10.
+    <div class="row" style="margin-bottom:10px;">
+    <center>
+      <button type="button" class="btn btn-primary" id="print">Print</button>
+    </center>
+    </div>
+  </div>
+<script>
+    $(document.body).on('click','#print',function(key){
+    $("#print").hide();
+     window.print();
+     $("#print").show();
+    });
+</script>
+{% endblock %}

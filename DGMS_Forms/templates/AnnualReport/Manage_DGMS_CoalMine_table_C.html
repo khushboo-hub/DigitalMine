@@ -55,8 +55,8 @@
     $(document.body).on('click','.delete',function(key){
     var id = $(this).data("id");
     var url = "/DGMS_Forms/Delete_DGMS_CoalMine_table_C/"+id;
-    $("#sureDelete").attr("href",url);
-    $('#update_info').modal('show');
+    $("#fill_url").attr("href",url);
+    $('#myModal').modal('show');
     });
 </script>
 {% endblock %}

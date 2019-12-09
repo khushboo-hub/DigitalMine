@@ -7,7 +7,9 @@ from .models import DGMS_CoalMine_Annual_Annexure_I, DGMS_CoalMine_Annual_Annexu
     DGMS_MetalliferousMine_Annual_Annexure_II_Subtable_1, DGMS_MetalliferousMines_Annual_Annexure_II_Subtable_2, \
     DGMS_OilMines_Annual_Annexure_III_Subtable_1, DGMS_OilMines_Annual_Annexure_III_Subtable_2, \
     DGMS_OilMines_Annual_Annexure_III, DGMS_CoalMine_Table_A_Model, DGMS_CoalMine_Table_B_Model, \
-    DGMS_CoalMine_Table_C_Model, DGMS_CoalMine_Table_D_Model, DGMS_CoalMine_Table_E_Model, First_Schedule_Form_iii_Model
+    DGMS_CoalMine_Table_C_Model, DGMS_CoalMine_Table_D_Model, DGMS_CoalMine_Table_E_Model, \
+    First_Schedule_Form_iii_Model, ventilation_Model, First_schedule_form_v_Model, development_permission_model, \
+    identification_report_of_the_problem_model, extract_or_reduce_pillars_models
 
 
 class DGMS_COALMINE_ANNUAL_Annexure_I_Forms_Subtable_1(forms.ModelForm):
@@ -3523,12 +3525,13 @@ class DGMS_CoalMine_Table_E_Form(forms.ModelForm):
         model = DGMS_CoalMine_Table_E_Model
         fields = "__all__"
 
+
 class First_Schedule_Form_iii(forms.ModelForm):
     year = forms.IntegerField(min_value=2018, max_value=2099, required=True,
-                                             widget=forms.NumberInput(attrs={
-                                                 "placeholder": "Ex.2018",
-                                                 "style":"width:40%"
-                                             }))
+                              widget=forms.NumberInput(attrs={
+                                  "placeholder": "Ex.2018",
+                                  "style": "width:40%"
+                              }))
 
     mine_address = forms.CharField(max_length=50, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
@@ -3538,89 +3541,94 @@ class First_Schedule_Form_iii(forms.ModelForm):
     mine_dop = forms.DateField(required=False, widget=forms.TextInput(attrs={
 
         'class': 'form-control datepicker',
-        "placeholder" : "Date of Opening"
+        "placeholder": "Date of Opening"
     }))
     mine_doc = forms.DateField(required=False, widget=forms.TextInput(attrs={
 
         'class': 'form-control datepicker',
         "placeholder": "Date of Closing"
     }))
-    mine_district = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    mine_district = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
 
         'class': 'form-control',
         "placeholder": "Situation of mine District"
     }))
-    mine_state = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    mine_state = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
 
         'class': 'form-control',
         "placeholder": "State"
     }))
-    owner_name = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    owner_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Name of Owner"
     }))
-    owner_address = forms.CharField(max_length=500,required=False, widget=forms.Textarea(attrs={
+    owner_address = forms.CharField(max_length=500, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         "placeholder": "Postel address of Owner",
         "rows": 5,
         "cols": 100
     }))
-    managing_agent = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    managing_agent = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Name of Managing Agent"
     }))
-    managing_agent_address = forms.CharField(max_length=500,required=False, widget=forms.Textarea(attrs={
+    managing_agent_address = forms.CharField(max_length=500, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         "placeholder": "Postel address of Managing Agents",
-        "rows":5,
-        "cols":100
+        "rows": 5,
+        "cols": 100
     }))
-    agent_name = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    agent_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Name of Agent (if any) as defined in section 2(c) of the Mines Act, 1952"
     }))
-    agent_address = forms.CharField(max_length=500,required=False, widget=forms.Textarea(attrs={
+    agent_address = forms.CharField(max_length=500, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         "placeholder": "Postel address of Agents",
         "rows": 5,
         "cols": 100
     }))
-    manager_name = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    manager_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Name of Manager"
     }))
-    manager_address = forms.CharField(max_length=500,required=False, widget=forms.Textarea(attrs={
+    manager_address = forms.CharField(max_length=500, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         "placeholder": "Postel address of Manager",
         "rows": 5,
         "cols": 100
     }))
-    superior_supervisory_staff = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    superior_supervisory_staff = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Other superior supervisory staff employed as at the end of the year."
     }))
-    whether_machinery_is_used = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    whether_machinery_is_used = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Whether machinery is used ?"
     }))
-    nature_of_power_used = forms.CharField(max_length=100,required=False, widget=forms.TextInput(attrs={
+    nature_of_power_used = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Nature of power used ?"
     }))
     CHOICES = [('Yes', 'Yes'),
                ('No', 'No')]
 
-    a_to_f_fillerd_and_attached = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect,required=True)
+    a_to_f_fillerd_and_attached = forms.ChoiceField(choices=CHOICES, widget=forms.RadioSelect, required=True)
     signature = forms.ImageField(required=True)
+
     class Meta():
         model = First_Schedule_Form_iii_Model
-        fields = ['mine_name','year','mine_address','mine_dop','mine_doc','mine_district','mine_state','owner_name','owner_address','managing_agent','managing_agent_address','agent_name','agent_address','manager_name','manager_address','superior_supervisory_staff','whether_machinery_is_used','nature_of_power_used','a_to_f_fillerd_and_attached','signature']
+        fields = ['mine_name', 'year', 'mine_address', 'mine_dop', 'mine_doc', 'mine_district', 'mine_state',
+                  'owner_name', 'owner_address', 'managing_agent', 'managing_agent_address', 'agent_name',
+                  'agent_address', 'manager_name', 'manager_address', 'superior_supervisory_staff',
+                  'whether_machinery_is_used', 'nature_of_power_used', 'a_to_f_fillerd_and_attached', 'signature']
+
 
 class sendMailForm(forms.Form):
     to_address = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Ex. abcd@gmail.com,shyam@gmail.com"
-        }))
+    }))
     subject = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
         "placeholder": "Subject"
@@ -3629,6 +3637,355 @@ class sendMailForm(forms.Form):
         'class': 'form-control',
         "placeholder": "Message"
     }))
-    attachment = forms.FileField(required=False,widget=forms.FileInput(attrs={
-        'class':"is_multiple"
+    attachment = forms.FileField(required=False, widget=forms.FileInput(attrs={
+        'class': "is_multiple"
     }))
+
+
+class ventilationForm(forms.ModelForm):
+    location = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        "placeholder": "Ex. location name / working level / junction "
+    }))
+    quantity = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        "placeholder": "Quantity"
+    }))
+    velocity = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        "placeholder": "Velocity"
+    }))
+    t_wet = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    t_dry = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+
+    class Meta():
+        model = ventilation_Model
+        fields = ["mine_name", "location", "quantity", "velocity", "t_wet", "t_dry"]
+
+
+class First_Schedule_Form_v_Form(forms.ModelForm):
+    form_address = forms.CharField(max_length=100, required=True,
+                                   widget=forms.Textarea(attrs={"rows": 3, "cols": 20, 'class': "form-control"}))
+    chief_inspector_of_mine = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    regional_inspector_of_mine = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    inspector_of_mine_er = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    distric_magistrate = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_name = forms.CharField(max_length=100, required=True,
+                                widget=forms.TextInput(attrs={'placeholder': "Enter mine name"}))
+    owner_state = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'placeholder': "Enter value",
+    }))
+    mine_owner = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'placeholder': "Enter Owner Name",
+    }))
+    situation_of_mine = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_vill = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_po = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_ps = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_subdistric = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_dist = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mine_state = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    mineral_workd = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    postel_address_of_owner = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+
+    person_affected_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_caste = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_vill = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_po = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_ps = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_sub_div = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_dist = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_state = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_sex = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    person_dob = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control datepicker"
+    }))
+    person_occupation = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    engage_duration = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    commencement_of_emp_date = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    in_your_mine = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    in_mining = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+
+    nature_of_disease_state_stage = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control"
+    }))
+    disease_detection_date = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={
+        'class': "form-control datepicker"
+    }))
+    medical_practitioner_suspecting_disease = forms.CharField(max_length=100, required=True,
+                                                              widget=forms.TextInput(attrs={
+                                                                  'class': "form-control"
+                                                              }))
+
+    signature = forms.ImageField(required=False)
+    designation = forms.CharField(max_length=100, required=True,
+                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    sig_date = forms.CharField(max_length=100, required=True,
+                               widget=forms.TextInput(attrs={'class': "form-control datepicker"}))
+
+    class Meta():
+        model = First_schedule_form_v_Model
+        fields = '__all__'
+
+
+class development_permission_form(forms.ModelForm):
+    name_of_mine = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_owner = forms.CharField(max_length=500, required=True,
+                                    widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_seam_proposed = forms.CharField(max_length=500, required=True,
+                                            widget=forms.TextInput(attrs={'class': "form-control"}))
+    total_thickness_seam = forms.CharField(max_length=500, required=True,
+                                           widget=forms.TextInput(attrs={'class': "form-control"}))
+    thickness_of_seam_taken_under_devlopment = forms.CharField(max_length=500, required=True,
+                                                               widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_min_cover_working_faces = forms.CharField(max_length=500, required=True,
+                                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_geo_disturbances = forms.CharField(max_length=500, required=True,
+                                           widget=forms.TextInput(attrs={'class': "form-control"}))
+    rate_of_dip = forms.CharField(max_length=500, required=True,
+                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    degree_of_gassiness_of_seam = forms.CharField(max_length=500, required=True,
+                                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    degree_of_gassiness_overlying_and_underlying = forms.CharField(max_length=500, required=True,
+                                                                   widget=forms.TextInput(
+                                                                       attrs={'class': "form-control"}))
+    history_fire_same_seam = forms.CharField(max_length=500, required=True,
+                                             widget=forms.TextInput(attrs={'class': "form-control"}))
+    seam_free_from_water = forms.CharField(max_length=500, required=True,
+                                           widget=forms.TextInput(attrs={'class': "form-control"}))
+    seam_extracted_stand_on_pillars = forms.CharField(max_length=500, required=True,
+                                                      widget=forms.TextInput(attrs={'class': "form-control"}))
+    railway = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    public_private_road = forms.CharField(max_length=500, required=True,
+                                          widget=forms.TextInput(attrs={'class': "form-control"}))
+    river_tank = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    building_belong_to_owner = forms.CharField(max_length=500, required=True,
+                                               widget=forms.TextInput(attrs={'class': "form-control"}))
+    building_not_belong_to_owner = forms.CharField(max_length=500, required=True,
+                                                   widget=forms.TextInput(attrs={'class': "form-control"}))
+    h_t_transmission_line = forms.CharField(max_length=500, required=True,
+                                            widget=forms.TextInput(attrs={'class': "form-control"}))
+    arial_ropeway = forms.CharField(max_length=500, required=True,
+                                    widget=forms.TextInput(attrs={'class': "form-control"}))
+    hfl = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    damage_to_surface_structure = forms.CharField(max_length=500, required=True,
+                                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    subsided_report = forms.CharField(max_length=500, required=True,
+                                      widget=forms.TextInput(attrs={'class': "form-control"}))
+    acquistion = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    surface_water = forms.CharField(max_length=500, required=True,
+                                    widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_stream_lying_above_or_below = forms.CharField(max_length=500, required=True,
+                                                      widget=forms.TextInput(attrs={'class': "form-control"}))
+    from_the_adjoining_mine = forms.CharField(max_length=500, required=True,
+                                              widget=forms.TextInput(attrs={'class': "form-control"}))
+    from_the_same_seam = forms.CharField(max_length=500, required=True,
+                                         widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_precautionary = forms.CharField(max_length=500, required=True,
+                                         widget=forms.TextInput(attrs={'class': "form-control"}))
+    danger_from_fire = forms.CharField(max_length=500, required=True,
+                                       widget=forms.TextInput(attrs={'class': "form-control"}))
+    danger_from_premature_collapsed = forms.CharField(max_length=500, required=True,
+                                                      widget=forms.TextInput(attrs={'class': "form-control"}))
+    ssr = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    does_the_area_proposed = forms.CharField(max_length=500, required=True,
+                                             widget=forms.TextInput(attrs={'class': "form-control"}))
+    whether_application = forms.CharField(max_length=500, required=True,
+                                          widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_plan_up_to_date = forms.CharField(max_length=500, required=True,
+                                              widget=forms.TextInput(attrs={'class': "form-control"}))
+
+    class Meta():
+        model = development_permission_model
+        fields = '__all__'
+
+
+class identification_report_of_the_problem_form(forms.ModelForm):
+    problem_type = forms.CharField(max_length=500, required=True, widget=forms.TextInput(
+        attrs={'class': "form-control", "placeholder": "Ex. ROOT CAUSE ANALYSIS"}))
+    application_desc = forms.CharField(max_length=500, required=True, widget=forms.Textarea(
+        attrs={'rows': 5, 'cols': 100, 'class': "form-control",
+               "placeholder": "Ex. Please do a root cause analysis of the current problem of frequent braking problem of winder.  Submit an analysis report at the earliest."}))
+    mine_manager_name = forms.CharField(max_length=500, required=True, widget=forms.TextInput(
+        attrs={'class': "form-control", "placeholder": "EX. Mine Manager Name"}))
+    problem = forms.CharField(max_length=500, required=True, widget=forms.TextInput(
+        attrs={'class': "form-control", "placeholder": "EX. Frequent braking problem of winder"}))
+    nature = forms.CharField(max_length=500, required=True,
+                             widget=forms.TextInput(attrs={'class': "form-control", "placeholder": "EX. Repetitive"}))
+    findings = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control",
+                                                                                            "placeholder": "EX. The solenoid valve of braking system was not working properly."}))
+    root_cause = forms.CharField(max_length=500, required=True, widget=forms.TextInput(
+        attrs={'class': "form-control", "placeholder": "EX. Moisture was found in the valve of braking system."}))
+    corrective_action = forms.CharField(max_length=500, required=True, widget=forms.Textarea(
+        attrs={'rows': 5, 'cols': 100, 'class': "form-control",
+               "placeholder": "Installed water separator in the main line of pneumatic circuit of brake and Moisture are being drained daily as a part of maintenance"}))
+    result = forms.CharField(max_length=500, required=True, widget=forms.TextInput(
+        attrs={'class': "form-control", "placeholder": "EX. Braking problem almost reduced to nil."}))
+
+    class Meta():
+        model = identification_report_of_the_problem_model
+        fields = '__all__'
+
+
+# ===========================================================================================================================================================
+class extract_or_reduce_pillars_forms(forms.ModelForm):
+    name_of_mine = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_owner = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    particular_about_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_seam_proposed_to_depillared = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    total_thickness_of_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    thickness_of_seam_section = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    rate_of_dip = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    plans = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    give_plan_no_of_date = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    plan_up_to_date_and_accurate = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    when_whom_area_applied_for_and_surveyed = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_size_of_panel_proposed_extraction = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_min_height_width_of_working = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    average_height_and_width_of_working = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_min_size_of_pillars = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    average_size_of_pillars_center_to_center = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    think_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    age_of_working = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    nature_of_roof_and_floor = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_working_dry_dump_naturally_wet = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_min_thickness = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    percentage_of_sand_stone = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    rate_of_emission_inflammable_in_district = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    rate_of_emission_inflammable_in_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_percentage_inflammable_in_district = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_percentage_inflammable_in_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_there_any_geological_disturbances = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    general_condition_of_working_as_actually_determind = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_there_are_singes_of_spalling_of_caol = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    fall_of_roof =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_history_of_fire =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    section_of_strata_from_surface_showing = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    proposed_method_of_extraction = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    convention_depillaring_with_slicing_stooking_method = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    splitting_of_pillars_as_final_operations = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    with_without_hydraulic_dry_stowing = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_conjuction_with_stowing =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    give_details_amount_of_existing = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    manner_extraction_splitting_of_pillar = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    condition_of_overlying = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_seam_free_from_water = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_seam_extracted = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_seam_extracted_have_been_extracted = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_fire_in_any_overlying = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    the_rate_omission = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    the_percantage_inflammable = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_roof_eaisly_cavable = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_danger_of_air_blast =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    railway = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    public_private_road = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    river_nallah = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    buliding_dwelling_belonging_to_owner = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    buliding_dwelling_not_belonging_to_owner = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    ht_transmission_line = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    arial_ropeway = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_other_structure = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    distance_of_highest_known_flood_level = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    do_you_apprehend_danger = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    due_to_proposed_operation = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    due_to_vicinity_fault = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    give_particular_of_subsidence_experience = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_surface_likely_to_be_affected = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_waterlogged = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_danger_inundation = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    surface_water = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    underground_working = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    in_any_seam_section_lying_above = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    of_theadjoining = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    from_the_same_seam = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_precautionary_measures_are_suggested = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    where_there_is_fire_in_either_the_overlying =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    whether_ventilation_is = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    fan_capacity_and_water_gauge =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    quantity_of_air_reaching_district =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    do_you_apprehend_any_premature_collapse = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    incubation_period = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_are_the_crossing = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_the_known_or_expected =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_was_average_rate = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    percentage_of_extraction_achieved = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    expected_percentage_of_extraction =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_is_coal_raised_sand_stowed = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    what_was_the_average_rate_of_daily = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    state_the_number_of_pillars = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    has_the_area_applied_for_depilling = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    please_state_the_type = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    how_long_it_will_take_you = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    have_you_submitted_draft_systematic = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    does_the_area_proposed_to_be_depillared = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    whether_the_application_has_been_made_under_105 =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    please_state_whether_any_permission_for_extraction = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    where_permission_has_been_granted = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    has_the_extraction_been_completed = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    give_details_of_experience = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_other_relevant_details =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    signature = forms.ImageField(required=False)
+    designation = forms.CharField(max_length=100, required=True,widget=forms.TextInput(attrs={'class': "form-control"}))
+    sig_date = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class': "form-control datepicker"}))
+
+    class Meta():
+        model = extract_or_reduce_pillars_models
+        fields = '__all__'

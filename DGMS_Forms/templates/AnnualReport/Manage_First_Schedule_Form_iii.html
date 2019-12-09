@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h2>Manage FIRST SCHEDULE FORM III</h2>
+    <h2>Manage FIRST SCHEDULE FORM V</h2>
     <hr/>
   <center>
       <a href="/DGMS_Forms/Add_First_Schedule_Form_iii"><span class="btn btn-success">Add First Schedule (FORM III)</span></a>
@@ -57,8 +57,8 @@
     $(document.body).on('click','.delete',function(key){
     var id = $(this).data("id");
     var url = "/DGMS_Forms/Delete_First_Schedule_Form_iii/"+id;
-    $("#sureDelete").attr("href",url);
-    $('#update_info').modal('show');
+    $("#fill_url").attr("href",url);
+    $('#myModal').modal('show');
     });
 </script>
 {% endblock %}

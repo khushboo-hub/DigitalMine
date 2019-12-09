@@ -1,0 +1,1283 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .small_top_margin{
+     margin-top:10px;
+    }
+    .small_margin_left{
+    margin-left : 30px;
+    }
+</style>
+<div class="container">
+    <form method="POST" class="post-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class=""><b>ANNUAL RETURN OF OIL MINE FOR THE YEAR ENDING ON THE 31<sup>ST</sup> DECEMBER,{{form.aecm_year}}</b></h3>
+                <center><h4><b>(Under the Mines Act, 1952 and allied
+                    legislation framed there under)</b></h4></center>
+
+                <h3><b>PART-A :The Oil Mines Regulations, 1957 (See Regulation 5):</b></h3>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                            <table class="table sampleTable">
+                                <!-------------------------------------- START POINT 1 ----------------------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="get_url"
+                                                           data-url="DGMS_Forms/fetch_mine">
+                                                        1.Name of Mine: <font color="red">*</font>
+                                                    </label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{form.mine_name}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!------------------------------------- END POINT 1------------------------------------------------------------------------>
+                                <!------------------------------------- START POINT 2 --------------------------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">2.Postal address of mine:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row form-group">
+                                                        <div class="col-md-4">
+                                                            <label for="">Village/Area/Road:</label>
+                                                        </div>
+
+                                                        <div class="col-md-8">
+                                                            {{ form.mine_vill}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for=""
+                                                               class="col-md-4">Tehsil/Taluka/Sub-division:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.mine_tehsil}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">District:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.mine_dist}}
+                                                        </div>
+                                                        <label for="" class="col-md-2" id="">PIN:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.mine_pin}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4" id="">State:</label>
+                                                        <div class="col-md-8">
+                                                             {{ form.mine_state}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-------------------------------------------------- END POINT 2 ---------------------------------------------------->
+                                <!--------------------------------------------------START POINT 3 --------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">3.Date of Opening:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                     {{ form.mine_dop}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 3 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 4 --------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">4.Labour Identification
+                                                        No.(LIN):</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                     {{ form.labour_id_no}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 4 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 5 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">5.Owner Details:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Name of Owner:</label>
+                                                        <div class="col-md-8">
+                                                             {{ form.owner_name}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">Tel No:</label>
+                                                        <div class="col-md-4">
+                                                             {{ form.owner_telephone}}
+                                                        </div>
+                                                        <label for="" class="col-md-2">Mob No:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.owner_mobile}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Email:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.owner_email}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Village/Area/Road:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.owner_vill}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Tehsil/Taluka/Sub-division:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.owner_tehsil}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">District:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.owner_dist}}
+                                                        </div>
+                                                        <label for="" class="col-md-2">PIN:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.owner_pin}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">State:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.owner_state}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 5 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 6 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="">6.Agent Details:(if any) as defined in
+                                                        section 2(c)
+                                                        of
+                                                        the Mines Act, 1952</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Name of Agent:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.agent_name}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">Tel No:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.agent_telephone}}
+                                                        </div>
+                                                        <label for="" class="col-md-2">Mob No:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.agent_mobile}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Email:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.agent_email}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Village/Area/Road:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.agent_vill}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4" id="">Tehsil/Taluka/Sub-division:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.agent_tehsil}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">District:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.agent_dist}}
+                                                        </div>
+                                                        <label for="" class="col-md-2">PIN:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.agent_pin}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">State:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.agent_state}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 6 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 7 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="">7.Manager Details</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Name of Manager:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.manager_name}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2">Tel No:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.manager_telephone}}
+                                                        </div>
+                                                        <label for="" class="col-md-2">Mob No:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.manager_mobile}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Email:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.manager_email}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Village/Area/Road:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.manager_vill}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">Tehsil/Taluka/Sub-division:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.manager_tehsil}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-2" id="">District:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.manager_dist}}
+                                                        </div>
+                                                        <label for="" class="col-md-2" id="">PIN:</label>
+                                                        <div class="col-md-4">
+                                                            {{ form.manager_pin}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="row form-group">
+                                                        <label for="" class="col-md-4">State:</label>
+                                                        <div class="col-md-8">
+                                                            {{ form.manager_state}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 7 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 8 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <label>8.Statutory Personnel employed in the mine:</label>
+                                                </div>
+                                                <div class="col-md-12 small_margin_left">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th scope="col">Sl. No.</th>
+                                                            <th scope="col">Designation</th>
+                                                            <th scope="col">No. required</th>
+                                                            <th scope="col">No. available</th>
+                                                            <th scope="col">Shortage/surplus</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for table1 in subTable1 %}
+                                                            <tr>
+                                                                <td> {{forloop.counter}}</td>
+                                                                <td><input type="text" name="spem_designation" class="form-control" value="{{table1.spem_designation}}"></td>
+                                                                 <td><input type="text" name="spem_no_requried" class="form-control" value="{{table1.spem_no_requried}}"></td>
+                                                                 <td><input type="text" name="spem_no_available" class="form-control" value="{{table1.spem_no_available}}"></td>
+                                                                 <td><input type="text" name="spem_short_surplus" class="form-control" value="{{table1.spem_short_surplus}}"></td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 8 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 9 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="">9. No. of contractors engaged :</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form.no_of_contractors}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 9 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 10 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <label>10. EMPLOYMENT</label>
+                                                </div>
+                                                <div class="small_margin_left">
+                                                    <div class="col-md-12">
+                                                        (1) Number of persons employed on roll in the mine:
+                                                    </div>
+                                                    <div class="col-md-12 small_top_margin small_margin_left">
+
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <th rowspan="2">Classification</th>
+                                                                <th colspan="3">
+                                                                    <center>Departmental</center>
+                                                                </th>
+                                                                <th colspan="3">
+                                                                    <center>Contractual</center>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>{{form.classification }}</td>
+                                                                <td>
+                                                                    {{ form.dept_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_total_male_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_total_male_female}}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        (2) Maximum number of persons employed on any day during the
+                                                        year
+                                                        <span class="fill_year"></span> in all i the mine on  {{ form.wbg_number}} (specific day):  {{ form.wbg_day}}
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        (3) Details of mandays worked and average employment:
+                                                    </div>
+                                                    <div class="col-md-12 small_top_margin small_margin_left">
+
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <th rowspan="3">Classification</th>
+                                                                <th colspan="6">
+                                                                    <center>Departmental</center>
+                                                                </th>
+                                                                <th colspan="6">
+                                                                    <center>Contractual</center>
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th colspan="3">Total mandays worked</th>
+                                                                <th colspan="3">Average daily number of persons employed
+                                                                </th>
+                                                                <th colspan="3">Total mandays worked</th>
+                                                                <th colspan="3">Average daily number of persons employed
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                                <th>Male</th>
+                                                                <th>Female</th>
+                                                                <th>Total</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>{{ form.dmw_classification}}</td>
+                                                                <td>
+                                                                    {{ form.dept_tmw_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_tmw_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_tmw_total_male_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_adnpe_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_adnpe_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.dept_adnpe_total_male_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_tmw_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_tmw_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_tmw_total_male_female}}
+                                                                 </td>
+                                                                <td>
+                                                                    {{ form.cont_adnpe_male}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_adnpe_female}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.cont_adnpe_total_male_female}}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------END POINT 10 --------------------------------------------------->
+                                <!--------------------------------------------------START POINT 11 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">11. No. of days worked:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form.no_of_days_worked}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12 small_top_margin">
+                                                <div class="col-md-4">
+                                                    <label for="" class="" id="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;No.
+                                                        of shift worked:</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ form.no_of_shift_worked}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------End POINT 11 ----------------------------------------------------->
+                                <!--------------------------------------------------Start POINT 12 ----------------------------------------------------->
+                                 <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                    <label>12.</label> (I) AGGREGATE HORSE-POWER OF MACHINERY AND
+                                                    EQUIPMENT
+                                                    USED/INSTALLED IN THE MINE:
+                                                </div>
+                                                <div class="small_margin_left">
+
+                                                    <div class="col-md-12 small_top_margin small_margin_left">
+
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>
+                                                                    <center>Place</center>
+                                                                </th>
+                                                                <th>
+                                                                    <center>Electrical</center>
+                                                                </th>
+                                                                <th>
+                                                                    <center>Oil/natural gas/steam</center>
+                                                                </th>
+                                                                <th>
+                                                                    <center>Compressed air</center>
+                                                                </th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr>
+                                                                <td>{{ form.place_name1 }}</td>
+                                                                <td>
+                                                                    {{ form.place_name1_electrical}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.place_name1_ongs}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.place_name1_comp_air}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{{ form.place_name2 }}</td>
+                                                                <td>
+                                                                    {{ form.place_name2_electrical}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.place_name2_ongs}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.place_name2_comp_air}}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td>
+                                                                    {{ form.total_electrical}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.total_ongs}}
+                                                                </td>
+                                                                <td>
+                                                                    {{ form.total_comp_air}}
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        (II) Voltage(s) at which current is used :
+                                                    </div>
+                                                    <div class="col-md-12 small_top_margin">
+                                                        <div class="col-md-4">
+                                                            <label>&nbsp;&nbsp;&nbsp;&nbsp;(i) Lighting</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            {{ form.lighting}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 small_top_margin">
+                                                        <div class="col-md-4">
+                                                            <label>&nbsp;&nbsp;&nbsp;&nbsp;(ii) Power</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            {{ form.power}}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------End POINT 12 ----------------------------------------------------->
+                                <!--------------------------------------------------Start POINT 13 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <label>13.Drilling and other rigs, oil wells and gas wells and pipelines:</label>
+                                                </div>
+                                                <div class="col-md-12 small_margin_left">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                          <th><center><b>Item No.</b></center></th>
+                                                          <th><center><b>Classification</b></center></th>
+                                                          <th><center><b>Type of Rig</b></center></th>
+                                                          <th><center><b>Total No. of units in use</b></center></th>
+                                                        </tr>
+                                                        <tr>
+                                                          <th><center>(1)</center></th>
+                                                          <th><center>(2)</center></th>
+                                                          <th><center>(3)</center></th>
+                                                          <th><center>(4)</center></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                          <td><center><b>1</b></center></td>
+                                                          <td>Drillig, Workover and other rigs</td>
+                                                          <td></td>
+                                                          <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>1.1</center></td>
+                                                          <td>Drillig</td>
+                                                          <td>{{ form.drillig_type_of_rig}}</td>
+                                                          <td>{{ form.drillig_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>1.2</center></td>
+                                                          <td>Workover</td>
+                                                          <td>{{ form.workover_type_of_rig}}</td>
+                                                          <td>{{ form.workover_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>1.3</center></td>
+                                                          <td>Other rigs</td>
+                                                          <td>{{ form.other_rigs_type_of_rig }}</td>
+                                                          <td>{{ form.other_rigs_total_no_of_units_in_use }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center><b>2</b></center></td>
+                                                          <td><b>Oil, gas and other wells</b></td>
+                                                          <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.1</center></td>
+                                                          <td>Wells drilled</td>
+                                                           <td>{{ form.wells_drilled_type_of_rig}}</td>
+                                                          <td>{{ form.wells_drilled_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.2</center></td>
+                                                          <td>Wells abandoned</td>
+                                                            <td>{{ form.wells_abandoned_type_of_rig}}</td>
+                                                          <td>{{ form.wells_abandoned_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.3</center></td>
+                                                          <td>Gas wells completed</td>
+                                                          <td>{{ form.gas_wells_completed_type_of_rig}}</td>
+                                                          <td>{{ form.gas_wells_completed_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.4</center></td>
+                                                          <td>Oil wells completed</td>
+                                                          <td>{{ form.oil_wells_completed_type_of_rig}}</td>
+                                                          <td>{{ form.oil_wells_completed_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.5</center></td>
+                                                          <td>Gas wells on production</td>
+                                                          <td>{{ form.gas_wells_production_type_of_rig}}</td>
+                                                          <td>{{ form.gas_wells_production_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.6</center></td>
+                                                          <td>Oil wells on production</td>
+                                                          <td>{{ form.oil_wells_production_type_of_rig}}</td>
+                                                          <td>{{ form.oil_wells_production_total_no_of_units_in_use }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>2.7</center></td>
+                                                          <td>Oil wells where production discontinued</td>
+                                                          <td>{{ form.oil_wells_production_discontinued_type_of_rig }}</td>
+                                                          <td>{{ form.oil_wells_production_discontinued_total_no_of_units_in_use }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center><b>3</b></center></td>
+                                                          <td><b>Pipelines</b></td>
+                                                          <td><b>Length in meters</b></td>
+                                                          <td><b>Diameter in meters</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>3.1</center></td>
+                                                          <td>Flow lines laid from wells to gathering station</td>
+                                                          <td>{{ form.f_l_l_well_gathering_station_type_of_rig}}</td>
+                                                          <td>{{form.f_l_l_well_gathering_station_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>3.2</center></td>
+                                                          <td>Pipelines laid from wells gathering station to central storage tanks</td>
+                                                          <td>{{form.p_l_well_gathering_station_central_type_of_rig}}</td>
+                                                          <td>{{form.p_l_well_gathering_station_central_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                          <td><center>3.3</center></td>
+                                                          <td>Others(Specify)</td>
+                                                          <td>{{form.other_type_of_rig}}</td>
+                                                          <td>{{form.other_total_no_of_units_in_use}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------End POINT 13 ----------------------------------------------------->
+                                <!--------------------------------------------------Start POINT 14 ----------------------------------------------------->
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <label>14.Details of production:</label>
+                                                </div>
+                                                <div class="col-md-12 small_margin_left">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                          <th rowspan="2"><center><b>Item No.</b></center></th>
+                                                          <th rowspan="2"><center><b>Type of Production</b></center></th>
+                                                          <th rowspan="2"><center><b>Opening stock as on 1st January</b></center></th>
+                                                          <th rowspan="2"><center><b>Production</b></center></th>
+                                                          <th rowspan="2"><center><b>Value (in Rs.)</b></center></th>
+                                                          <th colspan="3"><center><b>Despatches</b></center></th>
+                                                          <th rowspan="2"><center><b>Closing stock as on 31st December</b></center></th>
+                                                        </tr>
+                                                        <tr>
+                                                          <th>To refinery</th>
+                                                          <th>To marketing</th>
+                                                          <th>For house consumption</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>(1)</td>
+                                                            <td>(2)</td>
+                                                            <td>(3)</td>
+                                                            <td>(4)</td>
+                                                            <td>(5)</td>
+                                                            <td>(6)</td>
+                                                            <td>(7)</td>
+                                                            <td>(8)</td>
+                                                            <td>(9)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td>Oil in Metric Tonnes</td>
+                                                            <td>{{form.dp_oil_mt_opening}}</td>
+                                                            <td>{{form.dp_oil_mt_prod}}</td>
+                                                            <td>{{form.dp_oil_mt_value}}</td>
+                                                            <td>{{form.dp_oil_mt_to_refinery}}</td>
+                                                            <td>{{form.dp_oil_mt_to_marketing}}</td>
+                                                            <td>{{form.dp_oil_mt_for_house_consumption}}</td>
+                                                            <td>{{form.dp_oil_mt_closing}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>2</td>
+                                                            <td>Gas(in M3)</td>
+                                                            <td>{{form.dp_gas_opening}}</td>
+                                                            <td>{{form.dp_gas_prod}}</td>
+                                                            <td>{{form.dp_gas_value}}</td>
+                                                            <td>{{form.dp_gas_to_refinery}}</td>
+                                                            <td>{{form.dp_gas_to_marketing}}</td>
+                                                            <td>{{form.dp_gas_for_house_consumption}}</td>
+                                                            <td>{{form.dp_gas_closing}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!--------------------------------------------------End POINT 14 ----------------------------------------------------->
+                                <!--------------------------------------------------Start Point 15 --------------------------------------------------->
+                               <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <label for="">15. ACCIDENT STATISTICS (during last
+                                                        three
+                                                        years)</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12  small_margin_left">
+
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th rowspan="2">Year</th>
+                                                    <th colspan="3">
+                                                        <center>Fatal Accident</center>
+                                                    </th>
+                                                    <th colspan="2">
+                                                        <center>Serious Accident</center>
+                                                    </th>
+                                                    <th colspan="2">Reportable Accident</th>
+                                                    <th colspan="2">Minor Accident</th>
+                                                </tr>
+                                                <tr>
+
+                                                    <th>Number</th>
+                                                    <th>Number of person(s) killed</th>
+                                                    <th>Number of person(s) seriously injured</th>
+                                                    <th>Number</th>
+                                                    <th>Number of person(s) seriously injured</th>
+                                                    <th>Number</th>
+                                                    <th>Number of person(s) injured</th>
+                                                    <th>Number</th>
+                                                    <th>Number of person(s) injured</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for table2 in subTable2 %}
+                                                    <tr>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_year" value="{{table2.accident_statistics_year}}">
+                                                        </td>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_fatal_number" value="{{table2.accident_statistics_fatal_number}}">
+                                                        </td>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_fatal_no_of_persion_killed" value="{{table2.accident_statistics_fatal_no_of_persion_killed}}">
+                                                        </td>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_fatal_no_of_persion_injured" value="{{table2.accident_statistics_fatal_no_of_persion_injured}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control" name="accident_statistics_serious" value="{{table2.accident_statistics_serious}}">
+                                                        </td>
+                                                        <td>
+                                                              <input type="text" class="form-control" name="accident_statistics_serious_injured" value="{{table2.accident_statistics_serious_injured}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control" name="accident_statistics_reportable_number" value="{{table2.accident_statistics_reportable_number}}">
+                                                        </td>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_reportable_injured" value="{{table2.accident_statistics_reportable_injured}}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control" name="accident_statistics_minor_number" value="{{table2.accident_statistics_minor_number}}">
+                                                        </td>
+                                                        <td>
+                                                          <input type="text" class="form-control" name="accident_statistics_minor_injured" value="{{table2.accident_statistics_minor_injured}}">
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                               <!---------------------------------------------------End Point 15 --------------------------------------------------->
+                            </table>
+
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-md-12">
+                <h3><b>PART-B :The Mines Rules,1955:</b></h3>
+                <div class="row">
+                    <div class="form-group">
+                            <table class="table sampleTable">
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                   1. INITIAL/PERIODIC MEDICAL EXAMINATION (IME/PME) CONDUCTED DURING THE YEAR<br>&nbsp;&nbsp;&nbsp;{Rules 29B and 29P(1) of the Mines Rules,1955}
+                                                </div>
+                                                <div class="col-md-12 small_margin_left">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="2">Number of Persons employed</th>
+                                                            <th colspan="2">Number of Persons requried to undergo IME/PME</th>
+                                                            <th colspan="2">Number of Persons actually undergone IME/PME</th>
+                                                            <th>No. of Persons deciared medically unfit</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                            <th></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td colspan="7"><b>Inital Medical Examination (IME)</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{form.ime_npe_dept}}</td>
+                                                            <td>{{form.ime_npe_cont}}</td>
+                                                            <td>{{form.ime_npru_dept}}</td>
+                                                            <td>{{form.ime_npru_cont}}</td>
+                                                            <td>{{form.ime_npau_dept}}</td>
+                                                            <td>{{form.ime_npau_cont}}</td>
+                                                            <td>{{form.ime_no_of_p_d_m_unfit}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7"><b>Periodical Medical Examination (PME)</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{form.pme_npe_dept}}</td>
+                                                            <td>{{form.pme_npe_cont}}</td>
+                                                            <td>{{form.pme_npru_dept}}</td>
+                                                            <td>{{form.pme_npru_cont}}</td>
+                                                            <td>{{form.pme_npau_dept}}</td>
+                                                            <td>{{form.pme_npau_cont}}</td>
+                                                            <td>{{form.pme_no_of_p_d_m_unfit}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    2.APPOINTMENT OF WORKMEN'S INSPECTORS<br>
+                                                    &nbsp;&nbsp;&nbsp;{Rules 29Q of Mines Rules,1955}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="col-md-6 small_margin_left small_top_margin" >
+                                                    <label>(i) No. of Workmen's Inspector required</label>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    {{form.no_of_workmen_req}}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="col-md-6 small_margin_left small_top_margin">
+                                                    <label>(ii) No. of Workmen's Inspector provided</label>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    {{form.no_of_workmen_provide}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="col-md-12">
+                                            <div class="col-md-5">
+                                             &nbsp;&nbsp;&nbsp;3. Number of Safety Commitee meeting conducted during the year {Rules 29V of Mines Rules,1955}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {{form.no_of_satfy_c_meeting_conduct}}
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="col-md-12">
+                <h3><b>PART-C : Mines Vocational Training Rules,1966</b></h3>
+                <div class="row">
+                    <div class="form-group">
+                            <table class="table sampleTable">
+                                <tr>
+                                    <td>
+                                        <div class="form-group col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="col-md-12">
+                                                   1. VOCATIONAL TRAINING
+                                                </div>
+                                                <div class="col-md-12 small_margin_left">
+                                                    <table class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th colspan="2">Number of Persons employed</th>
+                                                            <th colspan="2">Number of Persons requried to undergo vocational training</th>
+                                                            <th colspan="2">Number of Persons actually undergone vocational training</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                            <th>Departmental</th>
+                                                            <th>Contractual</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td colspan="6"><b>Basic Vocational Training</b>(under Rule 6)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{form.npe_bvt_dept}}</td>
+                                                            <td>{{form.npe_bvt_cont}}</td>
+                                                            <td>{{form.npruvt_bvt_dept}}</td>
+                                                            <td>{{form.npruvt_bvt_cont}}</td>
+                                                            <td>{{form.npauvt_bvt_dept}}</td>
+                                                            <td>{{form.npauvt_bvt_cont}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="7"><b>Refresher Training</b>(under Rule 8)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{form.npe_rt_dept}}</td>
+                                                            <td>{{form.npe_rt_cont}}</td>
+                                                            <td>{{form.npruvt_rt_dept}}</td>
+                                                            <td>{{form.npruvt_rt_cont}}</td>
+                                                            <td>{{form.npauvt_rt_dept}}</td>
+                                                            <td>{{form.npauvt_rt_cont}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+             <label for="">Upload signature:</label>
+             {{ form.signature}}
+        </div>
+        <hr/>
+        <div class="row">
+             <div class="text-center">
+                 <button type="submit" class="btn btn-primary">Submit</button>
+             </div>
+        </div>
+    </form>
+</div>
+
+<script>
+$(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2012",
+      format:"yyyy-mm-dd"
+      // You can put more options here.
+
+    });
+  });
+
+$(document).ready(function(){
+    $("#id_mine_name").addClass('form-control');
+});
+$("#id_mine_name").change(function(){
+      mine_id=this.value;
+      set_mine_details(mine_id);
+      set_mine_manager(mine_id);
+
+
+});
+
+function set_mine_details(mine_id){
+
+        url=$("#get_url").data('url');
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'DGMS_Forms:fetch_mine' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                console.log(data);
+                $("#txt_vill_area_road").val(data.result.village_area_road);
+                $("#txt_tehsil").val(data.result.tehsil_taluka_subdivision);
+                $("#txt_district").val(data.result.district);
+                $("#txt_pin").val(data.result.pin);
+                $("#txt_state").val(data.result.state);
+                $("#date_of_opening").val(data.result.date_of_opening);
+                $("#lin").val(data.result.lin_no);
+                    },
+            error: function(){
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+}
+function set_mine_manager(mine_id){
+
+      $.ajax({
+            type:"get",
+            url: "{% url 'DGMS_Forms:fetch_mine_manager' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+
+                $("#mine_manager_name").val(data.result.name);
+                $("#manager_mobile").val(data.result.mob);
+                $("#manager_email").val(data.result.email);
+                $("#manager_vill").val(data.result.address);
+                $("#manager_dist").val(data.result.city);
+                $("#manager_pin").val(data.result.pin);
+                $("#manager_state").val(data.result.state);
+
+                    },
+            error: function(){
+                    console.log("something is not right.please contact admin - 2");
+                 }
+            });
+}
+
+
+$(document.body).on('blur','#input_annual_year',function(){
+    var custom_year = $(this).val();
+    $(".fill_year").append(custom_year);
+});
+$(document.body).on('blur change paste keyup','.male_fetch_value',function(){
+    var total = 0;
+    var t_male = $(this).val();
+    var t_female =  $(this).closest('td').next('td').find('.female_fetch_value').val();
+    var result = parseInt(t_male) + parseInt(t_female);
+      if (!isNaN(result)) {
+         total = result;
+      }else{
+          total = t_male;
+      }
+    $(this).closest('td').next('td').next('td').find('.total_male_female').val(total);
+});
+
+$(document.body).on('blur change paste keyup','.female_fetch_value',function(){
+    var total = 0;
+    var t_female = $(this).val();
+    var t_male =  $(this).closest('td').prev('td').find('.male_fetch_value').val();
+    var result = parseInt(t_male) + parseInt(t_female);
+      if (!isNaN(result)) {
+         total = result;
+      }else{
+          total = t_female;
+      }
+    $(this).closest('td').next('td').find('.total_male_female').val(total);
+});
+
+
+$(document.body).on('blur change paste keyup','.electrical',function(){
+   var total = 0;
+    $(".electrical").each(function() {
+
+     var one_element = 0;
+    one_element = $(this).val();
+    if(one_element == ""){
+    one_element = 0;
+    }
+     total = parseInt(total) + parseInt(one_element);
+
+    });
+    $("#total_electrical").val(total);
+});
+
+
+$(document.body).on('blur change paste keyup','.ongs',function(){
+   var total = 0;
+    $(".ongs").each(function() {
+
+     var one_element = 0;
+    one_element = $(this).val();
+    if(one_element == ""){
+    one_element = 0;
+    }
+     total = parseInt(total) + parseInt(one_element);
+
+    });
+    $("#total_ongs").val(total);
+});
+
+
+$(document.body).on('blur change paste keyup','.comp_air',function(){
+    var total = 0;
+    $(".comp_air").each(function() {
+
+    var one_element = 0;
+    one_element = $(this).val();
+    if(one_element == ""){
+        one_element = 0;
+    }
+     total = parseInt(total) + parseInt(one_element);
+
+    });
+    $("#total_comp_air").val(total);
+});
+
+$(document.body).on('keyup','.is_number',function(key){
+    var num1 =  !isNaN(parseFloat($(this).val()));
+    var num2 = isFinite($(this).val());
+
+    if(!num1 && !num2){
+    $(this).val(0);
+    alert("Please Input Number Only !");
+    }
+});
+</script>
+{% endblock %}
