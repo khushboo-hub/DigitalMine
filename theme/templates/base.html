@@ -179,6 +179,9 @@
     <!--&lt;!&ndash;<link rel="stylesheet" href="{% static '/css/datepicker.css' %}">&ndash;&gt; if this is added then bootstrap-datetimepicker does not work properly-->
     <link rel="stylesheet" href="{% static '/css/dataTable.css' %}">
     <link rel="stylesheet" href="{% static '/css/custom_style.css' %}">
+
+    <link rel="stylesheet" href="{% static '/css/jquery.toast.css' %}">
+
     <link rel="stylesheet" href="{% static 'tags/css/bootstrap-tagsinput.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
@@ -253,7 +256,8 @@
     <!--    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/svg.js/2.3.2/svg.min.js"></script>
     <script src="{% static 'js/workflowChart.js' %}"></script>
-
+    <script src="{% static 'js/divjs.js' %}"></script>
+    <script src="{% static 'js/jquery.toast.js' %}"></script>
 
     <style>
         .container.tim-container {
@@ -469,8 +473,9 @@
                                     ANNUAL REPORT</a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
                                     SCHEDULE (Form III)</a></li>
-                                {#                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE#}
-                                {#                                    (Form V)</a></li>#}
+
+                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE (Form V)</a></li>
+
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
                                     (Table A) </a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
@@ -480,8 +485,10 @@
                                     (Table C)</a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
                                     SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
-                                {#                                <li><a href="{% url 'DGMS_Forms:L̥Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,#}
-                                {#                                    SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>#}
+
+                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,
+                                    SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
+
                                 <li><h5><b>Metal Report</b></h5></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
                                     ANNUAL REPORT</a></li>
@@ -489,17 +496,14 @@
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
                                     ANNUAL REPORT</a></li>
                                 <li><h5><b>Miscellaneous Report</b></h5></li>
-                                <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on
-                                    PESO)</a></li>
-                                <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission
-                                    Application(on DGMS)</a></li>
-                                {#                                <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment#}
-                                {#                                    Permission </a></li>#}
-                                {#                                <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING#}
-                                {#                                    PERMISSION </a></li>#}
-                                {#                                <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>#}
-                                {#                                <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification#}
-                                {#                                    Report of the Problem</a></li>#}
+
+                                <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on PESO)</a></li>
+                                <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission Application(on DGMS)</a></li>
+                                <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment Permission </a></li>
+                                <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING PERMISSION </a></li>
+                                <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>
+                                <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification Report of the Problem</a></li>
+
                                 <li><h5 class="text-left"><b>Send Report</b></h5></li>
                                 <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
                             </ul>
