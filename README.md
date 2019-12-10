@@ -7,7 +7,8 @@ This is a Django project for development of digital mine using IoT(Internet of T
 - You can Download this project as .zip .gz .bz2 file and extract it
 - You can clone this project using git
 
-    `git clone https://vikashkisku@bitbucket.org/vikashkisku/digitalmine.git`
+    
+    git clone https://vikashkisku@bitbucket.org/vikashkisku/digitalmine.git
    
     
 ## Install Required Packages
@@ -16,6 +17,7 @@ The Digital Mine Project needs some packages before running. It was built and
 tested with Django 2.x version. To install it use the following command:
 
     pip install -r requirements.txt
+    
 
 Django 2 requires Python 3, if you need help setting up Python 3 on your machine you can consult
 DigitalOcean great documentation on 
@@ -27,7 +29,13 @@ the wheel for the above from
 You need to download a client with respect to the python version you are using.
 
 ###How to install downloaded mysqlclient
-`pip install <absolute path to your downloaded mysqlclient> ` 
+
+
+    pip install  <absolute path to your downloaded mysqlclient>
+
+
+
+
 ## Running the Application
 
 Before running the application we need to create the needed DB tables:
@@ -53,10 +61,10 @@ create it: <http://localhost:8000/admin/>
 ##How to Update Requirements.txt
 ###To see the packages that are installed
 
-**`pip freeze`**
+    pip freeze
 
 To update requirements.txt that saves the packages that are used ina project
 
-`pip freeze>requirements.txt`
+    pip freeze>requirements.txt
 
 
