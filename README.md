@@ -50,7 +50,6 @@ To access the applications go to the URL <http://localhost:8000/>
 
 
 ## I need a user and password to access admin section
-
 you can create a superuser using the following command:
 
     ./manage.py createsuperuser
