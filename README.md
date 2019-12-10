@@ -49,3 +49,14 @@ you can create a superuser using the following command:
 
 To create a normal user (non super user), you must login to the admin page and
 create it: <http://localhost:8000/admin/>
+
+##How to Update Requirements.txt
+###To see the packages that are installed
+
+**`pip freeze`**
+
+To update requirements.txt that saves the packages that are used ina project
+
+`pip freeze>requirements.txt`
+
+
