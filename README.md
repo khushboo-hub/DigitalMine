@@ -41,6 +41,12 @@ You need to download a client with respect to the python version you are using.
 Before running the application we need to create the needed DB tables:
 
     ./manage.py migrate
+    
+or
+
+`We can just import the file ''myiot.sql''  into phpmyadmin`
+
+
 
 Now you can run the development web server:
 
