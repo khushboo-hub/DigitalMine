@@ -404,6 +404,7 @@ var ZoomLevel;
 
 
 function ZoomButtonsInitialization(){
+
           var $section = $('#KBtestmap');
           var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
             increment       : 0.01,
@@ -416,14 +417,19 @@ function ZoomButtonsInitialization(){
           $panzoom.parent().on('mousewheel.focal', function( e ) {
             e.preventDefault();
             ZoomLevel=e;
+
             var delta = e.delta || e.originalEvent.wheelDelta;
 
             var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
             $panzoom.panzoom('zoom', zoomOut, {
               animate: false,
-              focal: e
+              focal: { clientX: e.clientX, clientY: e.clientY }
             });
-          });}
+
+          });
+
+
+}
     $(document).keyup(function(e) {
  // if (e.keyCode === 13) $('.save').click();     // enter
   if (e.keyCode === 27 || e.keyCode === 13){ //esc

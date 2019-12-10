@@ -18,6 +18,7 @@ urlpatterns = [
     path('delete_sensor/<int:pk>', views.delete_sensor, name='delete_sensor'),
 
     path('live_data_tabular', views.live_data_tabular, name='live_data_tabular'),
+    path('fetch_sensor_details',views.fetch_sensor_details,name='fetch_sensor_details'),
     path('fetch_sensor_ajax', views.fetch_sensor_ajax, name='fetch_sensor_ajax'),
     path('fetch_sensor_values_ajax', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax'),
     path('get_data_from_node_mcu', views.get_data_from_node_mcu, name='get_data_from_node_mcu'),#####testing only
