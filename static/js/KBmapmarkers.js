@@ -28,11 +28,11 @@ function Map(name){
 
 		this.mapMarkers[markerName] = new MapMarker(markerName, icon, cordX, cordY, this);
 
-	}
+	};
 
 	this.removeMarker = function(mapMarker){
 		this.mapMarkers[mapMarker].removeMarker();
-	}
+	};
 
 	this.importJSON = function(mapDataJSON){
 
@@ -45,17 +45,15 @@ function Map(name){
 
 			// add modal to new added marker if specified in json
 			if (this.mapDataJSON[importedMarkerName]["modal"] && this.mapDataJSON[importedMarkerName]["modal"].title && this.mapDataJSON[importedMarkerName]["modal"].content) {
-;
 				this.mapMarkers[importedMarkerName].addModal(this.mapDataJSON[importedMarkerName]["modal"].title, this.mapDataJSON[importedMarkerName]["modal"].content);
-				
-			};
 
+}
 		}
-	}
+	};
 
 	this.generateJSON = function(){
 		// function code here
-	}
+	};
 
 	this.showAllMapMarkers = function(){
 
@@ -66,18 +64,17 @@ function Map(name){
 			if (mapMarker != "removeElement") {
 
 				this.mapMarkers[mapMarker].show();
-	
-			};
 
 		}
+		}
 
-	}
+	};
 
 
 	this.closeAllModals = function(){
 		for (var i = this.openedModals.length-1; i >= 0; i--) {
 			this.openedModals[i].closeModal()
-		};
+		}
 	}
 
 } // Map class end
@@ -94,30 +91,30 @@ function MapMarker(name, icon, cordX, cordY, map){
 
 	this.addModal = function(modalTitle, modalContent){
 		this.modal = new MarkerModal(modalTitle, modalContent, this);
-	}
+	};
 	
 	this.activate = function(){
 		jQuery('[data-marker-name="' + this.name + '"]').addClass('active');
-	}
+	};
 
 	this.deactivate = function(){
 		jQuery('[data-marker-name="' + this.name + '"]').removeClass('active');
-	}
+	};
 
 	this.setCurrent = function(){
 		jQuery('[data-marker-name="'+ this.name +'"]').css('z-index', this.map.maxZindex);
 		this.map.maxZindex++;
-	}
+	};
 
 	this.unsetCurrent = function(){
 		jQuery('[data-marker-name="'+ this.name +'"]').css('z-index', "1");
-	}
+	};
 
 	this.generateMarker = function(){
-		output = '<div class="KBmap__marker '+this.name+' " data-marker-name="'+this.name+'" style="left: '+this.cordX+'%; top: '+this.cordY+'%"><img class="markerIcon" src="'+this.icon+'" alt="'+this.location+'"></div>'
+		output = '<div class="KBmap__marker '+this.name+' " data-marker-name="'+this.name+'" style="left: '+this.cordX+'%; top: '+this.cordY+'%"><img class="markerIcon" src="'+this.icon+'" alt="'+this.location+'"></div>';
 
 		return output;
-	}
+	};
 
 	this.removeMarker = function(){
 
@@ -126,7 +123,7 @@ function MapMarker(name, icon, cordX, cordY, map){
 		delete this.map.mapMarkers[this.name];
 
 		this.map.openedModals.removeElement(this.modal);
-	}
+	};
 
 	this.show = function(){
 
@@ -155,11 +152,11 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 
 		return output;
 
-	}
+	};
 
 	this.isModalActive = function(){
 		return (jQuery('[data-marker-name="' + this.linkedMapMarker.name + '"]').hasClass('active'));
-	}
+	};
 
 	this.closeModal = function(){
 		jQuery('[data-marker-name="'+ this.linkedMapMarker.name +'"] .KBmap__markerContent').remove();
@@ -171,9 +168,8 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 
 		if (this.linkedMapMarker.map.openedModals.length < 1) {
 			this.linkedMapMarker.map.maxZindex = 2;
-		};
-
-	}
+		}
+	};
 
 	this.openModal = function(){
 
@@ -190,7 +186,7 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 		// center opened modal on map marker (css);
 		this.clearPosition();
 
-	}
+	};
 
 	this.toggleModal = function(){
 
@@ -204,7 +200,7 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 
 		}
 
-	}
+	};
 
 	this.clearPosition = function(){
 
@@ -233,7 +229,7 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 		// if modal is off screen changes its left/right position until modal is fully on screen
 		whileOffScreen();
 
-	}
+	};
 
 	function whileOffScreen(){
 
@@ -284,7 +280,7 @@ Array.prototype.removeElement = function(elem){
 		this.splice(index, 1);
 	}
 
-}
+};
 
 function generateName(namebase){
 	return namebase+Math.floor((Math.random() * 1000) + 1);
@@ -317,7 +313,7 @@ function generateUniqueMarkerName(map, name){
 		if (infiniteLoopCheck > 1000) {
 			console.error('After 10000 tries couldnt generate unique name for MapMarker object. Change max number in MapMarker object name [function generateName()]. Default max: 1000');
 			return false;
-		};
+		}
 	}
 
 	return objname;

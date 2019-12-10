@@ -13,7 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
     <!-- Canonical SEO -->
-    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>
+    {#    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>#}
 
 
     <meta name="keywords"
@@ -225,7 +225,7 @@
     <script src="{% static 'datetime/js/collapse.js' %}"></script>
     <script src="{% static 'datetime/js/transition.min.js' %}"></script>
     <script src="{% static 'js/printThis.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
 
     <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
     <!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
@@ -473,7 +473,9 @@
                                     ANNUAL REPORT</a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
                                     SCHEDULE (Form III)</a></li>
+
                                 <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE (Form V)</a></li>
+
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
                                     (Table A) </a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
@@ -483,8 +485,10 @@
                                     (Table C)</a></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
                                     SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
+
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,
                                     SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
+
                                 <li><h5><b>Metal Report</b></h5></li>
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
                                     ANNUAL REPORT</a></li>
@@ -492,12 +496,14 @@
                                 <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
                                     ANNUAL REPORT</a></li>
                                 <li><h5><b>Miscellaneous Report</b></h5></li>
+
                                 <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on PESO)</a></li>
                                 <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission Application(on DGMS)</a></li>
                                 <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment Permission </a></li>
                                 <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING PERMISSION </a></li>
                                 <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>
                                 <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification Report of the Problem</a></li>
+
                                 <li><h5 class="text-left"><b>Send Report</b></h5></li>
                                 <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
                             </ul>
@@ -734,32 +740,6 @@
     </div>
 </div>
 
-<script>
-    $('ul.nav li.dropdown').hover(function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-    }, function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-    });
-
-    toastr.options = {
-            "closeButton": false,
-            "debug": false,
-            "newestOnTop": true,
-            "progressBar": false,
-            "positionClass": "toast-bottom-full-width",
-            "preventDuplicates": true,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "100",
-            "timeOut": "3000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut",
-        }
-
-=======
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
      aria-hidden="true">
@@ -779,64 +759,82 @@
         </div>
     </div>
 </div>
->>>>>>> ab7492d4bf7463412da55b4ac54dba7dfb7ac2bb
 
+<script>
 
-
-
-        <!--var interval_time=10000;-->
-        <!--    setInterval(function(){-->
-        <!--        $.ajax({-->
-        <!--            type:"get",-->
-        <!--                url: "{% url 'Strata:warning_level_information' %}",-->
-        <!--                success: function(data) {-->
-        < !--                //console.log(data);-->
-        < !--                //toastr.warning(data["result"]); // Vikash Changed Here-->
-        < !--                //$("#fill_here").html(data["result"]); //Vikash Changed Here-->
-        <!--                if(data["result"]){-->
-        < !--                   // $("#is_visiable").attr("style",""); //Vikash Changed Here-->
-        <!--                    toastr.warning(data["result"]);-->
-        <!--                    if(data["light_result"]){-->
-        < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
-    -- >
-    <!--                    }else{-->
-    < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
-    -- >
-    <!--                    }-->
-    <!--                }else{-->
-    <!--                    $("#is_visiable").attr("style","display:none");-->
-    < !--$("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
-    -- >
-    <!--                }-->
-    <!--                },-->
-    <!--                error: function(){-->
-    <!--                        console.log("something went wrong");-->
-    <!--                }-->
-    <!--        });-->
-    < !--
-    },
-    interval_time
-    )
-    ;//time in milliseconds-->
-
-    <!--    $(document).ready(function(){-->
-    <!--      $('[data-toggle="tooltip"]').tooltip();-->
-    <!--    });-->
-
-    $('ul.nav li.dropdown').hover(function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-    }, function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-    });
-
-
-    $('ul.nav li.dropdown').hover(function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
-    }, function () {
-        $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
-    });
 
     $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+        $('ul.nav li.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": false,
+            "positionClass": "toast-bottom-full-width",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "100",
+            "timeOut": "3000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+        };
+
+
+        {#var interval_time = 10000;#}
+        {#setInterval(function () {#}
+        {#        $.ajax({#}
+        {#            type: "get",#}
+        {#            url: "{% url 'Strata:warning_level_information' %}",#}
+        {#            success: function (data) {#}
+        {#                console.log(data);#}
+        {#                //toastr.warning(data["result"]); // Vikash Changed Here-->#}
+        {#                //$("#fill_here").html(data["result"]); //Vikash Changed Here-->#}
+        {#                if (data["result"]) {#}
+        {#                    // $("#is_visiable").attr("style",""); //Vikash Changed Here-->#}
+        {#                    toastr.warning(data["result"]);#}
+        {#                    if (data["light_result"]) {#}
+        {#                        $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
+        {##}
+        {#                    } else {#}
+        {#                        $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {##}
+        {#                    }#}
+        {#                } else {#}
+        {#                    $("#is_visiable").attr("style", "display:none");#}
+        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {##}
+        {#                }#}
+        {#            },#}
+        {#            error: function () {#}
+        {#                console.log("something went wrong");#}
+        {#            }#}
+        {#        });#}
+        {#    },interval_time#}
+        {#)#}
+
+        $('ul.nav li.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+
+
+        $('ul.nav li.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+
         $.ajax({
             url: "{% url 'employee1:checkifuserfieldempty' %}",
             success: function (data) {
@@ -851,13 +849,10 @@
             }
 
         });
-    });
-    var T;
-    $(document).ready(function () {
+
         $.ajax({
             url: "{% url 'employee1:profile_ajax' %}",
             success: function (data) {
-                T = data;
                 if (data.hasOwnProperty('profile_avatar')) {
                     $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
 
