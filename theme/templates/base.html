@@ -459,55 +459,64 @@
                                     between two datetime</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown">
+                        <li class="dropdown  dropdown-large">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-news-paper"></i>
                                 <p>
-                                    DGMS
+                                    e-Governance
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color">
-                                <li><h5><b>Coal Report</b></h5></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">MANAGE
-                                    ANNUAL REPORT</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
-                                    SCHEDULE (Form III)</a></li>
+                            <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
+                                <li class="col-sm-6">
+                                    <ul class="">
+                                        <li class="dropdown-header" style="color:white;"><strong>Coal Report</strong></li>
+        {#                            <ul class="dropdown-menu  navbar-color">#}
+        {#                                <li><h5><b>Coal Report</b></h5></li>#}
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">MANAGE
+                                            ANNUAL REPORT</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
+                                            SCHEDULE (Form III)</a></li>
 
-                                <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE (Form V)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE (Form V)</a></li>
 
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
-                                    (Table A) </a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
-                                    AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS (Table B)</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">MANAGE TYPE AND
-                                    AGGREGATE HORSE_POWER OF MACHINERY AND EQUIPMENT (OTHER THEN ELECTRICAL APPARATUS)
-                                    (Table C)</a></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
-                                    SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
+                                            (Table A) </a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
+                                            AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS (Table B)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">MANAGE TYPE AND
+                                            AGGREGATE HORSE_POWER OF MACHINERY AND EQUIPMENT (OTHER THEN ELECTRICAL APPARATUS)
+                                            (Table C)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
+                                            SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
 
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,
-                                    SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,
+                                            SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
+                                    </ul>
+                                </li>
+                                <li class="col-sm-6">
+                                    <ul class="">
 
-                                <li><h5><b>Metal Report</b></h5></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
-                                    ANNUAL REPORT</a></li>
-                                <li><h5 class="text-left"><b>Oil Report</b></h5></li>
-                                <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
-                                    ANNUAL REPORT</a></li>
-                                <li><h5><b>Miscellaneous Report</b></h5></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Metal Report</strong></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
+                                            ANNUAL REPORT</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Oil Report</strong></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
+                                            ANNUAL REPORT</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Miscellaneous Report</strong></li>
 
-                                <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on PESO)</a></li>
-                                <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission Application(on DGMS)</a></li>
-                                <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment Permission </a></li>
-                                <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING PERMISSION </a></li>
-                                <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>
-                                <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification Report of the Problem</a></li>
+                                        <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on PESO)</a></li>
+                                        <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission Application(on DGMS)</a></li>
+                                        <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment Permission </a></li>
+                                        <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING PERMISSION </a></li>
+                                        <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>
+                                        <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification Report of the Problem</a></li>
 
-                                <li><h5 class="text-left"><b>Send Report</b></h5></li>
-                                <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Send Report</strong></li>
+                                        <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
+                                    </ul>
+                                </li>
                             </ul>
-                        </li>
                         <li class="dropdown ">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-wallet "></i>
