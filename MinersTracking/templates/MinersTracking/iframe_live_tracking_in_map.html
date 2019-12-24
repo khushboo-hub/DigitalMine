@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>Digital Mine (IoT) | CSIR-CIMFR</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
+    <!-- Canonical SEO -->
+    {#    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>#}
+
+
+    <meta name="keywords"
+          content="csir,cimfr,central institute mining and fuel research digital, Council of Scientific and Industrial Research, digital mine, internet of things,
+           development, development of digital mine using iot, erp, digital erp, meity,ministry of electronics and information technology,government of india">
+    <meta name="description"
+          content="The main motive of this software is to digitize the manual workings of the mining industry to make it more efficient and save human lives">
+
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content="Development of digital mine using IOT">
+    <meta itemprop="description"
+          content="We restyled the classic Bootstrap Navbar and we added brand new icons. This navbar comes with 5 vibrant colors: blue, azzure, green, orange and red.">
+    <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
+
+
+    <script>
+        window.onload = function () {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.location = '/mobile';
+            }
+        }
+    </script>
+
+    <!--=======end PAHLE KA===================-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static '/css/custom_style.css' %}">
+    <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
+
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script src="{% static 'js/customJS.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+
+    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
+    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'js/ObjectEquate.js' %}"></script>
+    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
+    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
+    <script src="{% static 'js/jquery.md5.min.js' %}"></script>
+
+
+
+    <!-- BootStrap Notify Includes -->
+    <script src="{% static 'js/toastr.min.js' %}"></script>
+
+    <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
+
+    <script>
+        //paste this code under the head tag or in a separate js file.
+        // Wait for window load
+        $(document).ready(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+        });
+    </script>
+
+</head>
+<body>
+<div class="se-pre-con"></div>
+
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<div class="container-fluid ">
+        <section class="KBmap" id="KBtestmap"></section>
+    </div>
+</div>
+<!--Emergency Modal-->
+<div class="modal fade" style="position:absolute" id="emergency_info" role="dialog">
+    <div class="modal-dialog modal-confirm ">
+        <div class="modal-content">
+            <div class="modal-header">
+				<div class="icon-box">
+					<i class="material-icons">&#xE5CD;</i>
+				</div>
+				<h4 class="modal-title">Danger!</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			</div>
+            <div class="modal-body">
+				<p>Help the Miner</p>
+                <p id="MinerName"></p>
+                <p id="Location"></p>
+
+			</div>
+
+        </div>
+    </div>
+</div>
+<!--Emergency Modal End-->
+<script>
+var el;
+$( document ).ready(function() {
+    CreateKBtestMap('{{mine_data.6}}');
+    FillRouters('{{mine_data.0}}');
+    Get_All_Miners_Data();
+   /* toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-top-right",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",  
+                    }
+    */
+    FULLSCREEN();
+    setTimeout(function(){
+        ZoomButtonsInitialization();
+    }, 2000);
+
+
+});
+
+function FillRouters(mine_id){
+    $.ajax({
+            type:"get",
+            url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+
+                fill_map_with_routers(data.mine,data.routers);
+                return data;
+                    },
+            error: function(){
+                    console.log("Something Went Wrong :(");
+                 }
+            });
+}
+function setImageData(mine_id){
+    url=$("#get_url").data('url');
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'Strata:fetch_map_image' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                // CreateMapModel(data.result.image_url,data.result.name);
+                tempData=data;
+                  CreateKBtestMap(data.result.image_url);
+
+                //console.log(data.result.name);
+                //console.log(data.result.image_url);
+                    },
+            error: function(){
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+}
+
+
+	function CreateKBtestMap(data){
+            var img=data;
+            //console.log(url);
+         if(addedKBmaps.length>0){
+            addedKBmaps.pop();
+            $('.KBmap__mapContainer').remove();
+         }
+
+        //alert(img);
+
+        if(img){
+        createKBmap('KBtestmap', '/media/'+img);
+
+				// KBtestmap.importJSON(jsonData);
+				// KBtestmap.showAllMapMarkers();
+
+				}
+        else{
+            $("#map").css("");
+            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+        }
+    };
+function fill_dropdown(result){
+
+    $("#id_miner_id").html("<option>--Select Miner--</option>");
+    for (x in result) {
+    $("#id_miner_id").append($("<option></option>")
+                    .attr("value",result[x].rfid)
+                    .text(result[x].name));
+    }
+}
+function fill_map_with_routers(mine,routers){
+        var img=mine.image_url;
+        //console.log(url);
+        if(addedKBmaps.length>0){
+            addedKBmaps.pop();
+            $('.KBmap__mapContainer').remove();
+        }
+        if(img){
+            createKBmap('KBtestmap', '/media/'+img);
+			KBtestmap.importJSON(routers);
+			KBtestmap.showAllMapMarkers();
+	    }
+        else{
+            $("#map").css("");
+            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+        }
+}
+var KB_flag=0;
+var tempData;
+var dataTemp;
+var flag1=0;
+var el;
+function Get_All_Miners_Data(){
+
+    mine_id='{{mine_data.0}}';
+    var flag=0;
+    var HashDataPrev="";
+    var HashDataCurr="";
+
+    setInterval(function(){
+        //call ajax
+         $.ajax({
+            data:{'id':mine_id},
+            url: "/MinersTracking/get_all_miners_data",
+            success: function(data) {
+
+                tempData=data;
+                HashDataPrev="";
+                HashDataPrev=HashDataCurr;
+
+                HashDataCurr="";
+                for(h in data){HashDataCurr+=data[h].router_id;}
+
+                if(HashDataPrev==HashDataCurr){
+
+                    if(flag1<=1){
+                        for(x in tempData){
+                            console.log(tempData);
+                        // For the Active Miner Explorer
+                        $('div#active_miners').append('<ul><li class="'+tempData[x].iconClass+'">'+tempData[x].miner_name+'</li></ul>');
+
+                        //For the Router Explorer
+                        $('#secondLink'+tempData[x].router_id).append('<a class="jygdf" href="../single_miner_page?mine_id='+mine_id+'&&miner_id='+x+'" target="__blank"><li class="'+tempData[x].iconClass+'" id="'+x+'">'+tempData[x].miner_name+'</li></a>')}}
+                    }
+                    else{
+                        $('.RouterExplorer').empty();
+                        $('div#active_miners').empty();
+                        flag1=0;
+                    }
+                    flag1++;
+                    tempData=data;
+                    for(miner_id in data){
+                        $('.KBmap__marker.'+miner_id).remove();
+                        if(KB_flag!=0)KBtestmap.mapMarkers[miner_id].removeMarker();
+
+
+                    }
+                    KB_flag=1;
+
+                    KBtestmap.importJSON(data);
+                    
+                    WARNINGMINER(data);
+				return data;
+              }
+            });
+        //end call ajax
+
+    }, 3000);//time in milliseconds
+}
+var X;
+//var elem = document.getElementById("KBtestmap");
+function WARNINGMINER(data){
+       for(miner_id in data){
+                //    console.log(miner_id);
+                    if(data[miner_id].emergency=='1'){
+                      //  $('p#MinerName').html(data[miner_id].modal.title);
+                       // var rand=ra
+                       var miner_name=data[miner_id].modal.title;
+                       var router_id=data[miner_id].router_id;
+                       
+                      X=  toastr.info(miner_name);
+                      //  $('p#Location').html(data[miner_id].router_id);
+                       // $('#emergency_info').modal('toggle');
+                        Speak("Please Help the "+data[miner_id].modal.title,9,11);
+
+                    }
+                    else{
+                    }
+                    KBtestmap.mapMarkers[miner_id].cordX=data[miner_id].cordX;
+                    KBtestmap.mapMarkers[miner_id].cordY=data[miner_id].cordY;
+
+                    KBtestmap.mapMarkers[miner_id].show();
+                }
+}
+
+</script>
+</body>
+</html>
+

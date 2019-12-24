@@ -16,6 +16,7 @@ urlpatterns = [
   path('ajax_tracking_data', views.ajax_tracking_data, name='ajax_tracking_data'),
   path('all_mine_page', views.all_mine_page, name='all_mine_page'),
   path('live_tracking_in_map/<int:mine_id>', views.live_tracking_in_map, name='live_tracking_in_map'),
+  path('iframe_live_tracking_in_map/<int:mine_id>', views.iframe_live_tracking_in_map, name='iframe_live_tracking_in_map'),
   path('live_tracking_in_map_/<int:mine_id>', views.live_tracking_in_map_, name='live_tracking_in_map_'),
   path('get_miners_data1', views.get_miners_data1, name='get_miners_data1'),
   path('single_miner_page', views.single_miner_page, name='single_miner_page'),

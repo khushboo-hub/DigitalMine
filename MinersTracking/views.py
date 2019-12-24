@@ -279,6 +279,18 @@ def live_tracking_in_map(request, mine_id, template_name='MinersTracking/live_tr
 
     return render(request, template_name, data)
 
+@login_required
+def iframe_live_tracking_in_map(request, mine_id, template_name='MinersTracking/iframe_live_tracking_in_map.html'):
+    data = {}
+    mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
+    data['mine_data'] = mine_data
+    routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
+    data['routers'] = routers
+    miners = Employee1.objects.filter(mine_id=mine_id)
+    print(miners)
+    data['miners'] = miners
+
+    return render(request, template_name, data)
 
 @login_required
 def live_tracking_in_map_(request, mine_id, template_name='MinersTracking/live_tracking_in_map_.html'):

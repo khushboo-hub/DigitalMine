@@ -260,7 +260,7 @@
                             <i class="fas fa-search fa-sm"></i>
                           </button>
                         </div> -->
-                        <select name="mine_name" onchange="this.form.submit()" id="" class="form-control">
+                        <select name="mine_name" onchange="this.form.submit()" id="mine" class="form-control">
                             {% for x in mine_table %}
                                 {% firstof var1 var2 var3 %}
                                 <option {% if selected == x.id %} selected {% endif %}
@@ -813,8 +813,18 @@
                 <!--</div>-->
                 <div class="card-header py-3">
                   <h6 class="m-0 font-weight-bold text-primary">Miners Tracking</h6>
+                     <li class="MinerWorkerIcon">Worker</li>
+                                     <li class="MinerOfficerIcon">Officer</li>
                 </div>
-                <section class="KBmap" id="KBtestmap"></section>
+                  <div class="container">
+
+                      <div class="embed-responsive embed-responsive-16by9">
+
+                          <iframe id="miners_tracking_iframe" class="embed-responsive-item" src="{% url 'MinersTracking:iframe_live_tracking_in_map' selected %}"></iframe>
+                      </div>
+                    </div>
+               <!-- <section class="KBmap" id="KBtestmap"></section>-->
+
               </div>
 
                         <!-- Approach -->
@@ -989,10 +999,7 @@
             });
         }
         document.getElementById("overlay").style.display = "block";
-        {#var StrataCalling = setInterval(function () {#}
-        {#    #}
-        {##}
-        {#}, 1000);#}
+
 
         function StrataMonitoring(strata, UpperLimit) {
             strata = parseFloat(strata);
@@ -1020,92 +1027,11 @@
         }
 
 
-  </script>
   <!--MINERS TRACKING START-->
-<script>
 var el;
-$( document ).ready(function() {
-    <!--CreateKBtestMap('{{mine_data.6}}');-->
-    CreateKBtestMap('mine_map_image/cimfr_img.JPG');
-    FillRouters('{{mine_data.0}}');
-    Get_All_Miners_Data();
-   /* toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",
-                    }
-    */
-    FULLSCREEN();
-    setTimeout(function(){
-        ZoomButtonsInitialization();
-    }, 2000);
-
-
-});
-
-function FillRouters(mine_id){
-    $.ajax({
-            type:"get",
-            url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-
-                fill_map_with_routers(data.mine,data.routers);
-                return data;
-                    },
-            error: function(){
-                    console.log("Something Went Wrong :(");
-                 }
-            });
-}
-function setImageData(mine_id){
-    url=$("#get_url").data('url');
-
-        $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_map_image' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                // CreateMapModel(data.result.image_url,data.result.name);
-                tempData=data;
-                  CreateKBtestMap(data.result.image_url);
-
-                //console.log(data.result.name);
-                //console.log(data.result.image_url);
-                    },
-            error: function(){
-                    console.log("something is not right.please contact admin - 1");
-                 }
-            });
-}
-
-
-	function CreateKBtestMap(data){
-            var img=data;
-            //console.log(url);
-         if(addedKBmaps.length>0){
-            addedKBmaps.pop();
-            $('.KBmap__mapContainer').remove();
-         }
 
         //alert(img);
-        function GasMonitoring(waterLevel, UpperLimit, Id) {
+function GasMonitoring(waterLevel, UpperLimit, Id) {
             waterLevelPercentage = parseFloat(waterLevel);
             if (waterLevelPercentage < 0.00) {
                 document.getElementById("overlay").style.display = "block";
@@ -1126,137 +1052,7 @@ function setImageData(mine_id){
 
             $('span#' + Id).html(waterLevelPercentage);
         }
-
-
     });
-
-
-        if(img){
-        createKBmap('KBtestmap', '/media/'+img);
-
-				// KBtestmap.importJSON(jsonData);
-				// KBtestmap.showAllMapMarkers();
-
-				}
-        else{
-            $("#map").css("");
-            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-        }
-    };
-function fill_dropdown(result){
-
-    $("#id_miner_id").html("<option>--Select Miner--</option>");
-    for (x in result) {
-    $("#id_miner_id").append($("<option></option>")
-                    .attr("value",result[x].rfid)
-                    .text(result[x].name));
-    }
-}
-function fill_map_with_routers(mine,routers){
-        var img=mine.image_url;
-        //console.log(url);
-        if(addedKBmaps.length>0){
-            addedKBmaps.pop();
-            $('.KBmap__mapContainer').remove();
-        }
-        if(img){
-            createKBmap('KBtestmap', '/media/'+img);
-			KBtestmap.importJSON(routers);
-			KBtestmap.showAllMapMarkers();
-	    }
-        else{
-            $("#map").css("");
-            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-        }
-}
-var KB_flag=0;
-var tempData;
-var dataTemp;
-var flag1=0;
-var el;
-function Get_All_Miners_Data(){
-
-    mine_id='{{mine_data.0}}';
-    var flag=0;
-    var HashDataPrev="";
-    var HashDataCurr="";
-
-    setInterval(function(){
-        //call ajax
-         $.ajax({
-            data:{'id':mine_id},
-            url: "/MinersTracking/get_all_miners_data",
-            success: function(data) {
-
-                tempData=data;
-                HashDataPrev="";
-                HashDataPrev=HashDataCurr;
-
-                HashDataCurr="";
-                for(h in data){HashDataCurr+=data[h].router_id;}
-
-                if(HashDataPrev==HashDataCurr){
-
-                    if(flag1<=1){
-                        for(x in tempData){
-                            console.log(tempData);
-                        // For the Active Miner Explorer
-                        $('div#active_miners').append('<ul><li class="'+tempData[x].iconClass+'">'+tempData[x].miner_name+'</li></ul>');
-
-                        //For the Router Explorer
-                        $('#secondLink'+tempData[x].router_id).append('<a class="jygdf" href="../single_miner_page?mine_id='+mine_id+'&&miner_id='+x+'" target="__blank"><li class="'+tempData[x].iconClass+'" id="'+x+'">'+tempData[x].miner_name+'</li></a>')}}
-                    }
-                    else{
-                        $('.RouterExplorer').empty();
-                        $('div#active_miners').empty();
-                        flag1=0;
-                    }
-                    flag1++;
-                    tempData=data;
-                    for(miner_id in data){
-                        $('.KBmap__marker.'+miner_id).remove();
-                        if(KB_flag!=0)KBtestmap.mapMarkers[miner_id].removeMarker();
-
-
-                    }
-                    KB_flag=1;
-
-                    KBtestmap.importJSON(data);
-
-                    WARNINGMINER(data);
-				return data;
-              }
-            });
-        //end call ajax
-
-    }, 3000);//time in milliseconds
-}
-var X;
-//var elem = document.getElementById("KBtestmap");
-function WARNINGMINER(data){
-       for(miner_id in data){
-                //    console.log(miner_id);
-                    if(data[miner_id].emergency=='1'){
-                      //  $('p#MinerName').html(data[miner_id].modal.title);
-                       // var rand=ra
-                       var miner_name=data[miner_id].modal.title;
-                       var router_id=data[miner_id].router_id;
-
-                      X=  toastr.info(miner_name);
-                      //  $('p#Location').html(data[miner_id].router_id);
-                       // $('#emergency_info').modal('toggle');
-                        Speak("Please Help the "+data[miner_id].modal.title,9,11);
-
-                    }
-                    else{
-                    }
-                    KBtestmap.mapMarkers[miner_id].cordX=data[miner_id].cordX;
-                    KBtestmap.mapMarkers[miner_id].cordY=data[miner_id].cordY;
-
-                    KBtestmap.mapMarkers[miner_id].show();
-                }
-}
-
 </script>
 <style>
   .pin{
