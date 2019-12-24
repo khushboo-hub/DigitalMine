@@ -650,22 +650,22 @@
 
                                         <li class="dropdown-header" style="color:white;">Sensor Management</li>
 
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Setting</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Add Sensor</a>
-                                        </li>
-                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Manage Sensor</a></li>
+                                        <li><a href="{% url 'wm_test:setting' %}">Setting</a></li>
+                                        <li><a href="{% url 'wm_test:add_sensor' %}">Add Sensor</a></li>
+                                        <li><a href="{% url 'wm_test:manage_sensor' %}">Manage Sensor</a></li>
 
                                         <li class="dropdown-header" style="color:white;">Customise Report</li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Live Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Sensor Hourly Report </a>
-                                        </li>
-                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Hour Duration Average Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Date and Hour Average Report</a></li>
+                                        <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
+                                        <li><a href="{% url 'wm_test:sensor_hourly_report' %}">Sensor Hourly Report</a></li>
+                                        <li><a href="{% url 'wm_test:hour_duration_avg_report' %}">Hour Duration Avg Report</a></li>
+                                        <li><a href="{% url 'wm_test:date_and_hour_duration_avg_report' %}">Date And Hour Duration Avg Report</a></li>
+
                                         <li class="dropdown-header" style="color:white;">Wind Rose</li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Wind Report</a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Wind Hourly Report</a>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Frequency Distribution Report<span class="label label-default">Count</span></a></li>
-                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Frequency Distribution Report<span class="label label-default">Normalised</span></a>
+                                        <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
+                                        <li><a href="{% url 'wm_test:wind_hourly_report' %}">Wind Hourly Report</a></li>
+                                        <li><a href="{% url 'wm_test:frequency_distribution_count_report' %}">Frequency Distribution Report<span class="label label-default">Count</span></a></li>
+                                        <li><a href="{% url 'wm_test:frequency_distribution_normalized_report' %}">Frequency Distribution Report<span class="label label-default">Normalised</span></a></li>
+
                                         </li>
                             </ul>
                         </li>
