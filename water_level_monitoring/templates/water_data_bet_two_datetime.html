@@ -7,7 +7,7 @@
     }
      .dt-buttons {
     z-index: 1 !important;
-    margin-bottom: -50px;
+    margin-bottom: -20px;
 }
 </style>
 
@@ -135,7 +135,7 @@
                     },
                 success: function(data) {
                         for(index = 0; index < data.result.length; index++) {
-                            var str_array = data.result[index].split(',');
+                            var str_array = data.result[index].split('@#');
                             $("#ip_hidden").val(str_array[0]);
                         }
                  },
@@ -175,7 +175,7 @@
                 }
             });
         }else{
-            alert("Please choose From Date and To Date")
+            alert("Please choose From Date and To Date");
         }
     }else{
         alert("Please choose location");

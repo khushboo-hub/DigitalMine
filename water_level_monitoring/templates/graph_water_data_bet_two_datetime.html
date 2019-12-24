@@ -124,10 +124,10 @@ $('#to_date').datetimepicker({
                     console.log(x_data);
                     console.log(y_data);
                     var data = [{
-                    x: x_data.reverse(),
-                    y: y_data.reverse(),
-                    type: 'scatter'
-                    }];
+                            x: x_data.reverse(),
+                            y: y_data.reverse(),
+                            type: 'scatter'
+                        }];
                     Plotly.newPlot('myDiv', data, {}, {showSendToCloud: true});
                     $("#btn_show").val("Show");
                     $("#btn_show").prop('disabled', false);
@@ -140,7 +140,6 @@ $('#to_date').datetimepicker({
      }else{
          alert("Please choose location");
      }
-
  });
   </script>
 </body>

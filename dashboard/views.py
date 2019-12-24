@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .models import MineDetails,Node,Sensor_Node
+from .models import MineDetails,Node,Sensor_Node,MinerTracking,TrackingRouter
 from Strata.models import Strata_location
 from accounts.models import profile_extension
 from django.shortcuts import get_object_or_404

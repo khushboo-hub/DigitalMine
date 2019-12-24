@@ -1,0 +1,520 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+              <h1 class="page-header">Frequency Distribution Report&nbsp;&nbsp;(count)</h1>
+
+            <!-- Table content -->
+            <div class="form-border">
+                <div class="row">
+
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+
+                        <br><br>
+
+
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="from_date" class="" >From Date</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control datepicker" id="date1">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="to_date" class="">To Date</label>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control datepicker" id="date2">
+                                    </div>
+                                 </div>
+                            </div>
+
+                        <br/><br/>
+                        <br/><br/>
+
+                        <div class="form-group col-md-12">
+
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="text-center">
+                                        <input class="btn btn-primary" type="button" id="id_show" value="Show"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+
+<br>
+<br>
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="content">
+
+                                <tr>
+
+                                    <th></th>
+                                    <th>0.5-2.1</th>
+                                    <th>2.1-3.6</th>
+                                    <th>3.6-5.7</th>
+                                    <th>5.7-8.8</th>
+                                    <th>8.8-11.1</th>
+                                    <th>>=11.1</th>
+                                    <th>Total</th>
+                                </tr>
+                                <tr>
+                                    <th>348.75-11.25</th>
+                                    <td><span id="a1"></span></td>
+                                    <td><span id="a2"></span></td>
+                                    <td><span id="a3"></span></td>
+                                    <td><span id="a4"></span></td>
+                                    <td><span id="a5"></span></td>
+                                    <td><span id="a6"></span></td>
+                                    <td><span id="t1"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>11.25-33.75</th>
+                                    <td><span id="b1"></span></td>
+                                    <td><span id="b2"></span></td>
+                                    <td><span id="b3"></span></td>
+                                    <td><span id="b4"></span></td>
+                                    <td><span id="b5"></span></td>
+                                    <td><span id="b6"></span></td>
+                                    <td><span id="t2"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>33.75-56.25</th>
+                                    <td><span id="c1"></span></td>
+                                    <td><span id="c2"></span></td>
+                                    <td><span id="c3"></span></td>
+                                    <td><span id="c4"></span></td>
+                                    <td><span id="c5"></span></td>
+                                    <td><span id="c6"></span></td>
+                                    <td><span id="t3"></span></td>
+                                </tr>
+                                <tr>
+                                    <th>56.25-78.75</th>
+                                   <td><span id="d1"></span></td>
+                                    <td><span id="d2"></span></td>
+                                    <td><span id="d3"></span></td>
+                                    <td><span id="d4"></span></td>
+                                    <td><span id="d5"></span></td>
+                                    <td><span id="d6"></span></td>
+                                    <td><span id="t4"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>78.75-101.25</th>
+                                    <td><span id="e1"></span></td>
+                                    <td><span id="e2"></span></td>
+                                    <td><span id="e3"></span></td>
+                                    <td><span id="e4"></span></td>
+                                    <td><span id="e5"></span></td>
+                                    <td><span id="e6"></span></td>
+                                    <td><span id="t5"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>101.25-123.75</th>
+                                    <td><span id="f1"></span></td>
+                                    <td><span id="f2"></span></td>
+                                    <td><span id="f3"></span></td>
+                                    <td><span id="f4"></span></td>
+                                    <td><span id="f5"></span></td>
+                                    <td><span id="f6"></span></td>
+                                    <td><span id="t6"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>123.75-146.25</th>
+                                    <td><span id="g1"></span></td>
+                                    <td><span id="g2"></span></td>
+                                    <td><span id="g3"></span></td>
+                                    <td><span id="g4"></span></td>
+                                    <td><span id="g5"></span></td>
+                                    <td><span id="g6"></span></td>
+                                    <td><span id="t7"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>146.25-168.75</th>
+                                   <td><span id="h1"></span></td>
+                                    <td><span id="h2"></span></td>
+                                    <td><span id="h3"></span></td>
+                                    <td><span id="h4"></span></td>
+                                    <td><span id="h5"></span></td>
+                                    <td><span id="h6"></span></td>
+                                    <td><span id="t8"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>168.75-191.25</th>
+                                    <td><span id="i1"></span></td>
+                                    <td><span id="i2"></span></td>
+                                    <td><span id="i3"></span></td>
+                                    <td><span id="i4"></span></td>
+                                    <td><span id="i5"></span></td>
+                                    <td><span id="i6"></span></td>
+                                    <td><span id="t9"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>191.25-213.75</th>
+                                    <td><span id="j1"></span></td>
+                                    <td><span id="j2"></span></td>
+                                    <td><span id="j3"></span></td>
+                                    <td><span id="j4"></span></td>
+                                    <td><span id="j5"></span></td>
+                                    <td><span id="j6"></span></td>
+                                    <td><span id="t10"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>213.75-236.25</th>
+                                    <td><span id="k1"></span></td>
+                                    <td><span id="k2"></span></td>
+                                    <td><span id="k3"></span></td>
+                                    <td><span id="k4"></span></td>
+                                    <td><span id="k5"></span></td>
+                                    <td><span id="k6"></span></td>
+                                    <td><span id="t11"></span></td>
+                                </tr>
+
+                             <tr>
+
+                                    <th>236.25-258.75</th>
+                                    <td><span id="l1"></span></td>
+                                    <td><span id="l2"></span></td>
+                                    <td><span id="l3"></span></td>
+                                    <td><span id="l4"></span></td>
+                                    <td><span id="l5"></span></td>
+                                    <td><span id="l6"></span></td>
+                                    <td><span id="t12"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>258.75-281.25</th>
+                                   <td><span id="m1"></span></td>
+                                    <td><span id="m2"></span></td>
+                                    <td><span id="m3"></span></td>
+                                    <td><span id="m4"></span></td>
+                                    <td><span id="m5"></span></td>
+                                    <td><span id="m6"></span></td>
+                                    <td><span id="t13"></span></td>
+                                </tr><tr>
+                                    <th>281.25-303.75</th>
+                                    <td><span id="n1"></span></td>
+                                    <td><span id="n2"></span></td>
+                                    <td><span id="n3"></span></td>
+                                    <td><span id="n4"></span></td>
+                                    <td><span id="n5"></span></td>
+                                    <td><span id="n6"></span></td>
+                                    <td><span id="t14"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>303.75-326.25</th>
+                                       <td><span id="o1"></span></td>
+                                    <td><span id="o2"></span></td>
+                                    <td><span id="o3"></span></td>
+                                    <td><span id="o4"></span></td>
+                                    <td><span id="o5"></span></td>
+                                    <td><span id="o6"></span></td>
+                                    <td><span id="t15"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>326.25-348.75</th>
+                                    <td><span id="p1"></span></td>
+                                    <td><span id="p2"></span></td>
+                                    <td><span id="p3"></span></td>
+                                    <td><span id="p4"></span></td>
+                                    <td><span id="p5"></span></td>
+                                    <td><span id="p6"></span></td>
+                                    <td><span id="t16"></span></td>
+                                </tr>
+                             <tr>
+                                    <th>Total</th>
+                                    <td><span id="t17"></span></td>
+                                    <td><span id="t18"></span></td>
+                                    <td><span id="t19"></span></td>
+                                    <td><span id="t20"></span></td>
+                                    <td><span id="t21"></span></td>
+                                    <td><span id="t22"></span></td>
+                                    <td><span id="t23"></span></td>
+                                </tr>
+
+                        </table>
+                    </div>
+                      <div class="text-center">
+                        <input class="btn btn-primary" onclick="myFunction()" type="button" id="id_print" value="Print"/>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+            <!--end Table content -->
+        </section>
+    </div>
+</div>
+
+
+
+
+
+<style>
+    fieldset.scheduler-border {
+    border: solid 1px #DDD !important;
+    padding: 0 10px 10px 10px;
+    border-bottom: none;
+}
+
+legend.scheduler-border {
+    width: auto !important;
+    border: none;
+    font-size: 14px;
+}
+fieldset ul {list-style:none}
+
+.form-border{
+      box-sizing: border-box;
+  border: 2px solid #DDD;
+  border-radius: 4px;
+      padding: 0 30px 10px 30px;
+}
+
+
+
+</style>
+<script>
+
+ $('#my').click(function()
+                    {
+    alert('9\xB0');
+    });
+$(function() {
+    $( "#date1" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+    });
+  });
+
+$(function() {
+    $( "#date2" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2020",
+      // You can put more options here.
+
+    });
+  });
+
+
+$(function() {
+    $( "#date1" ).datepicker({
+      format: 'dd-mm-yyyy'
+      // You can put more options here.
+
+    });
+  });
+
+
+
+$("#id_show").click(function(){
+var date1 =$('#date1').val();
+    //alert(date1);
+    var date2=$('#date2').val();
+    //alert(date2);
+    var tym=00;
+
+    var split_date1 =date1.split("/");
+    var year1 = split_date1[2];
+    var month1 = split_date1[0];
+    var day1 = split_date1[1];
+    var newDate1 = year1 + "-" + month1 + "-" + day1;
+   // alert(newDate1);
+
+    var split_date2 =date2.split("/");
+    var year2 = split_date2[2];
+    var month2 = split_date2[0];
+    var day2 = split_date2[1];
+    var newDate2 = year2 + "-" + month2 + "-" + day2;
+    //alert(newDate2);
+
+
+    var new_date1=newDate1+" "+tym+tym+":"+tym+tym+":"+tym+tym+"."+tym+tym+tym+tym+tym+tym;
+    var new_date2=newDate2+" "+'2'+'3'+":"+'5'+'9'+":"+'5'+'9'+"."+tym+tym+tym+tym+tym+tym;
+   // alert(new_date1)
+   // alert(new_date2)
+     $.ajax({
+            type:"get",
+            url: "{% url 'wm_test:fetch_frequency_distribution_count_ajax' %}",
+                data: {
+                         'from_date':newDate1,
+                         'to_date':newDate2,
+                       },
+                success: function(data) {
+                            console.log(data.result);
+                            res=data.result[0].split(",");
+                            var a1 = res[0];
+                            alert(a1);
+
+
+
+
+                             $("#a1").text(res[0]);
+                             $("#a2").text(res[1]);
+                             $("#a3").text(res[2]);
+                             $("#a4").text(res[3]);
+                             $("#a5").text(res[4]);
+                             $("#a6").text(res[5]);
+                             $("#b1").text(res[6]);
+                             $("#b2").text(res[7]);
+                             $("#b3").text(res[8]);
+                             $("#b4").text(res[9]);
+                             $("#b5").text(res[10]);
+                             $("#b6").text(res[11]);
+                             $("#c1").text(res[12]);
+                             $("#c2").text(res[13]);
+                             $("#c3").text(res[14]);
+                             $("#c4").text(res[15]);
+                             $("#c5").text(res[16]);
+                             $("#c6").text(res[17]);
+                             $("#d1").text(res[18]);
+                             $("#d2").text(res[19]);
+                             $("#d3").text(res[20]);
+                             $("#d4").text(res[21]);
+                             $("#d5").text(res[22]);
+                             $("#d6").text(res[23]);
+                             $("#e1").text(res[24]);
+                             $("#e2").text(res[25]);
+                             $("#e3").text(res[26]);
+                             $("#e4").text(res[27]);
+                             $("#e5").text(res[28]);
+                             $("#e6").text(res[29]);
+                             $("#f1").text(res[30]);
+                             $("#f2").text(res[31]);
+                             $("#f3").text(res[32]);
+                             $("#f4").text(res[33]);
+                             $("#f5").text(res[34]);
+                             $("#f6").text(res[35]);
+                             $("#g1").text(res[36]);
+                             $("#g2").text(res[37]);
+                             $("#g3").text(res[38]);
+                             $("#g4").text(res[39]);
+                             $("#g5").text(res[40]);
+                             $("#g6").text(res[41]);
+                             $("#h1").text(res[42]);
+                             $("#h2").text(res[43]);
+                             $("#h3").text(res[44]);
+                             $("#h4").text(res[45]);
+                             $("#h5").text(res[46]);
+                             $("#h6").text(res[47]);
+                             $("#i1").text(res[48]);
+                             $("#i2").text(res[49]);
+                             $("#i3").text(res[50]);
+                             $("#i4").text(res[51]);
+                             $("#i5").text(res[52]);
+                             $("#i6").text(res[53]);
+                             $("#j1").text(res[54]);
+                             $("#j2").text(res[55]);
+                             $("#j3").text(res[56]);
+                             $("#j4").text(res[57]);
+                             $("#j5").text(res[58]);
+                             $("#j6").text(res[59]);
+                             $("#k1").text(res[60]);
+                             $("#k2").text(res[61]);
+                             $("#k3").text(res[62]);
+                             $("#k4").text(res[63]);
+                             $("#k5").text(res[64]);
+                             $("#k6").text(res[65]);
+                             $("#l1").text(res[66]);
+                             $("#l2").text(res[67]);
+                             $("#l3").text(res[68]);
+                             $("#l4").text(res[69]);
+                             $("#l5").text(res[70]);
+                             $("#l6").text(res[71]);
+                             $("#m1").text(res[72]);
+                             $("#m2").text(res[73]);
+                             $("#m3").text(res[74]);
+                             $("#m4").text(res[75]);
+                             $("#m5").text(res[76]);
+                             $("#m6").text(res[77]);
+                             $("#n1").text(res[78]);
+                             $("#n2").text(res[79]);
+                             $("#n3").text(res[80]);
+                             $("#n4").text(res[81]);
+                             $("#n5").text(res[82]);
+                             $("#n6").text(res[83]);
+                             $("#o1").text(res[84]);
+                             $("#o2").text(res[85]);
+                             $("#o3").text(res[86]);
+                             $("#o4").text(res[87]);
+                             $("#o5").text(res[88]);
+                             $("#o6").text(res[89]);
+                             $("#p1").text(res[90]);
+                             $("#p2").text(res[91]);
+                             $("#p3").text(res[92]);
+                             $("#p4").text(res[93]);
+                             $("#p5").text(res[94]);
+                             $("#p6").text(res[95]);
+                             $("#t1").text(res[96]);
+                             $("#t2").text(res[97]);
+                             $("#t3").text(res[98]);
+                             $("#t4").text(res[99]);
+                             $("#t5").text(res[100]);
+                             $("#t6").text(res[101]);
+                             $("#t7").text(res[102]);
+                             $("#t8").text(res[103]);
+                             $("#t9").text(res[104]);
+                             $("#t10").text(res[105]);
+                             $("#t11").text(res[106]);
+                             $("#t12").text(res[107]);
+                             $("#t13").text(res[108]);
+                             $("#t14").text(res[109]);
+                             $("#t15").text(res[110]);
+                             $("#t16").text(res[111]);
+                             $("#t17").text(res[112]);
+                             $("#t18").text(res[113]);
+                             $("#t19").text(res[114]);
+                             $("#t20").text(res[115]);
+                             $("#t21").text(res[116]);
+                             $("#t22").text(res[117]);
+                             $("#t23").text(res[118]);
+                       },
+                error: function(){
+                        console.log("Error!");
+                     }
+            });
+});
+
+function myFunction() {
+  window.print();
+}
+
+
+</script>
+
+
+
+{% endblock %}
+

@@ -28,7 +28,7 @@ the wheel for the above from
 [Download Mysql Client](https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient)
 You need to download a client with respect to the python version you are using.
 
-###How to install downloaded mysqlclient
+### How to install downloaded mysqlclient
 
 
     pip install  <absolute path to your downloaded mysqlclient>
@@ -54,8 +54,27 @@ Now you can run the development web server:
 
 To access the applications go to the URL <http://localhost:8000/>
 
+If you want your project to be accessible by other computer in the network than run
+    
+    ./manage.py runserver 0.0.0.0:8000
 
-## I need a user and password to access admin section
+or    
+    
+    ./manage.py runserver <your-ip-address>:<desired-port>
+
+To find out your IP (local, ofcourse) use
+
+For Windows ==>
+    
+    ipconfig
+
+For others ==>
+
+    ifconfig
+    
+    
+           
+## You need a user and password to access admin section
 you can create a superuser using the following command:
 
     ./manage.py createsuperuser
@@ -63,12 +82,13 @@ you can create a superuser using the following command:
 To create a normal user (non super user), you must login to the admin page and
 create it: <http://localhost:8000/admin/>
 
-##How to Update Requirements.txt
-###To see the packages that are installed
+### How to Update Requirements.txt
+
+To see the packages that are installed
 
     pip freeze
 
-To update requirements.txt that saves the packages that are used ina project
+To save the updated packages into Requirement.txt
 
     pip freeze>requirements.txt
 

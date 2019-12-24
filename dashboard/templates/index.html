@@ -78,6 +78,38 @@
         }
     </style>
 
+
+  <!--HEADER FOR MINERS TRACKING-->
+  <style>
+
+	.KBmap__markerTitle{
+		font-family: witcher;
+		color: #56270c;
+	}
+	.KBmap__mapContainer{
+		height: 100vh;
+		max-height: 100vh;
+	}
+	.KBmap__mapHolder{
+		height: 100%;
+		box-shadow:10px 10px 5px #aaaaaa;
+	}
+	.KBmap__mapHolder img{
+		width: auto;
+	    height: 100%;
+	}
+
+  </style>
+
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
+
+    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
+    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+
+
+  <!--END-HEADER FOR MINERS TRACKING-->
 </head>
 
 <body id="page-top">
@@ -229,7 +261,7 @@
                             <i class="fas fa-search fa-sm"></i>
                           </button>
                         </div> -->
-                        <select name="mine_name" onchange="this.form.submit()" id="" class="form-control">
+                        <select name="mine_name" onchange="this.form.submit()" id="mine" class="form-control">
                             {% for x in mine_table %}
                                 {% firstof var1 var2 var3 %}
                                 <option {% if selected == x.id %} selected {% endif %}
@@ -768,6 +800,36 @@
                             </div>
                         </div>
 
+              <!-- Illustrations -->
+              <div class="card shadow mb-4">
+                <!--<div class="card-header py-3">-->
+                  <!--<h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>-->
+                <!--</div>-->
+                <!--<div class="card-body">-->
+                  <!--<div class="text-center">-->
+                    <!--<img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"  src="{% static 'dashboard/img/undraw_posting_photo.svg' %}" alt="">-->
+                  <!--</div>-->
+                  <!--<p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>-->
+                  <!--<a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>-->
+                <!--</div>-->
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Miners Tracking</h6>
+
+                         <li class="MinerWorkerIcon">Worker</li>
+                         <li class="MinerOfficerIcon">Officer</li>
+
+                </div>
+                  <div class="container">
+
+                      <div class="embed-responsive embed-responsive-16by9">
+
+                          <iframe id="miners_tracking_iframe" class="embed-responsive-item" src="{% url 'MinersTracking:iframe_live_tracking_in_map' selected %}"></iframe>
+                      </div>
+                    </div>
+               <!-- <section class="KBmap" id="KBtestmap"></section>-->
+
+              </div>
+
                         <!-- Approach -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
@@ -781,6 +843,7 @@
                                     Bootstrap framework, especially the utility classes.</p>
                             </div>
                         </div>
+
 
                     </div>
                 </div>
@@ -939,10 +1002,7 @@
             });
         }
         document.getElementById("overlay").style.display = "block";
-        {#var StrataCalling = setInterval(function () {#}
-        {#    #}
-        {##}
-        {#}, 1000);#}
+
 
         function StrataMonitoring(strata, UpperLimit) {
             strata = parseFloat(strata);
@@ -969,7 +1029,12 @@
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        function GasMonitoring(waterLevel, UpperLimit, Id) {
+
+  <!--MINERS TRACKING START-->
+var el;
+
+        //alert(img);
+function GasMonitoring(waterLevel, UpperLimit, Id) {
             waterLevelPercentage = parseFloat(waterLevel);
             if (waterLevelPercentage < 0.00) {
                 document.getElementById("overlay").style.display = "block";
@@ -990,12 +1055,55 @@
 
             $('span#' + Id).html(waterLevelPercentage);
         }
-
-
     });
-
 </script>
+<style>
+  .pin{
+position:absolute;
+height:25px;
+width:25px;
+background:green;
+}
+#map_div{
+<!--background-position: center;-->
+<!--background-size: contain;-->
+background-repeat: no-repeat;
+}
 
+.list-group{
+    max-height: 300px;
+
+    margin-bottom: 10px;
+    overflow:scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+
+.services li:before {
+content:'';
+display:inline-block;
+height:1em;
+width:1em;
+background-image:url('/static/image/router.svg');
+background-size:contain;
+background-repeat:no-repeat;
+padding-left: 2em;
+}
+
+.RouterIcon {list-style-image:url('/static/image/router.svg') }
+.MinerIcon  { list-style-image:url('/static/image/miner.svg') }
+.MinerIconMini  { list-style-image:url('/static/image/miner_mini.svg') }
+
+ul, ol {
+  list-style: none;
+}
+#accordion1 li.panel{
+    margin-bottom: 0px;
+}
+.MinerWorkerIcon  { list-style-image:url('/static/image/miner_worker.svg') }
+.MinerOfficerIcon  { list-style-image:url('/static/image/miner_officer.svg') }
+</style>
+  <!--END- MINERS TRACKING START-->
 </body>
 
 </html>

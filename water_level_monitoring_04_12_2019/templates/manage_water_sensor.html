@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success" role="alert"><center><b>{{ message }}</b></center></div>
+        {% endfor %}
+    {% endif %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+             <h1 class="page-header"><b>Manage Water Level Sensor </b><small>Here you can manage water level sensor and alarm level</small></h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'water_level_monitoring:add_water_sensor' %}">Add New Water Sensor </a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Mine Id</th>
+                                <th>Area Name</th>
+                                <th>IP Address</th>
+                                <th>Desc</th>
+                                <th class="text-center">Sensor data acquisition</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for obj in water_level_sensor_details %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                         <td>{{obj.mine_id}}</td>
+                                        <td>{{obj.area_name}}</td>
+                                        <td>{{obj.ip_address}}</td>
+                                        <td>{{obj.desc}}</td>
+                                        <td class="text-center"><a href="{% url 'water_level_monitoring:start_save_water_data' obj.id %}" title="Start sensor data acquisition"><span class="glyphicon glyphicon-record"></span></a></td>
+                                        <td class="text-center">
+                                            <a href="{% url 'water_level_monitoring:edit_water_sensor' obj.id %}" title="Edit Data.">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="delete" data-url="{% url 'water_level_monitoring:delete_water_sensor' obj.id %}" title="Delete Data.">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+<div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a id="sureDelete">
+                    <button type="button" class="btn btn-danger">Yes</button>
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+     $(document.body).on("click", ".delete", function ()
+      {
+         $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+    });
+</script>
+
+{% endblock %}

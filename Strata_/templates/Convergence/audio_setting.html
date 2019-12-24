@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header"><b>Pause Warning </b><small>  Here you can set pause warning duration</small></h1>
+            <br>
+          <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                      {{form.sensor_id.as_hidden }}
+                      {{form.limit.as_hidden }}
+                      {{form.type.as_hidden }}
+                        <div class="col-md-3">
+                            <label for="" class="" id="">Pause waring end date time:</label>
+                        </div>
+                        <div class="col-md-6">
+                          {{form.pause_waring_duration_end_datetime}}
+                        </div>
+                        <div class="col-md-2">
+                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        $('#datetimepicker1').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss'
+            });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+{% endblock %}

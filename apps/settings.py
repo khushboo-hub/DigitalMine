@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     'mail_templated',
     'dashboard',
     'setting',
+    'wm_test',
 ]
 
 MIDDLEWARE = [
