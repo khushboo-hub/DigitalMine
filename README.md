@@ -54,7 +54,26 @@ Now you can run the development web server:
 
 To access the applications go to the URL <http://localhost:8000/>
 
+If you want your project to be accessible by other computer in the network than run
+    
+    ./manage.py runserver 0.0.0.0:8000
 
+or    
+    
+    ./manage.py runserver <your-ip-address>:<desired-port>
+
+To find out your IP (local, ofcourse) use
+
+For Windows ==>
+    
+    ipconfig
+
+For others ==>
+
+    ifconfig
+    
+    
+           
 ## I need a user and password to access admin section
 you can create a superuser using the following command:
 
