@@ -5,9 +5,8 @@
     .margin_top{
      margin-top: 15px;
     }
-.dt-buttons{
+.dt-buttons {
     z-index: 1 !important;
-    margin-bottom: -20px;
 }
 </style>
 </head>
@@ -115,16 +114,6 @@ $(document).ready(function() {
      var m_value = "";
      var h_value = "";
      var t_hight = 0;
-
-       var audio_type = "";
-     var first_warning = "";
-     var second_warning = "";
-     var third_warning = "";
-
-     var first_audio = "";
-     var second_audio = "";
-     var third_audio = "";
-
     $("#id_location_list").on("change",function(){
         location_id=this.value;
         $.ajax({
@@ -136,22 +125,13 @@ $(document).ready(function() {
                 success: function(data) {
                         console.log(data);
                      for(index = 0; index < data.result.length; index++) {
-                            var str_array = data.result[index].split('@#');
+                            var str_array = data.result[index].split(',');
                             console.log(str_array);
                              $("#ip_hidden").val(str_array[0]);
                                 l_value = str_array[1];
                                 m_value = str_array[2];
                                 h_value = str_array[3];
                                 t_hight = str_array[4];
-
-                                audio_type = str_array[5];
-                                first_warning =  str_array[6];
-                                second_warning = str_array[7];
-                                third_warning = str_array[8];
-
-                                first_audio =  str_array[9];
-                                second_audio = str_array[10];
-                                third_audio =  str_array[11];
 
                         }
                  },
@@ -163,8 +143,8 @@ $(document).ready(function() {
      //------------------------------------------------------------------------------------------------------------------
 
     $(document.body).on('click','#btn_show',function(){
-         var warning_validation = 1;
         var location = $("#id_location_list").val();
+        console.log(location);
         if(location){
                 $("#btn_show").val("Please wait...");
                 $("#btn_show").prop('disabled', true);
@@ -177,14 +157,21 @@ $(document).ready(function() {
                     $("#sensor_content_body").empty();//empty the table on each click
                     setInterval(function(){
                             $.ajax({
-                            type:"get",
+                            type:"POST",
                             url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
                             data: {
+                                       csrfmiddlewaretoken: "{{ csrf_token }}",
                                      'id': location
                                    },
                             success: function(data) {
-                                console.log(data.result);
+
+                                console.log(data);
+                                //alert(data.result[0]);
+                                //document.getElementById('sensor_content_body').style.backgroundColor='#FFFFFF';
+                                // $('tr').css({ 'background-color' : '#FFFFFF'});
                                  fill_table_sensor(data.result);
+
+                                //return data;
                                     },
                             error: function(){
                                     console.log("error he ji");
@@ -206,7 +193,7 @@ function fill_table_sensor(result){
             var str_array = result[index].split(',');
             $("#ip_hidden").val(str_array[1]);
             var final_value = ((t_hight - str_array[5]) >0 ? (t_hight - str_array[5]) : 0);
-            checkAndPlay(final_value);
+
             $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[2]+"</td><td>"+str_array[3]+"</td><td>"+str_array[4]+"</td><td>"+final_value+" cm</td></tr>"));
         }
         d_table();
@@ -224,62 +211,6 @@ function fill_table_sensor(result){
                 ]
          });
     }
-
-
-    function checkAndPlay(sensorValue){
-
-    var loc = window.location;
-    var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/media/" ;
-
-    if((l_value < sensorValue)&&(sensorValue < m_value)){//low level
-        $.toast({
-            heading: '<b>Water Level Monitoring : First Level Warning</b>',
-            text: first_warning,
-            showHideTransition: 'fade',
-            position: 'bottom-right',
-            icon: 'error'
-        })
-        if(audio_type =="text2voice"){
-             Speak(first_warning,9,0.5);
-        }else{
-            path = baseUrl+first_audio;
-            var playNow = new Audio(path);
-            playNow.play();
-        }
-    }
-    if((m_value < sensorValue) && (sensorValue < h_value)){//middle level
-        $.toast({
-            heading: '<b>Water Level Monitoring : Second Level Warning </b>',
-            text: second_warning,
-            showHideTransition: 'fade',
-            position: 'bottom-right',
-            icon: 'error'
-        })
-         if(audio_type =="text2voice"){
-             Speak(second_warning,9,0.5);
-         }else{
-              path = baseUrl+second_audio;
-             var playNow = new Audio(path);
-             playNow.play();
-         }
-    }
-    if(sensorValue > h_value) {//high level
-        $.toast({
-            heading: '<b>Water Level Monitoring : Third Level Warning</b> ',
-            text: third_warning,
-            position: 'bottom-right',
-            showHideTransition: 'fade',
-            icon: 'error'
-        })
-        if(audio_type =="text2voice"){
-              Speak(third_warning, 9, 0.5);
-        }else{
-             path = baseUrl+third_audio;
-             var playNow = new Audio(path);
-            playNow.play();
-        }
-    }
-}
 </script>
 </body>
 {% endblock %}

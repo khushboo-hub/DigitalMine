@@ -87,19 +87,19 @@ def fetch_sensor_details(request):# fetch IP address and water level only (For g
         location_data = []
         for r in location_details:
             print(r)
-            location_data.append(str(r[13])+'@#'+str(r[4])+'@#'+str(r[5])+'@#'+str(r[6])+'@#'+str(r[3])+'@#'+str(r[15])+'@#'+str(r[7])+'@#'+str(r[8])+'@#'+str(r[9])+'@#'+str(r[10])+'@#'+str(r[11])+'@#'+str(r[12]))
+            location_data.append(str(r[13])+','+str(r[4])+','+str(r[5])+','+str(r[6])+','+str(r[3]))
             i = i + 1
         data['result'] = location_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-#*****************************************************************************************************************************************************************************************************
+
 def fetch_water_level_ajax(request):
     data = {}
     if request.is_ajax():
         sensor_data = []
-        id = request.GET.get('id', None)
-        sensor_details = water_level_monitoring_model.objects.get(id=id)
+        id = request.POST.get('id', None)
+        sensor_details = water_level_monitoring_model.objects.get(id=2)#here id is fixed due to urgent requriment
         mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
 
         ok_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

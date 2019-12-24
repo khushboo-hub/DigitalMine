@@ -3,7 +3,7 @@
 <head>
     <style>
     .margin_top{
-        margin-top: 15px;
+     margin-top: 15px;
     }
 </style>
 
@@ -20,7 +20,7 @@
                     {{form.mine_id}}
                 </div>
                 <div class="col-md-2">
-                    <label for="">Choose Location:</label>
+                    <label for="" class="" id="">Choose Location:</label>
                 </div>
                 <div class="col-md-4">
                     <select class="form-control" id="id_location_list">
@@ -30,7 +30,7 @@
             </div>
             <div class="row margin_top">
                 <div class="col-md-2">
-                     <label>Wireless data is comming from IP:</label>
+                     <label for="" class="" id="">Wireless data is comming from IP:</label>
                 </div>
                 <div class="col-md-4">
                      <input type="text" class="form-control" readonly id="ip_hidden">
@@ -49,7 +49,6 @@
 <body>
 <div id="chartContainer" style="height: 500px; width: 100%;"></div>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-
 <script>
  $("#id_mine_id").addClass('form-control');
  //------------------------------------------------------------------------------------------------------------------
@@ -79,7 +78,7 @@
     }
     //------------------------------------------------------------------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------
-     var l_color = "#C0DF81";
+    var l_color = "#C0DF81";
      var m_color = "#FEFE9A";
      var h_color = "#F37C84";
 
@@ -87,17 +86,6 @@
      var m_value = "";
      var h_value = "";
      var t_hight = 0;
-
-     var audio_type = "";
-     var first_warning = "";
-     var second_warning = "";
-     var third_warning = "";
-
-     var first_audio = "";
-     var second_audio = "";
-     var third_audio = "";
-
-
     $("#id_location_list").on("change",function(){
         location_id=this.value;
         $.ajax({
@@ -109,22 +97,13 @@
                 success: function(data) {
                         console.log(data);
                      for(index = 0; index < data.result.length; index++) {
-                            var str_array = data.result[index].split('@#');
+                            var str_array = data.result[index].split(',');
                             console.log(str_array);
-                            $("#ip_hidden").val(str_array[0]);
+                             $("#ip_hidden").val(str_array[0]);
                             l_value = str_array[1];
                             m_value = str_array[2];
                             h_value = str_array[3];
                             t_hight = str_array[4];
-
-                            audio_type = str_array[5];
-                            first_warning =  str_array[6];
-                            second_warning = str_array[7];
-                            third_warning = str_array[8];
-
-                            first_audio =  str_array[9];
-                            second_audio = str_array[10];
-                            third_audio =  str_array[11];
 
                         }
                  },
@@ -136,7 +115,6 @@
      //------------------------------------------------------------------------------------------------------------------
 
     $(document.body).on('click','#btn_show',function(){
-        var warning_validation = 1;
         var location = $("#id_location_list").val();
         if(location){
             fill_water_level_graph();
@@ -197,9 +175,8 @@ function fill_water_level_graph(){
 
     var xVal = 0;
     var yVal = 100;
-    var updateInterval = 5000;
+    var updateInterval = 4000;
     var dataLength = 20; // number of dataPoints visible at any point
-    var final_value ='';
 
  var updateChart = function () {
     var location = $("#id_location_list").val();
@@ -210,24 +187,23 @@ function fill_water_level_graph(){
                  'id': location
                },
         success: function(data) {
-            //console.log(data.result);
+            console.log(data.result);
             for(index = 0; index < data.result.length; index++) {
                 var str_array = data.result[index].split(',');
-                final_value = t_hight - Number(str_array[5]);
                 dps.push({
                     x: Date.parse(str_array[2]),
-                    y: (final_value > 0 ? final_value : 0)
+                    y: ((t_hight - Number((str_array[5]))) > 0 ? (t_hight - Number((str_array[5]))) : 0)
                 });
-                }//for loop closing
-
-                checkAndPlay(final_value);
+                //xVal++;
+               }
+            return data;
                 },
         error: function(){
                 console.log("error he ji");
              }
     });
 
-    //Speak('Lily Hindi voice test',9,0.5);
+
 	if (dps.length > dataLength) {
 		dps.shift();
 	}
@@ -237,65 +213,10 @@ $(".canvasjs-chart-credit").text('');
  };
 
 updateChart(dataLength);
-    setInterval(function(){updateChart()}, updateInterval);
+setInterval(function(){updateChart()}, updateInterval);
 }
 
-
-function checkAndPlay(sensorValue){
-
-    var loc = window.location;
-    var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/media/" ;
-
-    if((l_value < sensorValue)&&(sensorValue < m_value)){//low level
-        $.toast({
-            heading: '<b>Water Level Monitoring : First Level Warning</b>',
-            text: first_warning,
-            showHideTransition: 'fade',
-            position: 'bottom-right',
-            icon: 'error'
-        })
-        if(audio_type =="text2voice"){
-             Speak(first_warning,9,0.5);
-        }else{
-            path = baseUrl+first_audio;
-            var playNow = new Audio(path);
-            playNow.play();
-        }
-    }
-    if((m_value < sensorValue) && (sensorValue < h_value)){//middle level
-        $.toast({
-            heading: '<b>Water Level Monitoring : Second Level Warning </b>',
-            text: second_warning,
-            showHideTransition: 'fade',
-            position: 'bottom-right',
-            icon: 'error'
-        })
-         if(audio_type =="text2voice"){
-             Speak(second_warning,9,0.5);
-         }else{
-              path = baseUrl+second_audio;
-             var playNow = new Audio(path);
-             playNow.play();
-         }
-    }
-    if(sensorValue > h_value) {//high level
-        $.toast({
-            heading: '<b>Water Level Monitoring : Third Level Warning</b> ',
-            text: third_warning,
-            position: 'bottom-right',
-            showHideTransition: 'fade',
-            icon: 'error'
-        })
-        if(audio_type =="text2voice"){
-              Speak(third_warning, 9, 0.5);
-        }else{
-             path = baseUrl+third_audio;
-             var playNow = new Audio(path);
-            playNow.play();
-        }
-    }
-}
-//------------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 </script>
 </body>
 {% endblock %}

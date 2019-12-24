@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header"><b>STRATA: Add Location</b><small>&nbsp&nbsp&nbspHere you can add different Location of Underground Mine</small></h1>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">1. Choose Mine:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.mine_name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">2. Location name:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.location_name}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">3. Tag No:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.tag_no}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">4. X-Axis:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.x_axis}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">5. Y-Axis:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.y_axis}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">6. Description:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.description}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">7. Created On:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.created_date}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+
+</style>
+<script>
+$(document).ready(function(){
+        $("#id_location_name").addClass('form-control');
+
+});
+$(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+        $("#id_created_date").datepicker({ format: 'yyyy-mm-dd', });
+
+});
+</script>
+
+{% endblock %}
+
