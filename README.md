@@ -74,7 +74,7 @@ For others ==>
     
     
            
-## I need a user and password to access admin section
+## You need a user and password to access admin section
 you can create a superuser using the following command:
 
     ./manage.py createsuperuser
