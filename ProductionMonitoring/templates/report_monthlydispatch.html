@@ -3,33 +3,6 @@
 {% block content %}
 
 {% load staticfiles %}
-<!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-        <!--<script src="{% static 'dateandtime/jquery-ui.js' %}"></script>-->
-        <!--<script src="{% static 'dateandtime/jquery-ui-timepicker-addon.js' %}"></script>-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/1.11.4-themes-smoothness-jquery-ui.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/bootstrap-datetimepicker.css' %}">-->
-
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery.timepicker.css' %}">-->
-        <!--<link rel="stylesheet" href="{% static 'dateandtime/jquery-ui-timepicker-addon.css' %}">-->
-
-
-
-        <!--<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">-->
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
-
-
-
-
-
-
-
-
 
 <div class="container">
     <div class="row">
@@ -39,13 +12,6 @@
             <div class="row text-center">
 
             </div>
-
-<!--<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Manual Entry Of Coal/Ore Weighbridge</h1>-->
-            <!-- Table content -->
             <div class="row">
                 <div class="form-group">
                     <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -65,11 +31,15 @@
                                        <label for="" class="" id="">Year</label>
                                     </div>
                                     <div class="col-md-8">
-                                       {{form.years}}
+                                      <div class="input-group date" id="year_picker">
+                                                {{form.years}}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red"> {{ form.years.errors|striptags }}</span>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             <div class="form-group col-md-12">
@@ -78,7 +48,13 @@
                                         <label for="" class="" id="">From Month</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.month}}
+                                        <div class="input-group date" id="from_month_picker">
+                                                {{form.month}}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red"> {{ form.month.errors|striptags }}</span>
                                     </div>
 
                                  </div>
@@ -87,16 +63,17 @@
                                         <label for="" class="" id="">To Month</label>
                                     </div>
                                     <div class="col-md-8">
-                                       {{form.month}}
+                                       <div class="input-group date" id="to_month_picker">
+                                                {{form.month}}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red"> {{ form.month.errors|striptags }}</span>
                                     </div>
 
                                  </div>
-
-
-
                             </div>
-
-
                         </fieldset>
                         <br/><br/>
                          <div class="text-center">
@@ -116,7 +93,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="table-responsive">
-                <table class="table table-bordered" id="content">
+                <table class="table table-bordered" id="ProductionTable">
                     <thead>
                         <tr>
                             <th>Mine Name</th>
@@ -168,133 +145,70 @@ $(document).ready(function(){
         $("#id_name_of_the_tub").addClass('form-control');
          $("#id_shift_name").addClass('form-control');
 
+          var year = $('#year_picker').datetimepicker({
+                format: 'YYYY'
+            });
+         var to = $('#from_month_picker').datetimepicker({
+                format: 'MM'
+            });
+         var from = $('#to_month_picker').datetimepicker({
+                format: 'MM'
+            });
+         $('#ProductionTable').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                }
+            )
+
 
 
 });
 
-
-
-$(function() {
-    $( ".datepicker" ).datepicker({
-      changeMonth: true,
-      changeYear: true,
-      yearRange: "1900:2012",
-      format: 'yyyy-mm-dd'
-      // You can put more options here.
-
-    });
-  });
   $("#id_show").click(function(){
-        var month="";
-        var b=1;
-        var a1,a2;
-        $('.xzy').each(function(){
-            if(b==1){
-                a1= $(this).val();
-            }else{
-                a2= $(this).val();
-            }
-            b++;
-         });
+         var mine = $("#id_mine_id").val();
+        var year = $("#id_years").val();
+        var from = $('#from_month_picker input').val();
+        var to = $('#to_month_picker input').val();
+        if(isEmpty(mine) || isEmpty(year) || isEmpty(from) || isEmpty(to)){
+            return;
+        }
 
-        var mine_id = $("#id_mine_id").val();
-        alert(mine_id);
-        var year_id = $("#id_years").val();
-        alert(year_id);
-        alert(a1);
-        alert(a2);
            $.ajax({
             type:"get",
             url: "{% url 'ProductionMonitoring:fetch_report_monthlydispatch_ajax' %}",
             data: {
-                     'mine_ID': mine_id,
-                     'year_ID':year_id,
-                     'from_ID':a1,
-                     'to_ID':a2,
+                     'mine': mine,
+                     'year':year,
+                     'from':from,
+                     'to':to,
 
                    },
             success: function(data) {
-                console.log(data.result);
-                alert(data.result);
                 fill_table(data.result);
 
-
-
-
-                    //return false;
                     },
             error: function(){
                     console.log("Error!");
                  }
             });
 });
-function fill_table(result){
-  // alert(result);
-   <!--var count=0;-->
-   <!--var  sum=0;-->
-   for (index = 0; index < result.length; index++) {
 
-        <!--alert(result[index][0]);-->
-
-         <!--var str_array = result[index].split(',');-->
-        <!--alert(str_array);-->
-          mm=result[index][3];
-          month='';
-          if(mm==1)
-          {
-            month='Jan';
-          }
-          else if(mm==2){
-            month='Feb';
-          }
-          else if(mm==3){
-            month='Mar';
-          }
-          else if(mm==4){
-            month='Apr';
-          }
-          else if(mm==5){
-            month='May';
-          }
-          else if(mm==6){
-            month='Jun';
-          }
-          else if(mm==7){
-            month='Jul';
-          }
-          else if(mm==8){
-            month='Aug';
-          }
-          else if(mm=9){
-            month='Sept';
-          }
-          else if(mm==10){
-            month='Oct';
-          }
-          else if(mm==11){
-            month='Nov';
-          }
-          else if(mm==12){
-            month='Feb';
-          }
-
-          else {
-            month='No data';
-          }
-          $("#results").append($("<tr><td>"+result[index][0]+"</td><td>"+month+"</td><td>"+result[index][2]+"</td><td>"+result[index][1]+"</td>><td>"+result[index][4]+"</td></tr>"));
-
+  function fill_table(monthly_report){
+        var MonthName=['January','February','March','April','May','June','July','August','September','October','November','December'];
+        datatable = $('#ProductionTable').DataTable();
+        datatable.clear().draw();
+        for (report = 0; report < monthly_report.length; report++) {
+            var R = monthly_report[report];
+            var row = datatable.row.add([R.mine, MonthName[R.month-1], R.type, R.total, R.unit]).draw().node();
+        }
     }
-}
 
 
 function myFunction() {
   window.print();
 }
-
-
-
-
-
 
 </script>
 

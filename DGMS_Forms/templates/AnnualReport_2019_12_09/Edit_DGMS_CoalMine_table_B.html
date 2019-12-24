@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+   {% csrf_token %}
+  <div class="container">
+    <div class="row margin">
+      <center><b>TABLE B -TYPE AND AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS</b></center>
+    </div>
+    <br>
+    <table class="table table-bordered">
+      <tr>
+        <td colspan="5">
+          1. Electricity generated, purchased or received otherwise (in kwh).
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="2">Generated</td>
+        <td colspan="2">Purchased or received</td>
+      </tr>
+      <tr>
+        <td>
+          (a) For own use<br><br>
+          (b) For sale
+        </td>
+        <td colspan="2">
+          {{form.for_own_use_generated}}
+          {{form.for_sale_generated}}
+        </td>
+        <td colspan="2">
+          {{form.for_own_use_purchased}}
+          {{form.for_sale_purchased}}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5">2. System of supply (whether direct current or altermating current):-</td>
+      </tr>
+      <tr>
+        <td>
+          (i) Voltage of supply<br><br>
+          (ii) Periodicity<br><br>
+          (iii) Source of supply<br>
+        </td>
+          <td colspan="4">
+            {{form.system_of_supply_voltage}}
+             {{form.system_of_supply_periodicity}}
+             {{form.system_of_supply_source}}
+          </td>
+      </tr>
+
+      <tr>
+        <td colspan="5">3. Voltage at which current is used for:</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td colspan="2">Above ground</td>
+        <td colspan="2">Below ground</td>
+      </tr>
+      <tr>
+        <td>
+        (a) Lighting<br><br>
+        (b) Power
+        </td>
+        <td colspan="2">
+           {{form.above_ground_lighting}}
+           {{form.above_ground_power}}
+        </td>
+        <td colspan="2">
+           {{form.below_ground_lighting}}
+           {{form.below_ground_power}}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="5">4. Length of cables (in metres):</td>
+      </tr>
+      <tr>
+        <td>
+          (i) High pressure<br><br>
+          (ii) Medium pressure
+        </td>
+        <td colspan="4">
+          {{form.high_pressure}}
+          {{form.medium_pressure}}
+        </td>
+        </tr>
+       <tr>
+        <td colspan="5">5. Total number and aggregate horse-power of motors</td>
+      </tr>
+      <tr>
+        <td colspan="5">
+          <table class="table table-bordered">
+            <tr>
+                <td></td>
+                <td colspan="2"><center>In use</center></td>
+                <td colspan="2"><center>In reserve</center></td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>Number of units</td>
+              <td>Toal h.p.</td>
+              <td>Number of units</td>
+              <td>Total h.p.</td>
+            </tr>
+            <tr>
+              <td colspan="5">(a) Installed above ground for:</td>
+            </tr>
+            <tr>
+              <td>(i) Winding</td>
+              <td>{{ form.in_use_number_of_units_Winding}}</td>
+              <td>{{form.in_use_total_hp_Winding}}</td>
+              <td>{{ form.in_reserve_number_of_units_Winding}}</td>
+              <td>{{ form.in_reserve_total_hp_Winding }}</td>
+            </tr>
+            <tr>
+              <td>(ii) Ventilation</td>
+              <td>{{ form.in_use_number_of_units_Ventilation}}</td>
+              <td>{{ form.in_use_total_hp_Ventilation}}</td>
+              <td>{{ form.in_reserve_number_of_units_Ventilation}}</td>
+              <td>{{form.in_reserve_total_hp_Ventilation}}</td>
+            </tr>
+            <tr>
+              <td>(iii) Haulage</td>
+              <td>{{ form.in_use_number_of_units_Haulage}}</td>
+              <td>{{ form.in_use_total_hp_Haulage}}</td>
+              <td>{{ form.in_reserve_number_of_units_Haulage}}</td>
+              <td>{{ form.in_reserve_total_hp_Haulage}}</td>
+            </tr>
+            <tr>
+              <td>(iv) Pumping</td>
+              <td>{{ form.in_use_number_of_Pumping}}</td>
+              <td>{{ form.in_use_total_hp_Pumping}}</td>
+              <td>{{ form.in_reserve_number_of_units_Pumping}}</td>
+              <td>{{ form.in_reserve_total_hp_Pumping}}</td>
+            </tr>
+            <tr>
+              <td>(v) Coal washing, screening or handling plants</td>
+              <td>{{ form.in_use_number_of_units_coal_washing}}</td>
+              <td>{{ form.in_use_total_hp_coal_washing}}</td>
+              <td>{{ form.in_reserve_number_of_units_coal_washing}}</td>
+              <td>{{ form.in_reserve_total_hp_coal_washing}}</td>
+            </tr>
+            <tr>
+              <td>(vi) Worksshops including foundry, smithy etc.</td>
+              <td>{{form.in_use_number_of_unit_workshop}}</td>
+              <td>{{form.in_use_total_hp_workshop}}</td>
+              <td>{{form.in_reserve_number_of_units_workshop}}</td>
+              <td>{{form.in_reserve_total_hp_workshop}}</td>
+            </tr>
+            <tr>
+              <td>(vii) Miscellaneous (specify){{form.specify1}}</td>
+              <td>{{form.specify1_in_use_no_of_unit}}</td>
+              <td>{{form.specify1_in_use_total_hp}}</td>
+              <td>{{form.specify1_in_reverse_number_of_unit}}</td>
+              <td>{{form.specify1_in_reverse_total_hp}}</td>
+            </tr>
+            <tr>
+              <td>Total</td>
+              <td colspan="4">
+                {{ form.total_1}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">(a) Installed above ground for:</td>
+            </tr>
+            <tr>
+              <td>(i) Winding</td>
+              <td>{{form.in_use_number_of_units_Winding1}}</td>
+              <td>{{form.in_use_total_hp_Winding1}}</td>
+              <td>{{form.in_reserve_number_of_units_Winding1}}</td>
+              <td>{{form.in_reserve_total_hp_Winding1}}</td>
+            </tr>
+            <tr>
+              <td>(ii) Haulage</td>
+              <td>{{form.in_use_number_of_units_Haulage1 }}</td>
+              <td>{{form.in_use_total_hp_Haulage1 }}</td>
+              <td>{{form.in_reserve_number_of_units_Haulage1}}</td>
+              <td>{{form.in_reserve_total_hp_Haulage1}}</td>
+            </tr>
+            <tr>
+              <td>(iii) Ventilation</td>
+              <td>{{form.in_use_number_of_units_Ventilation1}}</td>
+              <td>{{form.in_use_total_hp_Ventilation1}}</td>
+              <td>{{form.in_reserve_number_of_units_Ventilation1}}</td>
+              <td>{{form.in_reserve_total_hp_Ventilation1}}</td>
+            </tr>
+            <tr>
+              <td>(iv) Pumping</td>
+              <td>{{form.in_use_number_of_Pumping1}}</td>
+              <td>{{form.in_use_total_hp_Pumping1}}</td>
+              <td>{{form.in_reserve_number_of_units_Pumping1}}</td>
+              <td>{{form.in_reserve_total_hp_Pumping1}}</td>
+            </tr>
+            <tr>
+              <td>(v) Other portable machines(dill,etc.)</td>
+              <td>{{form.in_use_number_of_Other_portable_machines}}</td>
+              <td>{{form.in_use_total_hp_Other_portable_machines}}</td>
+              <td>{{form.in_reserve_number_of_units_Other_portable_machines}}</td>
+              <td>{{form.in_reserve_total_hp_Other_portable_machines}}</td>
+            </tr>
+            <tr>
+              <td>(vi) Conveyors, loaders, scrapers, etc</td>
+              <td>{{form.in_use_number_of_Conveyors}}</td>
+              <td>{{form.in_use_total_hp_Conveyors}}</td>
+              <td>{{form.in_reserve_number_of_units_Conveyors}}</td>
+              <td>{{form.in_reserve_total_hp_Conveyors}}</td>
+            </tr>
+            <tr>
+              <td> (vii) Electric traction (locomotives,etc.)</td>
+              <td>{{form.in_use_number_of_units_Electric_traction}}</td>
+              <td>{{form.in_use_total_hp_Electric_traction}}</td>
+              <td>{{form.in_reserve_number_of_units_Electric_traction}}</td>
+              <td>{{form.in_reserve_total_hp_Electric_traction}}</td>
+            </tr>
+            <tr>
+              <td>(viii) Miscellaneous(specify){{form.specify2}}</td>
+              <td>{{form.specify2_in_use_no_of_unit}}</td>
+              <td>{{form.specify2_in_use_total_hp}}</td>
+              <td>{{form.specify2_in_reverse_number_of_unit}}</td>
+              <td>{{form.specify2_in_reverse_total_hp}}</td>
+            </tr>
+            <tr>
+              <td>Total:</td>
+              <td colspan="4">
+                {{form.total_2}}
+              </td>
+            </tr>
+            <tr>
+              <td colspan="5">(b) Installed above ground for:</td>
+            </tr>
+            <tr>
+              <td>(i) Haulage</td>
+              <td>{{form.in_use_number_of_units_b_haulage}}</td>
+              <td>{{form.in_use_total_hp_b_haulage}}</td>
+              <td>{{form.in_reverse_number_of_units_b_haulage}}</td>
+              <td>{{form.in_reverse_total_hp_b_haulage}}</td>
+            </tr>
+            <tr>
+              <td>(ii) Ventilation</td>
+              <td>{{form.in_use_number_of_units_b_ventilation}}</td>
+              <td>{{form.in_use_total_hp_b_ventilation}}</td>
+              <td>{{form.in_reverse_number_of_units_b_ventilation}}</td>
+              <td>{{form.in_reverse_total_hp_b_ventilation}}</td>
+            </tr>
+            <tr>
+              <td>(iii) Pumping</td>
+              <td>{{form.in_use_number_of_units_b_pumping}}</td>
+              <td>{{form.in_use_total_hp_b_pumping}}</td>
+              <td>{{form.in_reverse_number_of_units_b_pumping}}</td>
+              <td>{{form.in_reverse_total_hp_b_pumping}}</td>
+            </tr>
+            <tr>
+              <td>(iv) Coal-cutting machine</td>
+              <td>{{form.in_use_number_of_units_b_coal_cutting_machine}}</td>
+              <td>{{form.in_use_total_hp_b_coal_cutting_machine}}</td>
+              <td>{{form.in_reverse_number_of_units_b_coal_cutting_machine}}</td>
+              <td>{{form.in_reverse_total_hp_b_coal_cutting_machine}}</td>
+            </tr>
+            <tr>
+              <td>(v) Other portable machine (drill, etc.)</td>
+              <td>{{form.in_use_number_of_units_b_portable_machine}}</td>
+              <td>{{form.in_use_total_hp_b_portable_machine}}</td>
+              <td>{{form.in_reverse_number_of_units_b_portable_machine}}</td>
+              <td>{{form.in_reverse_total_hp_b_portable_machine}}</td>
+            </tr>
+            <tr>
+              <td>(vi) Conveyors,loaders,scrapers, etc</td>
+              <td>{{form.in_use_number_of_units_b_conveyors}}</td>
+              <td>{{form.in_use_total_hp_b_conveyors}}</td>
+              <td>{{form.in_reverse_number_of_units_b_conveyors}}</td>
+              <td>{{form.in_reverse_total_hp_b_conveyors}}</td>
+            </tr>
+            <tr>
+              <td> (vii) Electric traction (locomotives, etc.)</td>
+              <td>{{form.in_use_number_of_units_b_electric_traction}}</td>
+              <td>{{form.in_use_total_hp_b_electric_traction}}</td>
+              <td>{{form.in_reverse_number_of_units_b_electric_traction}}</td>
+              <td>{{form.in_reverse_total_hp_b_electric_traction}}</td>
+            </tr>
+            <tr>
+              <td> (viii) Miscellaneous (specify){{ form.specify3}}</td>
+              <td>{{form.specify3_in_use_no_of_unit}}</td>
+              <td>{{form.specify3_in_use_total_hp}}</td>
+              <td>{{form.specify3_in_reverse_number_of_unit}}</td>
+              <td>{{form.specify3_in_reverse_total_hp}}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>Total:</td>
+        <td colspan="4">
+          {{form.total_3}}
+        </td>
+      </tr>
+    </table>
+    <div class="row">
+      <center>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </center>
+    </div>
+  </div>
+</form>
+{% endblock %}

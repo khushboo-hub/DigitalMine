@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+   {% csrf_token %}
+<div class="container">
+  <div class="row margin">
+    <center>
+      <b>
+        Ventilation Report
+      </b>
+    </center>
+  </div>
+  <br>
+ <table class="table table-striped">
+    <tbody>
+    <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">1. Mine Name</label>
+            </div>
+            <div class="col-md-8">
+                {{form.mine_name}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">2. Location Name</label>
+            </div>
+            <div class="col-md-8">
+                {{form.location}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">3. Quantity</label>
+            </div>
+            <div class="col-md-8">
+               {{form.quantity}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">4.Velocity</label>
+            </div>
+            <div class="col-md-8">
+                {{form.velocity}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+                <label for="">5. Temp (wet)</label>
+            </div>
+            <div class="col-md-8">
+                {{form.t_wet}}
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="row">
+            <div class="col-md-4">
+               <label for="">6. Temp (dry)</label>
+            </div>
+            <div class="col-md-8">
+                {{form.t_dry}}
+            </div>
+          </div>
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<div class="row">
+     <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</div>
+</div>
+</form>
+<script>
+    $(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+    });
+</script>
+{% endblock %}

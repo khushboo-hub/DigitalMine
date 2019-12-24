@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+</style>
+
+  <div class="container">
+    <div class="row margin">
+      <center><b>TABLE C -TYPE AND AGREGATE HORSE-POWER OF MACHINERY AND EQUIPMENT <small>(OTHER THAN ELECTRICAL APPARATUS)</small></b></center>
+    </div>
+    <br>
+    <div class="row">
+      <table class="table table-bordered">
+        <tr align="center">
+          <td></td>
+          <td colspan="2">In use</td>
+          <td colspan="2">In reserver</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>Number of units</td>
+          <td>Total h.p.</td>
+          <td>Number of units</td>
+          <td>Total h.p.</td>
+        </tr>
+         <tr>
+              <td>
+               <b>(I) Power generators</b>
+              </td>
+              <td colspan="4"></td>
+            </tr>
+            <tr>
+              <td>(a) Boilers</td>
+              <td>{{form.in_use_number_of_units_boilers}}</td>
+              <td>{{ form.in_use_total_hp_boilers }}</td>
+              <td>{{ form.in_reserve_number_of_units_boilers}}</td>
+              <td>{{ form.in_reserve_total_hp_boilers}}</td>
+            </tr>
+            <tr>
+              <td>(b) Steam Turbines</td>
+              <td>{{form.in_use_number_of_units_steam_turbines}}</td>
+              <td>{{form.in_use_total_hp_steam_turbines}}</td>
+              <td>{{form.in_reserve_number_of_units_steam_turbines}}</td>
+              <td>{{form.in_reserve_total_hp_steam_turbines}}</td>
+            </tr>
+            <tr>
+              <td>(c) Diesel Enginers</td>
+              <td>{{ form.in_use_number_of_units_diesel_engines}}</td>
+              <td>{{form.in_use_total_hp_diesel_engines}}</td>
+              <td>{{form.in_reserve_number_of_units_diesel_engines}}</td>
+              <td>{{ form.in_reserve_total_hp_diesel_engines}}</td>
+            </tr>
+            <tr>
+              <td>(d) Gasoline,Gas or Oil Enginers other than Diesel Engines</td>
+              <td>{{ form.in_use_number_of_units_gasoline}}</td>
+              <td>{{ form.in_use_total_hp_gasoline}}</td>
+              <td>{{ form.in_reserve_number_of_units_gasoline}}</td>
+              <td>{{ form.in_reserve_total_hp_gasoline}}</td>
+            </tr>
+            <tr>
+              <td>(e) Hydraulic Turbines or Water Wheels</td>
+              <td>{{form.in_use_number_of_units_hydraulic_turbines}}</td>
+              <td>{{form.in_use_total_hp_hydraulic_turbines}}</td>
+              <td>{{form.in_reserve_number_of_units_hydraulic_turbines}}</td>
+              <td>{{form.in_reserve_total_hp_hydraulic_turbines}}</td>
+            </tr>
+            <tr>
+              <td>(f) Air Compressors</td>
+              <td>{{ form.in_use_number_of_units_air_compressors}}</td>
+              <td>{{form.in_use_total_hp_air_compressors}}</td>
+              <td>{{ form.in_reserve_number_of_units_air_compressors}}</td>
+              <td>{{ form.in_reserve_total_hp_air_compressors}}</td>
+            </tr>
+            <tr>
+              <td>
+                Total
+              </td>
+              <td colspan="4">{{form.total1}}</td>
+            </tr>
+        <tr>
+          <td>
+            <b>(II) Machinery Installed above ground for:</b>
+          </td>
+          <td colspan="4"></td>
+        </tr>
+        <tr>
+          <td>
+            (i) Winding
+          </td>
+          <td>{{form.in_use_number_of_units_winding}}</td>
+          <td>{{form.in_use_total_hp_winding}}</td>
+          <td>{{form.in_reserve_number_of_units_winding}}</td>
+          <td>{{form.in_reserve_total_hp_winding}}</td>
+        </tr>
+        <tr>
+          <td>
+            (ii) Ventilation
+          </td>
+          <td>{{form.in_use_number_of_units_ventilation}}</td>
+          <td>{{form.in_use_total_hp_ventilation}}</td>
+          <td>{{form.in_reserve_number_of_units_ventilation}}</td>
+          <td>{{form.in_reserve_total_hp_ventilation}}</td>
+        </tr>
+        <tr>
+          <td>
+            (iii) Haulage
+          </td>
+          <td>{{ form.in_use_number_of_units_haulage}}</td>
+          <td>{{ form.in_use_total_hp_haulage}}</td>
+          <td>{{ form.in_reserve_number_of_units_haulage}}</td>
+          <td>{{ form.in_reserve_total_hp_haulage}}</td>
+        </tr>
+        <tr>
+          <td>
+            (iv) Pumping
+          </td>
+          <td>{{form.in_use_number_of_units_pumping}}</td>
+          <td>{{ form.in_use_total_hp_pumping}}</td>
+          <td>{{form.in_reserve_number_of_units_pumping}}</td>
+          <td>{{form.in_reserve_total_hp_pumping}}</td>
+        </tr>
+        <tr>
+          <td>
+            (v) Mineral dressing plants
+          </td>
+          <td>{{form.in_use_number_of_units_mineral_dressing_plants}}</td>
+          <td>{{form.in_use_total_hp_mineral_dressing_plants}}</td>
+          <td>{{form.in_reserve_number_of_units_mineral_dressing_plants}}</td>
+          <td>{{form.in_reserve_total_hp_mineral_dressing_plants}}</td>
+        </tr>
+        <tr>
+          <td>
+            (vi) Workshops including foundry,smithy etc.
+          </td>
+          <td>{{form.in_use_number_of_units_workshops}}</td>
+          <td>{{form.in_use_total_hp_workshops}}</td>
+          <td>{{form.in_reserve_number_of_units_workshops}}</td>
+          <td>{{form.in_reserve_total_hp_workshops}}</td>
+        </tr>
+        <tr>
+          <td>
+            (vii) Miscellaneous(specify){{form.specify1}}
+          </td>
+          <td>{{form.in_use_number_of_units_specify1}}</td>
+          <td>{{form.in_use_total_hp_specify1}}</td>
+          <td>{{form.in_reserve_number_of_units_specify1}}</td>
+          <td>{{form.in_reserve_total_hp_specify1}}</td>
+        </tr>
+        <tr>
+          <td>
+            Total
+          </td>
+          <td colspan="4">{{ form.total2}}</td>
+        </tr>
+        <tr>
+          <td>
+            <b>(III) Machinery Installed above ground for:</b>
+          </td>
+          <td colspan="4"></td>
+        </tr>
+        <tr>
+          <td>
+            (i) Haulage
+          </td>
+          <td>{{ form.in_use_number_of_units_iii_haulage }}</td>
+          <td>{{form.in_use_total_hp_iii_haulage}}</td>
+          <td>{{form.in_reserve_number_of_units_iii_haulage}}</td>
+          <td>{{form.in_reserve_total_hp_iii_haulage}}</td>
+        </tr>
+        <tr>
+          <td>
+            (ii) Ventilation
+          </td>
+          <td>{{form.in_use_number_of_units_iii_ventilation}}</td>
+          <td>{{form.in_use_total_hp_iii_ventilation}}</td>
+          <td>{{form.in_reserve_number_of_units_iii_ventilation}}</td>
+          <td>{{form.in_reserve_total_hp_iii_ventilation}}</td>
+        </tr>
+        <tr>
+          <td>
+            (iii) Pumping
+          </td>
+          <td>{{form.in_use_number_of_units_iii_pumping}}</td>
+          <td>{{form.in_use_total_hp_iii_pumping}}</td>
+          <td>{{form.in_reserve_number_of_units_iii_pumping}}</td>
+          <td>{{form.in_reserve_total_hp_iii_pumping}}</td>
+        </tr>
+        <tr>
+          <td>
+            (iv) locomotives,etc.
+          </td>
+          <td>{{form.in_use_number_of_units_iii_locomotives}}</td>
+          <td>{{form.in_use_total_hp_iii_locomotives}}</td>
+          <td>{{form.in_reserve_number_of_units_iii_locomotives}}</td>
+          <td>{{form.in_reserve_total_hp_iii_locomotives}}</td>
+        </tr>
+        <tr>
+          <td>
+            (v) Miscellaneous(specify){{form.specify2}}
+          </td>
+          <td>{{form.in_use_number_of_units_specify2}}</td>
+          <td>{{form.in_use_total_hp_specify2}}</td>
+          <td>{{form.in_reserve_number_of_units_specify2}}</td>
+          <td>{{form.in_reserve_total_hp_specify2}}</td>
+        </tr>
+        <tr>
+          <td>
+            Total
+          </td>
+          <td colspan="4">
+           {{form.total3}}
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+    <center>
+      <button type="button" class="btn btn-primary" id="print">Print</button>
+    </center>
+  </div>
+</div>
+
+<script>
+    $(document.body).on('click','#print',function(key){
+    $("#print").hide();
+      window.print();
+    $("#print").show();
+    });
+</script>
+{% endblock %}

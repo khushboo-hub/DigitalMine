@@ -1,0 +1,555 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+  .margin{
+  margin-top:5px;
+  }
+    table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+
+/* see me */
+td {
+  border: solid;
+    text-align: left !important;
+}
+/* play with bg cells and cols ? */
+
+tr:nth-child(even) :nth-child(odd) {
+  background:#F7F6F6;
+  }
+tr:nth-child(odd) :nth-child(even) {
+  background:rgba(255,255,255,0.3);
+  }
+</style>
+<form method="POST" class="post-form" enctype="multipart/form-data">
+   {% csrf_token %}
+<div class="container">
+  <div class="row margin">
+    <center>
+      <b>
+         APPENDIX- 100 PR (88)<br><br>
+        PROFORMA FOR APPLICATION TO EXTRACT OR REDUCE PILLARS <br><br>
+        UNDER REGULATION 112 (1) / OF CMR 2017
+
+      </b>
+    </center>
+  </div><br>
+    <div class="row">
+     <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>1.0 Name of Mine.</td>
+                <td>{{form.name_of_mine}}</td>
+            </tr>
+            <tr>
+                <td>2.0 Name of Owner.</td>
+                <td>{{form.name_of_owner}}</td>
+            </tr>
+            <tr>
+                <td>3.0 Particular about the seam.</td>
+                <td>{{form.particular_about_seam}}</td>
+            </tr>
+            <tr>
+                <td>3.1 Name of the seam proposed to be depillared.</td>
+                <td>{{form.name_of_seam_proposed_to_depillared}}</td>
+            </tr>
+            <tr>
+                <td>3.2 Total thickness of the seam</td>
+                <td>{{form.total_thickness_of_seam}}</td>
+            </tr>
+            <tr>
+                <td>3.3 Thickness of the seam / section (s) proposed to be depillared (in a think seam, indicate also the location of horizon in relation to roof & floor). </td>
+                <td>{{form.thickness_of_seam_section}}</td>
+            </tr>
+            <tr>
+                <td>3.4 Rate of dip </td>
+                <td>{{form.rate_of_dip}}</td>
+            </tr>
+            <tr>
+                <td>4.0 PLANS.</td>
+                <td>{{form.plans}}</td>
+            </tr>
+            <tr>
+                <td>Give the plan No of date</td>
+                <td>{{form.give_plan_no_of_date}}</td>
+            </tr>
+            <tr>
+                <td>The plan up to date and accurate? (Please see Reg.65 regarding checking of plans).</td>
+                <td>{{form.plan_up_to_date_and_accurate}}</td>
+            </tr>
+            <tr>
+                <td>When & whom the area applied for and surveyed?</td>
+                <td>{{form.when_whom_area_applied_for_and_surveyed}}</td>
+            </tr>
+        <tr>
+            <td colspan="2">
+                <b>PARTICULARS ABOUT THE WORKINGS TO BE DEPILLARED</b>
+            </td>
+        </tr>
+        <tr>
+            <td>5.0 Name / No. and size of panel proposed extraction.</td>
+            <td>{{form.name_size_of_panel_proposed_extraction}}</td>
+        </tr>
+        <tr>
+            <td>5.1 Maximum & minimum height width of the workings.</td>
+            <td>{{form.max_min_height_width_of_working}}</td>
+        </tr>
+        <tr>
+            <td>5.2 Average height and width of the workings.</td>
+            <td>{{form.average_height_and_width_of_working}}</td>
+        </tr>
+        <tr>
+            <td>5.3 Maximum & Minimum size of pillars Centre to Centre.</td>
+            <td>{{form.max_min_size_of_pillars}}</td>
+        </tr>
+        <tr>
+            <td>5.4 Average size of pillars Center to Center. </td>
+            <td>{{form.average_size_of_pillars_center_to_center}}</td>
+        </tr>
+        <tr>
+            <td>5.5 In a think seam, indicate also the location of the horizon in relation to roof & the thickness of coal left in roof & floor. </td>
+            <td>{{form.think_seam}}</td>
+        </tr>
+        <tr>
+            <td>5.6 Age of working.</td>
+            <td>{{form.age_of_working}}</td>
+        </tr>
+        <tr>
+            <td>5.7 Nature of roof and floor (up to at least 5m. thickness above below)</td>
+            <td>{{form.nature_of_roof_and_floor}}</td>
+        </tr>
+        <tr>
+            <td>5.8 Are the workings dry / dump/ naturally wet?</td>
+            <td>{{form.are_working_dry_dump_naturally_wet}}</td>
+        </tr>
+        <tr>
+            <td>5.9 (a) Maximum and minimum thickness of cover from the surface.</td>
+            <td>{{form.max_min_thickness}}</td>
+        </tr>
+        <tr>
+            <td>(b) Percentage of sand stone in the cover over the proposed panel. </td>
+            <td>{{form.percentage_of_sand_stone}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>5.10 STATE.</b></td>
+        </tr>
+        <tr>
+            <td colspan="2">(a)The rate of emission of inflammable gas per ton of coal raised.</td>
+        </tr>
+        <tr>
+            <td>i.In the district.</td>
+            <td>{{form.rate_of_emission_inflammable_in_district}}</td>
+        </tr>
+        <tr>
+            <td>ii.in the seam. </td>
+            <td>{{form.rate_of_emission_inflammable_in_seam}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">(b) The maximum percentage of inflammable gas detected body of air. </td>
+        </tr>
+        <tr>
+            <td>(i) in the district.</td>
+            <td>{{form.max_percentage_inflammable_in_district}}</td>
+        </tr>
+        <tr>
+            <td>(ii) in the seam .</td>
+            <td>{{form.max_percentage_inflammable_in_seam}}</td>
+        </tr>
+        <tr>
+            <td>5.11 Are there any geological disturbances in or within 180m.of the area proposed to be depillared? </td>
+            <td>{{form.are_there_any_geological_disturbances}}</td>
+        </tr>
+        <tr>
+            <td>5.12 general condition of workings as actually determined by a recent inspection state in particular.</td>
+            <td>{{form.general_condition_of_working_as_actually_determind}}</td>
+        </tr>
+        <tr>
+            <td>(i) if there are in singes of spallings of coal from pillar sides and or </td>
+            <td>{{form.if_there_are_singes_of_spalling_of_caol}}</td>
+        </tr>
+        <tr>
+            <td>(ii) Falls of roof, if any (the nature and extend of such falls should also be clearly indicated)</td>
+            <td>{{form.fall_of_roof}}</td>
+        </tr>
+        <tr>
+            <td>5.13 Is there history of fire in the seam in same mine of adjoining mines.(please give details). </td>
+            <td>{{form.is_there_history_of_fire}}</td>
+        </tr>
+        <tr>
+            <td>6.0 Section of the strata from surface showing the overlying and underlying seams, Their thickness and the nature of the parting between them. This strata section shill be drawn at a point either within the panel or close to it (position of borehole etc.) section of which is per produced shall be clearly indicated on the plan.</td>
+            <td>{{form.section_of_strata_from_surface_showing}}</td>
+        </tr>
+        <tr>
+            <td><b>7.0 PROPOSED METHOD OF EXTRACTION VIZ.</b></td>
+            <td>{{form.proposed_method_of_extraction}}</td>
+        </tr>
+        <tr>
+            <td>(a) i. Convention depillaring with slicing/ stooking method. </td>
+            <td>{{form.convention_depillaring_with_slicing_stooking_method}}</td>
+        </tr>
+        <tr>
+            <td>ii. Splitting of pillars as final operations.   </td>
+            <td>{{form.splitting_of_pillars_as_final_operations}}</td>
+        </tr>
+        <tr>
+            <td>(b) With / without hydraulic / dry stowing with sand /other materials or by any method like hydraulic mining.</td>
+            <td>{{form.with_without_hydraulic_dry_stowing}}</td>
+        </tr>
+        <tr>
+            <td>7.01 If in conjunction with stowing are all preparatory arrangements for stowing ready, if not, want time this will take.  </td>
+            <td>{{form.if_conjuction_with_stowing}}</td>
+        </tr>
+        <tr>
+            <td>Give details and amount of existing void and Give details and amount of existing void and current rate of stowing / day. </td>
+            <td>{{form.give_details_amount_of_existing}}</td>
+        </tr>
+        <tr>
+            <td>8.00 Manner extraction / splitting of pillars to be also illustrated by suitable sketches.</td>
+            <td>{{form.manner_extraction_splitting_of_pillar}}</td>
+        </tr>
+        <tr>
+            <td>9.00 Condition of overlying or underlying seam/ section with respect to the area applied for. Specific details for the area above / below and within 90 m. should be given.</td>
+            <td>{{form.condition_of_overlying}}</td>
+        </tr>
+        <tr>
+            <td>9.1 Are the seams free from water? If not give details regarding position of water level. (Distance of water from the proposed plan should be given.)</td>
+            <td>{{form.are_the_seam_free_from_water}}</td>
+        </tr>
+        <tr>
+            <td>9.2 Are the seams extracted /split standing on pillars/virgin? (above the proposed panel and within 90m.thereof). </td>
+            <td>{{form.are_the_seam_extracted}}</td>
+        </tr>
+        <tr>
+            <td>9.3 If the seams have been extracted spilt /state if by caving method or hydraulic stowing or dry stowing.</td>
+            <td>{{form.if_seam_extracted_have_been_extracted}}</td>
+        </tr>
+        <tr>
+            <td>9.4 Is there any fire in any overlying our underlying seams / section or at the surface? If so please give details history above the seams and the present condition of the fire. Mention if ventilation of the mine is by exhaust fan (s)or forcing fans (S).  </td>
+            <td>{{form.is_there_any_fire_in_any_overlying}}</td>
+        </tr>
+        <tr>
+            <td>9.5 (a) the rate omission of inflammable gas per tone of coal raised.</td>
+            <td>{{form.the_rate_omission}}</td>
+        </tr>
+        <tr>
+            <td>(b)	The percentage inflammable gas in the general body of air.   </td>
+            <td>{{form.the_percantage_inflammable}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>10.0 AIR BLAST</b></td>
+        </tr>
+        <tr>
+            <td>(a) Is the roof easily cavable? What is your past experience?</td>
+            <td>{{form.is_roof_eaisly_cavable}}</td>
+        </tr>
+        <tr>
+            <td>(b) Is there any danger of air blast? Give details of past experience in this seam either in this mine or any nearby mine.</td>
+            <td>{{form.is_there_any_danger_of_air_blast}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>11.0 Surface features viz. lying above and within 45m.of the proposed area. (Please give details including actual distance from the panel)</b></td>
+        </tr>
+        <tr>
+            <td>i.  Railway</td>
+            <td>{{form.railway}}</td>
+        </tr>
+        <tr>
+            <td>ii. Public/ Private road.</td>
+            <td>{{form.public_private_road}}</td>
+        </tr>
+        <tr>
+            <td>iii. River, Nallah are any other water course, tank or    reservoir.</td>
+            <td>{{form.river_nallah}}</td>
+        </tr>
+        <tr>
+            <td>iv. Buildings /Dwellings belonging to the owner  (State whether kutcha, pucca, single storey, double storey, etc.)</td>
+            <td>{{form.buliding_dwelling_belonging_to_owner}}</td>
+        </tr>
+        <tr>
+            <td>v. Building / Dwellings not belonging to the owner (State whether kutcha, pucca, single storey, double storey, etc.)</td>
+            <td>{{form.buliding_dwelling_not_belonging_to_owner}}</td>
+        </tr>
+        <tr>
+            <td>vi . H. T. Transmission line state whether belonging to the owner or any other party. </td>
+            <td>{{form.ht_transmission_line}}</td>
+        </tr>
+        <tr>
+            <td>vii. Arial ropeway (state whether belonging to the owner or any other party).</td>
+            <td>{{form.arial_ropeway}}</td>
+        </tr>
+        <tr>
+            <td>Vii . Any other structure / features whether or not belonging to owner </td>
+            <td>{{form.any_other_structure}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>12.0 HIGHEST FLOOD LEVEL.</b></td>
+        </tr>
+        <tr>
+            <td>Distance of the highest known flood level of any river, Nallah, etc. from the edge of the panel. State difference in level between HFL and point on surface over edge or panel. (Details of HFL / RL.S).</td>
+            <td>{{form.distance_of_highest_known_flood_level}}</td>
+        </tr>
+        <tr>
+            <td colspan="2"><b>13.0 DAMAGE TO THE SURFACE STRUCTURES  ETC.</b></td>
+        </tr>
+        <tr>
+            <td>Do you apprehend any danger  to the surface building of structures mentioned in the item 12m? of the panel.</td>
+            <td>{{form.do_you_apprehend_danger}}</td>
+        </tr>
+        <tr>
+            <td>I. Due to the proposed operation; If `NO’ give reasons. (a) If you apprehend danger , please give details of the proposed measures to prevent danger to the same.</td>
+            <td>{{form.due_to_proposed_operation}}</td>
+        </tr>
+        <tr>
+            <td>II. Due to the vicinity of a fault or a dyky or other geological disburbance as a result of the proposed operations. (a) If you apprehend danger, please give details of the proposed measures to prevent danger to the same.</td>
+            <td>{{form.due_to_vicinity_fault}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">14. SUBSIDENCE RECORDS ETC.</td>
+        </tr>
+        <tr>
+            <td>Give particulars of the subsidence experience in panel already extracted in the same seam (attach also a copy of the subsidence records and plan & sections). Details of nature of intervening strata shall be given.</td>
+            <td>{{form.give_particular_of_subsidence_experience}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">15.0 ACQUISITION/ FENCING OF SURFACE AREA</td>
+        </tr>
+        <tr>
+            <td>If surface is likely to be affected, has it been acquired for fencing as required under Reg. 112 (1) (C)? If not, what alternative arrangement has been made to prevent danger?</td>
+            <td>{{form.if_surface_likely_to_be_affected}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">16.1 DANGER OF INUNDATION</td>
+        </tr>
+        <tr>
+            <td>i. Is there any waterlogged / disused working within 60m of the proposed panel?</td>
+            <td>{{form.is_there_any_waterlogged}}</td>
+        </tr>
+        <tr>
+            <td>ii. Is there any danger of inundation as a result of proposed operation panel? </td>
+            <td>{{form.is_there_any_danger_inundation}}</td>
+        </tr>
+        <tr>
+            <td>(a)  Surface water.</td>
+            <td>{{form.surface_water}}</td>
+        </tr>
+        <tr>
+            <td>(b) Underground working</td>
+            <td>{{form.underground_working}}</td>
+        </tr>
+        <tr>
+            <td>i. In any seam / section lying above or below the area applied for in the same mine or </td>
+            <td>{{form.in_any_seam_section_lying_above}}</td>
+        </tr>
+        <tr>
+            <td>ii.  of the adjoining mines in the same seam / section. </td>
+            <td>{{form.of_theadjoining}}</td>
+        </tr>
+        <tr>
+            <td>iii.  from the same seam / section I the same mine.</td>
+            <td>{{form.from_the_same_seam}}</td>
+        </tr>
+        <tr>
+            <td>16.2 what precautionary measures are suggested to prevent the danger of inundation, if any?</td>
+            <td>{{form.what_precautionary_measures_are_suggested}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">17.0 DANGER FROM FIRE </td>
+        </tr>
+        <tr>
+            <td>Where there is fire in either the overlying or underlying seams / sections or on the surface (Whether in the same mine or adjoining mine ), state the proposed protective measures to prevent danger from the same. </td>
+            <td>{{form.where_there_is_fire_in_either_the_overlying}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">18.0 DETAILS OF VENTILATION.</td>
+        </tr>
+        <tr>
+            <td>a. Whether ventilation is, exhaust o forcing type.</td>
+            <td>{{form.whether_ventilation_is}}</td>
+        </tr>
+        <tr>
+            <td>b. Fan capacity and water gauge. </td>
+            <td>{{form.fan_capacity_and_water_gauge}}</td>
+        </tr>
+        <tr>
+            <td>c. Quantity of air reaching the district. </td>
+            <td>{{form.quantity_of_air_reaching_district}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">19.0 DANGER OF PREMATURE COLLAPSE.</td>
+        </tr>
+        <tr>
+            <td>Do you apprehend any premature collapse of the working either in the same seams / sections? If so what so, what are the measures proposed to prevent the seam? </td>
+            <td>{{form.do_you_apprehend_any_premature_collapse}}</td>
+        </tr>
+        <tr>
+            <td>20.0 INCUBATION PERIOD. </td>
+            <td>{{form.incubation_period}}</td>
+        </tr>
+        <tr>
+            <td>20.1 What are the crossing and ignition point temperatures of the coal seam to be depillared?</td>
+            <td>{{form.what_are_the_crossing}}</td>
+        </tr>
+        <tr>
+            <td>20.2 What the known or expected incubation period of the seam?</td>
+            <td>{{form.what_the_known_or_expected}}</td>
+        </tr>
+        <tr>
+            <td>20.3 (a) What was the average rate of monthly production from a depillaring district under similar condition also state the expected monthly production in in the proposed panel. </td>
+            <td>{{form.what_was_average_rate}}</td>
+        </tr>
+        <tr>
+            <td>(b) i.  Percentage of extraction achieved earlier in similar panel (excluding barrier). </td>
+            <td>{{form.percentage_of_extraction_achieved}}</td>
+        </tr>
+        <tr>
+            <td>ii. Expected percentage of extraction in the panel.</td>
+            <td>{{form.expected_percentage_of_extraction}}</td>
+        </tr>
+        <tr>
+            <td>20.4 What is coal raised / sand stowed ratio by volume.</td>
+            <td>{{form.what_is_coal_raised_sand_stowed}}</td>
+        </tr>
+        <tr>
+            <td>20.5 What was the average rate of daily sand stowing achieved by volume under similar conditions?  </td>
+            <td>{{form.what_was_the_average_rate_of_daily}}</td>
+        </tr>
+        <tr>
+            <td>20.6 State the number of pillars in the largest panel/ sub – panel and the quantity of coal standing in pillars </td>
+            <td>{{form.state_the_number_of_pillars}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">21.0 DIVISION OF THE AREA INTO PANELS AND PROVISION OF ISOLATION STOPINGS.</td>
+        </tr>
+        <tr>
+            <td>21.1 Has the area applied for depillaring been divided on the plan into suitable panels consistent with the known or expected incubation period of the seam.</td>
+            <td>{{form.has_the_area_applied_for_depilling}}</td>
+        </tr>
+        <tr>
+            <td>21.2 Please state the type (state whether explosions proof or otherwise and give details of construction of isolation / preparatory stopping purpose of Reg. 132 (6).</td>
+            <td>{{form.please_state_the_type}}</td>
+        </tr>
+        <tr>
+            <td>21.3 How long it will take you to complete construction of isolation/ preparatory stopping around the area proposed for depillaring?</td>
+            <td>{{form.how_long_it_will_take_you}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">22.0 SYSTAMATIC SUPPORT RULES.</td>
+        </tr>
+        <tr>
+            <td> Have you submitted a draft of the systematic support rules to the concerned Director / Dy. Director for approval in accordance with Reg. 108.</td>
+            <td>{{form.have_you_submitted_draft_systematic}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">23.0 WORKING WITHIN DISPUTED AREA. </td>
+        </tr>
+        <tr>
+            <td>Does the area proposed to be depillared / split lie within or close to the disputed boundary or area or encroached workings with the neighboring mine.<br>If so, please give details.
+                Have you left adequate barrier against mine boundary as per provisions of Reg. 107 (as amended up to date).
+            </td>
+            <td>{{form.does_the_area_proposed_to_be_depillared}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">24.0 FOR APPLICATION UNDER REG. 105 (1).</td>
+        </tr>
+        <tr>
+            <td>  Whether the application has been made under Reg. 105 (1) has a copy of the same together with relevant lans been sent, in the case of railway administration concerned and in the case of other public works to authorities owning such works . </td>
+            <td>{{form.whether_the_application_has_been_made_under_105}}</td>
+        </tr>
+        <tr>
+            <td colspan="2">25.0 PEFERENCE TO PREVIOUS PERMISSION. </td>
+        </tr>
+        <tr>
+            <td> Please state whether any permission for extraction of pillars was granted in the past for any other area of the seam at the mine, If so.
+                <br>(a) The reference number and date of the permission letter (s)
+            </td>
+            <td>{{form.please_state_whether_any_permission_for_extraction}}</td>
+        </tr>
+        <tr>
+            <td><b>N.B.</b><br>Where permission has been granted in more than two areas in the past, reference number and date of only the last two permission letters need be given.</td>
+            <td>{{form.where_permission_has_been_granted}}</td>
+        </tr>
+        <tr>
+            <td>(b) Has the extraction been completed in the said areas (if not give the latest position in respect of the same ).</td>
+            <td>{{form.has_the_extraction_been_completed}}</td>
+        </tr>
+        <tr>
+            <td>(c) Give details of experience during extraction of such hels mentioned above. Mention about any untoward incidence that might have occurred in those panels.</td>
+            <td>{{form.give_details_of_experience}}</td>
+        </tr>
+        <tr>
+            <td><b>26.0 Any Other Relevant Details.</b></td>
+            <td>{{form.any_other_relevant_details}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+        Certificate that the above information and plan submitted area correct to the best of my knowledge and belief.
+    </div>
+    <br>
+    <br>
+    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right">
+                                <label>Signature:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.signature }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-2">
+                            <div class="pull-right">
+                                <label>Designation:</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                           {{ form.designation }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                         <div class="col-md-2">
+                             <div class="pull-right">
+                                <label>Date:</label>
+                             </div>
+                        </div>
+                        <div class="col-md-4">
+                          {{ form.sig_date }}
+                        </div>
+                    </div>
+<div class="row">
+     <div class="text-center">
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </div>
+</div>
+</div>
+</form>
+<script>
+    $(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+    });
+    $(function() {
+    $( ".datepicker" ).datepicker({
+      changeMonth: true,
+      changeYear: true,
+      yearRange: "1900:2012",
+      format:"yyyy-mm-dd"
+      // You can put more options here.
+
+    });
+  });
+</script>
+{% endblock %}

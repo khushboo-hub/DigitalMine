@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_view_permission',
+    #'admin_view_permission',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -68,12 +68,12 @@ INSTALLED_APPS = [
     'django_hosts',
     'mail_templated',
     'dashboard',
-
+    'setting',
+    'wm_test',
 ]
 
 MIDDLEWARE = [
     'django_hosts.middleware.HostsRequestMiddleware',
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -118,9 +118,9 @@ DATABASES = {
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'IOT',
-        'NAME': 'cimfr_iot',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'myiot',
+        'USER': 'csir',
+        'PASSWORD': 'tpo4pf9KlQEBGkNo',
         'HOST': '127.0.0.1',
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"

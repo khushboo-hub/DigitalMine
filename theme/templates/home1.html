@@ -87,6 +87,7 @@
     <link href='https://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
     <script src="{% static 'js/toastr.min.js' %}"></script>
     <script type="text/javascript" src="https://cdn.rawgit.com/ricmoo/aes-js/e27b99df/index.js"></script>
+
 <!--    <script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>-->
     <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>-->
 
@@ -94,7 +95,6 @@
         .container.tim-container{
         width:100%;
         }
-
         .row-flex {
           display: flex;
           flex-wrap: wrap;
@@ -110,11 +110,23 @@
         margin-top: 20px;
         width: 500px;
     }
+
+    div.item>img{
+        width:100% !important;
+        height:600px !important;
+    }
+
+
     @media(max-width: 992px){
      .navbar .navbar-brand-logo .brand {
         margin-top: 20px;
         width: 400px;
     }
+        div.item>img{
+        width:100% !important;
+        height:300px !important;
+    }
+
 }
     @media(max-width: 526px){
      .navbar .navbar-brand-logo .brand {
@@ -140,6 +152,9 @@
         width: 150px;
     }
 }
+    a>i.pe-7s-mail>span.label{
+        position:absolute;
+    }
     </style>
 
      <script>
@@ -223,8 +238,7 @@
                                     Profile</a></li>
 
                                 <li class="divider"></li>
-                                <li><a href="/accounts/logout"><span class="glyphicon glyphicon-off"></span> Sign
-                                    Out</a></li>
+                                <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-off" ></span> Sign Out</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -243,18 +257,23 @@
                     <ol class="carousel-indicators">
                     <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
                     <li data-target="#myCarousel" data-slide-to="1"></li>
-                    <li data-target="#myCarousel" data-slide-to="2"></li>
+{#                    <li data-target="#myCarousel" data-slide-to="2"></li>#}
                 </ol>
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner">
                   <div class="item active">
+<<<<<<< HEAD
                     <img src="static/image/underground_mine_image/underground_mine01.png" alt="Los Angeles" style="width:100%;height:600px;">
+=======
+                    <img src="static/image/under_ground_machine.png" alt="Los Angeles">
+>>>>>>> 26d8137691e8c7b900fd4038f4e5a2f913408a9f
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
                       <!-- <p>LA is always so much fun!</p> -->
                     </div>
                   </div>
 
+<<<<<<< HEAD
                   <div class="item">
                     <img src="static/image/underground_mine_image/underground_mine00.png" alt="Chicago" style="width:100%; height:600px;">
                     <div class="carousel-caption">
@@ -265,6 +284,18 @@
 
                   <div class="item">
                     <img src="static/image/underground_mine_image/mine_underground_bg5.jpg" alt="New York" style="width:100%;height:600px;">
+=======
+{#                  <div class="item">#}
+{#                    <img src="static/image/bg_img.jpg" alt="Chicago" style="width:100%; height:600px;">#}
+{#                    <div class="carousel-caption">#}
+{#                      <h3>Digital Mine</h3>#}
+{#                      <!-- <p>Thank you, Chicago!</p> -->#}
+{#                    </div>#}
+{#                  </div>#}
+
+                  <div class="item">
+                    <img src="static/image/under_ground_track.png" alt="New York">
+>>>>>>> 26d8137691e8c7b900fd4038f4e5a2f913408a9f
                     <div class="carousel-caption">
                       <h3>Digital Mine</h3>
                       <!-- <p>We love the Big Apple!</p> -->
@@ -293,16 +324,17 @@
                         <div class="col-md-1"></div>
                         <div class="col-md-1">
                             <div class="row">
-                                <center><img class="logo img-responsive" src="{% static '/image/csir_logo.svg' %}" alt=""/><center>
+                                <center><img class="logo img-responsive" src="{% static '/image/csir_logo.svg' %}" alt=""/></center>
                             </div>
                             <div class="row text-center">
                                 
                             </div>
                         </div>
-                        <div class="col-md-3 logo-text">
+                        <div class="col-md-4 logo-text">
 
                             <div class="row text-center">
                                 <br>
+
                                 <strong>CSIR-Central Institute of Mining & Fuel Research,Dhanbad</strong>
                             </div>
                         </div>
@@ -311,15 +343,9 @@
                        
                     </div>
 
-
-
-
-
-
-
                 <div class="col-md-6">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-1">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-2">
                         <div class="row">
                             <center><img class="logo img-responsive" src="{% static '/image/meity.svg' %}" alt=""/><center>
                         </div>
@@ -327,7 +353,7 @@
                             <strong>सत्यमेव जयते</strong>
                         </div>
                     </div>
-                    <div class="col-md-4 logo-text">
+                    <div class="col-md-5 logo-text">
 
                 <div class="row text-center">
                     
@@ -473,6 +499,26 @@
     </div>
 </div>
 <p class="text-center">Powered By <a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> | Copyright &copy; Protected | All Rights Reserved.</p>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/accounts/logout">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
 <script>

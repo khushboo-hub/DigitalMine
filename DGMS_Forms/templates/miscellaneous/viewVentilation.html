@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+tr
+{
+    line-height:30px;
+    font-weight: bold;
+}
+</style>
+
+<div class="container">
+
+  <div class="panel panel-primary">
+      <div class="panel-heading"><span class="pull-right"><button type="button" class="btn btn-sm btn-success print">Print</button></span><center>Ventilation Report</center></div>
+      <div class="panel-body">
+           <table>
+              <tbody>
+              <tr >
+                  <td>
+                   1. Mine Name :
+                  </td>
+                 <td>
+                {{form.mine_name}}
+                  </td>
+                </tr >
+                <tr>
+                  <td>
+                    2. Location Name :
+                  </td>
+                  <td>
+                     {{form.location}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                   3. Quantity :
+                  </td>
+                   <td>
+                   {{form.quantity}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    4.Velocity :
+                  </td>
+                  <td>
+                    {{form.velocity}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                   5. Temp (wet) :
+                  </td>
+                   <td>
+                   {{form.t_wet}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    6. Temp (dry) :
+                  </td>
+                  <td>
+                     {{form.t_dry}}
+                  </td>
+                </tr>
+               <tr>
+                  <td>
+                    <div class="row">
+                      <br>
+                      * Please submit ventilation mapping plan along with this report
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+  $('.print').click(function(){
+ window.print();
+  });
+</script>
+{% endblock %}

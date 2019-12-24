@@ -12,23 +12,47 @@ from django.http import HttpResponse, JsonResponse
 
 @login_required
 def dashboard_calling(request):
+    print('calling..........')
+
+    if request.method == "POST":
+        print('calling post')
+        mine_name = request.POST.get("mine_name", None)
+        mine= get_object_or_404(MineDetails,pk=mine_name)
+    else:
+        print('calling else')
+        mine=MineDetails.objects.all()[:1].get()
+
+    print(mine)
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    data={}
+    data = {}
     mine_table = MineDetails.objects.all()
     data['mine_table'] = mine_table
-    strata=Strata_location.objects.filter(mine_name=profile.mine_id.id)
+    strata=Strata_location.objects.filter(mine_name=mine.id)
     # print("Strata",strata)
-    first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
-    data['first_mine_id']=first_mine[0]
-    data['first_mine_name'] = first_mine[1]
+    # first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
+    data['first_mine_id']=mine.id
+    data['first_mine_name'] = mine.name
+    data['selected'] = mine.id
+
     data['strata'] = strata
-    nodes=Node.objects.filter(mine_id=profile.mine_id.id)
-    data['nodes'] =  nodes
+    nodes=Node.objects.filter(mine_id=mine.id)
+    print('---------------------------------')
+    NODES=[]
+
     for node in nodes:
-        print("Node Id",node.id,profile.mine_id.id)
+        SENSORS = []
+        Sensors = Sensor_Node.objects.filter(mine_id=mine.id,node_id=node.id)
+        for sensor in Sensors:
+            SENSORS.append({'mine':sensor.mine_id, 'ip':sensor.ip_add,'sensor_name':sensor.sensorname,'sensor_id':sensor.id})
+            print('IP=>', sensor.ip_add)
+        NODES.append({str(node.name): SENSORS})
+
+    print(nodes)
+    data['nodes'] = NODES
+
+    for node in nodes:
         sensors=Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node.id)
-        print(sensors)
 
     return render(request, "index.html",data)
 
@@ -51,10 +75,12 @@ def fetchwl(request):
 
 def fetchsl(request):
 
+
     data={}
     sensor_val=-1
     if request.is_ajax():
-
+        strata = request.GET.get('strata', None)
+        print('strata',strata)
         try:
             response = requests.get('http://192.168.1.201')
             sensor_val = strip_tags(response.text)

@@ -14,16 +14,18 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.utils.html import strip_tags
 from gtts import gTTS
-# from matplotlib._cm_listed import data
-# from past.builtins import apply
-# from pyparsing import Group
+from matplotlib._cm_listed import data
+from past.builtins import apply
+from pyparsing import Group
 from apps.settings import MEDIA_ROOT
+from setting.models import setting
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model
 from .forms import Strata_location_Form, Strata_sensor_Form, Live_data_tabular, Strata_sensor_flag_Form
 from .models import Strata_location, MineDetails, Strata_sensor, Strata_sensor_data, Strata_sensor_flag
 from background_task import background
 from pygame import mixer  # Load the required library
 from django.shortcuts import render, redirect
+#from annoying.functions import get_object_or_None
 
 # ====================================================================================================
 # Function : (1) convergence_add_location,
@@ -32,7 +34,7 @@ from django.shortcuts import render, redirect
 #            (4) convergence_delete_location
 #
 # Purpose : CRUD functionality of location in strata module
-#---------------------------------------------------------------------
+#---------------------------------------------warning_level_information------------------------
 hcount = 1
 mcount = 1
 lcount = 1
@@ -52,7 +54,6 @@ def convergence_add_location(request, template_name='Convergence/add_location.ht
             created_date = form.cleaned_data['created_date']
 
             strata_location_inst = Strata_location()
-
             strata_location_inst.mine_name = mine_name
             strata_location_inst.location_name = location_name
             strata_location_inst.tag_no = tag_no
@@ -138,6 +139,7 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
     # print(prepared_data)
     # return HttpResponse("ok")
     data['result'] = prepared_data
+
     return render(request, template_name, data)
 
 @login_required
@@ -234,15 +236,23 @@ def fetch_sensor_comman_values_ajax(request):
         #sensor_id = 13
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         if(sensor_details):
-            sensor_data.append(str(sensor_details.id) + ',' +
-                               str(sensor_details.sensor_unit)  + ',' +
-                               str(sensor_details.level_1_warning_unit) +',' +
-                               str(sensor_details.level_2_warning_unit)+',' +
-                               str(sensor_details.level_3_warning_unit)+',' +
-                               str(sensor_details.level_1_color) +',' +
-                               str(sensor_details.level_2_color) +',' +
-                               str(sensor_details.level_3_color) +',' +
-                               str(sensor_details.ip_address))
+            sensor_data.append(str(sensor_details.id) + '@#' +
+                               str(sensor_details.sensor_unit)  + '@#' +
+                               str(sensor_details.level_1_warning_unit) +'@#' +
+                               str(sensor_details.level_2_warning_unit)+'@#' +
+                               str(sensor_details.level_3_warning_unit)+'@#' +
+                               str(sensor_details.level_1_color) +'@#' +
+                               str(sensor_details.level_2_color) +'@#' +
+                               str(sensor_details.level_3_color) +'@#' +
+                               str(sensor_details.ip_address)+'@#' +
+                               str(sensor_details.level_1_msg) + '@#' +
+                               str(sensor_details.level_2_msg) + '@#' +
+                               str(sensor_details.level_3_msg) + '@#' +
+                               str(sensor_details.level_1_audio) + '@#' +
+                               str(sensor_details.level_2_audio) + '@#' +
+                               str(sensor_details.level_3_audio) + '@#' +
+                               str(sensor_details.audio_play_type) + '@#'
+                               )
             data['result'] = sensor_data
         else:
             data['result'] = "No Data"
@@ -262,11 +272,9 @@ def fetch_sensor_values_ajax(request):
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
         try:
             response = requests.get('http://' + str(sensor_details.ip_address))
-            print(sensor_details.ip_address)
             sensor_val=strip_tags(response.text)
-            # sensor_val=0.3
             if(sensor_val):
-                sensor_data.append(str(sensor_details.id)+','+str(sensor_details.ip_address)+','+ok_date+','+str(mine_details.name)+','+str(sensor_details.location_id)+','+str(sensor_details.sensor_name)+','+str(float(sensor_val))+','+str(sensor_details.sensor_unit)+','+str(sensor_details.tag_no))##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
+                sensor_data.append(str(sensor_details.id)+','+str(sensor_details.ip_address)+','+ok_date+','+str(mine_details.name)+','+str(sensor_details.location_id)+','+str(sensor_details.sensor_name)+','+str(sensor_val)+','+str(sensor_details.sensor_unit)+','+str(sensor_details.tag_no))##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
             else:
                 sensor_data.append(
                     str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
@@ -288,7 +296,25 @@ def fetch_sensor_values_ajax(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+#=======================================================================================================================
+def fetch_sensor_details(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('sensor_id', None)
+        sensor_details = Strata_sensor.objects.values_list().filter(id=sensor_id)
+        data = {}
+        i = 0
+        sensor_data = []
+        for r in sensor_details:
+            sensor_data.append(str(r[6])+'@#'+str(r[7])+'@#'+str(r[8])+'@#'+str(r[12])+'@#'+str(r[13])+'@#'+str(r[14])+'@#'+str(r[15])+'@#'+str(r[16])+'@#'+str(r[17])+'@#'+str(r[20]))
+            i = i + 1
+        data['result'] = sensor_data
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
 
+
+#=======================================================================================================================
 def show_sensor_graph(request,template_name='Convergence/live_data_graph.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form':form})
@@ -350,9 +376,7 @@ def run_back_save(sensor_id):
                         push_mail(mail_subject,mail_html_content)
                         mixer.init()
                         if(sensor_details.audio_play_type == "mp3only"):
-                            #print("HIGH LEVEL")
                             mixer.music.load(MEDIA_ROOT+"/"+str(sensor_details.level_3_audio))
-                            #mixer.music.play()
                         else:
                             msg = sensor_details.level_3_msg
                             tts = gTTS(text=msg,lang='en')
@@ -455,33 +479,29 @@ def run_back_save(sensor_id):
 # Function name : warning_level_information
 # Purpose : Display alert message. this function call from ajax(base.py)
 #=======================================================================================================================
-def warning_level_information(request):
+def warning_level_information(request):# for 1 for strata 2 for water 3 for all
+
     return_string = ""
     table = ""
     high = ""
     data = {}
+    validation = request.GET.get('validation', None)
+
     if request.is_ajax():
         sensor_table_details = Strata_sensor_data.objects.values('sensor_id').order_by("sensor_id").annotate(max_id=Max('id'))
-        #print(sensor_table_details.query)
         table = '<table class="table table-striped"><thead><tr><th>Date-Time</th><th>Sensor Name / Type</th><th>Warning Level</th><th>Sensor value</th></tr></thead><tbody>'
+        if(validation == 2):# 2 means only  water should be display
+            sensor_table_details = ""
         if (sensor_table_details):# for Strata managemenet
             for loop in sensor_table_details:
                 with connection.cursor() as cursor:
                     cursor.execute("select a.sensor_name,a.level_1_warning_unit,a.level_2_warning_unit,a.level_3_warning_unit, b.sensor_value,b.created_date,a.level_1_color,a.level_2_color,a.level_3_color,a.level_1_warning_unit,a.level_2_warning_unit,a.level_3_warning_unit,c.pause_waring_duration_end_datetime from strata_sensor as a join strata_sensor_data as b on a.id = b.sensor_id join strata_sensor_flag as c on a.id = c.sensor_id where c.limit > 2 and b.id = %s",[loop["max_id"]])
                     row = cursor.fetchone()
                     #print("select a.sensor_name,a.level_1_warning_unit,a.level_2_warning_unit,a.level_3_warning_unit, b.sensor_value,b.created_date,a.level_1_color,a.level_2_color,a.level_3_color,a.level_1_warning_unit,a.level_2_warning_unit,a.level_3_warning_unit,c.pause_waring_duration_end_datetime from strata_sensor as a join strata_sensor_data as b on a.id = b.sensor_id join strata_sensor_flag as c on a.id = c.sensor_id where c.limit > 2 and b.id = %s",[loop["max_id"]])
+
                     if (row):
-                        # print(datetime.now() >= row[12])
-                        # print(row[12] >=(datetime.now() - timedelta(minutes=15)))
-                        # print(datetime.now())
-                        # print((datetime.now() - timedelta(minutes=15)))
-                        # print(row[12]) #Please check service is pause or not
-                        # print(row[5])
                         if (datetime.now() >= row[12]) and (row[5] >= (datetime.now() - timedelta(minutes=15))):
-                        #if datetime.now() >= row[12]:
-                            if (row[4] != "Network Error") :
-                                # print(row[3])
-                                # print(row[4])
+                            if (row[4] != "Network Error"):
                                 if (row[3] < float(row[4])):# for high
                                     return_string = return_string + "<tr class='danger'><td>" + str(row[5].strftime("%d-%m-%Y %H:%M:%S")) + "</td><td>" + str(row[0]) + "</td><td>HIGH</td><td>"+str(row[4])+"</td></tr>"
                                     high = "high"
@@ -494,7 +514,8 @@ def warning_level_information(request):
                        # else:
                         #    return_string = return_string + "<tr class='success'><td><b>Strata monitoing : </b>Data not saved from more then 15 minutes.</td><td></td><td></td><td></td></tr>"
         water_sensor_details = water_level_monitoring_model.objects.all().order_by("id")
-
+        if (validation == 1):
+            water_sensor_details = ""
         if (water_sensor_details):
             for water_data in water_sensor_details:
                 sensor_data = water_level_monitoring_data_acquisition_model.objects.filter(sensor_id=water_data.id).order_by("-id").first()
@@ -505,7 +526,6 @@ def warning_level_information(request):
                         sensor_value = sensor_data.sensor_value
                 else:
                     sensor_value = 0
-
                 h_range = float(water_data.distance_bet_roof_and_water) - float(water_data.alarm_water_level_3)
                 m_range = float(water_data.distance_bet_roof_and_water) - float(water_data.alarm_water_level_2)
                 l_range = float(water_data.distance_bet_roof_and_water) - float(water_data.alarm_water_level_1)
@@ -535,9 +555,14 @@ def warning_level_information(request):
     return JsonResponse(data)
 
 def push_mail(mail_subject="",mail_html_content=""):
-    email = EmailMessage(mail_subject, mail_html_content, "", ['devwangshu@gmail.com'])
-    email.content_subtype = "html"
-    res = email.send()
+
+    receiver_data = setting.objects.values_list().filter(name="receiver_email")
+    for share in receiver_data:
+        total_receiver =  share[2].split(',')
+        for loop_data in total_receiver:
+            email = EmailMessage(mail_subject, mail_html_content, "", [loop_data])
+            email.content_subtype = "html"
+            res = email.send()
 
 def start_save_sensor(request,sensor_id,template_name='Convergence/manage_sensor_in_location.html'):
     # print("before save")
@@ -679,8 +704,6 @@ def run_multi_sensor_validation():
                     row = cursor.fetchall()
                     if (row):
                         for base in row:
-                            print(base[1])
-                            print(total_sensor/2)
                             if(base[1] > (total_sensor/2)):
                                 if(str(base[0]) == "High"):
                                     mail_subject = "STRATA WARNING MESSAGES - High"
@@ -729,21 +752,22 @@ def audio_setting(request,sensor_id):
     return render(request, "Convergence/audio_setting.html", {'form': form})
 
 def fetch_map_image(request):
-
     data = {}
-
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         mine_details = MineDetails.objects.values_list().filter(id=mine_id)
+
         data = {}
         mine_data = {}
         for r in mine_details:
             mine_data['id'] = str(r[0])
             mine_data['name'] = str(r[1])
             mine_data['image_url'] = str(r[6])
-            mine_data['test1'] = str(r[7])
+            mine_data['test1']=str(r[7])
+
+
         data['result'] = mine_data
+    # print(mine_data)
     else:
         data['result'] = "Not Ajax"
-
     return JsonResponse(data)
