@@ -14,19 +14,19 @@ global rain_gauge_data, pm2_5_data, pm10_data, humidity_data, temperature_data, 
 # Create your views here.
 from django.utils.html import strip_tags
 
-from .models import Setting, AddSensor, Weather_data
-from .forms import SensorForm, AddSensorForms
+from .models import WindRoseSetting, WindRoseAddSensor, WindRoseData
+from .forms import WindRoseSensorForm, WindRoseAddSensorForms
 
 
 @login_required
 def setting(request):
-    form = SensorForm(request.POST, request.FILES)
-    data = Setting.objects.all()
+    form = WindRoseSensorForm(request.POST, request.FILES)
+    data = WindRoseSetting.objects.all()
     # if form.is_valid():
     if(data):
         #(data)
-        book = get_object_or_404(Setting, id=1)
-        form = SensorForm(request.POST or None, instance=book)
+        book = get_object_or_404(WindRoseSetting, id=1)
+        form = WindRoseSensorForm(request.POST or None, instance=book)
         if form.is_valid():
             #print(form)
             form.save()
@@ -47,7 +47,7 @@ def setting(request):
 def add_sensor(request, template_name='add_sensor.html'):
     if request.method == "POST":
         # print(request.POST)
-        form = AddSensorForms(request.POST)
+        form = WindRoseAddSensorForms(request.POST)
         print(form)
         if form.is_valid():
             form.save()
@@ -55,27 +55,27 @@ def add_sensor(request, template_name='add_sensor.html'):
         else:
             print("Form Invalid")
     else:
-        form =AddSensorForms()
+        form =WindRoseAddSensorForms()
     return render(request, template_name, {'form': form})
 
 @login_required
 def manage_sensor(request, template_name='manage_sensor.html'):
-    book = AddSensor.objects.all() ### select * from AddSensorDetails
+    book = WindRoseAddSensor.objects.all() ### select * from AddSensorDetails
     data = {}
     data['object_list'] = book
     return render(request, template_name, data)
 
 @login_required()
 def edit(request, pk, template_name="add_sensor.html"):
-    book = get_object_or_404(AddSensor, pk=pk)
-    form = AddSensorForms(request.POST or None, request.FILES or None, instance=book)
+    book = get_object_or_404(WindRoseAddSensor, pk=pk)
+    form = WindRoseAddSensorForms(request.POST or None, request.FILES or None, instance=book)
     if form.is_valid():
         form.save()
         return redirect("wm_test:manage_sensor")
     return render(request, template_name, {'form': form})
 
 def delete(request, pk, template_name='manage_sensor.html'):
-    book= get_object_or_404(AddSensor, pk=pk)
+    book= get_object_or_404(WindRoseAddSensor, pk=pk)
     if request.method=='POST':
         book.delete()
         return redirect('wmtest:manage_sensor')
@@ -147,7 +147,7 @@ def live_report(request, template_name='live_report.html'):
 @background(schedule=10)
 def run_back_save(setting_id):
     print("background calling...")
-    inst = Weather_data()
+    inst = WindRoseData()
     inst.setting_id = setting_id
     inst.rain_gauge = '0.00'
     inst.pm2_5 = '0.00'
@@ -160,11 +160,11 @@ def run_back_save(setting_id):
     inst.so2 = '0.00'
     # inst.save()
 
-    setting_details = Setting.objects.get(id=setting_id)
+    setting_details = WindRoseSetting.objects.get(id=setting_id)
     try:
 
         sensor_id = 1
-        sensor_details = Setting.objects.get(id=sensor_id)
+        sensor_details = WindRoseSetting.objects.get(id=sensor_id)
         response = requests.get('http://' + str(setting_details.ip_address))
 
         # response = requests.get('http://192.168.1.202')
@@ -225,7 +225,7 @@ def start_save_sensor(request,template_name='home1.html'):
 #
 #     if request.is_ajax():
 #         print("ajax")
-#         start = Weather_data.objects.last()
+#         start = WindRoseData.objects.last()
 #         print(start)
 #         ttt=[]
 #         ttt.append(str(start.modified_date) + ',' + str(start.modified_time) + ',' + start.rain_gauge + ',' + start.pm2_5+','+start.pm10+','+start.humidity+','+start.temperature +','+start.ws_value+','+start.wd_value)
@@ -261,18 +261,18 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time = '00:00'
-            val_a = Weather_data.objects.filter(date=date1, time='01:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='01:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value_1 = val_a
             else:
                 wd_value_1 = 0
-            avg_ws_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_1 = avg_ws_1["ws_value__avg"]
             # print(avg_ws)
             if (ws_avg_1 == None):
                 ws_avg_1 = 0
-            avg_wd_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_1 = avg_wd_1["wd_value__avg"]
             # print(wd_avg)
             if(wd_avg_1 == None):
@@ -290,18 +290,18 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time = '01:00'
-            val_a = Weather_data.objects.filter(date=date1, time='01:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='01:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value_2 = val_a
             else:
                 wd_value_2 = 0
-            avg_ws_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_2 = avg_ws_2["ws_value__avg"]
             # print(avg_ws_2)
             if (ws_avg_2 == None):
                 ws_avg_2 = 0
-            avg_wd_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_2 = avg_wd_2["wd_value__avg"]
             # print(wd_avg_2)
             if (wd_avg_2 == None):
@@ -319,18 +319,18 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time = '02:00'
-            val_a = Weather_data.objects.filter(date=date1, time='02:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='02:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value_3 = val_a
             else:
                 wd_value_3 = 0
-            avg_ws_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_3 = avg_ws_3["ws_value__avg"]
             # print(avg_ws_3)
             if (ws_avg_3 == None):
                 ws_avg_3 = 0
-            avg_wd_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_3 = avg_wd_3["wd_value__avg"]
             # print(wd_avg_3)
             if (wd_avg_3 == None):
@@ -348,18 +348,18 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time = '03:00'
-            val_a = Weather_data.objects.filter(date=date1, time='03:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='03:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value_4 = val_a
             else:
                 wd_value_4 = 0
-            avg_ws_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_4 = avg_ws_4["ws_value__avg"]
             # print(avg_ws_4)
             if (ws_avg_4 == None):
                 ws_avg_4 = 0
-            avg_wd_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_4 = avg_wd_4["wd_value__avg"]
             # print(wd_avg_4)
             if (wd_avg_4 == None):
@@ -377,18 +377,18 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time5 = '04:00'
-            val_e = Weather_data.objects.filter(date=date1, time='04:00:00.000000').values('ws_value')
+            val_e = WindRoseData.objects.filter(date=date1, time='04:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_e):
                 wd_value5 = val_e
             else:
                 wd_value5 = 0
-            avg_ws_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg5 = avg_ws_5["ws_value__avg"]
             # print(avg_ws_5)
             if (ws_avg5 == None):
                 ws_avg5 = 0
-            avg_wd_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg5 = avg_wd_5["wd_value__avg"]
             # print(wd_avg5)
             if (wd_avg5 == None):
@@ -406,19 +406,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time6 = '05:00'
-            val_f = Weather_data.objects.filter(date=date1, time='05:00:00.000000').values('ws_value')
+            val_f = WindRoseData.objects.filter(date=date1, time='05:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_f):
                 wd_value6 = val_f
             else:
                 wd_value6 = 0
-            avg_ws_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_ws_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg6 = avg_ws_6["ws_value__avg"]
             # print(avg_ws_6)
             if (ws_avg6 == None):
                 ws_avg6 = 0
-            avg_wd_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_wd_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg6 = avg_wd_6["wd_value__avg"]
             # print(wd_avg6)
@@ -437,19 +437,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time7 = '06:00'
-            val_g = Weather_data.objects.filter(date=date1, time='06:00:00.000000').values('ws_value')
+            val_g =WindRoseData.objects.filter(date=date1, time='06:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_g):
                 wd_value7 = val_g
             else:
                 wd_value7 = 0
-            avg_ws_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_ws_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg7 = avg_ws_7["ws_value__avg"]
             # print(avg_ws_7)
             if (ws_avg7 == None):
                 ws_avg7 = 0
-            avg_wd_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_wd_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg7 = avg_wd_7["wd_value__avg"]
             # print(wd_avg7)
@@ -468,19 +468,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time8 = '07:00'
-            val_a = Weather_data.objects.filter(date=date1, time='07:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='07:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value8 = round(val_a,2)
             else:
                 wd_value8 = 0
-            avg_ws_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_ws_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg8 = avg_ws_8["ws_value__avg"]
             # print(avg_ws_8)
             if (ws_avg8 == None):
                 ws_avg8 = 0
-            avg_wd_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_wd_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg8 = avg_wd_8["wd_value__avg"]
             # print(wd_avg8)
@@ -499,19 +499,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time9 = '08:00'
-            val_a = Weather_data.objects.filter(date=date1, time='08:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='08:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value9 = val_a
             else:
                 wd_value9 = 0
-            avg_ws_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_ws_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg9 = avg_ws_9["ws_value__avg"]
             # print(avg_ws_9)
             if (ws_avg9 == None):
                 ws_avg9 = 0
-            avg_wd_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_wd_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg9 = avg_wd_9["wd_value__avg"]
             # print(wd_avg9)
@@ -530,19 +530,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time10 = '09:00'
-            val_a = Weather_data.objects.filter(date=date1, time='09:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='09:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value10 = val_a
             else:
                 wd_value10 = 0
-            avg_ws_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_ws_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg10 = avg_ws_10["ws_value__avg"]
             # print(avg_ws_10)
             if (ws_avg10 == None):
                 ws_avg10 = 0
-            avg_wd_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_wd_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg10 = avg_wd_10["wd_value__avg"]
             # print(wd_avg10)
@@ -561,19 +561,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time11 = '10:00'
-            val_a = Weather_data.objects.filter(date=date1, time='10:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='10:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value11 = val_a
             else:
                 wd_value11 = 0
-            avg_ws_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_ws_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg11 = avg_ws_11["ws_value__avg"]
             # print(avg_ws_11)
             if (ws_avg11 == None):
                 ws_avg11 = 0
-            avg_wd_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_wd_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg11 = avg_wd_11["wd_value__avg"]
             # print(wd_avg11)
@@ -592,19 +592,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time12 = '11:00'
-            val_a = Weather_data.objects.filter(date=date1, time='11:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='11:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value12 = val_a
             else:
                 wd_value12 = 0
-            avg_ws_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_ws_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg12 = avg_ws_12["ws_value__avg"]
             # print(avg_ws_12)
             if (ws_avg12 == None):
                 ws_avg12 = 0
-            avg_wd_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_wd_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg12 = avg_wd_12["wd_value__avg"]
             # print(wd_avg12)
@@ -623,19 +623,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time13 = '12:00'
-            val_a = Weather_data.objects.filter(date=date1, time='12:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='12:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value13 = val_a
             else:
                 wd_value13 = 0
-            avg_ws_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_ws_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg13 = avg_ws_13["ws_value__avg"]
             # print(avg_ws_13)
             if (ws_avg13 == None):
                 ws_avg13 = 0
-            avg_wd_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_wd_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg13 = avg_wd_13["wd_value__avg"]
             # print(wd_avg13)
@@ -654,19 +654,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time14 = '13:00'
-            val_a = Weather_data.objects.filter(date=date1, time='13:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='13:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value14 = val_a
             else:
                 wd_value14 = 0
-            avg_ws_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_ws_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg14 = avg_ws_14["ws_value__avg"]
             # print(avg_ws_14)
             if (ws_avg14 == None):
                 ws_avg14 = 0
-            avg_wd_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_wd_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg14 = avg_wd_14["wd_value__avg"]
             # print(wd_avg14)
@@ -685,19 +685,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time15 = '14:00'
-            val_a = Weather_data.objects.filter(date=date1, time='14:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='14:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value15 = val_a
             else:
                 wd_value15 = 0
-            avg_ws_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_ws_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg15 = avg_ws_15["ws_value__avg"]
             # print(avg_ws_15)
             if (ws_avg15 == None):
                 ws_avg15 = 0
-            avg_wd_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_wd_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg15 = avg_wd_15["wd_value__avg"]
             # print(wd_avg15)
@@ -716,19 +716,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time16 = '15:00'
-            val_a = Weather_data.objects.filter(date=date1, time='15:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='15:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value16 = val_a
             else:
                 wd_value16 = 0
-            avg_ws_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_ws_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg16 = avg_ws_16["ws_value__avg"]
             # print(avg_ws_16)
             if (ws_avg16 == None):
                 ws_avg16 = 0
-            avg_wd_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_wd_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg16 = avg_wd_16["wd_value__avg"]
             # print(wd_avg16)
@@ -747,19 +747,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time17 = '16:00'
-            val_a = Weather_data.objects.filter(date=date1, time='16:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='16:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value17 = val_a
             else:
                 wd_value17 = 0
-            avg_ws_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_ws_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg17 = avg_ws_17["ws_value__avg"]
             # print(avg_ws_17)
             if (ws_avg17 == None):
                 ws_avg17 = 0
-            avg_wd_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_wd_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg17 = avg_wd_17["wd_value__avg"]
             # print(wd_avg17)
@@ -778,19 +778,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time18 = '17:00'
-            val_a = Weather_data.objects.filter(date=date1, time='17:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='17:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value18 = val_a
             else:
                 wd_value18 = 0
-            avg_ws_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_ws_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg18 = avg_ws_18["ws_value__avg"]
             # print(avg_ws_18)
             if (ws_avg18 == None):
                 ws_avg18 = 0
-            avg_wd_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_wd_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg18 = avg_wd_18["wd_value__avg"]
             # print(wd_avg18)
@@ -809,19 +809,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time19 = '18:00'
-            val_a = Weather_data.objects.filter(date=date1, time='18:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='18:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value19 = val_a
             else:
                 wd_value19 = 0
-            avg_ws_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_ws_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg19 = avg_ws_19["ws_value__avg"]
             # print(avg_ws_19)
             if (ws_avg19 == None):
                 ws_avg19 = 0
-            avg_wd_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_wd_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg19 = avg_wd_19["wd_value__avg"]
             # print(wd_avg19)
@@ -840,19 +840,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time20 = '19:00'
-            val_a = Weather_data.objects.filter(date=date1, time='19:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='19:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value20 = val_a
             else:
                 wd_value20 = 0
-            avg_ws_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_ws_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg20 = avg_ws_20["ws_value__avg"]
             # print(avg_ws_20)
             if (ws_avg20 == None):
                 ws_avg20 = 0
-            avg_wd_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_wd_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg20 = avg_wd_20["wd_value__avg"]
             # print(wd_avg20)
@@ -871,19 +871,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time21 = '20:00'
-            val_a = Weather_data.objects.filter(date=date1, time='20:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='20:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value21 = val_a
             else:
                 wd_value21 = 0
-            avg_ws_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_ws_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg21 = avg_ws_21["ws_value__avg"]
             # print(avg_ws_21)
             if (ws_avg21 == None):
                 ws_avg21 = 0
-            avg_wd_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_wd_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg21 = avg_wd_21["wd_value__avg"]
             # print(wd_avg21)
@@ -902,19 +902,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time22 = '21:00'
-            val_a = Weather_data.objects.filter(date=date1, time='21:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='21:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value22 = val_a
             else:
                 wd_value22 = 0
-            avg_ws_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_ws_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg22 = avg_ws_22["ws_value__avg"]
             # print(avg_ws_22)
             if (ws_avg22 == None):
                 ws_avg22 = 0
-            avg_wd_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_wd_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg22 = avg_wd_22["wd_value__avg"]
             # print(wd_avg22)
@@ -933,19 +933,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time23 = '22:00'
-            val_a = Weather_data.objects.filter(date=date1, time='22:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='22:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value23 = val_a
             else:
                 wd_value23 = 0
-            avg_ws_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_ws_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg23 = avg_ws_23["ws_value__avg"]
             # print(avg_ws_23)
             if (ws_avg23 == None):
                 ws_avg23 = 0
-            avg_wd_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_wd_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg23 = avg_wd_23["wd_value__avg"]
             # print(wd_avg23)
@@ -964,19 +964,19 @@ def fetch_wind_hourly_report_ajax(request):
 
             s_no = s_no + 1
             time24 = '23:00'
-            val_a = Weather_data.objects.filter(date=date1, time='23:00:00.000000').values('ws_value')
+            val_a = WindRoseData.objects.filter(date=date1, time='23:00:00.000000').values('ws_value')
             # print(month_num)
             if (val_a):
                 wd_value24 = val_a
             else:
                 wd_value24 = 0
-            avg_ws_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_ws_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg24 = avg_ws_24["ws_value__avg"]
             # print(avg_ws_24)
             if (ws_avg24 == None):
                 ws_avg24 = 0
-            avg_wd_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_wd_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg24 = avg_wd_24["wd_value__avg"]
             # print(wd_avg24)
@@ -1049,300 +1049,300 @@ def fetch_frequency_distribution_count_ajax(request):
 
         while date1 <= date2:
             # print(date1)
-            avg_ws_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_1 = avg_ws_1["ws_value__avg"]
             # # print(avg_ws)
             if (ws_avg_1 == None):
                 ws_avg_1 = 0
-            avg_wd_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_1 = avg_wd_1["wd_value__avg"]
             # # print(wd_avg)
             if(wd_avg_1 == None):
                 wd_avg_1 = 0
 
-            avg_ws_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_2 = avg_ws_2["ws_value__avg"]
             if (ws_avg_2 == None):
                 ws_avg_2 = 0
-            avg_wd_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_2 = avg_wd_2["wd_value__avg"]
             if (wd_avg_2 == None):
                 wd_avg_2 = 0
 
-            avg_ws_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_3 = avg_ws_3["ws_value__avg"]
             # # print(avg_ws_3)
             if (ws_avg_3 == None):
                 ws_avg_3 = 0
-            avg_wd_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_3 = avg_wd_3["wd_value__avg"]
             # # print(wd_avg)
             if (wd_avg_3 == None):
                 wd_avg_3 = 0
 
-            avg_ws_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_4 = avg_ws_4["ws_value__avg"]
             # # print(avg_ws_4)
             if (ws_avg_4 == None):
                 ws_avg_4 = 0
-            avg_wd_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_4 = avg_wd_4["wd_value__avg"]
             # # print(wd_avg_4)
             if (wd_avg_4 == None):
                 wd_avg_4 = 0
 
-            avg_ws_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_5 = avg_ws_5["ws_value__avg"]
             # # print(avg_ws_5)
             if (ws_avg_5 == None):
                 ws_avg_5 = 0
-            avg_wd_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_5 = avg_wd_5["wd_value__avg"]
             # # print(wd_avg_5)
             if (wd_avg_5 == None):
                 wd_avg_5 = 0
 
-            avg_ws_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_ws_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_6 = avg_ws_6["ws_value__avg"]
             # # print(avg_ws_6)
             if (ws_avg_6 == None):
                 ws_avg_6 = 0
-            avg_wd_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_wd_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_6 = avg_wd_6["wd_value__avg"]
             # # print(wd_avg_6)
             if (wd_avg_6 == None):
                 wd_avg_6 = 0
 
-            avg_ws_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_ws_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_7 = avg_ws_7["ws_value__avg"]
             # print(avg_ws_7)
             if (ws_avg_7 == None):
                 ws_avg_7 = 0
-            avg_wd_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_wd_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_7 = avg_wd_7["wd_value__avg"]
             # print(wd_avg_7)
             if (wd_avg_7 == None):
                 wd_avg_7 = 0
 
-            avg_ws_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_ws_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_8 = avg_ws_8["ws_value__avg"]
             # print(avg_ws_8)
             if (ws_avg_8 == None):
                 ws_avg_8 = 0
-            avg_wd_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_wd_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_8 = avg_wd_8["wd_value__avg"]
             # print(wd_avg_8)
             if (wd_avg_8 == None):
                 wd_avg_8 = 0
 
-            avg_ws_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_ws_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_9 = avg_ws_9["ws_value__avg"]
             # print(avg_ws_9)
             if (ws_avg_9 == None):
                 ws_avg_9 = 0
-            avg_wd_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_wd_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_9 = avg_wd_9["wd_value__avg"]
             # print(wd_avg_9)
             if (wd_avg_9 == None):
                 wd_avg_9 = 0
 
-            avg_ws_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_ws_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_10 = avg_ws_10["ws_value__avg"]
             # print(avg_ws_10)
             if (ws_avg_10 == None):
                 ws_avg_10 = 0
-            avg_wd_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_wd_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_10 = avg_wd_10["wd_value__avg"]
             # print(wd_avg_10)
             if (wd_avg_10 == None):
                 wd_avg_10 = 0
 
-            avg_ws_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_ws_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_11 = avg_ws_11["ws_value__avg"]
             # print(avg_ws_11)
             if (ws_avg_11 == None):
                 ws_avg_11 = 0
-            avg_wd_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_wd_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_11 = avg_wd_11["wd_value__avg"]
             # print(wd_avg_11)
             if (wd_avg_11 == None):
                 wd_avg_11 = 0
 
-            avg_ws_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_ws_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_12 = avg_ws_12["ws_value__avg"]
             # print(avg_ws_12)
             if (ws_avg_12 == None):
                 ws_avg_12 = 0
-            avg_wd_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_wd_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_12 = avg_wd_12["wd_value__avg"]
             # print(wd_avg_12)
             if (wd_avg_12 == None):
                 wd_avg_12 = 0
 
-            avg_ws_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_ws_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_13 = avg_ws_13["ws_value__avg"]
             # print(avg_ws_13)
             if (ws_avg_13 == None):
                 ws_avg_13 = 0
-            avg_wd_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_wd_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_13 = avg_wd_13["wd_value__avg"]
             # print(wd_avg_13)
             if (wd_avg_13 == None):
                 wd_avg_13 = 0
 
-            avg_ws_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_ws_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_14 = avg_ws_14["ws_value__avg"]
             # print(avg_ws_14)
             if (ws_avg_14 == None):
                 ws_avg_14 = 0
-            avg_wd_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_wd_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_14 = avg_wd_14["wd_value__avg"]
             # print(wd_avg_14)
             if (wd_avg_14 == None):
                 wd_avg_14 = 0
 
-            avg_ws_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_ws_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_15 = avg_ws_15["ws_value__avg"]
             # print(avg_ws_15)
             if (ws_avg_15 == None):
                 ws_avg_15 = 0
-            avg_wd_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_wd_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_15 = avg_wd_15["wd_value__avg"]
             # print(wd_avg_15)
             if (wd_avg_15 == None):
                 wd_avg_15 = 0
 
-            avg_ws_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_ws_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_16 = avg_ws_16["ws_value__avg"]
             # print(avg_ws_16)
             if (ws_avg_16 == None):
                 ws_avg_16 = 0
-            avg_wd_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_wd_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_16 = avg_wd_16["wd_value__avg"]
             # print(wd_avg_16)
             if (wd_avg_16 == None):
                 wd_avg_16 = 0
 
-            avg_ws_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_ws_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_17 = avg_ws_17["ws_value__avg"]
             # print(avg_ws_17)
             if (ws_avg_17 == None):
                 ws_avg_17 = 0
-            avg_wd_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_wd_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_17 = avg_wd_17["wd_value__avg"]
             # print(wd_avg_17)
             if (wd_avg_17 == None):
                 wd_avg_17 = 0
 
-            avg_ws_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_ws_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_18 = avg_ws_18["ws_value__avg"]
             # print(avg_ws_18)
             if (ws_avg_18 == None):
                 ws_avg_18 = 0
-            avg_wd_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_wd_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_18 = avg_wd_18["wd_value__avg"]
             # print(wd_avg_18)
             if (wd_avg_18 == None):
                 wd_avg_18 = 0
 
-            avg_ws_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_ws_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_19 = avg_ws_19["ws_value__avg"]
             # print(avg_ws_19)
             if (ws_avg_19 == None):
                 ws_avg_19 = 0
-            avg_wd_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_wd_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_19 = avg_wd_19["wd_value__avg"]
             # print(wd_avg_19)
             if (wd_avg_19 == None):
                 wd_avg_19 = 0
 
-            avg_ws_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_ws_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_20 = avg_ws_20["ws_value__avg"]
             # print(avg_ws_20)
             if (ws_avg_20 == None):
                 ws_avg_20 = 0
-            avg_wd_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_wd_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_20 = avg_wd_20["wd_value__avg"]
             # print(wd_avg_20)
             if (wd_avg_20 == None):
                 wd_avg_20 = 0
 
-            avg_ws_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_ws_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_21 = avg_ws_21["ws_value__avg"]
             # print(avg_ws_21)
             if (ws_avg_21 == None):
                 ws_avg_21 = 0
-            avg_wd_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_wd_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_21 = avg_wd_21["wd_value__avg"]
             # print(wd_avg_21)
             if (wd_avg_21 == None):
                 wd_avg_21 = 0
 
-            avg_ws_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_ws_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_22 = avg_ws_22["ws_value__avg"]
             # print(avg_ws_22)
             if (ws_avg_22 == None):
                 ws_avg_22 = 0
-            avg_wd_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_wd_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_22 = avg_wd_22["wd_value__avg"]
             # print(wd_avg_22)
             if (wd_avg_22 == None):
                 wd_avg_22 = 0
 
-            avg_ws_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_ws_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_23 = avg_ws_23["ws_value__avg"]
             # print(avg_ws_23)
             if (ws_avg_23 == None):
                 ws_avg_23 = 0
-            avg_wd_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_wd_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_23 = avg_wd_23["wd_value__avg"]
             # print(wd_avg_23)
             if (wd_avg_23 == None):
                 wd_avg_23 = 0
 
-            avg_ws_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_ws_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_24 = avg_ws_24["ws_value__avg"]
             # print(avg_ws_24)
             if (ws_avg_24 == None):
                 ws_avg_24 = 0
-            avg_wd_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_wd_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_24 = avg_wd_24["wd_value__avg"]
             # print(wd_avg_24)
@@ -1730,47 +1730,47 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time1 = '00:00'
             # calculating average rainfall
-            rainfall_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('rain_gauge'))
+            rainfall_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_1 = rainfall_1["rain_gauge__avg"]
             if (avg_rainfall_1 == None):
                 avg_rainfall_1 = 0
             # calculating average pm2.5
-            pm2_5_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('pm2_5'))
+            pm2_5_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_1 = pm2_5_1["pm2_5__avg"]
             if (avg_pm2_5_1 == None):
                 avg_pm2_5_1 = 0
             # calculating average pm10
-            pm10_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('pm10'))
+            pm10_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('pm10'))
             avg_pm10_1 = pm10_1["pm10__avg"]
             if (avg_pm10_1 == None):
                 avg_pm10_1 = 0
             # calculating average humidity
-            humidity_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('humidity'))
+            humidity_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('humidity'))
             avg_humidity_1 = humidity_1["humidity__avg"]
             if (avg_humidity_1 == None):
                 avg_humidity_1 = 0
             # calculating average temperature
-            temperature_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('temperature'))
+            temperature_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('temperature'))
             avg_temperature_1 = temperature_1["temperature__avg"]
             if (avg_temperature_1 == None):
                 avg_temperature_1 = 0
             # calculating average wind speed
-            avg_ws_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_1 = avg_ws_1["ws_value__avg"]
             if (ws_avg_1 == None):
                 ws_avg_1 = 0
             # calculating average wind direction
-            avg_wd_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_1 = avg_wd_1["wd_value__avg"]
             if(wd_avg_1 == None):
                 wd_avg_1 = 0
             # calculating average No2
-            no2_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'), date=date1).aggregate(Avg('no2'))
+            no2_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'), date=date1).aggregate(Avg('no2'))
             avg_no2_1 = no2_1["no2__avg"]
             if (avg_no2_1 == None):
                 avg_no2_1 = 0
             # calculating average So2
-            so2_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('so2'))
+            so2_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('so2'))
             avg_so2_1 = so2_1["so2__avg"]
             if (avg_so2_1 == None):
                 avg_so2_1 = 0
@@ -1794,54 +1794,54 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time2 = '01:00'
             # calculating average rainfall
-            rainfall_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            rainfall_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_2 = rainfall_2["rain_gauge__avg"]
             if (avg_rainfall_2 == None):
                 avg_rainfall_2 = 0
             # calculating average pm2.5
-            pm2_5_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            pm2_5_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_2 = pm2_5_2["pm2_5__avg"]
             if (avg_pm2_5_2 == None):
                 avg_pm2_5_2 = 0
             # calculating average pm10
-            pm10_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            pm10_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_2 = pm10_2["pm10__avg"]
             if (avg_pm10_2 == None):
                 avg_pm10_2 = 0
             # calculating average humidity
-            humidity_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            humidity_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_2 = humidity_1["humidity__avg"]
             if (avg_humidity_2 == None):
                 avg_humidity_2 = 0
             # calculating average temperature
-            temperature_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            temperature_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_2 = temperature_2["temperature__avg"]
             if (avg_temperature_2 == None):
                 avg_temperature_2 = 0
             # calculating average wind speed
-            avg_ws_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_2 = avg_ws_2["ws_value__avg"]
             # print(avg_ws_2)
             if (ws_avg_2 == None):
                 ws_avg_2 = 0
-            avg_wd_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_2 = avg_wd_2["wd_value__avg"]
             # print(wd_avg_2)
             if (wd_avg_2 == None):
                 wd_avg_2 = 0
             # calculating average No2
-            no2_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            no2_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_2 = no2_2["no2__avg"]
             if (avg_no2_2 == None):
                 avg_no2_2 = 0
             # calculating average So2
-            so2_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
+            so2_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_2 = so2_2["so2__avg"]
             if (avg_so2_2 == None):
@@ -1865,54 +1865,54 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time3 = '02:00'
             # calculating average rainfall
-            rainfall_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            rainfall_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_3 = rainfall_3["rain_gauge__avg"]
             if (avg_rainfall_3 == None):
                 avg_rainfall_3 = 0
             # calculating average pm2.5
-            pm2_5_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            pm2_5_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_3 = pm2_5_3["pm2_5__avg"]
             if (avg_pm2_5_3 == None):
                 avg_pm2_5_3 = 0
             # calculating average pm10
-            pm10_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            pm10_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_3 = pm10_3["pm10__avg"]
             if (avg_pm10_3 == None):
                 avg_pm10_3 = 0
             # calculating average humidity
-            humidity_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            humidity_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_3 = humidity_1["humidity__avg"]
             if (avg_humidity_3 == None):
                 avg_humidity_3 = 0
             # calculating average temperature
-            temperature_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            temperature_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_3 = temperature_1["temperature__avg"]
             if (avg_temperature_3 == None):
                 avg_temperature_3 = 0
             # calculating average wind speed
-            avg_ws_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_3 = avg_ws_3["ws_value__avg"]
             # print(avg_ws_3)
             if (ws_avg_3 == None):
                 ws_avg_3 = 0
-            avg_wd_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_3 = avg_wd_3["wd_value__avg"]
             # print(wd_avg_3)
             if (wd_avg_3 == None):
                 wd_avg_3 = 0
             # calculating average No2
-            no2_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            no2_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_3 = no2_3["no2__avg"]
             if (avg_no2_3 == None):
                 avg_no2_3 = 0
             # calculating average So2
-            so2_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
+            so2_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_3 = so2_3["so2__avg"]
             if (avg_so2_3 == None):
@@ -1937,55 +1937,55 @@ def fetch_sensor_hourly_report_ajax(request):
             time4 = '03:00'
 
             # calculating average rainfall
-            rainfall_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            rainfall_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_4 = rainfall_4["rain_gauge__avg"]
             if (avg_rainfall_4 == None):
                 avg_rainfall_4 = 0
             # calculating average pm2.5
-            pm2_5_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            pm2_5_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_4 = pm2_5_4["pm2_5__avg"]
             if (avg_pm2_5_4 == None):
                 avg_pm2_5_4 = 0
             # calculating average pm10
-            pm10_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            pm10_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_4 = pm10_4["pm10__avg"]
             if (avg_pm10_4 == None):
                 avg_pm10_4 = 0
             # calculating average humidity
-            humidity_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            humidity_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_4 = humidity_4["humidity__avg"]
             if (avg_humidity_4 == None):
                 avg_humidity_4 = 0
             # calculating average temperature
-            temperature_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            temperature_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_4 = temperature_4["temperature__avg"]
             if (avg_temperature_4 == None):
                 avg_temperature_4 = 0
             # calculating average wind speed
 
-            avg_ws_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_4 = avg_ws_4["ws_value__avg"]
             # print(avg_ws_4)
             if (ws_avg_4 == None):
                 ws_avg_4 = 0
-            avg_wd_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_4 = avg_wd_4["wd_value__avg"]
             # print(wd_avg_4)
             if (wd_avg_4 == None):
                 wd_avg_4 = 0
             # calculating average No2
-            no2_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            no2_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_4 = no2_4["no2__avg"]
             if (avg_no2_4 == None):
                 avg_no2_4 = 0
             # calculating average So2
-            so2_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
+            so2_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_4 = so2_4["so2__avg"]
             if (avg_so2_4 == None):
@@ -2009,54 +2009,54 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time5 = '04:00'
             # calculating average rainfall
-            rainfall_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            rainfall_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_5 = rainfall_5["rain_gauge__avg"]
             if (avg_rainfall_5 == None):
                 avg_rainfall_5 = 0
             # calculating average pm2.5
-            pm2_5_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            pm2_5_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_5 = pm2_5_5["pm2_5__avg"]
             if (avg_pm2_5_5 == None):
                 avg_pm2_5_5 = 0
             # calculating average pm10
-            pm10_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            pm10_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_5 = pm10_5["pm10__avg"]
             if (avg_pm10_5 == None):
                 avg_pm10_5 = 0
             # calculating average humidity
-            humidity_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            humidity_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_5 = humidity_5["humidity__avg"]
             if (avg_humidity_5 == None):
                 avg_humidity_5 = 0
             # calculating average temperature
-            temperature_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            temperature_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_5 = temperature_5["temperature__avg"]
             if (avg_temperature_5 == None):
                 avg_temperature_5 = 0
             # calculating average wind speed
-            avg_ws_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_5 = avg_ws_5["ws_value__avg"]
             # print(avg_ws_5)
             if (ws_avg_5 == None):
                 ws_avg_5 = 0
-            avg_wd_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_5 = avg_wd_5["wd_value__avg"]
             # print(wd_avg_5)
             if (wd_avg_5 == None):
                 wd_avg_5 = 0
             # calculating average No2
-            no2_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            no2_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_5 = no2_5["no2__avg"]
             if (avg_no2_5== None):
                 avg_no2_5 = 0
             # calculating average So2
-            so2_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
+            so2_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_5 = so2_5["so2__avg"]
             if (avg_so2_5 == None):
@@ -2080,56 +2080,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time6 = '05:00'
             # calculating average rainfall
-            rainfall_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            rainfall_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_6 = rainfall_6["rain_gauge__avg"]
             if (avg_rainfall_6 == None):
                 avg_rainfall_6 = 0
             # calculating average pm2.5
-            pm2_5_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            pm2_5_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_6 = pm2_5_6["pm2_5__avg"]
             if (avg_pm2_5_6 == None):
                 avg_pm2_5_6 = 0
             # calculating average pm10
-            pm10_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            pm10_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_6 = pm10_6["pm10__avg"]
             if (avg_pm10_6 == None):
                 avg_pm10_6 = 0
             # calculating average humidity
-            humidity_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            humidity_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_6 = humidity_6["humidity__avg"]
             if (avg_humidity_6 == None):
                 avg_humidity_6 = 0
             # calculating average temperature
-            temperature_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            temperature_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_6 = temperature_6["temperature__avg"]
             if (avg_temperature_6 == None):
                 avg_temperature_6 = 0
             # calculating average wind speed
-            avg_ws_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_ws_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_6 = avg_ws_6["ws_value__avg"]
             # print(avg_ws_6)
             if (ws_avg_6 == None):
                 ws_avg_6 = 0
-            avg_wd_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_wd_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_6 = avg_wd_6["wd_value__avg"]
             # print(wd_avg_6)
             if (wd_avg_6 == None):
                 wd_avg_6 = 0
             # calculating average No2
-            no2_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            no2_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_6 = no2_6["no2__avg"]
             if (avg_no2_6 == None):
                 avg_no2_6 = 0
             # calculating average So2
-            so2_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            so2_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_6 = so2_6["so2__avg"]
             if (avg_so2_6 == None):
@@ -2153,56 +2153,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time7 = '06:00'
             # calculating average rainfall
-            rainfall_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            rainfall_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_7 = rainfall_7["rain_gauge__avg"]
             if (avg_rainfall_7 == None):
                 avg_rainfall_7 = 0
             # calculating average pm2.5
-            pm2_5_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            pm2_5_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_7 = pm2_5_7["pm2_5__avg"]
             if (avg_pm2_5_7 == None):
                 avg_pm2_5_7 = 0
             # calculating average pm10
-            pm10_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            pm10_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_7 = pm10_7["pm10__avg"]
             if (avg_pm10_7 == None):
                 avg_pm10_7 = 0
             # calculating average humidity
-            humidity_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            humidity_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_7 = humidity_7["humidity__avg"]
             if (avg_humidity_7 == None):
                 avg_humidity_7 = 0
             # calculating average temperature
-            temperature_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            temperature_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_7 = temperature_7["temperature__avg"]
             if (avg_temperature_7 == None):
                 avg_temperature_7 = 0
             # calculating average wind speed
-            avg_ws_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_ws_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_7 = avg_ws_7["ws_value__avg"]
             # print(avg_ws_7)
             if (ws_avg_7 == None):
                 ws_avg_7 = 0
-            avg_wd_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_wd_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_7 = avg_wd_7["wd_value__avg"]
             # print(wd_avg_7)
             if (wd_avg_7 == None):
                 wd_avg_7 = 0
             # calculating average No2
-            no2_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            no2_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_7 = no2_7["no2__avg"]
             if (avg_no2_7 == None):
                 avg_no2_7 = 0
             # calculating average So2
-            so2_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            so2_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_7 = so2_7["so2__avg"]
             if (avg_so2_7 == None):
@@ -2226,56 +2226,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time8 = '07:00'
             # calculating average rainfall
-            rainfall_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            rainfall_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_8 = rainfall_8["rain_gauge__avg"]
             if (avg_rainfall_8 == None):
                 avg_rainfall_8 = 0
             # calculating average pm2.5
-            pm2_5_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            pm2_5_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_8 = pm2_5_8["pm2_5__avg"]
             if (avg_pm2_5_8 == None):
                 avg_pm2_5_8 = 0
             # calculating average pm10
-            pm10_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            pm10_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_8 = pm10_8["pm10__avg"]
             if (avg_pm10_8 == None):
                 avg_pm10_8 = 0
             # calculating average humidity
-            humidity_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            humidity_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_8 = humidity_8["humidity__avg"]
             if (avg_humidity_8 == None):
                 avg_humidity_8 = 0
             # calculating average temperature
-            temperature_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            temperature_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_8 = temperature_8["temperature__avg"]
             if (avg_temperature_8 == None):
                 avg_temperature_8 = 0
             # calculating average wind speed
-            avg_ws_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_ws_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_8 = avg_ws_8["ws_value__avg"]
             # print(avg_ws_8)
             if (ws_avg_8 == None):
                 ws_avg_8 = 0
-            avg_wd_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_wd_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_8 = avg_wd_8["wd_value__avg"]
             # print(wd_avg_8)
             if (wd_avg_8 == None):
                 wd_avg_8 = 0
             # calculating average No2
-            no2_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            no2_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_8 = no2_8["no2__avg"]
             if (avg_no2_8 == None):
                 avg_no2_8 = 0
             # calculating average So2
-            so2_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            so2_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_8 = so2_8["so2__avg"]
             if (avg_so2_8 == None):
@@ -2299,56 +2299,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time9 = '08:00'
             # calculating average rainfall
-            rainfall_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            rainfall_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_9 = rainfall_9["rain_gauge__avg"]
             if (avg_rainfall_9 == None):
                 avg_rainfall_9 = 0
             # calculating average pm2.5
-            pm2_5_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            pm2_5_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_9 = pm2_5_9["pm2_5__avg"]
             if (avg_pm2_5_9 == None):
                 avg_pm2_5_9 = 0
             # calculating average pm10
-            pm10_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            pm10_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_9 = pm10_9["pm10__avg"]
             if (avg_pm10_9 == None):
                 avg_pm10_9 = 0
             # calculating average humidity
-            humidity_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            humidity_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_9 = humidity_9["humidity__avg"]
             if (avg_humidity_9 == None):
                 avg_humidity_9 = 0
             # calculating average temperature
-            temperature_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            temperature_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_9 = temperature_9["temperature__avg"]
             if (avg_temperature_9 == None):
                 avg_temperature_9 = 0
             # calculating average wind speed
-            avg_ws_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_ws_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_9 = avg_ws_9["ws_value__avg"]
             # print(avg_ws_9)
             if (ws_avg_9 == None):
                 ws_avg_9 = 0
-            avg_wd_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_wd_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_9 = avg_wd_9["wd_value__avg"]
             # print(wd_avg_9)
             if (wd_avg_9 == None):
                 wd_avg_9 = 0
             # calculating average No2
-            no2_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            no2_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_9 = no2_9["no2__avg"]
             if (avg_no2_9 == None):
                 avg_no2_9 = 0
             # calculating average So2
-            so2_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            so2_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_9 = so2_9["so2__avg"]
             if (avg_so2_9 == None):
@@ -2372,56 +2372,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time10 = '09:00'
             # calculating average rainfall
-            rainfall_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            rainfall_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_10 = rainfall_10["rain_gauge__avg"]
             if (avg_rainfall_10 == None):
                 avg_rainfall_10 = 0
             # calculating average pm2.5
-            pm2_5_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            pm2_5_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_10 = pm2_5_10["pm2_5__avg"]
             if (avg_pm2_5_10 == None):
                 avg_pm2_5_10 = 0
             # calculating average pm10
-            pm10_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            pm10_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_10 = pm10_10["pm10__avg"]
             if (avg_pm10_10 == None):
                 avg_pm10_10 = 0
             # calculating average humidity
-            humidity_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            humidity_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_10 = humidity_10["humidity__avg"]
             if (avg_humidity_10 == None):
                 avg_humidity_10 = 0
             # calculating average temperature
-            temperature_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            temperature_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_10 = temperature_10["temperature__avg"]
             if (avg_temperature_10 == None):
                 avg_temperature_10 = 0
             # calculating average wind speed
-            avg_ws_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_ws_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_10 = avg_ws_10["ws_value__avg"]
             # print(avg_ws_10)
             if (ws_avg_10 == None):
                 ws_avg_10 = 0
-            avg_wd_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_wd_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_10 = avg_wd_10["wd_value__avg"]
             # print(wd_avg_10)
             if (wd_avg_10 == None):
                 wd_avg_10 = 0
             # calculating average No2
-            no2_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            no2_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_10 = no2_10["no2__avg"]
             if (avg_no2_10 == None):
                 avg_no2_10 = 0
             # calculating average So2
-            so2_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            so2_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_10 = so2_10["so2__avg"]
             if (avg_so2_10 == None):
@@ -2445,56 +2445,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time11 = '10:00'
             # calculating average rainfall
-            rainfall_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            rainfall_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_11 = rainfall_11["rain_gauge__avg"]
             if (avg_rainfall_11 == None):
                 avg_rainfall_11 = 0
             # calculating average pm2.5
-            pm2_5_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            pm2_5_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_11 = pm2_5_11["pm2_5__avg"]
             if (avg_pm2_5_11 == None):
                 avg_pm2_5_11 = 0
             # calculating average pm10
-            pm10_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            pm10_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_11 = pm10_11["pm10__avg"]
             if (avg_pm10_11 == None):
                 avg_pm10_11 = 0
             # calculating average humidity
-            humidity_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            humidity_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_11 = humidity_11["humidity__avg"]
             if (avg_humidity_11 == None):
                 avg_humidity_11 = 0
             # calculating average temperature
-            temperature_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            temperature_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_11 = temperature_11["temperature__avg"]
             if (avg_temperature_11 == None):
                 avg_temperature_11 = 0
             # calculating average wind speed
-            avg_ws_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_ws_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_11 = avg_ws_11["ws_value__avg"]
             # print(avg_ws_11)
             if (ws_avg_11 == None):
                 ws_avg_11 = 0
-            avg_wd_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_wd_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_11 = avg_wd_11["wd_value__avg"]
             # print(wd_avg_11)
             if (wd_avg_11 == None):
                 wd_avg_11 = 0
             # calculating average No2
-            no2_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            no2_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_11 = no2_11["no2__avg"]
             if (avg_no2_11 == None):
                 avg_no2_11 = 0
             # calculating average So2
-            so2_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            so2_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_11 = so2_11["so2__avg"]
             if (avg_so2_11 == None):
@@ -2519,56 +2519,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time12 = '11:00'
             # calculating average rainfall
-            rainfall_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            rainfall_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_12 = rainfall_12["rain_gauge__avg"]
             if (avg_rainfall_12 == None):
                 avg_rainfall_12 = 0
             # calculating average pm2.5
-            pm2_5_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            pm2_5_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_12 = pm2_5_12["pm2_5__avg"]
             if (avg_pm2_5_12 == None):
                 avg_pm2_5_12 = 0
             # calculating average pm10
-            pm10_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            pm10_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_12 = pm10_12["pm10__avg"]
             if (avg_pm10_12 == None):
                 avg_pm10_12 = 0
             # calculating average humidity
-            humidity_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            humidity_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_12 = humidity_12["humidity__avg"]
             if (avg_humidity_12 == None):
                 avg_humidity_12 = 0
             # calculating average temperature
-            temperature_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            temperature_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_12 = temperature_12["temperature__avg"]
             if (avg_temperature_12 == None):
                 avg_temperature_12 = 0
             # calculating average wind speed
-            avg_ws_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_ws_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_12 = avg_ws_12["ws_value__avg"]
             # print(avg_ws_12)
             if (ws_avg_12 == None):
                 ws_avg_12 = 0
-            avg_wd_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_wd_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_12 = avg_wd_12["wd_value__avg"]
             # print(wd_avg_12)
             if (wd_avg_12 == None):
                 wd_avg_12 = 0
             # calculating average No2
-            no2_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            no2_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_12 = no2_12["no2__avg"]
             if (avg_no2_12 == None):
                 avg_no2_12 = 0
             # calculating average So2
-            so2_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            so2_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_12 = so2_12["so2__avg"]
             if (avg_so2_12 == None):
@@ -2592,56 +2592,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time13 = '12:00'
             # calculating average rainfall
-            rainfall_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            rainfall_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_13 = rainfall_13["rain_gauge__avg"]
             if (avg_rainfall_13 == None):
                 avg_rainfall_13 = 0
             # calculating average pm2.5
-            pm2_5_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            pm2_5_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_13 = pm2_5_13["pm2_5__avg"]
             if (avg_pm2_5_13 == None):
                 avg_pm2_5_13 = 0
             # calculating average pm10
-            pm10_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            pm10_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_13 = pm10_13["pm10__avg"]
             if (avg_pm10_13 == None):
                 avg_pm10_13 = 0
             # calculating average humidity
-            humidity_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            humidity_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_13 = humidity_13["humidity__avg"]
             if (avg_humidity_13 == None):
                 avg_humidity_13 = 0
             # calculating average temperature
-            temperature_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            temperature_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_13 = temperature_13["temperature__avg"]
             if (avg_temperature_13 == None):
                 avg_temperature_13 = 0
             # calculating average wind speed
-            avg_ws_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_ws_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_13 = avg_ws_13["ws_value__avg"]
             # print(avg_ws_13)
             if (ws_avg_13 == None):
                 ws_avg_13 = 0
-            avg_wd_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_wd_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_13 = avg_wd_13["wd_value__avg"]
             # print(wd_avg_13)
             if (wd_avg_13 == None):
                 wd_avg_13 = 0
             # calculating average No2
-            no2_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '14:00:00.000000'),
+            no2_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '14:00:00.000000'),
                                                 date=date1).aggregate(Avg('no2'))
             avg_no2_13 = no2_13["no2__avg"]
             if (avg_no2_13 == None):
                 avg_no2_13 = 0
             # calculating average So2
-            so2_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            so2_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                 date=date1).aggregate(Avg('so2'))
             avg_so2_13 = so2_13["so2__avg"]
             if (avg_so2_13 == None):
@@ -2665,56 +2665,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time14 = '13:00'
             # calculating average rainfall
-            rainfall_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            rainfall_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_14 = rainfall_14["rain_gauge__avg"]
             if (avg_rainfall_14 == None):
                 avg_rainfall_14 = 0
             # calculating average pm2.5
-            pm2_5_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            pm2_5_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_14 = pm2_5_14["pm2_5__avg"]
             if (avg_pm2_5_14 == None):
                 avg_pm2_5_14 = 0
             # calculating average pm10
-            pm10_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            pm10_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_14 = pm10_14["pm10__avg"]
             if (avg_pm10_14 == None):
                 avg_pm10_14 = 0
             # calculating average humidity
-            humidity_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            humidity_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_14 = humidity_14["humidity__avg"]
             if (avg_humidity_14 == None):
                 avg_humidity_14 = 0
             # calculating average temperature
-            temperature_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            temperature_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_14 = temperature_14["temperature__avg"]
             if (avg_temperature_14 == None):
                 avg_temperature_14 = 0
             # calculating average wind speed
-            avg_ws_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_ws_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_14 = avg_ws_14["ws_value__avg"]
             # print(avg_ws_14)
             if (ws_avg_14 == None):
                 ws_avg_14 = 0
-            avg_wd_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_wd_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_14 = avg_wd_14["wd_value__avg"]
             # print(wd_avg_14)
             if (wd_avg_14 == None):
                 wd_avg_14 = 0
             # calculating average No2
-            no2_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            no2_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_14 = no2_14["no2__avg"]
             if (avg_no2_14 == None):
                 avg_no2_14 = 0
             # calculating average So2
-            so2_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            so2_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_14 = so2_14["so2__avg"]
             if (avg_so2_14 == None):
@@ -2738,55 +2738,55 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time15 = '14:00'
             # calculating average rainfall
-            rainfall_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            rainfall_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_15 = rainfall_15["rain_gauge__avg"]
             if (avg_rainfall_15 == None):
                 avg_rainfall_15 = 0
             # calculating average pm2.5
-            pm2_5_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            pm2_5_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_15 = pm2_5_15["pm2_5__avg"]
             if (avg_pm2_5_15 == None):
                 avg_pm2_5_15 = 0
             # calculating average pm10
-            pm10_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            pm10_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_15 = pm10_15["pm10__avg"]
             if (avg_pm10_15 == None):
                 avg_pm10_15 = 0
             # calculating average humidity
-            humidity_15= Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            humidity_15= WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_15 = humidity_15["humidity__avg"]
             if (avg_humidity_15 == None):
                 avg_humidity_15 = 0
             # calculating average temperature
-            temperature_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            temperature_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_15 = temperature_15["temperature__avg"]
             if (avg_temperature_15 == None):
                 avg_temperature_15 = 0
             # calculating average wind speed
-            avg_ws_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_ws_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_15 = avg_ws_15["ws_value__avg"]
             # print(avg_ws_15)
             if (ws_avg_15 == None):
                 ws_avg_15 = 0
-            avg_wd_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_wd_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_15 = avg_wd_15["wd_value__avg"]
             # print(wd_avg_15)
             if (wd_avg_15 == None):
                 wd_avg_15 = 0
-            no2_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            no2_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_15 = no2_15["no2__avg"]
             if (avg_no2_15 == None):
                 avg_no2_15 = 0
             # calculating average So2
-            so2_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            so2_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_15 = so2_15["so2__avg"]
             if (avg_so2_15 == None):
@@ -2810,56 +2810,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time16 = '15:00'
             # calculating average rainfall
-            rainfall_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            rainfall_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_16 = rainfall_16["rain_gauge__avg"]
             if (avg_rainfall_16 == None):
                 avg_rainfall_16 = 0
             # calculating average pm2.5
-            pm2_5_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            pm2_5_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_16 = pm2_5_16["pm2_5__avg"]
             if (avg_pm2_5_16 == None):
                 avg_pm2_5_16 = 0
             # calculating average pm10
-            pm10_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            pm10_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_16 = pm10_16["pm10__avg"]
             if (avg_pm10_16 == None):
                 avg_pm10_16 = 0
             # calculating average humidity
-            humidity_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            humidity_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_16 = humidity_16["humidity__avg"]
             if (avg_humidity_16 == None):
                 avg_humidity_16 = 0
             # calculating average temperature
-            temperature_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            temperature_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_16 = temperature_16["temperature__avg"]
             if (avg_temperature_16 == None):
                 avg_temperature_16 = 0
             # calculating average wind speed
-            avg_ws_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_ws_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_16 = avg_ws_16["ws_value__avg"]
             # print(avg_ws_16)
             if (ws_avg_16 == None):
                 ws_avg_16 = 0
-            avg_wd_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_wd_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_16 = avg_wd_16["wd_value__avg"]
             # print(wd_avg_16)
             if (wd_avg_16 == None):
                 wd_avg_16 = 0
 
-            no2_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            no2_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_16 = no2_14["no2__avg"]
             if (avg_no2_16 == None):
                 avg_no2_16 = 0
             # calculating average So2
-            so2_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            so2_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_16 = so2_16["so2__avg"]
             if (avg_so2_16 == None):
@@ -2883,56 +2883,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time17 = '16:00'
             # calculating average rainfall
-            rainfall_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            rainfall_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_17 = rainfall_17["rain_gauge__avg"]
             if (avg_rainfall_17 == None):
                 avg_rainfall_17 = 0
             # calculating average pm2.5
-            pm2_5_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            pm2_5_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_17 = pm2_5_17["pm2_5__avg"]
             if (avg_pm2_5_17 == None):
                 avg_pm2_5_17 = 0
             # calculating average pm10
-            pm10_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            pm10_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_17 = pm10_17["pm10__avg"]
             if (avg_pm10_17 == None):
                 avg_pm10_17 = 0
             # calculating average humidity
-            humidity_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            humidity_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_17 = humidity_17["humidity__avg"]
             if (avg_humidity_17 == None):
                 avg_humidity_17 = 0
             # calculating average temperature
-            temperature_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            temperature_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_17 = temperature_17["temperature__avg"]
             if (avg_temperature_17 == None):
                 avg_temperature_17 = 0
             # calculating average wind speed
-            avg_ws_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_ws_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_17 = avg_ws_17["ws_value__avg"]
             # print(avg_ws_17)
             if (ws_avg_17 == None):
                 ws_avg_17 = 0
-            avg_wd_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_wd_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_17 = avg_wd_17["wd_value__avg"]
             # print(wd_avg_17)
             if (wd_avg_17 == None):
                 wd_avg_17 = 0
 
-            no2_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            no2_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_17 = no2_17["no2__avg"]
             if (avg_no2_17 == None):
                 avg_no2_17 = 0
             # calculating average So2
-            so2_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            so2_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_17 = so2_17["so2__avg"]
             if (avg_so2_17 == None):
@@ -2956,56 +2956,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time18 = '17:00'
             # calculating average rainfall
-            rainfall_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            rainfall_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_18 = rainfall_18["rain_gauge__avg"]
             if (avg_rainfall_18 == None):
                 avg_rainfall_18 = 0
             # calculating average pm2.5
-            pm2_5_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            pm2_5_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_18 = pm2_5_18["pm2_5__avg"]
             if (avg_pm2_5_18 == None):
                 avg_pm2_5_18 = 0
             # calculating average pm10
-            pm10_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            pm10_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_18 = pm10_18["pm10__avg"]
             if (avg_pm10_18 == None):
                 avg_pm10_18 = 0
             # calculating average humidity
-            humidity_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            humidity_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_18 = humidity_18["humidity__avg"]
             if (avg_humidity_18 == None):
                 avg_humidity_18 = 0
             # calculating average temperature
-            temperature_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            temperature_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_18 = temperature_18["temperature__avg"]
             if (avg_temperature_18 == None):
                 avg_temperature_18 = 0
             # calculating average wind speed
-            avg_ws_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_ws_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_18 = avg_ws_18["ws_value__avg"]
             # print(avg_ws_18)
             if (ws_avg_18 == None):
                 ws_avg_18 = 0
-            avg_wd_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_wd_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_18 = avg_wd_18["wd_value__avg"]
             # print(wd_avg_18)
             if (wd_avg_18 == None):
                 wd_avg_18 = 0
 
-            no2_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            no2_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_18 = no2_18["no2__avg"]
             if (avg_no2_18 == None):
                 avg_no2_18 = 0
             # calculating average So2
-            so2_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            so2_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_18 = so2_18["so2__avg"]
             if (avg_so2_18 == None):
@@ -3029,56 +3029,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time19 = '18:00'
             # calculating average rainfall
-            rainfall_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            rainfall_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_19 = rainfall_19["rain_gauge__avg"]
             if (avg_rainfall_19 == None):
                 avg_rainfall_19 = 0
             # calculating average pm2.5
-            pm2_5_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            pm2_5_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_19 = pm2_5_19["pm2_5__avg"]
             if (avg_pm2_5_19 == None):
                 avg_pm2_5_19 = 0
             # calculating average pm10
-            pm10_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            pm10_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_19 = pm10_19["pm10__avg"]
             if (avg_pm10_19 == None):
                 avg_pm10_19 = 0
             # calculating average humidity
-            humidity_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            humidity_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_19 = humidity_19["humidity__avg"]
             if (avg_humidity_19 == None):
                 avg_humidity_19 = 0
             # calculating average temperature
-            temperature_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            temperature_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_19 = temperature_19["temperature__avg"]
             if (avg_temperature_19 == None):
                 avg_temperature_19 = 0
             # calculating average wind speed
-            avg_ws_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_ws_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_19 = avg_ws_19["ws_value__avg"]
             # print(avg_ws_19)
             if (ws_avg_19 == None):
                 ws_avg_19 = 0
-            avg_wd_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_wd_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_19 = avg_wd_19["wd_value__avg"]
             # print(wd_avg_19)
             if (wd_avg_19 == None):
                 wd_avg_19 = 0
 
-            no2_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            no2_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_19 = no2_19["no2__avg"]
             if (avg_no2_19 == None):
                 avg_no2_19 = 0
             # calculating average So2
-            so2_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            so2_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_19 = so2_19["so2__avg"]
             if (avg_so2_19 == None):
@@ -3102,56 +3102,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time20 = '19:00'
             # calculating average rainfall
-            rainfall_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            rainfall_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_20 = rainfall_20["rain_gauge__avg"]
             if (avg_rainfall_20 == None):
                 avg_rainfall_20 = 0
             # calculating average pm2.5
-            pm2_5_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            pm2_5_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_20 = pm2_5_20["pm2_5__avg"]
             if (avg_pm2_5_20 == None):
                 avg_pm2_5_20 = 0
             # calculating average pm10
-            pm10_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            pm10_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_20 = pm10_20["pm10__avg"]
             if (avg_pm10_20 == None):
                 avg_pm10_20 = 0
             # calculating average humidity
-            humidity_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            humidity_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_20 = humidity_20["humidity__avg"]
             if (avg_humidity_20 == None):
                 avg_humidity_20 = 0
             # calculating average temperature
-            temperature_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            temperature_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_20 = temperature_20["temperature__avg"]
             if (avg_temperature_20 == None):
                 avg_temperature_20 = 0
             # calculating average wind speed
-            avg_ws_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_ws_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_20 = avg_ws_20["ws_value__avg"]
             # print(avg_ws_20)
             if (ws_avg_20 == None):
                 ws_avg_20 = 0
-            avg_wd_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_wd_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_20 = avg_wd_20["wd_value__avg"]
             # print(wd_avg_20)
             if (wd_avg_20 == None):
                 wd_avg_20 = 0
 
-            no2_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            no2_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_20 = no2_20["no2__avg"]
             if (avg_no2_20 == None):
                 avg_no2_20 = 0
             # calculating average So2
-            so2_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            so2_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_20 = so2_20["so2__avg"]
             if (avg_so2_20 == None):
@@ -3175,56 +3175,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time21 = '20:00'
             # calculating average rainfall
-            rainfall_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            rainfall_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_21 = rainfall_21["rain_gauge__avg"]
             if (avg_rainfall_21 == None):
                 avg_rainfall_21 = 0
             # calculating average pm2.5
-            pm2_5_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            pm2_5_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_21 = pm2_5_21["pm2_5__avg"]
             if (avg_pm2_5_21 == None):
                 avg_pm2_5_21 = 0
             # calculating average pm10
-            pm10_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            pm10_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_21 = pm10_21["pm10__avg"]
             if (avg_pm10_21 == None):
                 avg_pm10_21 = 0
             # calculating average humidity
-            humidity_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            humidity_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_21 = humidity_21["humidity__avg"]
             if (avg_humidity_21 == None):
                 avg_humidity_21 = 0
             # calculating average temperature
-            temperature_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            temperature_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_21 = temperature_21["temperature__avg"]
             if (avg_temperature_21 == None):
                 avg_temperature_21 = 0
             # calculating average wind speed
-            avg_ws_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_ws_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_21 = avg_ws_21["ws_value__avg"]
             # print(avg_ws_21)
             if (ws_avg_21 == None):
                 ws_avg_21 = 0
-            avg_wd_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_wd_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_21 = avg_wd_21["wd_value__avg"]
             # print(wd_avg_21)
             if (wd_avg_21 == None):
                 wd_avg_21 = 0
 
-            no2_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            no2_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_21 = no2_21["no2__avg"]
             if (avg_no2_21 == None):
                 avg_no2_21 = 0
             # calculating average So2
-            so2_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            so2_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_21 = so2_14["so2__avg"]
             if (avg_so2_21 == None):
@@ -3248,56 +3248,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time22 = '21:00'
             # calculating average rainfall
-            rainfall_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            rainfall_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_22 = rainfall_22["rain_gauge__avg"]
             if (avg_rainfall_22 == None):
                 avg_rainfall_22 = 0
             # calculating average pm2.5
-            pm2_5_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            pm2_5_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_22 = pm2_5_22["pm2_5__avg"]
             if (avg_pm2_5_22 == None):
                 avg_pm2_5_22 = 0
             # calculating average pm10
-            pm10_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            pm10_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_22 = pm10_22["pm10__avg"]
             if (avg_pm10_22 == None):
                 avg_pm10_22 = 0
             # calculating average humidity
-            humidity_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            humidity_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_22 = humidity_1["humidity__avg"]
             if (avg_humidity_22 == None):
                 avg_humidity_22 = 0
             # calculating average temperature
-            temperature_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            temperature_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_22 = temperature_22["temperature__avg"]
             if (avg_temperature_22 == None):
                 avg_temperature_22 = 0
             # calculating average wind speed
-            avg_ws_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_ws_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_22 = avg_ws_22["ws_value__avg"]
             # print(avg_ws_22)
             if (ws_avg_22 == None):
                 ws_avg_22 = 0
-            avg_wd_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_wd_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_22 = avg_wd_22["wd_value__avg"]
             # print(wd_avg_22)
             if (wd_avg_22 == None):
                 wd_avg_22 = 0
 
-            no2_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            no2_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_22 = no2_22["no2__avg"]
             if (avg_no2_22 == None):
                 avg_no2_22 = 0
             # calculating average So2
-            so2_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            so2_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_22 = so2_22["so2__avg"]
             if (avg_so2_22 == None):
@@ -3321,56 +3321,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time23 = '22:00'
             # calculating average rainfall
-            rainfall_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            rainfall_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_23 = rainfall_23["rain_gauge__avg"]
             if (avg_rainfall_23 == None):
                 avg_rainfall_23 = 0
             # calculating average pm2.5
-            pm2_5_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            pm2_5_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_23 = pm2_5_23["pm2_5__avg"]
             if (avg_pm2_5_23 == None):
                 avg_pm2_5_23 = 0
             # calculating average pm10
-            pm10_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            pm10_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_23 = pm10_23["pm10__avg"]
             if (avg_pm10_23 == None):
                 avg_pm10_23 = 0
             # calculating average humidity
-            humidity_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            humidity_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_23 = humidity_23["humidity__avg"]
             if (avg_humidity_23 == None):
                 avg_humidity_23 = 0
             # calculating average temperature
-            temperature_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            temperature_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_23 = temperature_23["temperature__avg"]
             if (avg_temperature_23 == None):
                 avg_temperature_23 = 0
             # calculating average wind speed
-            avg_ws_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_ws_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_23 = avg_ws_23["ws_value__avg"]
             # print(avg_ws_23)
             if (ws_avg_23 == None):
                 ws_avg_23 = 0
-            avg_wd_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_wd_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_23 = avg_wd_23["wd_value__avg"]
             # print(wd_avg_23)
             if (wd_avg_23 == None):
                 wd_avg_23 = 0
 
-            no2_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            no2_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_23 = no2_23["no2__avg"]
             if (avg_no2_23 == None):
                 avg_no2_23 = 0
             # calculating average So2
-            so2_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            so2_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_23 = so2_23["so2__avg"]
             if (avg_so2_23 == None):
@@ -3394,56 +3394,56 @@ def fetch_sensor_hourly_report_ajax(request):
             s_no = s_no + 1
             time24 = '23:00'
             # calculating average rainfall
-            rainfall_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            rainfall_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                      date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_24 = rainfall_24["rain_gauge__avg"]
             if (avg_rainfall_24 == None):
                 avg_rainfall_24 = 0
             # calculating average pm2.5
-            pm2_5_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            pm2_5_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                   date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_24 = pm2_5_24["pm2_5__avg"]
             if (avg_pm2_5_24 == None):
                 avg_pm2_5_24 = 0
             # calculating average pm10
-            pm10_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            pm10_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                  date=date1).aggregate(Avg('pm10'))
             avg_pm10_24 = pm10_24["pm10__avg"]
             if (avg_pm10_24 == None):
                 avg_pm10_24 = 0
             # calculating average humidity
-            humidity_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            humidity_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                      date=date1).aggregate(Avg('humidity'))
             avg_humidity_24 = humidity_24["humidity__avg"]
             if (avg_humidity_24 == None):
                 avg_humidity_24 = 0
             # calculating average temperature
-            temperature_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            temperature_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                         date=date1).aggregate(Avg('temperature'))
             avg_temperature_24 = temperature_24["temperature__avg"]
             if (avg_temperature_24 == None):
                 avg_temperature_24 = 0
             # calculating average wind speed
-            avg_ws_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_ws_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_24 = avg_ws_24["ws_value__avg"]
             # print(avg_ws_24)
             if (ws_avg_24 == None):
                 ws_avg_24 = 0
-            avg_wd_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_wd_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_24 = avg_wd_24["wd_value__avg"]
             # print(wd_avg_24)
             if (wd_avg_24 == None):
                 wd_avg_24 = 0
 
-            no2_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            no2_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                  date=date1).aggregate(Avg('no2'))
             avg_no2_24 = no2_24["no2__avg"]
             if (avg_no2_24 == None):
                 avg_no2_24 = 0
             # calculating average So2
-            so2_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            so2_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                  date=date1).aggregate(Avg('so2'))
             avg_so2_24 = so2_24["so2__avg"]
             if (avg_so2_24 == None):
@@ -3515,53 +3515,53 @@ def fetch_hour_duration_avg_report_ajax(request):
         s_no = 0
         s_no = s_no + 1
         # calculating average rainfall
-        rainfall = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('rain_gauge'))
+        rainfall = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('rain_gauge'))
         avg_rainfall =rainfall["rain_gauge__avg"]
         ## print(rainfall.query)
         ## print(avg_rainfall)
         if (avg_rainfall == None):
             avg_rainfall = 0
         # calculating average pm2.5
-        pm2_5 = Weather_data.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('pm2_5'))
+        pm2_5 = WindRoseData.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('pm2_5'))
         avg_pm2_5 = pm2_5["pm2_5__avg"]
         if (avg_pm2_5 == None):
             avg_pm2_5 = 0
         # calculating average pm10
-        pm10 = Weather_data.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('pm10'))
+        pm10 = WindRoseData.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('pm10'))
         avg_pm10 = pm10["pm10__avg"]
         if (avg_pm10 == None):
             avg_pm10 = 0
         # calculating average humidity
-        humidity = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('humidity'))
+        humidity = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('humidity'))
         avg_humidity = humidity["humidity__avg"]
         if (avg_humidity == None):
             avg_humidity = 0
         # calculating average temperature
-        temperature = Weather_data.objects.filter(time__range=(from_time, to_time),
+        temperature = WindRoseData.objects.filter(time__range=(from_time, to_time),
                                                     date=date1).aggregate(Avg('temperature'))
         avg_temperature = temperature["temperature__avg"]
         if (avg_temperature == None):
             avg_temperature = 0
         # calculating average wind speed
-        avg_ws = Weather_data.objects.filter(time__range=(from_time, to_time),
+        avg_ws = WindRoseData.objects.filter(time__range=(from_time, to_time),
                                                date=date1).aggregate(Avg('ws_value'))
         ws_avg = avg_ws["ws_value__avg"]
         if (ws_avg == None):
             ws_avg = 0
         # calculating average wind direction
-        avg_wd = Weather_data.objects.filter(time__range=(from_time, to_time),
+        avg_wd = WindRoseData.objects.filter(time__range=(from_time, to_time),
                                                date=date1).aggregate(Avg('wd_value'))
         wd_avg = avg_wd["wd_value__avg"]
         if (wd_avg == None):
             wd_avg = 0
         # calculating average No2
-        no2 = Weather_data.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(
+        no2 = WindRoseData.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(
             Avg('no2'))
         avg_no2 = no2["no2__avg"]
         if (avg_no2 == None):
             avg_no2 = 0
         # calculating average So2
-        so2 = Weather_data.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(
+        so2 = WindRoseData.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(
             Avg('so2'))
         avg_so2 = so2["so2__avg"]
         if (avg_so2 == None):
@@ -3612,47 +3612,47 @@ def fetch_date_and_hour_duration_avg_report_ajax(request):
             # # print(date1)
             s_no = s_no + 1
             # calculating average rainfall
-            rainfall_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('rain_gauge'))
+            rainfall_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('rain_gauge'))
             avg_rainfall_1 = rainfall_1["rain_gauge__avg"]
             if (avg_rainfall_1 == None):
                 avg_rainfall_1 = 0
             # calculating average pm2.5
-            pm2_5_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('pm2_5'))
+            pm2_5_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('pm2_5'))
             avg_pm2_5_1 = pm2_5_1["pm2_5__avg"]
             if (avg_pm2_5_1 == None):
                 avg_pm2_5_1 = 0
             # calculating average pm10
-            pm10_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('pm10'))
+            pm10_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('pm10'))
             avg_pm10_1 = pm10_1["pm10__avg"]
             if (avg_pm10_1 == None):
                 avg_pm10_1 = 0
             # calculating average humidity
-            humidity_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('humidity'))
+            humidity_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('humidity'))
             avg_humidity_1 = humidity_1["humidity__avg"]
             if (avg_humidity_1 == None):
                 avg_humidity_1 = 0
             # calculating average temperature
-            temperature_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('temperature'))
+            temperature_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('temperature'))
             avg_temperature_1 = temperature_1["temperature__avg"]
             if (avg_temperature_1 == None):
                 avg_temperature_1 = 0
             # calculating average wind speed
-            avg_ws_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('ws_value'))
             ws_avg_1 = avg_ws_1["ws_value__avg"]
             if (ws_avg_1 == None):
                 ws_avg_1 = 0
             # calculating average wind direction
-            avg_wd_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('wd_value'))
             wd_avg_1 = avg_wd_1["wd_value__avg"]
             if(wd_avg_1 == None):
                 wd_avg_1 = 0
             # calculating average No2
-            no2_1 = Weather_data.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('no2'))
+            no2_1 = WindRoseData.objects.filter(time__range=(from_time, to_time), date=date1).aggregate(Avg('no2'))
             avg_no2_1 = no2_1["no2__avg"]
             if (avg_no2_1 == None):
                 avg_no2_1 = 0
             # calculating average So2
-            so2_1 = Weather_data.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('so2'))
+            so2_1 = WindRoseData.objects.filter(time__range=(from_time, to_time),date=date1).aggregate(Avg('so2'))
             avg_so2_1 = so2_1["so2__avg"]
             if (avg_so2_1 == None):
                 avg_so2_1 = 0
@@ -3705,300 +3705,300 @@ def fetch_frequency_distribution_normalized_ajax(request):
 
         while date1 <= date2:
             # print(date1)
-            avg_ws_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_1 = avg_ws_1["ws_value__avg"]
             # # print(avg_ws)
             if (ws_avg_1 == None):
                 ws_avg_1 = 0
-            avg_wd_1 = Weather_data.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_1 = WindRoseData.objects.filter(time__range=('00:00:00.000000', '01:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_1 = avg_wd_1["wd_value__avg"]
             # # print(wd_avg)
             if(wd_avg_1 == None):
                 wd_avg_1 = 0
 
-            avg_ws_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_2 = avg_ws_2["ws_value__avg"]
             if (ws_avg_2 == None):
                 ws_avg_2 = 0
-            avg_wd_2 = Weather_data.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_2 = WindRoseData.objects.filter(time__range=('01:00:00.000000', '02:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_2 = avg_wd_2["wd_value__avg"]
             if (wd_avg_2 == None):
                 wd_avg_2 = 0
 
-            avg_ws_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_3 = avg_ws_3["ws_value__avg"]
             # # print(avg_ws_3)
             if (ws_avg_3 == None):
                 ws_avg_3 = 0
-            avg_wd_3 = Weather_data.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_3 = WindRoseData.objects.filter(time__range=('02:00:00.000000', '03:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_3 = avg_wd_3["wd_value__avg"]
             # # print(wd_avg)
             if (wd_avg_3 == None):
                 wd_avg_3 = 0
 
-            avg_ws_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_4 = avg_ws_4["ws_value__avg"]
             # # print(avg_ws_4)
             if (ws_avg_4 == None):
                 ws_avg_4 = 0
-            avg_wd_4 = Weather_data.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_4 = WindRoseData.objects.filter(time__range=('03:00:00.000000', '04:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_4 = avg_wd_4["wd_value__avg"]
             # # print(wd_avg_4)
             if (wd_avg_4 == None):
                 wd_avg_4 = 0
 
-            avg_ws_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
+            avg_ws_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('ws_value'))
             ws_avg_5 = avg_ws_5["ws_value__avg"]
             # # print(avg_ws_5)
             if (ws_avg_5 == None):
                 ws_avg_5 = 0
-            avg_wd_5 = Weather_data.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
+            avg_wd_5 = WindRoseData.objects.filter(time__range=('04:00:00.000000', '05:00:00.000000'),date=date1).aggregate(Avg('wd_value'))
             wd_avg_5 = avg_wd_5["wd_value__avg"]
             # # print(wd_avg_5)
             if (wd_avg_5 == None):
                 wd_avg_5 = 0
 
-            avg_ws_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_ws_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_6 = avg_ws_6["ws_value__avg"]
             # # print(avg_ws_6)
             if (ws_avg_6 == None):
                 ws_avg_6 = 0
-            avg_wd_6 = Weather_data.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
+            avg_wd_6 = WindRoseData.objects.filter(time__range=('05:00:00.000000', '06:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_6 = avg_wd_6["wd_value__avg"]
             # # print(wd_avg_6)
             if (wd_avg_6 == None):
                 wd_avg_6 = 0
 
-            avg_ws_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_ws_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_7 = avg_ws_7["ws_value__avg"]
             # print(avg_ws_7)
             if (ws_avg_7 == None):
                 ws_avg_7 = 0
-            avg_wd_7 = Weather_data.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
+            avg_wd_7 = WindRoseData.objects.filter(time__range=('06:00:00.000000', '07:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_7 = avg_wd_7["wd_value__avg"]
             # print(wd_avg_7)
             if (wd_avg_7 == None):
                 wd_avg_7 = 0
 
-            avg_ws_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_ws_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_8 = avg_ws_8["ws_value__avg"]
             # print(avg_ws_8)
             if (ws_avg_8 == None):
                 ws_avg_8 = 0
-            avg_wd_8 = Weather_data.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
+            avg_wd_8 = WindRoseData.objects.filter(time__range=('07:00:00.000000', '08:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_8 = avg_wd_8["wd_value__avg"]
             # print(wd_avg_8)
             if (wd_avg_8 == None):
                 wd_avg_8 = 0
 
-            avg_ws_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_ws_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_9 = avg_ws_9["ws_value__avg"]
             # print(avg_ws_9)
             if (ws_avg_9 == None):
                 ws_avg_9 = 0
-            avg_wd_9 = Weather_data.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
+            avg_wd_9 = WindRoseData.objects.filter(time__range=('08:00:00.000000', '09:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_9 = avg_wd_9["wd_value__avg"]
             # print(wd_avg_9)
             if (wd_avg_9 == None):
                 wd_avg_9 = 0
 
-            avg_ws_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_ws_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_10 = avg_ws_10["ws_value__avg"]
             # print(avg_ws_10)
             if (ws_avg_10 == None):
                 ws_avg_10 = 0
-            avg_wd_10 = Weather_data.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
+            avg_wd_10 = WindRoseData.objects.filter(time__range=('09:00:00.000000', '10:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_10 = avg_wd_10["wd_value__avg"]
             # print(wd_avg_10)
             if (wd_avg_10 == None):
                 wd_avg_10 = 0
 
-            avg_ws_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_ws_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_11 = avg_ws_11["ws_value__avg"]
             # print(avg_ws_11)
             if (ws_avg_11 == None):
                 ws_avg_11 = 0
-            avg_wd_11 = Weather_data.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
+            avg_wd_11 = WindRoseData.objects.filter(time__range=('10:00:00.000000', '11:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_11 = avg_wd_11["wd_value__avg"]
             # print(wd_avg_11)
             if (wd_avg_11 == None):
                 wd_avg_11 = 0
 
-            avg_ws_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_ws_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_12 = avg_ws_12["ws_value__avg"]
             # print(avg_ws_12)
             if (ws_avg_12 == None):
                 ws_avg_12 = 0
-            avg_wd_12 = Weather_data.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
+            avg_wd_12 = WindRoseData.objects.filter(time__range=('11:00:00.000000', '12:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_12 = avg_wd_12["wd_value__avg"]
             # print(wd_avg_12)
             if (wd_avg_12 == None):
                 wd_avg_12 = 0
 
-            avg_ws_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_ws_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_13 = avg_ws_13["ws_value__avg"]
             # print(avg_ws_13)
             if (ws_avg_13 == None):
                 ws_avg_13 = 0
-            avg_wd_13 = Weather_data.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
+            avg_wd_13 = WindRoseData.objects.filter(time__range=('12:00:00.000000', '13:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_13 = avg_wd_13["wd_value__avg"]
             # print(wd_avg_13)
             if (wd_avg_13 == None):
                 wd_avg_13 = 0
 
-            avg_ws_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_ws_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_14 = avg_ws_14["ws_value__avg"]
             # print(avg_ws_14)
             if (ws_avg_14 == None):
                 ws_avg_14 = 0
-            avg_wd_14 = Weather_data.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
+            avg_wd_14 = WindRoseData.objects.filter(time__range=('13:00:00.000000', '14:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_14 = avg_wd_14["wd_value__avg"]
             # print(wd_avg_14)
             if (wd_avg_14 == None):
                 wd_avg_14 = 0
 
-            avg_ws_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_ws_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_15 = avg_ws_15["ws_value__avg"]
             # print(avg_ws_15)
             if (ws_avg_15 == None):
                 ws_avg_15 = 0
-            avg_wd_15 = Weather_data.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
+            avg_wd_15 = WindRoseData.objects.filter(time__range=('14:00:00.000000', '15:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_15 = avg_wd_15["wd_value__avg"]
             # print(wd_avg_15)
             if (wd_avg_15 == None):
                 wd_avg_15 = 0
 
-            avg_ws_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_ws_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_16 = avg_ws_16["ws_value__avg"]
             # print(avg_ws_16)
             if (ws_avg_16 == None):
                 ws_avg_16 = 0
-            avg_wd_16 = Weather_data.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
+            avg_wd_16 = WindRoseData.objects.filter(time__range=('15:00:00.000000', '16:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_16 = avg_wd_16["wd_value__avg"]
             # print(wd_avg_16)
             if (wd_avg_16 == None):
                 wd_avg_16 = 0
 
-            avg_ws_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_ws_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_17 = avg_ws_17["ws_value__avg"]
             # print(avg_ws_17)
             if (ws_avg_17 == None):
                 ws_avg_17 = 0
-            avg_wd_17 = Weather_data.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
+            avg_wd_17 = WindRoseData.objects.filter(time__range=('16:00:00.000000', '17:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_17 = avg_wd_17["wd_value__avg"]
             # print(wd_avg_17)
             if (wd_avg_17 == None):
                 wd_avg_17 = 0
 
-            avg_ws_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_ws_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_18 = avg_ws_18["ws_value__avg"]
             # print(avg_ws_18)
             if (ws_avg_18 == None):
                 ws_avg_18 = 0
-            avg_wd_18 = Weather_data.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
+            avg_wd_18 = WindRoseData.objects.filter(time__range=('17:00:00.000000', '18:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_18 = avg_wd_18["wd_value__avg"]
             # print(wd_avg_18)
             if (wd_avg_18 == None):
                 wd_avg_18 = 0
 
-            avg_ws_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_ws_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_19 = avg_ws_19["ws_value__avg"]
             # print(avg_ws_19)
             if (ws_avg_19 == None):
                 ws_avg_19 = 0
-            avg_wd_19 = Weather_data.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
+            avg_wd_19 = WindRoseData.objects.filter(time__range=('18:00:00.000000', '19:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_19 = avg_wd_19["wd_value__avg"]
             # print(wd_avg_19)
             if (wd_avg_19 == None):
                 wd_avg_19 = 0
 
-            avg_ws_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_ws_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_20 = avg_ws_20["ws_value__avg"]
             # print(avg_ws_20)
             if (ws_avg_20 == None):
                 ws_avg_20 = 0
-            avg_wd_20 = Weather_data.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
+            avg_wd_20 = WindRoseData.objects.filter(time__range=('19:00:00.000000', '20:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_20 = avg_wd_20["wd_value__avg"]
             # print(wd_avg_20)
             if (wd_avg_20 == None):
                 wd_avg_20 = 0
 
-            avg_ws_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_ws_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_21 = avg_ws_21["ws_value__avg"]
             # print(avg_ws_21)
             if (ws_avg_21 == None):
                 ws_avg_21 = 0
-            avg_wd_21 = Weather_data.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
+            avg_wd_21 = WindRoseData.objects.filter(time__range=('20:00:00.000000', '21:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_21 = avg_wd_21["wd_value__avg"]
             # print(wd_avg_21)
             if (wd_avg_21 == None):
                 wd_avg_21 = 0
 
-            avg_ws_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_ws_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_22 = avg_ws_22["ws_value__avg"]
             # print(avg_ws_22)
             if (ws_avg_22 == None):
                 ws_avg_22 = 0
-            avg_wd_22 = Weather_data.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
+            avg_wd_22 = WindRoseData.objects.filter(time__range=('21:00:00.000000', '22:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_22 = avg_wd_22["wd_value__avg"]
             # print(wd_avg_22)
             if (wd_avg_22 == None):
                 wd_avg_22 = 0
 
-            avg_ws_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_ws_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_23 = avg_ws_23["ws_value__avg"]
             # print(avg_ws_23)
             if (ws_avg_23 == None):
                 ws_avg_23 = 0
-            avg_wd_23 = Weather_data.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
+            avg_wd_23 = WindRoseData.objects.filter(time__range=('22:00:00.000000', '23:00:00.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_23 = avg_wd_23["wd_value__avg"]
             # print(wd_avg_23)
             if (wd_avg_23 == None):
                 wd_avg_23 = 0
 
-            avg_ws_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_ws_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('ws_value'))
             ws_avg_24 = avg_ws_24["ws_value__avg"]
             # print(avg_ws_24)
             if (ws_avg_24 == None):
                 ws_avg_24 = 0
-            avg_wd_24 = Weather_data.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
+            avg_wd_24 = WindRoseData.objects.filter(time__range=('23:00:00.000000', '23:59:59.000000'),
                                                    date=date1).aggregate(Avg('wd_value'))
             wd_avg_24 = avg_wd_24["wd_value__avg"]
             # print(wd_avg_24)

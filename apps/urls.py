@@ -43,6 +43,7 @@ urlpatterns = [
     path('news/', include('news.urls', namespace='news')),
     path('emails/', include('emails.urls', namespace='emails')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
+    path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
 ]
 
 if settings.DEBUG:

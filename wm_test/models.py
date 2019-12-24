@@ -2,7 +2,7 @@
 from datetime import datetime
 from django.db import models
 
-class Setting(models.Model):
+class WindRoseSetting(models.Model):
     ip_address = models.CharField(max_length=40, blank=False, null=True)
     wd_sensor_name = models.CharField(max_length=100, blank=False, null=True)
     wd_unit = models.CharField(max_length=10, blank=False, null=True)
@@ -26,10 +26,10 @@ class Setting(models.Model):
     modified_date = models.DateField(auto_now=False, auto_now_add=True, blank=False, null=True)
 
     class Meta:
-        db_table = "Setting"
+        db_table = "WindRoseSetting"
 
 
-class AddSensor(models.Model):
+class WindRoseAddSensor(models.Model):
     sensor_id = models.CharField(max_length=200,blank=False, null=True)
     sensor_name=models.CharField(max_length=200,blank=False, null=True)
     sensor_unit= models.CharField(max_length=200,blank=False, null=True)
@@ -40,10 +40,10 @@ class AddSensor(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "AddSensor"
+        db_table = "WindRoseAddSensor"
 
 
-class Weather_data(models.Model):
+class WindRoseData(models.Model):
     setting_id = models.IntegerField(blank=False, null=True)
     rain_gauge=models.CharField(max_length=200, blank=False, null=True)
     pm2_5= models.CharField(max_length=200, blank=False, null=True)
@@ -61,6 +61,6 @@ class Weather_data(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = "Weather_data"
+        db_table = "WindRoseData"
 
 

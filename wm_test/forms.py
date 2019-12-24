@@ -1,11 +1,11 @@
 from datetime import date
 
 from django.db import models
-from .models import Setting, AddSensor, Weather_data
+from .models import WindRoseSetting, WindRoseAddSensor, WindRoseData
 from django import forms
 
 
-class SensorForm(forms.ModelForm):
+class WindRoseSensorForm(forms.ModelForm):
     ip_address = forms.CharField(max_length=40, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Enter IP Adress'
@@ -98,13 +98,13 @@ class SensorForm(forms.ModelForm):
     }))
 
     class Meta():
-        model = Setting
+        model = WindRoseSetting
         fields = ['ip_address', 'wd_sensor_name', 'wd_unit', 'ws_sensor_name', 'ws_unit', 'rg_sensor_name', 'rg_unit', 'pm2_5_sensor_name', 'pm2_5_unit', 'pm10_sensor_name', 'pm10_unit', 'humidity_sensor_name', 'humidity_unit', 'temperature_sensor_name', 'temperature_unit', 'so2_sensor_name', 'so2_unit', 'no2_sensor_name', 'no2_unit']
 
 
 
 
-class AddSensorForms(forms.ModelForm):
+class WindRoseAddSensorForms(forms.ModelForm):
     sensor_id = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Sensor-ID'
@@ -137,7 +137,7 @@ class AddSensorForms(forms.ModelForm):
     }))
 
     class Meta():
-        model = AddSensor
+        model = WindRoseAddSensor
         fields = ['sensor_id', 'sensor_name', 'sensor_unit', 'min_range', 'max_range', 'desc']
 
 
