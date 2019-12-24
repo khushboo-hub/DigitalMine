@@ -637,6 +637,44 @@
 
                             </ul>
                         </li>
+                        <!--Weather Monitoring-->
+                         <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="pe-7s-display1"></i>
+                                <p>
+                                    Weather Monitoring
+                                    <span class="caret"></span>
+                                </p>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
+                                <li class="col-sm-12">
+                                    <ul class="">
+                                        <li class="dropdown-header" style="color:white;">Sensor Management</li>
+
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Setting</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Add Sensor</a>
+                                        </li>
+                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Manage Sensor</a></li>
+
+                                        <li class="dropdown-header" style="color:white;">Customise Report</li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Live Report</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Sensor Hourly Report </a>
+                                        </li>
+                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Hour Duration Average Report</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:weighbridge_add' %}">Date and Hour Average Report</a></li>
+                                        <li class="dropdown-header" style="color:white;">Wind Rose</li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Wind Report</a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Wind Hourly Report</a>
+                                            <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Frequency Distribution Report(Count) </a></li>
+                                        <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Frequency Distribution Report(Normalised)</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                            </ul>
+                        </li>
+                        <!--Weather Monitoring End-->
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-more"></i>
