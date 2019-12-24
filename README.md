@@ -28,7 +28,7 @@ the wheel for the above from
 [Download Mysql Client](https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient)
 You need to download a client with respect to the python version you are using.
 
-###How to install downloaded mysqlclient
+### How to install downloaded mysqlclient
 
 
     pip install  <absolute path to your downloaded mysqlclient>
