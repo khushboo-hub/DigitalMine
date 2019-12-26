@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2019 at 07:48 AM
+-- Generation Time: Dec 26, 2019 at 06:46 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.3.9
 
@@ -283,6 +283,53 @@ CREATE TABLE `deduct_details` (
   `quantity` int(11) DEFAULT NULL,
   `outstock` int(11) DEFAULT NULL,
   `updated_quantity` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `development_permission`
+--
+
+CREATE TABLE `development_permission` (
+  `id` int(11) NOT NULL,
+  `name_of_mine` varchar(500) DEFAULT NULL,
+  `name_of_owner` varchar(500) DEFAULT NULL,
+  `name_of_seam_proposed` varchar(500) DEFAULT NULL,
+  `total_thickness_seam` varchar(500) DEFAULT NULL,
+  `thickness_of_seam_taken_under_devlopment` varchar(500) DEFAULT NULL,
+  `max_min_cover_working_faces` varchar(500) DEFAULT NULL,
+  `are_geo_disturbances` varchar(500) DEFAULT NULL,
+  `rate_of_dip` varchar(500) DEFAULT NULL,
+  `degree_of_gassiness_of_seam` varchar(500) DEFAULT NULL,
+  `degree_of_gassiness_overlying_and_underlying` varchar(500) DEFAULT NULL,
+  `history_fire_same_seam` varchar(500) DEFAULT NULL,
+  `seam_free_from_water` varchar(500) DEFAULT NULL,
+  `seam_extracted_stand_on_pillars` varchar(500) DEFAULT NULL,
+  `railway` varchar(500) DEFAULT NULL,
+  `public_private_road` varchar(500) DEFAULT NULL,
+  `river_tank` varchar(500) DEFAULT NULL,
+  `building_belong_to_owner` varchar(500) DEFAULT NULL,
+  `building_not_belong_to_owner` varchar(500) DEFAULT NULL,
+  `h_t_transmission_line` varchar(500) DEFAULT NULL,
+  `arial_ropeway` varchar(500) DEFAULT NULL,
+  `hfl` varchar(500) DEFAULT NULL,
+  `damage_to_surface_structure` varchar(500) DEFAULT NULL,
+  `subsided_report` varchar(500) DEFAULT NULL,
+  `acquistion` varchar(500) DEFAULT NULL,
+  `surface_water` varchar(500) DEFAULT NULL,
+  `any_stream_lying_above_or_below` varchar(500) DEFAULT NULL,
+  `from_the_adjoining_mine` varchar(500) DEFAULT NULL,
+  `from_the_same_seam` varchar(500) DEFAULT NULL,
+  `what_precautionary` varchar(500) DEFAULT NULL,
+  `danger_from_fire` varchar(500) DEFAULT NULL,
+  `danger_from_premature_collapsed` varchar(500) DEFAULT NULL,
+  `ssr` varchar(500) DEFAULT NULL,
+  `does_the_area_proposed` varchar(500) DEFAULT NULL,
+  `whether_application` varchar(500) DEFAULT NULL,
+  `are_the_plan_up_to_date` varchar(500) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -959,6 +1006,56 @@ CREATE TABLE `dgms_first_schedule_form_iii` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dgms_first_schedule_form_v`
+--
+
+CREATE TABLE `dgms_first_schedule_form_v` (
+  `id` int(11) NOT NULL,
+  `form_address` varchar(500) DEFAULT NULL,
+  `chief_inspector_of_mine` varchar(500) DEFAULT NULL,
+  `regional_inspector_of_mine` varchar(500) DEFAULT NULL,
+  `inspector_of_mine_er` varchar(500) DEFAULT NULL,
+  `distric_magistrate` varchar(500) DEFAULT NULL,
+  `mine_name` varchar(500) DEFAULT NULL,
+  `mine_owner` varchar(500) DEFAULT NULL,
+  `owner_state` varchar(500) DEFAULT NULL,
+  `situation_of_mine` varchar(500) DEFAULT NULL,
+  `mine_vill` varchar(500) DEFAULT NULL,
+  `mine_po` varchar(500) DEFAULT NULL,
+  `mine_ps` varchar(500) DEFAULT NULL,
+  `mine_subdistric` varchar(500) DEFAULT NULL,
+  `mine_dist` varchar(500) DEFAULT NULL,
+  `mine_state` varchar(500) DEFAULT NULL,
+  `mineral_workd` varchar(500) DEFAULT NULL,
+  `postel_address_of_owner` varchar(500) DEFAULT NULL,
+  `person_affected_name` varchar(500) DEFAULT NULL,
+  `person_caste` varchar(500) DEFAULT NULL,
+  `person_vill` varchar(500) DEFAULT NULL,
+  `person_po` varchar(500) DEFAULT NULL,
+  `person_ps` varchar(500) DEFAULT NULL,
+  `person_sub_div` varchar(500) DEFAULT NULL,
+  `person_dist` varchar(500) DEFAULT NULL,
+  `person_state` varchar(500) DEFAULT NULL,
+  `person_sex` varchar(500) DEFAULT NULL,
+  `person_dob` varchar(500) DEFAULT NULL,
+  `person_occupation` varchar(500) DEFAULT NULL,
+  `engage_duration` varchar(500) DEFAULT NULL,
+  `commencement_of_emp_date` varchar(500) DEFAULT NULL,
+  `in_your_mine` varchar(500) DEFAULT NULL,
+  `in_mining` varchar(500) DEFAULT NULL,
+  `nature_of_disease_state_stage` varchar(500) DEFAULT NULL,
+  `disease_detection_date` varchar(500) DEFAULT NULL,
+  `medical_practitioner_suspecting_disease` varchar(500) DEFAULT NULL,
+  `signature` varchar(100) DEFAULT NULL,
+  `designation` varchar(500) DEFAULT NULL,
+  `sig_date` varchar(500) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `dgms_metelliferousmine_annual_annexure_ii`
 --
 
@@ -1363,6 +1460,24 @@ CREATE TABLE `dgms_oilmines_annual_annexure_iii_subtable_2` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `dgms_ventilation`
+--
+
+CREATE TABLE `dgms_ventilation` (
+  `id` int(11) NOT NULL,
+  `location` varchar(500) DEFAULT NULL,
+  `quantity` varchar(500) DEFAULT NULL,
+  `velocity` varchar(500) DEFAULT NULL,
+  `t_wet` varchar(500) DEFAULT NULL,
+  `t_dry` varchar(500) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL,
+  `mine_name_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `distribution_details`
 --
 
@@ -1498,7 +1613,7 @@ CREATE TABLE `employee1` (
   `created_date` datetime(6) NOT NULL,
   `modified_date` datetime(6) NOT NULL,
   `immediate_staff_id` int(11) DEFAULT NULL,
-  `mine_id` int(11) DEFAULT NULL,
+  `mine_id` int(11) NOT NULL,
   `mining_role_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1536,6 +1651,116 @@ CREATE TABLE `employee_employee` (
   `email` varchar(254) NOT NULL,
   `pin` int(11) NOT NULL,
   `mob` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `extract_or_reduce_pillars`
+--
+
+CREATE TABLE `extract_or_reduce_pillars` (
+  `id` int(11) NOT NULL,
+  `name_of_mine` longtext NOT NULL,
+  `name_of_owner` longtext NOT NULL,
+  `particular_about_seam` longtext NOT NULL,
+  `name_of_seam_proposed_to_depillared` longtext NOT NULL,
+  `total_thickness_of_seam` longtext NOT NULL,
+  `thickness_of_seam_section` longtext NOT NULL,
+  `rate_of_dip` longtext NOT NULL,
+  `plans` longtext NOT NULL,
+  `give_plan_no_of_date` longtext NOT NULL,
+  `plan_up_to_date_and_accurate` longtext NOT NULL,
+  `when_whom_area_applied_for_and_surveyed` longtext NOT NULL,
+  `name_size_of_panel_proposed_extraction` longtext NOT NULL,
+  `max_min_height_width_of_working` longtext NOT NULL,
+  `average_height_and_width_of_working` longtext NOT NULL,
+  `max_min_size_of_pillars` longtext NOT NULL,
+  `average_size_of_pillars_center_to_center` longtext NOT NULL,
+  `think_seam` longtext NOT NULL,
+  `age_of_working` longtext NOT NULL,
+  `nature_of_roof_and_floor` longtext NOT NULL,
+  `are_working_dry_dump_naturally_wet` longtext NOT NULL,
+  `max_min_thickness` longtext NOT NULL,
+  `percentage_of_sand_stone` longtext NOT NULL,
+  `rate_of_emission_inflammable_in_district` longtext NOT NULL,
+  `rate_of_emission_inflammable_in_seam` longtext NOT NULL,
+  `max_percentage_inflammable_in_district` longtext NOT NULL,
+  `max_percentage_inflammable_in_seam` longtext NOT NULL,
+  `are_there_any_geological_disturbances` longtext NOT NULL,
+  `general_condition_of_working_as_actually_determind` longtext NOT NULL,
+  `if_there_are_singes_of_spalling_of_caol` longtext NOT NULL,
+  `fall_of_roof` longtext NOT NULL,
+  `is_there_history_of_fire` longtext NOT NULL,
+  `section_of_strata_from_surface_showing` longtext NOT NULL,
+  `proposed_method_of_extraction` longtext NOT NULL,
+  `convention_depillaring_with_slicing_stooking_method` longtext NOT NULL,
+  `splitting_of_pillars_as_final_operations` longtext NOT NULL,
+  `with_without_hydraulic_dry_stowing` longtext NOT NULL,
+  `if_conjuction_with_stowing` longtext NOT NULL,
+  `give_details_amount_of_existing` longtext NOT NULL,
+  `manner_extraction_splitting_of_pillar` longtext NOT NULL,
+  `condition_of_overlying` longtext NOT NULL,
+  `are_the_seam_free_from_water` longtext NOT NULL,
+  `are_the_seam_extracted` longtext NOT NULL,
+  `if_seam_extracted_have_been_extracted` longtext NOT NULL,
+  `is_there_any_fire_in_any_overlying` longtext NOT NULL,
+  `the_rate_omission` longtext NOT NULL,
+  `the_percantage_inflammable` longtext NOT NULL,
+  `is_roof_eaisly_cavable` longtext NOT NULL,
+  `is_there_any_danger_of_air_blast` longtext NOT NULL,
+  `railway` longtext NOT NULL,
+  `public_private_road` longtext NOT NULL,
+  `river_nallah` longtext NOT NULL,
+  `buliding_dwelling_belonging_to_owner` longtext NOT NULL,
+  `buliding_dwelling_not_belonging_to_owner` longtext NOT NULL,
+  `ht_transmission_line` longtext NOT NULL,
+  `arial_ropeway` longtext NOT NULL,
+  `any_other_structure` longtext NOT NULL,
+  `distance_of_highest_known_flood_level` longtext NOT NULL,
+  `do_you_apprehend_danger` longtext NOT NULL,
+  `due_to_proposed_operation` longtext NOT NULL,
+  `due_to_vicinity_fault` longtext NOT NULL,
+  `give_particular_of_subsidence_experience` longtext NOT NULL,
+  `if_surface_likely_to_be_affected` longtext NOT NULL,
+  `is_there_any_waterlogged` longtext NOT NULL,
+  `is_there_any_danger_inundation` longtext NOT NULL,
+  `surface_water` longtext NOT NULL,
+  `underground_working` longtext NOT NULL,
+  `in_any_seam_section_lying_above` longtext NOT NULL,
+  `of_theadjoining` longtext NOT NULL,
+  `from_the_same_seam` longtext NOT NULL,
+  `what_precautionary_measures_are_suggested` longtext NOT NULL,
+  `where_there_is_fire_in_either_the_overlying` longtext NOT NULL,
+  `whether_ventilation_is` longtext NOT NULL,
+  `fan_capacity_and_water_gauge` longtext NOT NULL,
+  `quantity_of_air_reaching_district` longtext NOT NULL,
+  `do_you_apprehend_any_premature_collapse` longtext NOT NULL,
+  `incubation_period` longtext NOT NULL,
+  `what_are_the_crossing` longtext NOT NULL,
+  `what_the_known_or_expected` longtext NOT NULL,
+  `what_was_average_rate` longtext NOT NULL,
+  `percentage_of_extraction_achieved` longtext NOT NULL,
+  `expected_percentage_of_extraction` longtext NOT NULL,
+  `what_is_coal_raised_sand_stowed` longtext NOT NULL,
+  `what_was_the_average_rate_of_daily` longtext NOT NULL,
+  `state_the_number_of_pillars` longtext NOT NULL,
+  `has_the_area_applied_for_depilling` longtext NOT NULL,
+  `please_state_the_type` longtext NOT NULL,
+  `how_long_it_will_take_you` longtext NOT NULL,
+  `have_you_submitted_draft_systematic` longtext NOT NULL,
+  `does_the_area_proposed_to_be_depillared` longtext NOT NULL,
+  `whether_the_application_has_been_made_under_105` longtext NOT NULL,
+  `please_state_whether_any_permission_for_extraction` longtext NOT NULL,
+  `where_permission_has_been_granted` longtext NOT NULL,
+  `has_the_extraction_been_completed` longtext NOT NULL,
+  `give_details_of_experience` longtext NOT NULL,
+  `any_other_relevant_details` longtext NOT NULL,
+  `signature` varchar(100) DEFAULT NULL,
+  `designation` longtext NOT NULL,
+  `sig_date` longtext NOT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -1752,6 +1977,27 @@ CREATE TABLE `hitcount_hit_count` (
   `modified` datetime(6) NOT NULL,
   `object_pk` int(10) UNSIGNED NOT NULL,
   `content_type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `identification_report_of_the_problem`
+--
+
+CREATE TABLE `identification_report_of_the_problem` (
+  `id` int(11) NOT NULL,
+  `problem_type` varchar(500) DEFAULT NULL,
+  `application_desc` varchar(500) DEFAULT NULL,
+  `mine_manager_name` varchar(500) DEFAULT NULL,
+  `problem` varchar(500) DEFAULT NULL,
+  `nature` varchar(500) DEFAULT NULL,
+  `findings` varchar(500) DEFAULT NULL,
+  `root_cause` varchar(500) DEFAULT NULL,
+  `corrective_action` varchar(500) DEFAULT NULL,
+  `result` varchar(500) DEFAULT NULL,
+  `created_at` datetime(6) NOT NULL,
+  `updated_at` datetime(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -2602,6 +2848,79 @@ CREATE TRIGGER `NOTIFICATION` AFTER INSERT ON `water_level_monitoring_sensor` FO
 $$
 DELIMITER ;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windroseaddsensor`
+--
+
+CREATE TABLE `windroseaddsensor` (
+  `id` int(11) NOT NULL,
+  `sensor_id` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `sensor_name` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `sensor_unit` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `min_range` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `max_range` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `desc` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `created_date` datetime(6) NOT NULL,
+  `modified_date` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_croatian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windrosedata`
+--
+
+CREATE TABLE `windrosedata` (
+  `id` int(11) NOT NULL,
+  `setting_id` int(11) DEFAULT NULL,
+  `rain_gauge` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm2_5` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm10` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `humidity` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `temperature` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `ws_value` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `wd_value` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `no2` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `so2` varchar(200) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `time` time(6) DEFAULT NULL,
+  `created_date` datetime(6) NOT NULL,
+  `modified_date` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_croatian_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windrosesetting`
+--
+
+CREATE TABLE `windrosesetting` (
+  `id` int(11) NOT NULL,
+  `ip_address` varchar(40) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `wd_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `wd_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `ws_sensor_name` varchar(15) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `ws_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `rg_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `rg_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm2_5_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm2_5_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm10_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `pm10_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `humidity_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `humidity_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `temperature_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `temperature_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `so2_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `so2_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `no2_sensor_name` varchar(100) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `no2_unit` varchar(10) COLLATE utf16_croatian_ci DEFAULT NULL,
+  `created_date` date DEFAULT NULL,
+  `modified_date` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_croatian_ci;
+
 --
 -- Indexes for dumped tables
 --
@@ -2737,6 +3056,12 @@ ALTER TABLE `deduct_details`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `development_permission`
+--
+ALTER TABLE `development_permission`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `dgms_coalmine_annual_annexure_i`
 --
 ALTER TABLE `dgms_coalmine_annual_annexure_i`
@@ -2799,6 +3124,12 @@ ALTER TABLE `dgms_first_schedule_form_iii`
   ADD KEY `dgms_first_schedule__mine_name_id_bfccbac7_fk_MineDetai` (`mine_name_id`);
 
 --
+-- Indexes for table `dgms_first_schedule_form_v`
+--
+ALTER TABLE `dgms_first_schedule_form_v`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `dgms_metelliferousmine_annual_annexure_ii`
 --
 ALTER TABLE `dgms_metelliferousmine_annual_annexure_ii`
@@ -2841,6 +3172,13 @@ ALTER TABLE `dgms_oilmines_annual_annexure_iii_subtable_1`
 --
 ALTER TABLE `dgms_oilmines_annual_annexure_iii_subtable_2`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `dgms_ventilation`
+--
+ALTER TABLE `dgms_ventilation`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `dgms_ventilation_mine_name_id_0a5776ca_fk_MineDetails_id` (`mine_name_id`);
 
 --
 -- Indexes for table `distribution_details`
@@ -2889,8 +3227,8 @@ ALTER TABLE `emails`
 ALTER TABLE `employee1`
   ADD PRIMARY KEY (`id`),
   ADD KEY `employee1_immediate_staff_id_7751309c_fk_employee1_id` (`immediate_staff_id`),
-  ADD KEY `employee1_mine_id_62f5d8a7_fk_MineDetails_id` (`mine_id`),
-  ADD KEY `employee1_mining_role_id_0904bb33_fk_MiningRole_id` (`mining_role_id`);
+  ADD KEY `employee1_mining_role_id_0904bb33_fk_MiningRole_id` (`mining_role_id`),
+  ADD KEY `employee1_mine_id_62f5d8a7_fk_MineDetails_id` (`mine_id`);
 
 --
 -- Indexes for table `employeeshiftassign`
@@ -2902,6 +3240,12 @@ ALTER TABLE `employeeshiftassign`
 -- Indexes for table `employee_employee`
 --
 ALTER TABLE `employee_employee`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `extract_or_reduce_pillars`
+--
+ALTER TABLE `extract_or_reduce_pillars`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2978,6 +3322,12 @@ ALTER TABLE `hitcount_hit`
 ALTER TABLE `hitcount_hit_count`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `hitcount_hit_count_content_type_id_object_pk_4dacb610_uniq` (`content_type_id`,`object_pk`);
+
+--
+-- Indexes for table `identification_report_of_the_problem`
+--
+ALTER TABLE `identification_report_of_the_problem`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `minedetails`
@@ -3279,6 +3629,24 @@ ALTER TABLE `water_level_monitoring_sensor`
   ADD KEY `water_level_monitori_mine_id_id_e72fd679_fk_MineDetai` (`mine_id_id`);
 
 --
+-- Indexes for table `windroseaddsensor`
+--
+ALTER TABLE `windroseaddsensor`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `windrosedata`
+--
+ALTER TABLE `windrosedata`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `windrosesetting`
+--
+ALTER TABLE `windrosesetting`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -3379,6 +3747,12 @@ ALTER TABLE `deduct_details`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `development_permission`
+--
+ALTER TABLE `development_permission`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `dgms_coalmine_annual_annexure_i`
 --
 ALTER TABLE `dgms_coalmine_annual_annexure_i`
@@ -3439,6 +3813,12 @@ ALTER TABLE `dgms_first_schedule_form_iii`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `dgms_first_schedule_form_v`
+--
+ALTER TABLE `dgms_first_schedule_form_v`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `dgms_metelliferousmine_annual_annexure_ii`
 --
 ALTER TABLE `dgms_metelliferousmine_annual_annexure_ii`
@@ -3478,6 +3858,12 @@ ALTER TABLE `dgms_oilmines_annual_annexure_iii_subtable_1`
 -- AUTO_INCREMENT for table `dgms_oilmines_annual_annexure_iii_subtable_2`
 --
 ALTER TABLE `dgms_oilmines_annual_annexure_iii_subtable_2`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `dgms_ventilation`
+--
+ALTER TABLE `dgms_ventilation`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -3526,6 +3912,12 @@ ALTER TABLE `employeeshiftassign`
 -- AUTO_INCREMENT for table `employee_employee`
 --
 ALTER TABLE `employee_employee`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `extract_or_reduce_pillars`
+--
+ALTER TABLE `extract_or_reduce_pillars`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -3592,6 +3984,12 @@ ALTER TABLE `hitcount_hit`
 -- AUTO_INCREMENT for table `hitcount_hit_count`
 --
 ALTER TABLE `hitcount_hit_count`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `identification_report_of_the_problem`
+--
+ALTER TABLE `identification_report_of_the_problem`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -3859,6 +4257,24 @@ ALTER TABLE `water_level_monitoring_sensor`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `windroseaddsensor`
+--
+ALTER TABLE `windroseaddsensor`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `windrosedata`
+--
+ALTER TABLE `windrosedata`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `windrosesetting`
+--
+ALTER TABLE `windrosesetting`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -3943,6 +4359,12 @@ ALTER TABLE `dgms_metelliferousmine_annual_annexure_ii`
 --
 ALTER TABLE `dgms_oilmines_annual_annexure_iii`
   ADD CONSTRAINT `dgms_oilmines_annual_mine_name_id_907dd7ba_fk_MineDetai` FOREIGN KEY (`mine_name_id`) REFERENCES `minedetails` (`id`);
+
+--
+-- Constraints for table `dgms_ventilation`
+--
+ALTER TABLE `dgms_ventilation`
+  ADD CONSTRAINT `dgms_ventilation_mine_name_id_0a5776ca_fk_MineDetails_id` FOREIGN KEY (`mine_name_id`) REFERENCES `minedetails` (`id`);
 
 --
 -- Constraints for table `django_admin_log`
