@@ -7,13 +7,11 @@ from django.shortcuts import get_object_or_404
 import requests
 from django.utils.html import strip_tags
 from django.http import HttpResponse, JsonResponse
-
+import os
 # Create your views here.
 
 @login_required
 def dashboard_calling(request):
-    print('calling..........')
-
     if request.method == "POST":
         print('calling post')
         mine_name = request.POST.get("mine_name", None)
