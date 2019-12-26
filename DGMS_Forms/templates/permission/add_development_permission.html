@@ -4,6 +4,12 @@
   .margin{
   margin-top:5px;
   }
+  .margin_botton{
+      margin-bottom: 20px;
+  }
+td {
+   text-align: left !important;
+}
 </style>
 <form method="POST" class="post-form" enctype="multipart/form-data">
    {% csrf_token %}
@@ -536,7 +542,7 @@
 
     </tbody>
   </table>
-<div class="row">
+<div class="row margin_botton">
      <div class="text-center">
          <button type="submit" class="btn btn-primary">Submit</button>
      </div>

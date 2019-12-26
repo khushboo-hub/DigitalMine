@@ -1373,4 +1373,6 @@ class extract_or_reduce_pillars_models(models.Model):
     class Meta:
         db_table = "extract_or_reduce_pillars"
 
-
+#========================================================================================================================================
+# class metal_stoping_permission(models.Model):
+#     name_of_mine = models.TextField(default="")

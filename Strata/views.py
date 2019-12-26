@@ -62,6 +62,7 @@ def convergence_add_location(request, template_name='Convergence/add_location.ht
             strata_location_inst.description = description
             strata_location_inst.created_date = created_date
             print(strata_location_inst)
+
             strata_location_inst.save()
             return redirect('Strata:convergence_manage_location')
         else:
@@ -83,6 +84,7 @@ def convergence_edit_location(request, pk, template_name='Convergence/add_locati
     form = Strata_location_Form(request.POST or None,instance=book)
     if form.is_valid():
         form.save()
+        #75
         return redirect('Strata:convergence_manage_location')
     return render(request, template_name, {'form':form})
 
