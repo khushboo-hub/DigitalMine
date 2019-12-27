@@ -117,9 +117,12 @@ def get_data_from_node_mcu(request):
     data = {}
     sensor_data = []
     sensor_id=1
-    sensor_details = Setting.objects.get(id=sensor_id)
-    response = requests.get('http://' + str(sensor_details.ip_address))
-    sensor_values = strip_tags(response.text)
+    sensor_details = WindRoseSetting.objects.get(id=sensor_id)
+    try:
+        response = requests.get('http://' + str(sensor_details.ip_address))
+        sensor_values = strip_tags(response.text)
+    except:
+        pass
     now = datetime.datetime.now()
     print(now)
     ok_date = (str(now.strftime('%Y-%m-%d %H:%M')))

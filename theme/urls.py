@@ -11,4 +11,5 @@ urlpatterns = [
     path('get_all_carousal_images_ajax/',views.get_all_carousal_images_ajax,name='get_all_carousal_images_ajax'),
     path('activate_carousal/',views.activate_carousal,name='activate_carousal'),
     path('delete_carousal/',views.delete_carousal,name='delete_carousal'),
+    path('start_task/',views.start_background_tast,name="start_task"),
     ]
