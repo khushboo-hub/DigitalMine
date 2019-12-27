@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from .models import MineDetails,Node,Sensor_Node,MinerTracking,TrackingRouter
+from .models import MineDetails,Node,Sensor_Node,MinerTracking,TrackingRouter,water_level_monitoring_model
 from Strata.models import Strata_location
 from accounts.models import profile_extension
 from django.shortcuts import get_object_or_404
@@ -27,6 +27,7 @@ def dashboard_calling(request):
     mine_table = MineDetails.objects.all()
     data['mine_table'] = mine_table
     strata=Strata_location.objects.filter(mine_name=mine.id)
+    water_level=water_level_monitoring_model.objects.filter(mine_id=mine.id)
     # print("Strata",strata)
     # first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
     data['first_mine_id']=mine.id
@@ -34,6 +35,10 @@ def dashboard_calling(request):
     data['selected'] = mine.id
 
     data['strata'] = strata
+    print('WATER LEVEL')
+    print(water_level)
+    print('WATER LEVEL END')
+    data['water_level'] = water_level
     nodes=Node.objects.filter(mine_id=mine.id)
     print('---------------------------------')
     NODES=[]

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>Digital Mine (IoT) | CSIR-CIMFR</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
+    <!-- Canonical SEO -->
+    {#    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>#}
+
+
+    <meta name="keywords"
+          content="csir,cimfr,central institute mining and fuel research digital, Council of Scientific and Industrial Research, digital mine, internet of things,
+           development, development of digital mine using iot, erp, digital erp, meity,ministry of electronics and information technology,government of india">
+    <meta name="description"
+          content="The main motive of this software is to digitize the manual workings of the mining industry to make it more efficient and save human lives">
+
+    <!-- Schema.org markup for Google+ -->
+    <meta itemprop="name" content="Development of digital mine using IOT">
+    <meta itemprop="description"
+          content="We restyled the classic Bootstrap Navbar and we added brand new icons. This navbar comes with 5 vibrant colors: blue, azzure, green, orange and red.">
+    <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
+
+
+    <script>
+        window.onload = function () {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                document.location = '/mobile';
+            }
+        }
+    </script>
+
+    <!--=======end PAHLE KA===================-->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static '/css/custom_style.css' %}">
+    <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
+    <link rel="stylesheet" href="/static/css/jquery.toast.css">
+
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <script src="{% static 'js/customJS.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+
+    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
+    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
+    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+    <script src="{% static 'js/ObjectEquate.js' %}"></script>
+    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
+    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
+    <script src="{% static 'js/jquery.md5.min.js' %}"></script>
+    <script src="/static/js/jquery.toast.js"></script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
+    <!-- BootStrap Notify Includes -->
+    <script src="{% static 'js/toastr.min.js' %}"></script>
+
+    <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
+    <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
+    <style>
+        .KBmap__mapHolder{
+            width: 100%;
+        }
+    </style>
+    <script>
+        //paste this code under the head tag or in a separate js file.
+        // Wait for window load
+        $(document).ready(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+        });
+    </script>
+
+</head>
+<body>
+<div class="se-pre-con"></div>
+<input type="hidden" id="water_level_location" value="{{ location }}">
+<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+
+<script>
+    {#$(document).ready(function(){#}
+         var l_color = "#C0DF81";
+         var m_color = "#FEFE9A";
+         var h_color = "#F37C84";
+
+         var l_value = "";
+         var m_value = "";
+         var h_value = "";
+         var t_hight = 0;
+
+         var audio_type = "";
+         var first_warning = "";
+         var second_warning = "";
+         var third_warning = "";
+
+         var first_audio = "";
+         var second_audio = "";
+         var third_audio = "";
+         var water_level_location = $("input#water_level_location").val();
+             $.ajax({
+                        type:"get",
+                        url: "{% url 'water_level_monitoring:fetch_sensor_details'%}",
+                        data: {
+                            'id': water_level_location
+                            },
+                        success: function(data) {
+                                console.log(data);
+                             for(index = 0; index < data.result.length; index++) {
+                                    var str_array = data.result[index].split('@#');
+                                    {#console.log(str_array);#}
+                                    $("#ip_hidden").val(str_array[0]);
+                                    l_value = str_array[1];
+                                    m_value = str_array[2];
+                                    h_value = str_array[3];
+                                    t_hight = str_array[4];
+
+                                    audio_type = str_array[5];
+                                    first_warning =  str_array[6];
+                                    second_warning = str_array[7];
+                                    third_warning = str_array[8];
+
+                                    first_audio =  str_array[9];
+                                    second_audio = str_array[10];
+                                    third_audio =  str_array[11];
+
+                                }
+                         },
+                        error: function(){
+                                console.log("Something Went Wrong!");
+                             }
+                 });
+
+         //------------------------------------------------------------------------------------------------------------------
+
+          setTimeout(fill_water_level_graph(), 5000);
+
+
+     //==================graph part================================================================================================
+
+
+    function fill_water_level_graph(){
+
+            var dps = []; // dataPoints
+            var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            title: {
+                text: ""
+            },
+            axisX: {
+                title: "Time"
+            },
+            axisY: {
+                title: "Water level (in cm)",
+                //suffix: "mm"
+                maximum: 100,
+                stripLines: [
+                {
+                    label: "Level 1",
+                    startValue:parseFloat(10),
+                    endValue:parseFloat(30),
+                    color: "#C0DF81"
+                },
+                {
+                    label: "Level 2",
+                    startValue:parseFloat(30),
+                    endValue:parseFloat(50),
+                    color:"#FEFE9A"
+                },
+                {
+                    label: "Level 3",
+                    startValue:parseFloat(50),
+                    endValue:parseFloat(5000),
+                    color:"#F37C84"
+                }
+                ]
+            },
+
+            data: [{
+                type: "area",
+                name: "CPU Utilization",
+                connectNullData: true,
+                //nullDataLineDashType: "solid",
+                xValueType: "dateTime",
+                xValueFormatString: "DD MMM hh:mm TT",
+                yValueFormatString: "#,##0.##\"cm\"",
+                dataPoints: dps
+            }]
+        });
+
+        var xVal = 0;
+        var yVal = 100;
+        var updateInterval = 5000;
+        var dataLength = 20; // number of dataPoints visible at any point
+        var final_value ='';
+
+     var updateChart = function () {
+            $.ajax({
+                type:"get",
+                url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
+                data: {
+                         'id': water_level_location
+                       },
+                success: function(data) {
+                    //console.log(data.result);
+                    for(index = 0; index < data.result.length; index++) {
+                        var str_array = data.result[index].split(',');
+                        final_value = t_hight - Number(str_array[5]);
+                        dps.push({
+                            x: Date.parse(str_array[2]),
+                            y: (final_value > 0 ? final_value : 0)
+                        });
+                        }//for loop closing
+
+                        checkAndPlay(final_value);
+                        },
+                error: function(){
+                        console.log("error he ji");
+                     }
+            });
+
+            //Speak('Lily Hindi voice test',9,0.5);
+            if (dps.length > dataLength) {
+                dps.shift();
+            }
+
+            chart.render();
+            $(".canvasjs-chart-credit").text('');
+        };
+
+        updateChart(dataLength);
+        setInterval(function(){updateChart()}, updateInterval);
+    }
+    function checkAndPlay(sensorValue){
+
+        var loc = window.location;
+        var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/media/" ;
+
+        if((l_value < sensorValue)&&(sensorValue < m_value)){//low level
+            $.toast({
+                heading: '<b>Water Level Monitoring : First Level Warning</b>',
+                text: first_warning,
+                showHideTransition: 'fade',
+                position: 'bottom-right',
+                icon: 'error'
+            })
+            if(audio_type =="text2voice"){
+                 Speak(first_warning,9,0.5);
+            }else{
+                path = baseUrl+first_audio;
+                var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+        if((m_value < sensorValue) && (sensorValue < h_value)){//middle level
+            $.toast({
+                heading: '<b>Water Level Monitoring : Second Level Warning </b>',
+                text: second_warning,
+                showHideTransition: 'fade',
+                position: 'bottom-right',
+                icon: 'error'
+            })
+             if(audio_type =="text2voice"){
+                 Speak(second_warning,9,0.5);
+             }else{
+                  path = baseUrl+second_audio;
+                 var playNow = new Audio(path);
+                 playNow.play();
+             }
+        }
+        if(sensorValue > h_value) {//high level
+            $.toast({
+                heading: '<b>Water Level Monitoring : Third Level Warning</b> ',
+                text: third_warning,
+                position: 'bottom-right',
+                showHideTransition: 'fade',
+                icon: 'error'
+            })
+            if(audio_type =="text2voice"){
+                  Speak(third_warning, 9, 0.5);
+            }else{
+                 path = baseUrl+third_audio;
+                 var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+    }
+    {#});#}
+//------------------------------------------------------------------------------------------------------------------
+</script>
+</body>

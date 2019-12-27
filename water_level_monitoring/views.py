@@ -82,6 +82,15 @@ def show_graph_water_sensor(request):
     form = add_water_sensor_form()
     return render(request, "show_graph_water_sensor.html", {"form": form})
 
+def iframe_show_graph_water_sensor(request,mine_id,location):
+    print('mine_id',mine_id)
+    print('lcoation',location)
+    IpAddress=get_object_or_404(water_level_monitoring_model,mine_id=mine_id,id=location)
+    IpAddress=IpAddress.ip_address
+    form = add_water_sensor_form()
+
+    return render(request, "iframe_show_graph_water_sensor.html", {"form": form,'address':IpAddress,'location':location})
+
 
 def fetch_sensor_details(request):  # fetch IP address and water level only (For graph)
     data = {}
