@@ -92,7 +92,7 @@
     <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>-->
 
     <style>
-        .container.tim-container{
+    .container.tim-container{
         width:100%;
         }
         .row-flex {
@@ -121,7 +121,12 @@
      .navbar .navbar-brand-logo .brand {
         margin-top: 20px;
         width: 400px;
+
     }
+        div.col-md-3{
+            width: 100%;
+        }
+
         div.item>img{
         width:100% !important;
         height:300px !important;
@@ -445,7 +450,7 @@
                                 <span class="icon fa fa-fire" aria-hidden="true"></span>
                                 <h4>Fire Monitoring</h4>
                                 <div class="ots-btn-group">
-                                   <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
+{#                                   <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>#}
                                     <a href="{% url 'FireExp:manual_entry' %}">Manual</a>
                                     <!--<a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
                                     <a href="{% url 'FireExp:automatic_entry' %}">Automatic</a>

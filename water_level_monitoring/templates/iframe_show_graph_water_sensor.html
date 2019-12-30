@@ -79,6 +79,20 @@
         .KBmap__mapHolder{
             width: 100%;
         }
+        div.no_sensor {
+            width: 200px;
+            height: 100px;
+
+            position: absolute;
+            top:0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            font-weight: bold;
+            font-size: larger;
+
+            margin: auto;
+        }
     </style>
     <script>
         //paste this code under the head tag or in a separate js file.
@@ -95,7 +109,7 @@
 {% if availability %}
 <input type="hidden" id="water_level_location" value="{{ location }}">
 <div id="chartContainer" style="height: 400px; width: 100%;"></div>
-{% endif %}
+
 <script>
     $(document).ready(function(){
          var l_color = "#C0DF81";
@@ -306,4 +320,7 @@
     });
 //------------------------------------------------------------------------------------------------------------------
 </script>
+{% else %}
+    <div class="no_sensor">No Water Sensor Available</div>
+{% endif %}
 </body>
