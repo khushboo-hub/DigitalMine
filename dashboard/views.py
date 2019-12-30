@@ -33,12 +33,24 @@ def dashboard_calling(request):
     data['first_mine_id']=mine.id
     data['first_mine_name'] = mine.name
     data['selected'] = mine.id
+    water_level_area = 0
+
+    try:
+        water_level_area = water_level[0]
+        water_level_area=water_level_area.id
+    except:
+        print('Except Case')
+        water_level_area = 0
+        pass
+
+    print('water_level_area',water_level_area)
 
     data['strata'] = strata
     print('WATER LEVEL')
     print(water_level)
     print('WATER LEVEL END')
     data['water_level'] = water_level
+    data['water_level_id']=water_level_area
     nodes=Node.objects.filter(mine_id=mine.id)
     print('---------------------------------')
     NODES=[]

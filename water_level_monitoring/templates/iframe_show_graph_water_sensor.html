@@ -92,11 +92,12 @@
 </head>
 <body>
 <div class="se-pre-con"></div>
+{% if availability %}
 <input type="hidden" id="water_level_location" value="{{ location }}">
 <div id="chartContainer" style="height: 400px; width: 100%;"></div>
-
+{% endif %}
 <script>
-    #$(document).ready(function(){#}
+    $(document).ready(function(){
          var l_color = "#C0DF81";
          var m_color = "#FEFE9A";
          var h_color = "#F37C84";

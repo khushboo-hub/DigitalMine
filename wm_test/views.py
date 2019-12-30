@@ -75,7 +75,6 @@ def edit(request, pk, template_name="add_sensor.html"):
     return render(request, template_name, {'form': form})
 
 def delete(request, pk):
-    print('Wind Rose Deletion')
     book= get_object_or_404(WindRoseAddSensor, pk=pk)
     book.delete()
     return redirect('wm_test:manage_sensor')
