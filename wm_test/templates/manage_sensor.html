@@ -36,8 +36,8 @@
                             <td>{{ book.max_range }}</td>
                             <td>{{ book.desc }}</td>
                             <td style="width:100px;">
-                                &nbsp;&nbsp;<a href="{% url 'wm_test:edit' book.id %}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp&nbsp&nbsp&nbsp
-                                <a href="{% url 'wm_test:delete' book.id %}"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="{% url 'wm_test:edit' book.id %}"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp&nbsp&nbsp&nbsp
+                                <a class="delete" href="#" data-url="{% url 'wm_test:delete' book.id %}"><span class="glyphicon glyphicon-trash"></span></a>
                              </td>
                         </tr>
                         {% endfor %}
@@ -47,15 +47,14 @@
         </section>
     </div>
 </div>
-<style>
-
-
-
-
-</style>
 <script>
 
+$(document.body).on("click", ".delete", function () {
 
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
 
 
 </script>
