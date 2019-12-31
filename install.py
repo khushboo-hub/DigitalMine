@@ -1,3 +1,7 @@
+# How to use it
+
+# py install.py mysqlclient
+
 import sys
 import subprocess
 version_info = sys.version.split(' ')
