@@ -74,12 +74,10 @@ def edit(request, pk, template_name="add_sensor.html"):
         return redirect("wm_test:manage_sensor")
     return render(request, template_name, {'form': form})
 
-def delete(request, pk, template_name='manage_sensor.html'):
+def delete(request, pk):
     book= get_object_or_404(WindRoseAddSensor, pk=pk)
-    if request.method=='POST':
-        book.delete()
-        return redirect('wmtest:manage_sensor')
-    return render(request, template_name, {'object':book})
+    book.delete()
+    return redirect('wm_test:manage_sensor')
 
 
 # def get_data_from_node_mcu(request,template_name='home1.html'):

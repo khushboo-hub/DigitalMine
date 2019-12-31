@@ -799,6 +799,32 @@
                                     unDraw &rarr;</a>
                             </div>
                         </div>
+                         <!-- Illustrations -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Water Level Monitoring</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                         aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Dropdown Header:</div>
+                                        {% for water in water_level %}
+                                            <a class="dropdown-item strata location" href="#" id="{{ water.id}}">{{ water.area_name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="container">
+
+                      <div class="embed-responsive embed-responsive-16by9">
+
+                          <iframe id="miners_tracking_iframe" class="embed-responsive-item" src="{% url 'water_level_monitoring:iframe_show_graph_water_sensor' selected water_level_id %}"></iframe>
+                      </div>
+                    </div>
+                        </div>
 
               <!-- Illustrations -->
               <div class="card shadow mb-4">
@@ -817,6 +843,8 @@
 
                          <li class="MinerWorkerIcon">Worker</li>
                          <li class="MinerOfficerIcon">Officer</li>
+
+
 
                 </div>
                   <div class="container">
