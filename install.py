@@ -7,10 +7,8 @@ import subprocess
 version_info = sys.version.split(' ')
 version = version_info[0]
 bit = version_info[8]
-argumentList = sys.argv
 what = sys.argv[1]
-version = version.split('.')
-version = 'cp'+version[0]+version[1]
+version ='cp'+version.split('.')[0]+version.split('.')[1]
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 try:
