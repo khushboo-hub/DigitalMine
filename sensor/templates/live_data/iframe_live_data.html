@@ -142,11 +142,22 @@
                         </div>
 <script>
     setInterval(function(){
-        node=document.getElementById("nodeprogress")
-        x=(Math.floor((Math.random()*100)+1)).toString()+"%";
-       node.innerText=x;
-       $('div#nodeprogress').width(x);
- }, 1000);
+       $.ajax({
+            type:"get",
+            success: function(data) {
+                    var result=data.result;
+                    if($.isNumeric(result)){
+                        node=document.getElementById("nodeprogress")
+                        node.innerText=result+"%";
+                        $('div#nodeprogress').width(result+"%");
+                    }
+                return data;
+                    },
+            error: function(){
+                    console.log("Something Went Wrong :(");
+                 }
+            });
+ }, 2500);
 
 
 </script>

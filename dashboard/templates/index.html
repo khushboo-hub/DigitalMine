@@ -477,7 +477,7 @@
 {#                            <h1>{{ sensors}}</h1>#}
                             {% for sensor in sensors %}
 {#                                <h1>{{ sensor.mine }}</h1>#}
-                                    <iframe width="400" height="auto" style="border: none;"src="{% url 'sensor:iframe_live_data' selected sensor.node_id %}"></iframe>
+                                    <iframe width="400" height="auto" style="border: none;"src="{% url 'sensor:iframe_live_data' selected sensor.node_id sensor.sensor_id %}"></iframe>
                                 {% endfor %}
                             {% endfor %}
                     {% endfor %}
