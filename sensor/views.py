@@ -883,9 +883,13 @@ import random
 @login_required
 def iframe_live_data(request,mine_id, node_id,sensor_id, template_name='live_data/iframe_live_data.html'):
     data={}
+    node=get_object_or_404(Node,pk=node_id,mine_id=mine_id)
+    node_name=node.name
+    wireless_node = get_object_or_404(Sensor_Node, pk=sensor_id, mine_id=mine_id, node_id=node_id)
+    sensor_name = wireless_node.sensorname
     if request.is_ajax():
         try:
-           wireless_node=get_object_or_404(Sensor_Node,pk=sensor_id,mine_id=mine_id,node_id=node_id)
+           #wireless_node=get_object_or_404(Sensor_Node,pk=sensor_id,mine_id=mine_id,node_id=node_id)
            ipAdd=wireless_node.ip_add
            print('Ip Adderss',ipAdd)
            response = requests.get('http://' + ipAdd)
@@ -895,7 +899,7 @@ def iframe_live_data(request,mine_id, node_id,sensor_id, template_name='live_dat
             data['result']='Network Error'
         return JsonResponse(data)
 
-    return render(request,template_name)
+    return render(request,template_name,{'node_name':node_name,'sensor_name':sensor_name})
 
 #########demo
 def background_data(request):

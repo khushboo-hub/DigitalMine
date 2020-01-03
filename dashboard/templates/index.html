@@ -505,7 +505,7 @@
                                         <a class="dropdown-item" href="#">Another action</a>
                                         <div class="dropdown-divider"></div>
                                         {% for strata in strata %}
-                                            <a class="dropdown-item strata location" href="#" id="{{ strata.id}}">{{ strata.location_name }}</a>
+                                            <div class="dropdown-item strata location"  id="{{ strata.id}}">{{ strata.location_name }}</div>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -701,7 +701,7 @@
                                          aria-labelledby="dropdownMenuLink">
                                         <div class="dropdown-header">Dropdown Header:</div>
                                         {% for water in water_level %}
-                                            <div class="dropdown-item water location" href="" id="{{ water.id}}">{{ water.area_name }}</div>
+                                            <div class="dropdown-item water location" id="{{ water.id}}">{{ water.area_name }}</div>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -865,7 +865,7 @@
 
         });
 
-        $('a.strata.location').click(function(){
+        $('div.strata.location').click(function(){
                 strata = this.id;
                 console.log('strata=> ',strata);
                 $.xhrPool.abortAll();
