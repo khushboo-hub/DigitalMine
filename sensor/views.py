@@ -879,6 +879,9 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
 
     return render(request, template_name, {'form': form})
 
+@login_required
+def iframe_live_data(request,mine_id, node_id, template_name='live_data/iframe_live_data.html'):
+    return render(request,template_name)
 
 #########demo
 def background_data(request):
@@ -2168,3 +2171,4 @@ def node_sensor_data(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
