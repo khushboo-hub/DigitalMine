@@ -348,10 +348,26 @@ def fetch_sensor_details(request):
 
 
 # =======================================================================================================================
+@login_required
 def show_sensor_graph(request, template_name='Convergence/live_data_graph.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+@login_required
+def iframe_show_sensor_graph(request, mine_id, location_id,sensors_id, template_name = 'Convergence/iframe_live_data_graph.html'):
+    availability = 0
+    sensor_id = ""
+    print('mine_id',mine_id)
+    print('sensor_id',sensors_id)
+    try:
+        strata = get_object_or_404(Strata_sensor, id=sensors_id, mine_name = mine_id,location_id = location_id)
+        print(strata)
+        sensor_id = strata.id
+        availability = 1
+    except:
+        pass
+
+    return render(request, template_name, {'availability': availability,'sensor_id':sensor_id})
 
 @background(schedule=5)
 def run_back_save(sensor_id):

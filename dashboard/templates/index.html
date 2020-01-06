@@ -534,7 +534,7 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: 7D/51L)</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">7D/51L</span>)</h6>
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -549,7 +549,7 @@
                                                 <div class="strata-dropbtn">{{ key }}</div>
                                                 <div class="strata-dropdown-content">
                                                    {% for sensor in loc %}
-                                                        <a href="#" id="{{ sensor.id }}">{{sensor.sensor_name}}</a>
+                                                        <a class="strata-location-dropdown" id="{{ sensor.id }}">{{sensor.sensor_name}}</a>
                                                     {% endfor %}
                                                 </div>
                                             </div>
@@ -913,16 +913,22 @@
 
         });
 
-        $('div.strata.location').click(function(){
-                strata = this.id;
-                console.log('strata=> ',strata);
-                $.xhrPool.abortAll();
+        {#$('div.strata.location').click(function(){#}
+        {#        strata = this.id;#}
+        {#        console.log('strata=> ',strata);#}
+        {#        $.xhrPool.abortAll();#}
+        {##}
+        {#    var StrataCalling = setInterval(function () {#}
+        {#        STRATA(strata);#}
+        {#        WATER();#}
+        {#    }, 5000,strata);#}
+        {##}
+        {#});#}
 
-            var StrataCalling = setInterval(function () {
-                STRATA(strata);
-                WATER();
-            }, 5000,strata);
-
+        $('a.strata-location-dropdown').click(function(){
+           strata=this.id;
+           console.log(this.innerText);
+           $('span#strata_location_name').text(this.innerText);
         });
 
         $('div.water.location').click(function(){

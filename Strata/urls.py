@@ -24,6 +24,7 @@ urlpatterns = [
     path('get_data_from_node_mcu', views.get_data_from_node_mcu, name='get_data_from_node_mcu'),#####testing only
 
     path('show_sensor_graph', views.show_sensor_graph, name='show_sensor_graph'),
+    path('iframe_show_sensor_graph/<int:mine_id>/<int:location_id>/<int:sensors_id>', views.iframe_show_sensor_graph, name='iframe_show_sensor_graph'),
     path('start_save_sensor/<int:sensor_id>', views.start_save_sensor, name='start_save_sensor'),
     path('date_range_tabular', views.date_range_tabular, name='date_range_tabular'),
     path('fetch_sensor_date_range', views.fetch_sensor_date_range, name='fetch_sensor_date_range'),
