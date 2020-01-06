@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import MineDetails,Node,Sensor_Node,MinerTracking,TrackingRouter,water_level_monitoring_model
-from Strata.models import Strata_location
+from Strata.models import Strata_location,Strata_sensor
 from accounts.models import profile_extension
 from django.shortcuts import get_object_or_404
 import requests
@@ -26,8 +26,8 @@ def dashboard_calling(request):
     data = {}
     mine_table = MineDetails.objects.all()
     data['mine_table'] = mine_table
-    strata=Strata_location.objects.filter(mine_name=mine.id)
-    water_level=water_level_monitoring_model.objects.filter(mine_id=mine.id)
+    strata_location = Strata_location.objects.filter(mine_name=mine.id)
+    water_level = water_level_monitoring_model.objects.filter(mine_id=mine.id)
     # print("Strata",strata)
     # first_mine=MineDetails.objects.values_list('id','name')[0]## work for first mine in list
     data['first_mine_id']=mine.id
@@ -44,8 +44,18 @@ def dashboard_calling(request):
         pass
 
     print('water_level_area',water_level_area)
+    strata_result=[]
+    strata=[]
+    for strata_loc in strata_location:
+        strata=[]
+        strata_sensor=Strata_sensor.objects.filter(mine_name=mine.id,location_id=strata_loc.id)
+        for sensor in strata_sensor:
+            strata.append({'id':sensor.id,'sensor_name':sensor.sensor_name})
+        strata_result.append({strata_loc.location_name:strata})
 
-    data['strata'] = strata
+    print('strataaaaaaaaaaaaaaaaa........')
+    print(strata_result)
+    data['strata'] = strata_result
     print('WATER LEVEL')
     print(water_level)
     print('WATER LEVEL END')

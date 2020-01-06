@@ -98,7 +98,50 @@
 		width: auto;
 	    height: 100%;
 	}
+    .strata-dropdown{
+        background-color: #4CAF50;
+    }
 
+    .strata-dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.strata-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.strata-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 50%;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.strata-dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.strata-dropdown-content a:hover {background-color: #f1f1f1}
+
+.strata-dropdown:hover .strata-dropdown-content {
+  display: block;
+}
+
+.strata-dropdown:hover .strata-dropbtn:hover {
+  background-color: #3e8e41;
+
+}
   </style>
 
 
@@ -482,7 +525,6 @@
                             {% endfor %}
                     {% endfor %}
                 </div>
-
                 <!-- Content Row -->
 
                 <div class="row">
@@ -500,12 +542,18 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                          aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        {% for strata in strata %}
-                                            <div class="dropdown-item strata location"  id="{{ strata.id}}">{{ strata.location_name }}</div>
+                                        <div class="dropdown-header">Choose Strata Location:</div>
+                                        {% for location in strata %}
+                                            {% for key,loc in location.items %}
+                                            <div class="strata-dropdown dropdown-item strata location"  id="{{ strata.id}}">
+                                                <div class="strata-dropbtn">{{ key }}</div>
+                                                <div class="strata-dropdown-content">
+                                                   {% for sensor in loc %}
+                                                        <a href="#" id="{{ sensor.id }}">{{sensor.sensor_name}}</a>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                         {% endfor %}
                                     </div>
                                 </div>
