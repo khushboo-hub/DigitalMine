@@ -535,6 +535,8 @@
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">7D/51L</span>)</h6>
+
+
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -560,8 +562,11 @@
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+                               <div class="container">
+{#                                    <canvas id="myAreaChart"></canvas>#}
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                     <iframe src="{% url 'Strata:iframe_show_sensor_graph' 1 1 2 %}"></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>

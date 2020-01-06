@@ -106,19 +106,11 @@
 </head>
 <body>
 <div class="se-pre-con"></div>
-{% if availability %}
-<input type="hidden" id="strata_level_location" value="{{ sensor_id }}">
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-1" style="margin-top:14%;transform: rotate(270deg);font-weight:bold;" id="unit_sensor"></div>
-        <div class="col-md-11" style="margin-top:15px;">
-            <div class="table-responsive">
-                <div id="chartContainer" style="height: 600px; width:100%;"></div>
-                <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>
-            </div>
-        </div>
-    </div>
-</div>
+    {% if availability %}
+    <input type="hidden" id="strata_level_location" value="{{ sensor_id }}">
+
+    <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+{#    <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>#}
 
 <script>
     var l_label = "Low";
@@ -194,10 +186,6 @@
         var dps = []; // dataPoints
         var chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
-        title: {
-            text: custom_name+" Live Data"
-        },
-
         axisX: {
             title: "Time",
 		    valueFormatString: "hh:mm TT"
