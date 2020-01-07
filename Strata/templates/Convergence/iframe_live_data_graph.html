@@ -109,7 +109,7 @@
     {% if availability %}
     <input type="hidden" id="strata_level_location" value="{{ sensor_id }}">
 
-    <div id="chartContainer" style="height: 400px; width: 100%;"></div>
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 {#    <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>#}
 
 <script>
@@ -230,7 +230,7 @@
     //------------------------------------------------------------------------------------------------------------------
     var xVal = 0;
     var yVal = 100;
-    var updateInterval = 4000;
+    var updateInterval = 5000;
     var dataLength = 20; // number of dataPoints visible at any point
 
     var updateChart = function () {

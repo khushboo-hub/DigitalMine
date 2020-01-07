@@ -562,8 +562,10 @@
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                               <div class="container">
+{#                                <div class="chart-area">#}
+                                    <div class="container">
 {#                                    <canvas id="myAreaChart"></canvas>#}
+
                                     <div class="embed-responsive embed-responsive-16by9">
                                      <iframe src="{% url 'Strata:iframe_show_sensor_graph' 1 1 2 %}"></iframe>
                                     </div>
@@ -918,17 +920,17 @@
 
         });
 
-        {#$('div.strata.location').click(function(){#}
-        {#        strata = this.id;#}
-        {#        console.log('strata=> ',strata);#}
-        {#        $.xhrPool.abortAll();#}
-        {##}
-        {#    var StrataCalling = setInterval(function () {#}
-        {#        STRATA(strata);#}
-        {#        WATER();#}
-        {#    }, 5000,strata);#}
-        {##}
-        {#});#}
+        $('div.strata.location').click(function(){
+                strata = this.id;
+                console.log('strata=> ',strata);
+                $.xhrPool.abortAll();
+
+            var StrataCalling = setInterval(function () {
+                STRATA(strata);
+                WATER();
+            }, 5000,strata);
+
+        });
 
         $('a.strata-location-dropdown').click(function(){
            strata=this.id;
@@ -942,48 +944,48 @@
 
         });
         function replaceAt(string, index, replace) {return string.substring(0, index) + replace + string.substring(index + 1);}
-        function STRATA(strata){
-            $.ajax({
-                type: "get",
-                url: "{% url 'dashboard:fetchsl' %}",
-                data:{
-                 'strata':strata
-                },
-                beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-                success: function (data) {
-                    console.log(data);
-                    StrataMonitoring(data.result, 100);
-                },
-                error: function () {
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
-        }
-        function WATER(){
-            $.ajax({
-                type: "get",
-                url: "{% url 'dashboard:fetchwl' %}",
-
-                beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-                success: function (data) {
-                    console.log(data)
+        {#function STRATA(strata){#}
+        {#    $.ajax({#}
+        {#        type: "get",#}
+        {#        url: "{% url 'dashboard:fetchsl' %}",#}
+        {#        data:{#}
+        {#         'strata':strata#}
+        {#        },#}
+        {#        beforeSend: function (jqXHR) {#}
+        {#            $.xhrPool.push(jqXHR);#}
+        {#        },#}
+        {#        success: function (data) {#}
+        {#            console.log(data);#}
+        {#            StrataMonitoring(data.result, 100);#}
+        {#        },#}
+        {#        error: function () {#}
+        {#            console.log("something is not right.please contact admin - 1");#}
+        {#        }#}
+        {#    });#}
+        {#}#}
+        {#function WATER(){#}
+        {#    $.ajax({#}
+        {#        type: "get",#}
+        {#        url: "{% url 'dashboard:fetchwl' %}",#}
+        {##}
+        {#        beforeSend: function (jqXHR) {#}
+        {#            $.xhrPool.push(jqXHR);#}
+        {#        },#}
+        {#        success: function (data) {#}
+        {#            console.log(data)#}
                     {#StrataMonitoring(data.result,208);#}
-                    GasMonitoring(data.result, 208, "waterLevel");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
-                },
-                error: function () {
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
-        }
+        {#            GasMonitoring(data.result, 208, "waterLevel");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");#}
+        {#        },#}
+        {#        error: function () {#}
+        {#            console.log("something is not right.please contact admin - 1");#}
+        {#        }#}
+        {#    });#}
+        {#}#}
         document.getElementById("overlay").style.display = "block";
 
 
