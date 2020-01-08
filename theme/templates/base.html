@@ -490,10 +490,12 @@
                                             Aggregate Horse-Power of Electrical Appartatus (Table B)</a></li>
                                         <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">Manage Type
                                             and
-                                            Aggregate Horse Power of Machinery and Equipment (Other then Electrical Appartus)
+                                            Aggregate Horse Power of Machinery and Equipment (Other then Electrical
+                                            Appartus)
                                             (Table C)</a></li>
                                         <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">Manage
-                                            Explosives, Safety Lamp, Rock Drills and Mechanical Ventilators (Table D)</a></li>
+                                            Explosives, Safety Lamp, Rock Drills and Mechanical Ventilators (Table
+                                            D)</a></li>
                                         <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">Manage
                                             Explosives,
                                             Safty Lamps, Rock Drills and Mechanical Ventilators (Table E)</a></li>
@@ -504,13 +506,17 @@
 
                                 <li class="col-sm-6">
                                     <ul>
-                                        <li class="dropdown-header" style="color:white;"><strong>Metal Report</strong></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Metal Report</strong>
+                                        </li>
                                         <li>
                                             <a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">Manage
                                                 Annual Report</a>
                                         </li>
-                                        <li><a target="" href="{% url 'DGMS_Forms:manage_metal_mine_extract_permission' %}">Extract Permission </a></li>
-                                        <li class="dropdown-header" style="color:white;"><strong>Oil Report</strong></li>
+                                        <li><a target=""
+                                               href="{% url 'DGMS_Forms:manage_metal_mine_extract_permission' %}">Extract
+                                            Permission </a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Oil Report</strong>
+                                        </li>
                                         <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">Manage
                                             Annual Report</a></li>
                                         <li class="dropdown-header" style="color:white;"><strong>Miscellaneous
@@ -896,6 +902,20 @@
             }
         });
     });
+    <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
+    var myVar = setInterval(startGlobalWarningFunction, 1000);
+
+    function startGlobalWarningFunction() {
+        var d = new Date();
+        var t = d.toLocaleTimeString();
+        document.getElementById("demo").innerHTML = t;
+    }
+
+    function stopGlobalWarningFunction() {
+        clearInterval(myVar);
+    }
+
+    <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
 <!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
