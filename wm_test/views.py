@@ -74,12 +74,10 @@ def edit(request, pk, template_name="add_sensor.html"):
         return redirect("wm_test:manage_sensor")
     return render(request, template_name, {'form': form})
 
-def delete(request, pk, template_name='manage_sensor.html'):
+def delete(request, pk):
     book= get_object_or_404(WindRoseAddSensor, pk=pk)
-    if request.method=='POST':
-        book.delete()
-        return redirect('wmtest:manage_sensor')
-    return render(request, template_name, {'object':book})
+    book.delete()
+    return redirect('wm_test:manage_sensor')
 
 
 # def get_data_from_node_mcu(request,template_name='home1.html'):
@@ -117,9 +115,12 @@ def get_data_from_node_mcu(request):
     data = {}
     sensor_data = []
     sensor_id=1
-    sensor_details = Setting.objects.get(id=sensor_id)
-    response = requests.get('http://' + str(sensor_details.ip_address))
-    sensor_values = strip_tags(response.text)
+    sensor_details = WindRoseSetting.objects.get(id=sensor_id)
+    try:
+        response = requests.get('http://' + str(sensor_details.ip_address))
+        sensor_values = strip_tags(response.text)
+    except:
+        pass
     now = datetime.datetime.now()
     print(now)
     ok_date = (str(now.strftime('%Y-%m-%d %H:%M')))

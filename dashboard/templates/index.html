@@ -98,7 +98,50 @@
 		width: auto;
 	    height: 100%;
 	}
+    .strata-dropdown{
+        background-color: #4CAF50;
+    }
 
+    .strata-dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.strata-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.strata-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 50%;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.strata-dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.strata-dropdown-content a:hover {background-color: #f1f1f1}
+
+.strata-dropdown:hover .strata-dropdown-content {
+  display: block;
+}
+
+.strata-dropdown:hover .strata-dropbtn:hover {
+  background-color: #3e8e41;
+
+}
   </style>
 
 
@@ -477,123 +520,11 @@
 {#                            <h1>{{ sensors}}</h1>#}
                             {% for sensor in sensors %}
 {#                                <h1>{{ sensor.mine }}</h1>#}
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-primary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div id="{{ sensor.sensor_id }}" class="text-xs font-weight-bold text-primary text-uppercase mb-1">{{ key }}({{ sensor.sensor_name }})</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="nodeprogress">39.78 %</span></div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="progress progress-sm mr-2">
-                                                <div id="nodeprogress" class="progress-bar bg-info" role="progressbar"
-                                                     style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                     aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <iframe width="400" height="auto" style="border: none;"src="{% url 'sensor:iframe_live_data' selected sensor.node_id sensor.sensor_id %}"></iframe>
                                 {% endfor %}
                             {% endfor %}
                     {% endfor %}
-
-{#                    <!-- Earnings (Monthly) Card Example -->#}
-{#                    <div class="col-xl-3 col-md-6 mb-4">#}
-{#                        <div class="card border-left-primary shadow h-100 py-2">#}
-{#                            <div class="card-body">#}
-{#                                <div class="row no-gutters align-items-center">#}
-{#                                    <div class="col mr-2">#}
-{#                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Node X#}
-{#                                            (CH<sub>4</sub>)#}
-{#                                        </div>#}
-{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">39.78 %</div>#}
-{#                                    </div>#}
-{#                                    <div class="col-auto">#}
-{#                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
-{##}
-{#                    <!-- Earnings (Monthly) Card Example -->#}
-{#                    <div class="col-xl-3 col-md-6 mb-4">#}
-{#                        <div class="card border-left-success shadow h-100 py-2">#}
-{#                            <div class="card-body">#}
-{#                                <div class="row no-gutters align-items-center">#}
-{#                                    <div class="col mr-2">#}
-{#                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Node 1#}
-{#                                            (CO<sub>2</sub>)#}
-{#                                        </div>#}
-{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">12 ppm</div>#}
-{#                                    </div>#}
-{#                                    <div class="col-auto">#}
-{#                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
-                    <!-- Earnings (Monthly) Card Example -->
-{#                    <div class="col-xl-3 col-md-6 mb-4">#}
-{#                        <div class="card border-left-info shadow h-100 py-2">#}
-{#                            <div class="card-body">#}
-{#                                <div class="row no-gutters align-items-center">#}
-{#                                    <div class="col mr-2">#}
-{#                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Node 1#}
-{#                                            (h<sub>2</sub>S)#}
-{#                                        </div>#}
-{#                                        <div class="row no-gutters align-items-center">#}
-{#                                            <div class="col-auto">#}
-{#                                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">30 %</div>#}
-{#                                            </div>#}
-{#                                            <div class="col">#}
-{#                                                <div class="progress progress-sm mr-2">#}
-{#                                                    <div class="progress-bar bg-info" role="progressbar"#}
-{#                                                         style="width: 50%" aria-valuenow="50" aria-valuemin="0"#}
-{#                                                         aria-valuemax="100">#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                    <div class="col-auto">#}
-{#                                        <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
-{##}
-{#                    <!-- Pending Requests Card Example -->#}
-{#                    <div class="col-xl-3 col-md-6 mb-4">#}
-{#                        <div class="card border-left-warning shadow h-100 py-2">#}
-{#                            <div class="card-body">#}
-{#                                <div class="row no-gutters align-items-center">#}
-{#                                    <div class="col mr-2">#}
-{#                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Node 1 (O<sub>2</sub>)#}
-{#                                        </div>#}
-{#                                        <div class="h5 mb-0 font-weight-bold text-gray-800">18 ppm</div>#}
-{#                                    </div>#}
-{#                                    <div class="col-auto">#}
-{#                                        <i class="fas fa-comments fa-2x text-gray-300"></i>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
                 </div>
-
                 <!-- Content Row -->
 
                 <div class="row">
@@ -603,7 +534,9 @@
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: 7D/51L)</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">7D/51L</span>)</h6>
+
+
                                 <div class="dropdown no-arrow">
                                     <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -611,20 +544,31 @@
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
                                          aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        {% for strata in strata %}
-                                            <a class="dropdown-item strata location" href="#" id="{{ strata.id}}">{{ strata.location_name }}</a>
+                                        <div class="dropdown-header">Choose Strata Location:</div>
+                                        {% for location in strata %}
+                                            {% for key,loc in location.items %}
+                                            <div class="strata-dropdown dropdown-item strata location"  id="{{ strata.id}}">
+                                                <div class="strata-dropbtn">{{ key }}</div>
+                                                <div class="strata-dropdown-content">
+                                                   {% for sensor in loc %}
+                                                        <a class="strata-location-dropdown" id="{{ sensor.id }}">{{sensor.sensor_name}}</a>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
                             <!-- Card Body -->
                             <div class="card-body">
-                                <div class="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
+{#                                <div class="chart-area">#}
+                                    <div class="container">
+{#                                    <canvas id="myAreaChart"></canvas>#}
+
+                                    <div class="embed-responsive embed-responsive-16by9">
+                                     <iframe src="{% url 'Strata:iframe_show_sensor_graph' 1 1 2 %}"></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -781,23 +725,49 @@
                     <div class="col-lg-6 mb-4">
 
                         <!-- Illustrations -->
+{#                        <div class="card shadow mb-4">#}
+{#                            <div class="card-header py-3">#}
+{#                                <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>#}
+{#                            </div>#}
+{#                            <div class="card-body">#}
+{#                                <div class="text-center">#}
+{#                                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"#}
+{#                                         src="{% static 'dashboard/img/undraw_posting_photo.svg' %}" alt="">#}
+{#                                </div>#}
+{#                                <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank"#}
+{#                                                                                                      rel="nofollow"#}
+{#                                                                                                      href="https://undraw.co/">unDraw</a>,#}
+{#                                    a constantly updated collection of beautiful svg images that you can use completely#}
+{#                                    free and without attribution!</p>#}
+{#                                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on#}
+{#                                    unDraw &rarr;</a>#}
+{#                            </div>#}
+{#                        </div>#}
+                         <!-- Illustrations -->
                         <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="text-center">
-                                    <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                         src="{% static 'dashboard/img/undraw_posting_photo.svg' %}" alt="">
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Water Level Monitoring</h6>
+                                <div class="dropdown no-arrow">
+                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                         aria-labelledby="dropdownMenuLink">
+                                        <div class="dropdown-header">Dropdown Header:</div>
+                                        {% for water in water_level %}
+                                            <div class="dropdown-item water location" id="{{ water.id}}">{{ water.area_name }}</div>
+                                        {% endfor %}
+                                    </div>
                                 </div>
-                                <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank"
-                                                                                                      rel="nofollow"
-                                                                                                      href="https://undraw.co/">unDraw</a>,
-                                    a constantly updated collection of beautiful svg images that you can use completely
-                                    free and without attribution!</p>
-                                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                    unDraw &rarr;</a>
                             </div>
+                             <div class="container">
+
+                      <div class="embed-responsive embed-responsive-16by9">
+
+                          <iframe id="water_monitoring_iframe" class="embed-responsive-item" src="{% url 'water_level_monitoring:iframe_show_graph_water_sensor' selected water_level_id %}"></iframe>
+                      </div>
+                    </div>
                         </div>
 
               <!-- Illustrations -->
@@ -818,6 +788,8 @@
                          <li class="MinerWorkerIcon">Worker</li>
                          <li class="MinerOfficerIcon">Officer</li>
 
+
+
                 </div>
                   <div class="container">
 
@@ -831,18 +803,18 @@
               </div>
 
                         <!-- Approach -->
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                            </div>
-                            <div class="card-body">
-                                <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS
-                                    bloat and poor page performance. Custom CSS classes are used to create custom
-                                    components and custom utility classes.</p>
-                                <p class="mb-0">Before working with this theme, you should become familiar with the
-                                    Bootstrap framework, especially the utility classes.</p>
-                            </div>
-                        </div>
+{#                        <div class="card shadow mb-4">#}
+{#                            <div class="card-header py-3">#}
+{#                                <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>#}
+{#                            </div>#}
+{#                            <div class="card-body">#}
+{#                                <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce CSS#}
+{#                                    bloat and poor page performance. Custom CSS classes are used to create custom#}
+{#                                    components and custom utility classes.</p>#}
+{#                                <p class="mb-0">Before working with this theme, you should become familiar with the#}
+{#                                    Bootstrap framework, especially the utility classes.</p>#}
+{#                            </div>#}
+{#                        </div>#}
 
 
                     </div>
@@ -948,7 +920,7 @@
 
         });
 
-        $('a.strata.location').click(function(){
+        $('div.strata.location').click(function(){
                 strata = this.id;
                 console.log('strata=> ',strata);
                 $.xhrPool.abortAll();
@@ -959,48 +931,61 @@
             }, 5000,strata);
 
         });
-        function STRATA(strata){
-            $.ajax({
-                type: "get",
-                url: "{% url 'dashboard:fetchsl' %}",
-                data:{
-                 'strata':strata
-                },
-                beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-                success: function (data) {
-                    console.log(data);
-                    StrataMonitoring(data.result, 100);
-                },
-                error: function () {
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
-        }
-        function WATER(){
-            $.ajax({
-                type: "get",
-                url: "{% url 'dashboard:fetchwl' %}",
 
-                beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-                success: function (data) {
-                    console.log(data)
+        $('a.strata-location-dropdown').click(function(){
+           strata=this.id;
+           console.log(this.innerText);
+           $('span#strata_location_name').text(this.innerText);
+        });
+
+        $('div.water.location').click(function(){
+                iframe_link=$('iframe#water_monitoring_iframe')[0].src;
+                $('iframe#water_monitoring_iframe').attr('src',replaceAt(iframe_link,iframe_link.lastIndexOf('/')+1,this.id.toString()));
+
+        });
+        function replaceAt(string, index, replace) {return string.substring(0, index) + replace + string.substring(index + 1);}
+        {#function STRATA(strata){#}
+        {#    $.ajax({#}
+        {#        type: "get",#}
+        {#        url: "{% url 'dashboard:fetchsl' %}",#}
+        {#        data:{#}
+        {#         'strata':strata#}
+        {#        },#}
+        {#        beforeSend: function (jqXHR) {#}
+        {#            $.xhrPool.push(jqXHR);#}
+        {#        },#}
+        {#        success: function (data) {#}
+        {#            console.log(data);#}
+        {#            StrataMonitoring(data.result, 100);#}
+        {#        },#}
+        {#        error: function () {#}
+        {#            console.log("something is not right.please contact admin - 1");#}
+        {#        }#}
+        {#    });#}
+        {#}#}
+        {#function WATER(){#}
+        {#    $.ajax({#}
+        {#        type: "get",#}
+        {#        url: "{% url 'dashboard:fetchwl' %}",#}
+        {##}
+        {#        beforeSend: function (jqXHR) {#}
+        {#            $.xhrPool.push(jqXHR);#}
+        {#        },#}
+        {#        success: function (data) {#}
+        {#            console.log(data)#}
                     {#StrataMonitoring(data.result,208);#}
-                    GasMonitoring(data.result, 208, "waterLevel");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
-                },
-                error: function () {
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
-        }
+        {#            GasMonitoring(data.result, 208, "waterLevel");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");#}
+        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");#}
+        {#        },#}
+        {#        error: function () {#}
+        {#            console.log("something is not right.please contact admin - 1");#}
+        {#        }#}
+        {#    });#}
+        {#}#}
         document.getElementById("overlay").style.display = "block";
 
 

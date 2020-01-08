@@ -140,3 +140,8 @@ def delete_carousal(request):
 
     data['error'] = 'Something Went Wrong!'
     return JsonResponse(data)
+
+
+def start_background_tast(request):
+    os.system('manage.py process_tasks')
+    pass
