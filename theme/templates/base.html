@@ -155,15 +155,16 @@
 
         @media (min-width: 768px)
             @mdiapadding-top : 220px;
+
+
     </style>
+
     <script>
         window.onload = function () {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 document.location = '/mobile';
             }
         }
-
-
     </script>
 
     <!--=======end PAHLE KA===================-->
@@ -469,50 +470,69 @@
                             <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
                                 <li class="col-sm-6">
                                     <ul class="">
-                                        <li class="dropdown-header" style="color:white;"><strong>Coal Report</strong></li>
-        {#                            <ul class="dropdown-menu  navbar-color">#}
-        {#                                <li><h5><b>Coal Report</b></h5></li>#}
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">MANAGE
-                                            ANNUAL REPORT</a></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">MANAGE FIRST
-                                            SCHEDULE (Form III)</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Coal Report</strong>
+                                        </li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
+                                            Annual Report</a></li>
+                                        <li class="colorClass"><a
+                                                href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_iii' %}">Manage
+                                            First
+                                            Schedule (Form III)</a></li>
 
-                                        <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">MANAGE FIRST SCHEDULE (Form V)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_First_Schedule_Form_V' %}">Manage First
+                                            Schedule (Form V)</a></li>
 
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">MANAGE EMPLOYMENT
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_A' %}">Manage
+                                            Employment
                                             (Table A) </a></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">MANAGE TYPE AND
-                                            AGREGATE HORSE-POWER OF ELECTRICAL APPARTATUS (Table B)</a></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">MANAGE TYPE AND
-                                            AGGREGATE HORSE_POWER OF MACHINERY AND EQUIPMENT (OTHER THEN ELECTRICAL APPARATUS)
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_B' %}">Manage Type
+                                            and
+                                            Aggregate Horse-Power of Electrical Appartatus (Table B)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_C' %}">Manage Type
+                                            and
+                                            Aggregate Horse Power of Machinery and Equipment (Other then Electrical Appartus)
                                             (Table C)</a></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">MANAGE EXPLOSIVES,
-                                            SAFETY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table D)</a></li>
-
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">MANAGE EXPLOSIVES,
-                                            SAFTY LAMPS, ROCK DRILLS AND MECHANICAL VENTILATORS (Table E)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_D' %}">Manage
+                                            Explosives, Safety Lamp, Rock Drills and Mechanical Ventilators (Table D)</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_table_E' %}">Manage
+                                            Explosives,
+                                            Safty Lamps, Rock Drills and Mechanical Ventilators (Table E)</a></li>
+                                        <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">Depillaring
+                                            Permission </a></li>
                                     </ul>
                                 </li>
+
                                 <li class="col-sm-6">
-                                    <ul class="">
-
+                                    <ul>
                                         <li class="dropdown-header" style="color:white;"><strong>Metal Report</strong></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">MANAGE
-                                            ANNUAL REPORT</a></li>
+                                        <li>
+                                            <a href="{% url 'DGMS_Forms:Manage_DGMS_MetalliferousMines_Annual_Annexure_II' %}">Manage
+                                                Annual Report</a>
+                                        </li>
+                                        <li><a target="" href="{% url 'DGMS_Forms:manage_metal_mine_extract_permission' %}">Extract Permission </a></li>
                                         <li class="dropdown-header" style="color:white;"><strong>Oil Report</strong></li>
-                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">MANAGE
-                                            ANNUAL REPORT</a></li>
-                                        <li class="dropdown-header" style="color:white;"><strong>Miscellaneous Report</strong></li>
+                                        <li><a href="{% url 'DGMS_Forms:Manage_DGMS_OilMines_Annual_Annexure_III' %}">Manage
+                                            Annual Report</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Miscellaneous
+                                            Report</strong></li>
+                                        <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report
+                                            (on PESO)</a></li>
+                                        <li><a target="_blank"
+                                               href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission
+                                            Application(on DGMS)</a></li>
+                                        <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment
+                                            Permission </a></li>
 
-                                        <li><a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Report (on PESO)</a></li>
-                                        <li><a target="_blank" href="http://approval-permission-dgms.gov.in/Login/MineUser">Permission Application(on DGMS)</a></li>
-                                        <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment Permission </a></li>
-                                        <li><a target="" href="{% url 'DGMS_Forms:manage_extract_or_reduce_pillars' %}">DEPILLARING PERMISSION </a></li>
-                                        <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation Report </a></li>
-                                        <li><a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification Report of the Problem</a></li>
+                                        <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation
+                                            Report </a></li>
+                                        <li>
+                                            <a href="{% url 'DGMS_Forms:manage_identification_report_of_the_problem' %}">Identification
+                                                Report of the Problem</a></li>
 
-                                        <li class="dropdown-header" style="color:white;"><strong>Send Report</strong></li>
-                                        <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a></li>
+                                        <li class="dropdown-header" style="color:white;"><strong>Send Report</strong>
+                                        </li>
+                                        <li><a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a>
+                                        </li>
                                     </ul>
                                 </li>
                             </ul>
@@ -637,7 +657,7 @@
                             </ul>
                         </li>
                         <!--Weather Monitoring-->
-                         <li class="dropdown">
+                        <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-display1"></i>
                                 <p>
@@ -647,25 +667,29 @@
                             </a>
                             <ul class="dropdown-menu navbar-color ">
 
-                                        <li class="dropdown-header" style="color:white;">Sensor Management</li>
+                                <li class="dropdown-header" style="color:white;">Sensor Management</li>
 
-                                        <li><a href="{% url 'wm_test:setting' %}">Setting</a></li>
-                                        <li><a href="{% url 'wm_test:add_sensor' %}">Add Sensor</a></li>
-                                        <li><a href="{% url 'wm_test:manage_sensor' %}">Manage Sensor</a></li>
+                                <li><a href="{% url 'wm_test:setting' %}">Setting</a></li>
+                                <li><a href="{% url 'wm_test:add_sensor' %}">Add Sensor</a></li>
+                                <li><a href="{% url 'wm_test:manage_sensor' %}">Manage Sensor</a></li>
 
-                                        <li class="dropdown-header" style="color:white;">Customise Report</li>
-                                        <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
-                                        <li><a href="{% url 'wm_test:sensor_hourly_report' %}">Sensor Hourly Report</a></li>
-                                        <li><a href="{% url 'wm_test:hour_duration_avg_report' %}">Hour Duration Avg Report</a></li>
-                                        <li><a href="{% url 'wm_test:date_and_hour_duration_avg_report' %}">Date And Hour Duration Avg Report</a></li>
+                                <li class="dropdown-header" style="color:white;">Customise Report</li>
+                                <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
+                                <li><a href="{% url 'wm_test:sensor_hourly_report' %}">Sensor Hourly Report</a></li>
+                                <li><a href="{% url 'wm_test:hour_duration_avg_report' %}">Hour Duration Avg Report</a>
+                                </li>
+                                <li><a href="{% url 'wm_test:date_and_hour_duration_avg_report' %}">Date And Hour
+                                    Duration Avg Report</a></li>
 
-                                        <li class="dropdown-header" style="color:white;">Wind Rose</li>
-                                        <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
-                                        <li><a href="{% url 'wm_test:wind_hourly_report' %}">Wind Hourly Report</a></li>
-                                        <li><a href="{% url 'wm_test:frequency_distribution_count_report' %}">Frequency Distribution Report<span class="label label-default">Count</span></a></li>
-                                        <li><a href="{% url 'wm_test:frequency_distribution_normalized_report' %}">Frequency Distribution Report<span class="label label-default">Normalised</span></a></li>
+                                <li class="dropdown-header" style="color:white;">Wind Rose</li>
+                                <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
+                                <li><a href="{% url 'wm_test:wind_hourly_report' %}">Wind Hourly Report</a></li>
+                                <li><a href="{% url 'wm_test:frequency_distribution_count_report' %}">Frequency
+                                    Distribution Report<span class="label label-default">Count</span></a></li>
+                                <li><a href="{% url 'wm_test:frequency_distribution_normalized_report' %}">Frequency
+                                    Distribution Report<span class="label label-default">Normalised</span></a></li>
 
-                                        </li>
+                                </li>
                             </ul>
                         </li>
                         <!--Weather Monitoring End-->
@@ -728,10 +752,7 @@
             </div><!-- /.container-fluid -->
         </nav>
 
-        <div class="blurred-container">
-
-        </div>
-
+        <div class="blurred-container"></div>
     </div> <!-- end menu-dropdown -->
 </div>
 
@@ -829,39 +850,6 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut",
         };
-
-
-        {#var interval_time = 10000;#}
-        {#setInterval(function () {#}
-        {#        $.ajax({#}
-        {#            type: "get",#}
-        {#            url: "{% url 'Strata:warning_level_information' %}",#}
-        {#            success: function (data) {#}
-        {#                console.log(data);#}
-        {#                //toastr.warning(data["result"]); // Vikash Changed Here-->#}
-        {#                //$("#fill_here").html(data["result"]); //Vikash Changed Here-->#}
-        {#                if (data["result"]) {#}
-        {#                    // $("#is_visiable").attr("style",""); //Vikash Changed Here-->#}
-        {#                    toastr.warning(data["result"]);#}
-        {#                    if (data["light_result"]) {#}
-        {#                        $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
-        {##}
-        {#                    } else {#}
-        {#                        $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-        {##}
-        {#                    }#}
-        {#                } else {#}
-        {#                    $("#is_visiable").attr("style", "display:none");#}
-        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-        {##}
-        {#                }#}
-        {#            },#}
-        {#            error: function () {#}
-        {#                console.log("something went wrong");#}
-        {#            }#}
-        {#        });#}
-        {#    },interval_time#}
-        {#)#}
 
         $('ul.nav li.dropdown').hover(function () {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
