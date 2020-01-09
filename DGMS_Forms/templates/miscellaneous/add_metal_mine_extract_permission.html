@@ -1,0 +1,821 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+        .margin {
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+
+        /* see me */
+        td {
+            border: solid;
+            text-align: left !important;
+        }
+
+        /* play with bg cells and cols ? */
+
+        tr:nth-child(even) :nth-child(odd) {
+            background: #F7F6F6;
+        }
+
+        tr:nth-child(odd) :nth-child(even) {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+    <form method="POST" class="post-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="container">
+            <div class="row margin">
+                <center>
+                    <b>
+                        APPENDIX 52 OF 1976/MMR-107&109
+                    </b>
+                </center>
+            </div>
+            <br>
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    <td colspan="2">
+                        <label for="">1. Mine Name</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.name_of_mine }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">2. (a) Name of owner </label>
+                    </td>
+                    <td>
+                        {{ form.name_of_owner }}
+                    </td>
+                    <td>
+                        <label for="">(b) Mineral Worked </label>
+                    </td>
+                    <td>
+                        {{ form.mineral_worked }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label for="">3. Particulars of Ore body :</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.1 Names of Ore bodies proposed to be worked :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.name_of_ore_bodies }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.2 Location :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.location }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.3 Thickness of Ore bodies :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.thickness_of_ore }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for=""> Average True width Horizontal width :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.average_true_width }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.3.1 Reef Width:</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.reff_width }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.3.2 Stoping Width:</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.stoping_width }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.4 Size of Ore block :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.size_of_ore_block }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.5 Depth of Vein of Ore-body :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.depth_of_vein_of_ore_body }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.6 Rate of dip :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.rate_of_dip }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">3.7 Are there any parallel reefs, if so, give details :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.are_there_any_parallel_reefs }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label for="">4. Other particulars of the Ore-body:</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">4.1 Is there any history of occurrence of gas : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.is_there_any_history_of_occurance }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">4.2 Is there any history of fire in the seam ore-body in the same mine or in
+                            adjoining :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.is_there_any_history_of_fire }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5. Particulars about the workings to be stoped :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.particular_about_the_working_to_be_stoped }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.1 Maximum height & width of workings :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.max_height_and_width_of_working }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.2 Nature & type of Hanging wall & footwall within 15 m of reef :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.nature_and_type_of_hanging_wall }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.3 General conditions of workings : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.general_condition_of_workings }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.4 Are the workings dry/damp/naturally wet : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.are_the_working_dry_damp_naturally_wet }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.5 Maximum & minimum thickness of cover from surface: </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.maximum_and_minimum_thickness }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="">Maximum : </label>
+                    </td>
+                    <td>
+                        {{ form.maximum }}
+                    </td>
+                    <td>
+                        <label for="">Minimum </label>
+                    </td>
+                    <td>
+                        {{ form.minimum }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.6 Are there any Geological disturbances within 180 mt. of the Ore proposed to be
+                            stoped : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.are_there_any_geological_dist }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.7 Plan showing the area to be stoped and whether it has been signed by Surveyor
+                            & countersigned by Manager :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.plan_showing_the_area_to_be_stoped }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">5.8 Are the main approach roads in country rock or in ore-body itself :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.are_the_main_approach_roads }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">6 Section & plan of strata showing the position / condition of overlying &
+                            underlying or parallel bodies, their thickness of the parting between them and the nature of
+                            overlying rock: </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.section_plan_of_strata_showing }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">7 Proposed method of extraction : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.proposed_method_of_extraction }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">8 Manner of extraction of ore blocks (to be illustrated by suitable
+                            details): </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.manner_of_extraction_of_ore_block }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">9 Condition of overlying & underlying workings with respect to the area applied
+                            for : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.condition_of_overlying_and_underlying }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">9.1 Is these areas free from water </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.is_these_areas_free_from_water }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">9.2 Are the deposits extracted /split/standing on the pillars virgin :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.are_the_deposits_extracted }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">9.3 If it has been extracted , split ; state if by caving method or by cut and
+                            fill method : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.if_it_has_been_extracted }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label for="">10 Surface features viz. lying above and within 45m of the proposed area(please
+                            give details : </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.1 Railways : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.railway }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.2 Public / Private roads : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.public_private }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.3 River, Nallah or any other water course tank or reservoir: </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.river_nallah }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.4 Building / dwellings not belonging to the owner (state whether Katcha,
+                            Pucca,Single stored, double stored etc) : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.building_dwelling }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.5 High tension transmission line ( whether belonging to owner or any other
+                            party ) : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.high_tension }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.6 Arial Rope way (State whether belonging to the owner or any other party.)
+                            : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.arial_rope_way }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.7 Water pipe and gas main (State whether belonging to the owner or any other
+                            party.) : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.water_pipe_and_gas_main }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">10.8 Any other Structure, (State whether belonging to the owner or any other
+                            party.) : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.any_other_structure }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">11 Highest flood level – Does the area lie below the highest known flood level of
+                            any river, Nallah etc.: </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.highest_flood_level }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">12 A. (I) Damage to surface structures etc. Do you apprehend any danger to the
+                            surface buildings or structure mentioned in item 10 above? :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.damage_to_surface_structure }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(a) If you apprehend danger, please give details of proposed measures to prevent
+                            danger to the same :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.if_you_apprehend_danger }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(b) If you do not apprehend any danger please give reasons for the same :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.if_you_do_not_apprehend }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(II) Due to the vicinity of Geological Disturbances ; If you apprehend danger,
+                            please give details of proposed measures to prevent danger to the same : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.due_to_the_vicinity_of_geological }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <label for=""> 12B. Subsidence Records etc : <br> Give particulars of the subsidence experience
+                            along with subsidence records if available : </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(i) A 5.0m X 6.0m stretch of PCC road used for transport of ore got subsidized and
+                            created a 4.0m deep cavity on road on 19/09/2015 at about 11.45 am without causing any
+                            injury/damage to any person /machinery.</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.a_5_into_6_stretch_of_pcc_road }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(ii) However, there is no further subsidence activity being observed in the area
+                            and the surface is stable (Survey report and plan is enclosed).</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.however_there_is_no_further }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">12C. Acquisition / Fencing of Surface Area : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.acquisition_fencing_of_surface }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">If the surface is likely to be affected , has it been acquired for fencing as
+                            required under Regulation 115 (1) . </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.if_the_surface_is_likely_to_be_affected }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">If not what alternative arrangements have been made to prevent danger : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.if_not_what_alternative }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">13A. Danger of Inundation:</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.danger_of_inundation }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">Is there any danger of inundation as a result of the proposed operation
+                            from?</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.is_there_any_danger_of_inundation }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for=""> a) Surface water </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.surface_water }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for=""> b) Under ground workings</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.under_ground_working }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">i) Of any workings lying above or below the area applied for in the same mine
+                            : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.of_any_working_lying_above }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">ii) Of the adjoining mines in the same ore body or any other ore shoot : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.of_the_adjoining_mines }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">13B. Whether precautionary measures are suggested to prevent the danger of
+                            inundation , if any : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.whether_precautionary }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">14. Danger from fire, where there is fire, in the overlying or underlying workings
+                            or on the surface. State the proposed protective measures to prevent danger from the same
+                            : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.danger_from_fire }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">15. Danger of premature Collapse</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.danger_of_premature }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">Do you apprehend any premature collapse of the workings either in the same ore
+                            body or in the overlying or underlying or parallel ore body/ore shoot, as a result of the
+                            proposed operations? If so, what are the measures proposed to prevent the same? </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.do_you_apprehend_any_premature }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">16. Division of the area into panels provisions or isolation stopings.</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.division_of_the_area_into_panel }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">Has the area applied for stoping been divided on the plan into suitable panels?
+                            :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.has_the_area_applied_for_stoping }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">17. Systematic Timbering Rules</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.systematic_timbering_rules }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">Have the systematic timbering rules been approved by the Joint Director of Mines
+                            Safety in
+                            Accordance with Reg. 112 (2) (a)?</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.have_the_systermatic_timber }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">18. Workings within Disputed Area</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.working_within_disputed_area }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">Does the area proposed to be stoped lie within or close to the disputed boundary
+                            of area or encroached working with the neighboring mines? If so, please give details</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.does_the_area_proposed }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">19. For application under Reg. 109(1): Where the application has been made under Reg.
+                            109(1), has a copy of the same together with the relevant plans been sent to the
+                            administration concerned, and in the case of other public works to the authorities owning
+                            such works?</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.for_application_under_109 }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">20. Reference to previous permissions. Please state whether any permission for
+                            extraction of blocks/pillars was granted in the past for any other areas. If so</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.reference_to_previous_permission }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(a) The reference number and date of the letter(s) . :
+                            (Where permission has been granted in more than two areas reference to only the last two
+                            permissions need be given)</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.the_reference_number_and_date_of_letter }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">(b) Has extraction been completed in the said area(s)? : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.has_extraction_been_completed }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">21. Whether all plans and sections submitted have been signed by the Surveyor and
+                            counter-signed by the Mines Manager :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.whether_all_plans_and_section }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">22.Any other relevant details:</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.any_other_relevent_details }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 1.Underground Plan (with surface features) : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.underground_plan }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 2. Longitudinal Vertical Section : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.longitudinal_vertical_section }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 3.Geological plan of the Surface : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.geological_plan }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 4.Vertical section of a Bore hole showing geological formation :</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.vertical_section }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 5. Plan & Sections showing stoping block : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.plan_sections_showing }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 6. Schematic diagram of cut and fill stoping sequence. : </label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.schematic_diagram }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 7. A brief write up on cut and fill stoping method.</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.schematic_diagram }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 8. Photo copy of the approved SSR</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.photo_copy_of_approved_ssr }}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <label for="">֍ 9. Survey report for subsidence</label>
+                    </td>
+                    <td colspan="2">
+                        {{ form.survey_report }}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row margin">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-2">
+                    <div class="pull-right">
+                        <label>Signature:</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {{ form.signature }}
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-2">
+                    <div class="pull-right">
+                        <label>Designation:</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {{ form.designation }}
+                </div>
+            </div>
+            <div class="row margin">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-2">
+                    <div class="pull-right">
+                        <label>Date:</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    {{ form.sig_date }}
+                </div>
+            </div>
+            <div class="row" style="margin-bottom: 5px;">
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_name").addClass('form-control');
+        });
+        $(function () {
+            $(".datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1900:2012",
+                format: "yyyy-mm-dd"
+                // You can put more options here.
+
+            });
+        });
+        //var $j = jQuery.noConflict();
+        //$j("#datepicker").datepicker();
+    </script>
+{% endblock %}

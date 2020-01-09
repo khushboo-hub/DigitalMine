@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h3>APPENDIX 52 OF 1976/MMR-107&109</h3>
+    <hr/>
+    <center>
+        <a href="/DGMS_Forms/add_metal_mine_extract_permission"><span class="btn btn-success">Add Application to Extract One block of mineral </span></a>
+    </center>
+    <hr/>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Sl.No.</th>
+            <th>Name of Mine</th>
+            <th>Name of Owner</th>
+            <th>Created Date</th>
+            <th>Modify Date</th>
+            <th>Edit</th>
+            <th>View</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for obj in form %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{obj.name_of_mine}}</td>
+            <td>{{obj.name_of_owner}}</td>
+            <td>{{obj.created_at|date:"d M Y (H:i:s)" }}</td>
+            <td>{{obj.updated_at|date:"d M Y (H:i:s)" }}</td>
+            <td>
+                <a class="btn btn-warning" href="/DGMS_Forms/edit_metal_mine_extract_permission/{{obj.id }}"> Edit<span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+            <td>
+                <a class="btn btn-info" href="/DGMS_Forms/view_metal_mine_extract_permission/{{obj.id }}"> View <span class="glyphicon glyphicon-list"></span></a>
+            </td>
+            <td>
+                <div class="btn btn-danger delete" data-id="{{obj.id}}"> Delete<span class="glyphicon glyphicon-trash"></span></div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Alert !!!</h4>
+            </div>
+            <div class="modal-body">
+                <p>Data will be deleted permanently. Are you want to delete ?</p>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-danger pull-left" href="" id="fill_url">Delete</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document.body).on('click', '.delete', function (key) {
+        var id = $(this).data("id");
+        var url = "/DGMS_Forms/delete_metal_mine_extract_permission/" + id;
+
+        $("#fill_url").attr("href", url);
+        $('#myModal').modal('show');
+    });
+</script>
+{% endblock %}

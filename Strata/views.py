@@ -747,8 +747,7 @@ def ajx_sensor_graph_date_range(request):
 
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
 
-        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(
-            created_date__range=(from_d, from_t))
+        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(created_date__range=(from_d, from_t))
         # print(sensor_table_details)
         prepared_data = []
         i = 0

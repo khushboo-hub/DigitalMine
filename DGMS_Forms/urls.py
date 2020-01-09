@@ -117,4 +117,12 @@ urlpatterns = [
     path('edit_extract_or_reduce_pillars/<int:id>', views.edit_extract_or_reduce_pillars,name='edit_extract_or_reduce_pillars'),
     path('view_extract_or_reduce_pillars/<int:id>', views.view_extract_or_reduce_pillars,name='view_extract_or_reduce_pillars'),
     path('delete_extract_or_reduce_pillars/<int:id>', views.delete_extract_or_reduce_pillars,name='delete_extract_or_reduce_pillars'),
+
+#-----------------------------------------------------------------------------------------------------------------------
+    path('add_metal_mine_extract_permission', views.add_metal_mine_extract_permission,name='add_metal_mine_extract_permission'),
+    path('manage_metal_mine_extract_permission', views.manage_metal_mine_extract_permission,name='manage_metal_mine_extract_permission'),
+    path('edit_metal_mine_extract_permission/<int:id>', views.edit_metal_mine_extract_permission,name='edit_metal_mine_extract_permission'),
+    path('view_metal_mine_extract_permission/<int:id>', views.view_metal_mine_extract_permission, name='view_metal_mine_extract_permission'),
+    path('delete_metal_mine_extract_permission/<int:id>', views.delete_metal_mine_extract_permission,name='delete_metal_mine_extract_permission'),
+
 ]
