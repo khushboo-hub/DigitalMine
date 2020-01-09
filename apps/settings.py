@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'SMS',
     'news',
     'emails',
-    'django_hosts',
+    #'django_hosts',
     'mail_templated',
     'dashboard',
     'setting',
@@ -73,7 +73,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django_hosts.middleware.HostsRequestMiddleware',
+    #'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -82,13 +82,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'django_hosts.middleware.HostsResponseMiddleware',
+    #'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'apps.urls'
 
-ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
-DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
+#ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
+#DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
 
 TEMPLATES = [
     {
