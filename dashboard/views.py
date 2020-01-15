@@ -42,15 +42,35 @@ def dashboard_calling(request):
         print('Except Case')
         water_level_area = 0
         pass
+    iframe_strata_location=0
+    iframe_strata_sensor=0
+    data['iframe_strata_location_name']="No Strata Location"
+    try:
+        iframe_strata_location=strata_location[0]
+        data['iframe_strata_location_name'] =iframe_strata_location.location_name
+        iframe_strata_location=iframe_strata_location.id
+        strata_sensor = Strata_sensor.objects.filter(mine_name=mine.id, location_id=iframe_strata_location)
+        try:
+            iframe_strata_sensor=strata_sensor[0]
+            iframe_strata_sensor=iframe_strata_sensor.id
+        except:
+            pass
 
-    print('water_level_area',water_level_area)
+    except:
+        pass
+    print('ifrmae_strasta_location',iframe_strata_location)
+    data['iframe_strata_location']=iframe_strata_location
+
+    print('ifrmae_strasta_sensor', iframe_strata_sensor)
+    data['iframe_strata_sensor'] = iframe_strata_sensor
+
     strata_result=[]
     strata=[]
     for strata_loc in strata_location:
         strata=[]
         strata_sensor=Strata_sensor.objects.filter(mine_name=mine.id,location_id=strata_loc.id)
         for sensor in strata_sensor:
-            strata.append({'id':sensor.id,'sensor_name':sensor.sensor_name})
+            strata.append({'id':sensor.id,'sensor_name':sensor.sensor_name,'strata_location_id':sensor.location_id.id})
         strata_result.append({strata_loc.location_name:strata})
 
     print('strataaaaaaaaaaaaaaaaa........')
@@ -61,6 +81,7 @@ def dashboard_calling(request):
     print('WATER LEVEL END')
     data['water_level'] = water_level
     data['water_level_id']=water_level_area
+
     nodes=Node.objects.filter(mine_id=mine.id)
     print('---------------------------------')
     NODES=[]

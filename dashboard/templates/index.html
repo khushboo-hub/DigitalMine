@@ -530,11 +530,11 @@
                 <div class="row">
 
                     <!-- Area Chart -->
-                    <div class="col-xl-8 col-lg-7">
+                    <div class="col-xl-12 col-lg-7">
                         <div class="card shadow mb-4">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">7D/51L</span>)</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">{{ iframe_strata_location_name }}</span>)</h6>
 
 
                                 <div class="dropdown no-arrow">
@@ -547,11 +547,11 @@
                                         <div class="dropdown-header">Choose Strata Location:</div>
                                         {% for location in strata %}
                                             {% for key,loc in location.items %}
-                                            <div class="strata-dropdown dropdown-item strata location"  id="{{ strata.id}}">
-                                                <div class="strata-dropbtn">{{ key }}</div>
+                                            <div class="strata-dropdown dropdown-item strata location"  >
+                                                <div class="strata-dropbtn" >{{ key }}</div>
                                                 <div class="strata-dropdown-content">
                                                    {% for sensor in loc %}
-                                                        <a class="strata-location-dropdown" id="{{ sensor.id }}">{{sensor.sensor_name}}</a>
+                                                        <a class="strata-location-dropdown" id="{{ sensor.id }}" data-strata-location="{{ sensor.strata_location_id }}">{{sensor.sensor_name}}</a>
                                                     {% endfor %}
                                                 </div>
                                             </div>
@@ -561,57 +561,15 @@
                                 </div>
                             </div>
                             <!-- Card Body -->
-                            <div class="card-body">
+
 {#                                <div class="chart-area">#}
                                     <div class="container">
 {#                                    <canvas id="myAreaChart"></canvas>#}
 
                                     <div class="embed-responsive embed-responsive-16by9">
-                                     <iframe src="{% url 'Strata:iframe_show_sensor_graph' 1 1 2 %}"></iframe>
+                                     <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'Strata:iframe_show_sensor_graph' selected iframe_strata_location iframe_strata_sensor %}"></iframe>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Pie Chart -->
-                    <div class="col-xl-4 col-lg-5">
-                        <div class="card shadow mb-4">
-                            <!-- Card Header - Dropdown -->
-                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                <div class="dropdown no-arrow">
-                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                         aria-labelledby="dropdownMenuLink">
-                                        <div class="dropdown-header">Dropdown Header:</div>
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#">Something else here</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Card Body -->
-                            <div class="card-body">
-                                <div class="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
-                                </div>
-                                <div class="mt-4 text-center small">
-                    <span class="mr-2">
-                      <i class="fas fa-circle text-primary"></i> Direct
-                    </span>
-                                    <span class="mr-2">
-                      <i class="fas fa-circle text-success"></i> Social
-                    </span>
-                                    <span class="mr-2">
-                      <i class="fas fa-circle text-info"></i> Referral
-                    </span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -867,6 +825,7 @@
     </div>
 </div>
 
+
 <!-- Bootstrap core JavaScript-->
 <script src="{% static 'dashboard/vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
@@ -920,21 +879,26 @@
 
         });
 
-        $('div.strata.location').click(function(){
-                strata = this.id;
-                console.log('strata=> ',strata);
-                $.xhrPool.abortAll();
-
-            var StrataCalling = setInterval(function () {
-                STRATA(strata);
-                WATER();
-            }, 5000,strata);
-
-        });
+        {#$('div.strata.location').click(function(){#}
+        {##}
+        {#        console.log('strata=> ',strata);#}
+        {#        $.xhrPool.abortAll();#}
+        {##}
+        {#    var StrataCalling = setInterval(function () {#}
+        {#        STRATA(strata);#}
+        {#        WATER();#}
+        {#    }, 5000,strata);#}
+        {##}
+        {#});#}
 
         $('a.strata-location-dropdown').click(function(){
-           strata=this.id;
-           console.log(this.innerText);
+             location_id=$(this).attr('data-strata-location');
+             sensor_id=this.id
+             iframe_link=$('iframe#strata_monitoring_iframe')[0].src;
+             new_link=replaceAt(iframe_link,iframe_link.lastIndexOf('/')+1,sensor_id.toString());
+             new_link=replaceAt(new_link,new_link.lastIndexOf('/')-1,location_id.toString());
+
+            $('iframe#strata_monitoring_iframe').attr('src',new_link);
            $('span#strata_location_name').text(this.innerText);
         });
 

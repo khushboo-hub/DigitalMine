@@ -111,6 +111,7 @@
 <div id="chartContainer" style="height: 400px; width: 100%;"></div>
 
 <script>
+
     $(document).ready(function(){
          var l_color = "#C0DF81";
          var m_color = "#FEFE9A";
@@ -119,7 +120,7 @@
          var l_value = "";
          var m_value = "";
          var h_value = "";
-         var t_hight = 0;
+         var t_height = 0;
 
          var audio_type = "";
          var first_warning = "";
@@ -145,7 +146,8 @@
                                     l_value = str_array[1];
                                     m_value = str_array[2];
                                     h_value = str_array[3];
-                                    t_hight = str_array[4];
+                                    t_height = parseInt(str_array[4]);
+                                    console.log(l_value,m_value,h_value,t_height)
 
                                     audio_type = str_array[5];
                                     first_warning =  str_array[6];
@@ -155,7 +157,7 @@
                                     first_audio =  str_array[9];
                                     second_audio = str_array[10];
                                     third_audio =  str_array[11];
-
+                                    setTimeout(fill_water_level_graph(), 1000);
                                 }
                          },
                         error: function(){
@@ -165,7 +167,7 @@
 
          //------------------------------------------------------------------------------------------------------------------
 
-          setTimeout(fill_water_level_graph(), 5000);
+
 
 
      //==================graph part================================================================================================
@@ -185,23 +187,23 @@
             axisY: {
                 title: "Water level (in cm)",
                 //suffix: "mm"
-                maximum: 100,
+                maximum: parseInt(t_height),
                 stripLines: [
                 {
                     label: "Level 1",
-                    startValue:parseFloat(10),
-                    endValue:parseFloat(30),
+                    startValue:parseFloat(l_value),
+                    endValue:parseFloat(m_value),
                     color: "#C0DF81"
                 },
                 {
                     label: "Level 2",
-                    startValue:parseFloat(30),
-                    endValue:parseFloat(50),
+                    startValue:parseFloat(m_value),
+                    endValue:parseFloat(h_value),
                     color:"#FEFE9A"
                 },
                 {
                     label: "Level 3",
-                    startValue:parseFloat(50),
+                    startValue:parseFloat(h_value),
                     endValue:parseFloat(5000),
                     color:"#F37C84"
                 }
@@ -234,10 +236,12 @@
                          'id': water_level_location
                        },
                 success: function(data) {
-                    //console.log(data.result);
+                    console.log(data.result);
                     for(index = 0; index < data.result.length; index++) {
                         var str_array = data.result[index].split(',');
-                        final_value = t_hight - Number(str_array[5]);
+
+                        final_value = t_height - Number(str_array[5]);
+                        console.log('final value',final_value)
                         dps.push({
                             x: Date.parse(str_array[2]),
                             y: (final_value > 0 ? final_value : 0)
