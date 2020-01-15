@@ -927,29 +927,34 @@
         {#        }#}
         {#    });#}
         {#}#}
-        {#function WATER(){#}
-        {#    $.ajax({#}
-        {#        type: "get",#}
-        {#        url: "{% url 'dashboard:fetchwl' %}",#}
-        {##}
-        {#        beforeSend: function (jqXHR) {#}
-        {#            $.xhrPool.push(jqXHR);#}
-        {#        },#}
-        {#        success: function (data) {#}
-        {#            console.log(data)#}
-                    {#StrataMonitoring(data.result,208);#}
-        {#            GasMonitoring(data.result, 208, "waterLevel");#}
-        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");#}
-        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");#}
-        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");#}
-        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");#}
-        {#            GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");#}
-        {#        },#}
-        {#        error: function () {#}
-        {#            console.log("something is not right.please contact admin - 1");#}
-        {#        }#}
-        {#    });#}
-        {#}#}
+             setInterval(function () {
+                WATER();
+             },3000
+        );
+
+        function WATER(){
+            $.ajax({
+                type: "get",
+                url: "{% url 'dashboard:fetchwl' %}",
+
+                beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
+                success: function (data) {
+                    console.log('water level',data)
+                    //StrataMonitoring(data.result,208);
+                    GasMonitoring(data.result, 208, "waterLevel");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
+                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
+                },
+                error: function () {
+                    console.log("something is not right.please contact admin - 1");
+                }
+            });
+        }
 
         document.getElementById("overlay").style.display = "block";
 
