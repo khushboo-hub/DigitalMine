@@ -8,12 +8,12 @@ from django.urls import path
 
 from accounts import views
 
-# app_name = 'accounts'
+app_name = 'accounts'
 urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('profile/<str:action>/', views.profile,name='overview'),
+    path('profile/<str:action>/', views.profile,name='profile'),
     path('change_password',views.change_password,name='change_password'),
     # path('profile/setting/', views.profile,name='setting'),
     path('password_change/', PasswordChangeView.as_view(template_name='password_reset.html'), name='password_change'),

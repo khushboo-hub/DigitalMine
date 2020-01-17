@@ -220,3 +220,14 @@ $(document).ready(function() {
         input.attr("type", "password");
       }
 });
+
+  window.onunload = function () {
+            $.xhrPool.abortAll()
+        };
+        $.xhrPool = []; // array of uncompleted requests
+        $.xhrPool.abortAll = function () { // our abort function
+            $(this).each(function (idx, jqXHR) {
+                jqXHR.abort();
+            });
+            $.xhrPool.length = 0
+        };

@@ -85,6 +85,7 @@
 
     <script src="{% static 'js/KBmapmarkers.js' %}"></script>
     <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+    <script src="{% static 'js/customJS.js' %}"></script>
 
 
   <!--END-HEADER FOR MINERS TRACKING-->
@@ -119,6 +120,9 @@
     setInterval(function(){
        $.ajax({
             type:"get",
+           beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
             success: function(data) {
                     var result=data.result;
                     if($.isNumeric(result)){

@@ -67,6 +67,7 @@
     <script src="{% static 'js/jquery.md5.min.js' %}"></script>
     <script src="/static/js/jquery.toast.js"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="{% static 'js/customJS.js' %}"></script>
 
 
 
@@ -143,6 +144,9 @@
         data: {
             'id': sensor_id
         },
+        beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
         success: function(data) {
             console.log(data);
             for(index = 0; index < data.result.length; index++) {
@@ -240,6 +244,9 @@
                 data: {
                          'id': sensor_id
                        },
+            beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
                 success: function(data) {
                     //console.log(data.result);
                     for(index = 0; index < data.result.length; index++) {
