@@ -91,14 +91,13 @@ def dashboard_calling(request):
         Sensors = Sensor_Node.objects.filter(mine_id=mine.id,node_id=node.id)
         for sensor in Sensors:
             SENSORS.append({'mine':sensor.mine_id,'node_id':node.id, 'ip':sensor.ip_add,'sensor_name':sensor.sensorname,'sensor_id':sensor.id})
-            print('IP=>', sensor.ip_add)
         NODES.append({str(node.name): SENSORS})
 
     print(nodes)
     data['nodes'] = NODES
 
-    for node in nodes:
-        sensors=Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node.id)
+    # for node in nodes:
+    #     sensors=Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node.id)
 
     return render(request, "index.html",data)
 

@@ -33,6 +33,7 @@ def login(request):
             auth_login(request, user)
             return redirect(homeViews.home)
         else:
+
             messages.error(request,
                            'Please enter a correct username and password. Note that both fields may be case-sensitive.')
             return redirect('login')

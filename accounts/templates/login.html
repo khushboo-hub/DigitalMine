@@ -1,49 +1,64 @@
 {% extends "login_base.html" %}
-{% block title %} Login {% endblock %}
+{% block title %}Digital Mine | Login {% endblock %}
 
 {% block main %}
-<style>
-	#formContent {
-  -webkit-border-radius: 10px 10px 10px 10px;
-  border-radius: 10px 10px 10px 10px;
-  background: #fff;
 
-  width: 100%;
-  height:100%;
-  max-width: 100%;
+  <div class="container">
 
-  position: relative;
-  padding: 0px;
-  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
-  text-align: center;
-}
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
 
-</style>
-<div class="row">
-		<div class="wrapper fadeInDown">
-			<div id="formContent">
-				<br>
-				<h3 align="center"><span class="icon fa fa-users" aria-hidden="true"></span> LOGIN </h3>
-				<br>
-				<form method="post">
-					{% csrf_token %}
-					<input type="hidden" name="next" value="{{ request.path }}" />
-						{% include 'form.html' %}
-						{% if user.is_authenticated %}
+      <div class="col-xl-10 col-lg-12 col-md-9">
 
-						<!-- <button type="submit" style="margin-left:40%;" class="btn btn-danger"><a href="/accounts/logout">Logout</a></button> -->
-						{% else %}
-						<!-- <button type="submit" style="margin-left:40%;" class="btn btn-primary"><a class="link-color" href="/accounts/login">Login</a></button> -->
-						{% endif %}
-						{% block extraheader %}{% endblock %}
-					<input type="submit" class="fadeIn fourth" value="Log In"><br>
-					<div class="text-center"><a href="../password_reset">Forgot Password?</a></div>
-					<br>
-					<div class="text-center"><a href="../signup">Create Your Account</a></div>
-				</form>
+        <div class="card o-hidden border-0 shadow-lg my-5">
+          <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+              <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+              <div class="col-lg-6">
+                <div class="p-5">
+                  <div class="text-center">
+                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                  </div>
+                    {% for message in messages %}
+                      <div class="alert alert-danger" role="alert" style="background-color:#f8d7da;color:#a8686e">
+                          {{ message }}
+                      </div>
+                    {% endfor %}
+                  <form class="user" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ request.path }}" />
+                    <div class="form-group">
+                      <input type="text" name="username" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                    </div>
+                    <div class="form-group">
+                      <input type="password" name="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                      <div class="custom-control custom-checkbox small">
+                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
+                      </div>
+                    </div>
+                      <input type="submit" class="btn btn-primary btn-user btn-block" value="Log In"><br>
 
-			</div>
-		</div>
-</div>
+                  </form>
+                  <hr>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'password_reset' %}">Forgot Password?</a>
+                  </div>
+                  <div class="text-center">
+                    <a class="small" href="{% url 'signup' %}">Create an Account!</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 {% endblock %}
