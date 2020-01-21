@@ -46,7 +46,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class ProfileExtensionForm(forms.ModelForm):
-    profile_avatar=forms.ImageField()
+    profile_avatar=forms.ImageField(required=False)
     user_id=forms.CharField
     class Meta:
         model=profile_extension

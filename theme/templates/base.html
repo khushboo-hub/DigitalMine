@@ -898,12 +898,12 @@
             },
             error: function () {
                 console.log('Something Went Wrong!');
-                $('img#profile_avatar').attr('src', '/media/employee_image/male_alt_photo.svg');
+                $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
             }
         });
     });
     <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
-    var myVar = setInterval(startGlobalWarningFunction, 1000);
+    {#var myVar = setInterval(startGlobalWarningFunction, 1000);#}
 
     function startGlobalWarningFunction() {
         var d = new Date();
