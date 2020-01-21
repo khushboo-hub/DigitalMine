@@ -888,7 +888,12 @@
             url: "{% url 'employee1:profile_ajax' %}",
             success: function (data) {
                 if (data.hasOwnProperty('profile_avatar')) {
-                    $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                    if(!isEmpty(data.profile_avatar)) {
+                        $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                    }
+                    else{
+                        $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                    }
 
                 }
                 if (data.hasOwnProperty('mine')) {
