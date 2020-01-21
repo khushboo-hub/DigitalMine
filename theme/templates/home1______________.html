@@ -181,11 +181,11 @@
                             <span class="icon fa fa-users" aria-hidden="true"></span>
                             <h4>Employee Management</h4>
                             <div class="ots-btn-group">
-                                <a href="{% url 'employee1:employee_add' %}">Add Employee</a>
-                                <a href="{% url 'employee1:employee_manage' %}">Employee | Medical | Shift</a>
-                                <a href="{% url 'employee1:add_mine' %}">Add Mine Info</a>
-                                <a href="{% url 'employee1:manage_mine' %}">Mine Details | Mine Shift</a>
-                                <a href="{% url 'employee1:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
+                                <a href="{% url 'employee:employee_add' %}">Add Employee</a>
+                                <a href="{% url 'employee:employee_manage' %}">Employee | Medical | Shift</a>
+                                <a href="{% url 'employee:add_mine' %}">Add Mine Info</a>
+                                <a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
+                                <a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
                                 <br><br><br>
                             </div>
                         </div>
@@ -299,21 +299,21 @@
                 <div class="footer_dv">
                     <ul>
                         <li><a href="/" title="">Home</a></li>
-                        <li><a href="{% url 'employee1:aboutus' %}">About Us</a></li>
-                        <li><a href="{% url 'employee1:aboutiot' %}">About IoT</a></li>
-                        <li><a href="{% url 'employee1:aboutdigitalmine' %}">About Digital Mine</a></li>
-                        <li><a href="{% url 'employee1:contactus' %}">Contact Us</a></li>
+                        <li><a href="{% url 'employee:aboutus' %}">About Us</a></li>
+                        <li><a href="{% url 'employee:aboutiot' %}">About IoT</a></li>
+                        <li><a href="{% url 'employee:aboutdigitalmine' %}">About Digital Mine</a></li>
+                        <li><a href="{% url 'employee:contactus' %}">Contact Us</a></li>
                     </ul>
                 </div>
             </div>
             <div class="col-lg-4  col-md-4 col-sm-4">
                 <div class="footer_dv">
                     <ul>
-                        <li><a href="{% url 'employee1:employee_add' %}">Add Employee</a>
-                        <li><a href="{% url 'employee1:employee_manage' %}">Employee | Medical | Shift</a>
-                        <li><a href="{% url 'employee1:add_mine' %}">Add Mine Info</a>
-                        <li><a href="{% url 'employee1:manage_mine' %}">Mine Details | Mine Shift</a>
-                        <li><a href="{% url 'employee1:manage_mining_role' %}">Miner&#39;s Role Hierarchy</a>
+                        <li><a href="{% url 'employee:employee_add' %}">Add Employee</a>
+                        <li><a href="{% url 'employee:employee_manage' %}">Employee | Medical | Shift</a>
+                        <li><a href="{% url 'employee:add_mine' %}">Add Mine Info</a>
+                        <li><a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
+                        <li><a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role Hierarchy</a>
                     </ul>
                 </div>
             </div>

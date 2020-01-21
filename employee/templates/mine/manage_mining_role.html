@@ -22,7 +22,7 @@
             <h1 class="page-header">Manage Mining Role:{{mine_name.name}}</h1>
             <div class="row text-center">
                 <div class="col-md-12">
-                    <a class="btn btn-primary" href="{% url 'employee1:add_mining_role' %}">Add Mining Role</a>
+                    <a class="btn btn-primary" href="{% url 'employee:add_mining_role' %}">Add Mining Role</a>
                 </div>
             </div>
             <hr>
@@ -50,11 +50,11 @@
                                 <td>{{ book.parent_role}}</td>
                                 <td>{{ book.type }}</td>
 
-                                <td class="text-center"><a href="{% url 'employee1:edit_mining_role' book.id %}"
+                                <td class="text-center"><a href="{% url 'employee:edit_mining_role' book.id %}"
                                                            title="Edit Mining Role."><span
                                         class="glyphicon glyphicon-pencil"></span></a></td>
                                 <td class="text-center"><a href="#" class="delete"
-                                                           data-url="{% url 'employee1:delete_mining_role' book.id %}"
+                                                           data-url="{% url 'employee:delete_mining_role' book.id %}"
                                                            title="Delete Mining Role."><span
                                         class="glyphicon glyphicon-trash"></span></a></td>
                             </tr>

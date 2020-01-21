@@ -18,7 +18,7 @@ from background_task import background
 from gtts import gTTS
 
 from apps.settings import MEDIA_ROOT
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from water_level_monitoring.forms import add_water_sensor_form
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model
 

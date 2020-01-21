@@ -11,8 +11,8 @@ from .forms import VehicleForm1, WeighbridgeForm1, ManualentryForm1, Containerde
 from .models import Production_Vehicle, Production_Weighbridge, Production_Manualentry, Container_Details, \
     Production_Tub, Production_Material_Waste, Production_DailyEntry, Production_Monthly, Production_DailyDispatch, \
     Production_MonthlyDispatch, Production_YearlyDispatch, Production_YearlyEntry
-from employee1.models import MineShift
-from employee1.models import MineDetails
+from employee.models import MineShift
+from employee.models import MineDetails
 from django.db import connection
 from django.contrib import messages
 

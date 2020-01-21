@@ -1,7 +1,7 @@
 # Create your models here.
 from django.db import models
 # Create your models here.
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 
 class AreaModel(models.Model):

@@ -9,7 +9,7 @@ from SMS import views as sms
 from .forms import CarousalPhotoUploadForm
 from .models import Carousal
 from django.core import serializers
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from accounts.models import profile_extension
 import datetime
 from django.conf import settings

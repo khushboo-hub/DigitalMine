@@ -12,7 +12,7 @@ import requests
 from .models import AreaModel, Fire_exp_gasesWifi
 from .forms import AreaForm, ExplosiveAreaForm
 from django.http import HttpResponse, JsonResponse
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 
 @login_required

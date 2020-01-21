@@ -501,7 +501,7 @@ def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
         # print(request.POST)
         # print(object)
         object.save()
-        # return redirect('/employee1/manage_mining_shift/' + str(mine_id))
+        # return redirect('/employee/manage_mining_shift/' + str(mine_id))
         # object.save()
         return redirect('/sensor/arduino_manage/' + str(node_id))
     return render(request, template_name,

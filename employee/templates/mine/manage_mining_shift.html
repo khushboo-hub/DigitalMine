@@ -43,8 +43,8 @@
                             <td>{{ book.time_from}}</td>
                             <td>{{ book.time_to }}</td>
 
-                            <td class="text-center"><a href="{% url 'employee1:edit_mining_shift' book.id mine_id %}" title="Edit Mining Shift."><span class="glyphicon glyphicon-pencil"></span></a></td>
-                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'employee1:delete_mining_shift' book.id mine_id %}" title="Delete Mining Shift."><span class="glyphicon glyphicon-trash"></span></a></td>
+                            <td class="text-center"><a href="{% url 'employee:edit_mining_shift' book.id mine_id %}" title="Edit Mining Shift."><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'employee:delete_mining_shift' book.id mine_id %}" title="Delete Mining Shift."><span class="glyphicon glyphicon-trash"></span></a></td>
                         </tr>
 
                     {% endfor %}

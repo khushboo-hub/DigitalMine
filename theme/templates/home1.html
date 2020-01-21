@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>CSIR-CIMFR|Digital Mine Using IOT</title>
+    <title>CSIR-CIMFR | Digital Mine Using IOT</title>
 
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
@@ -106,22 +106,33 @@
           color: #fff;
         }
     .navbar .navbar-brand-logo .brand {
-        margin-top: 20px;
+        margin-top: 0px;
         width: 500px;
+    }
+    .logo-text{
+        padding-top:50px;
     }
 
     div.item>img{
         width:100% !important;
         height:600px !important;
     }
+     @media(min-width: 992px){
+         span.hr-show{
+             display: none;
+         }
 
+     }
 
     @media(max-width: 992px){
      .navbar .navbar-brand-logo .brand {
-        margin-top: 20px;
+        margin-top: -15px;
         width: 400px;
+        }
+        div.brand h3{
+             font-size: 30px !important;
+         }
 
-    }
         div.col-md-3{
             width: 100%;
         }
@@ -134,27 +145,37 @@
 }
     @media(max-width: 526px){
      .navbar .navbar-brand-logo .brand {
-        margin-top: 20px;
-        width: 300px;
+        margin-top: -15px;
+        width: 250px !important;
     }
+        div.brand>h3{
+            font-size: 25px !important;
+        }
 }
     @media(max-width: 426px){
      .navbar .navbar-brand-logo .brand {
-        margin-top: 10px;
-        width: 250px;
+        margin-top: -15px;
+        width: 200px;
     }
 }
     @media(max-width: 376px){
      .navbar .navbar-brand-logo .brand {
-        margin-top: 0px;
-        width: 200px;
+        margin-top: -15px !important;
+        width: 200px !important;
     }
+         div.brand>h3{
+            font-size: 23px !important;
+        }
 }
      @media(max-width: 326px){
      .navbar .navbar-brand-logo .brand {
-        margin-top: -5px;
-        width: 150px;
+        margin-top: -15px !important;
+        width: 180px !important;
     }
+         div.brand>h3{
+            font-size: 20px !important;
+        }
+
 }
     a>i.pe-7s-mail>span.label{
         position:absolute;
@@ -313,16 +334,14 @@
                     <div class="col-md-6">
                         
                         <div class="col-md-1"></div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="row">
                                 <strong>Developed By:</strong>
                                 <center><img class="logo img-responsive" src="{% static '/image/csir_logo.svg' %}" alt=""/></center>
                             </div>
-                            <div class="row text-center">
-                                
-                            </div>
+
                         </div>
-                        <div class="col-md-4 logo-text">
+                        <div class="col-md-6 logo-text" style="padding-left: 10px;">
 
                             <div class="row text-center">
                                 <br>
@@ -334,7 +353,7 @@
                         </div>
                        
                     </div>
-
+                <span class="hr-show"><hr></span>
                 <div class="col-md-6">
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
@@ -346,7 +365,7 @@
                             <strong>सत्यमेव जयते</strong>
                         </div>
                     </div>
-                    <div class="col-md-5 logo-text">
+                    <div class="col-md-6 logo-text">
 
                 <div class="row text-center">
                     
@@ -377,11 +396,11 @@
                                 <span class="icon fa fa-users" aria-hidden="true"></span>
                                 <h4>Employee Management</h4>
                                 <div class="ots-btn-group">
-                                    <a href="{% url 'employee1:employee_add' %}">Add Employee</a>
-                                    <a href="{% url 'employee1:employee_manage' %}">Employee | Medical | Shift</a>
-                                    <a href="{% url 'employee1:add_mine' %}">Add Mine Info</a>
-                                    <a href="{% url 'employee1:manage_mine' %}">Mine Details | Mine Shift</a>
-                                    <a href="{% url 'employee1:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
+                                    <a href="{% url 'employee:employee_add' %}">Add Employee</a>
+                                    <a href="{% url 'employee:employee_manage' %}">Employee | Medical | Shift</a>
+                                    <a href="{% url 'employee:add_mine' %}">Add Mine Info</a>
+                                    <a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
+                                    <a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
                                     <a href="{% url 'attendance:index' %}">Add Employee Attendance</a>
                                 </div>
                             </div>
@@ -517,7 +536,7 @@
 <script>
     $(document).ready(function(){
         $.ajax({
-           url: "{% url 'employee1:checkifuserfieldempty' %}",
+           url: "{% url 'employee:checkifuserfieldempty' %}",
            success:function(data){
                 if(data.result=='1'){
                  $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');

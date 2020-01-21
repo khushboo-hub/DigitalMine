@@ -23,7 +23,7 @@
     <h1 class="page-header">Manage Mine</h1>
     <div class="row text-center">
         <div class="col-md-12">
-            <a class="btn btn-primary"  href="{% url 'employee1:add_mine' %}">Add Mine</a>
+            <a class="btn btn-primary"  href="{% url 'employee:add_mine' %}">Add Mine</a>
         </div>
     </div>
     <hr>
@@ -53,10 +53,10 @@
                             <td>{{ book.name }}</td>
                             <td>{{ book.state }}</td>
 
-                            <td class="text-center"><a target="_blank" href="{% url 'employee1:manage_mining_shift' book.id %}"><span class="glyphicon glyphicon-plus" data-toggle="tooltip" title="Manage Shift"></span></a></td>
+                            <td class="text-center"><a target="_blank" href="{% url 'employee:manage_mining_shift' book.id %}"><span class="glyphicon glyphicon-plus" data-toggle="tooltip" title="Manage Shift"></span></a></td>
                             <td class="text-center"><span class="btn btn-info btn-sm map_details" data-url="{{book.latitude}}" id="{{book.longitude}}">Google Map</span>&nbsp;<span class="btn btn-info btn-sm mine_map" data-url="{{book.mine_map_image}}">Mine Map</span></td>
-                            <td class="text-center"><a href="{% url 'employee1:edit_mine' book.id %}" title="Edit Mine."><span class="glyphicon glyphicon-pencil"></span></a></td>
-                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'employee1:delete_mine' book.id %}" title="Delete Mine."><span class="glyphicon glyphicon-trash"></span></a></td>
+                            <td class="text-center"><a href="{% url 'employee:edit_mine' book.id %}" title="Edit Mine."><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'employee:delete_mine' book.id %}" title="Delete Mine."><span class="glyphicon glyphicon-trash"></span></a></td>
                         </tr>
 
                     {% endfor %}

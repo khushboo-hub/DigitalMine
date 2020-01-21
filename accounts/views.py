@@ -14,7 +14,7 @@ from .models import profile_extension
 from django.core.mail import EmailMessage
 from theme import views as homeViews
 from django.contrib import messages
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 

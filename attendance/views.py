@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import EmployeeAttendance, Employee1, MineShift, EmployeeShiftAssign, MineDetails
+from .models import EmployeeAttendance, Employee, MineShift, EmployeeShiftAssign, MineDetails
 from .forms import AttendenceForm
 from django.core import serializers
 
@@ -56,7 +56,7 @@ def attendance_manage(request, template_name='attendance_manage.html'):
 
     for emp in emp_show:
         employee={}
-        emp_details=Employee1.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
+        emp_details=Employee.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
         mine_details=MineDetails.objects.filter(id=emp.mine_id)
         for ob in emp_details:
             employee['emp_name']=str(ob.name)
@@ -110,7 +110,7 @@ def ajax_show_attendence(request):
                 attend={}
                 mine_details = MineDetails.objects.get(id=attendance.mine_id)
                 mine_name = mine_details.name
-                employee_table = Employee1.objects.get(id=str(attendance.emp_id))
+                employee_table = Employee.objects.get(id=str(attendance.emp_id))
                 emp_name = employee_table.name
                 employee_shift = MineShift.objects.get(id=str(attendance.shift_id))
                 shift_name=employee_shift.shift_name
@@ -178,7 +178,7 @@ def fetch_employee_list(request):
         i = 0
         assigned_data = []
         for r in employee_shift_assign: ##### 0-id
-            emp_table = Employee1.objects.get(id=str(r[1]))
+            emp_table = Employee.objects.get(id=str(r[1]))
             assigned_data.append(str(r[0]) + ',' + str(r[1]) + ',' + str(r[2]) + ',' + str(mine_table.name)+','+str(emp_table.name) + ',' + str(emp_table.id) + ',' + str(mine_table.id) + ','+ str(shift_table.shift_name) + '('+ str(shift_table.time_from) + '--'+ str(shift_table.time_to)+')')  # 0-mine_shift_id 1-employee_id,2-shift_name
             i = i + 1
             data['result'] = assigned_data
