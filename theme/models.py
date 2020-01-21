@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from accounts.models import User
 class Carousal(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

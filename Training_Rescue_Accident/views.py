@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Training_Rescue_Accident, Rescue_Records, Accident_Records, Employee1, MineShift, \
+from .models import Training_Rescue_Accident, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
 from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form
 import datetime

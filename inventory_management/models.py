@@ -6,7 +6,7 @@ from django.utils import timezone
 # Create your models here.
 from django.db import models
 # Create your models here.
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from datetime import date, datetime
 # from django.db import models
 # from phone_field import PhoneField

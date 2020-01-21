@@ -14,7 +14,7 @@ from django.core import serializers
 # Create your views here.
 from django.shortcuts import render, redirect
 from .forms import TrackingRouterForm
-from .models import TrackingRouter, MineDetails, MinerTracking, Employee1, MiningRole
+from .models import TrackingRouter, MineDetails, MinerTracking, Employee, MiningRole
 from accounts.models import profile_extension
 # ===============For matplotlib================
 import numpy as np

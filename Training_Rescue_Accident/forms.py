@@ -1,5 +1,5 @@
-from employee1.models import MineDetails
-from employee1.models import Employee1
+from employee.models import MineDetails
+from employee.models import Employee
 from .models import Training_Rescue_Accident
 from .models import Rescue_Records, Accident_Records
 from django import forms
@@ -14,7 +14,7 @@ class Training_Rescue_Accident_Form(forms.ModelForm):
     }))
 
     class Meta():
-        model = Employee1
+        model = Employee
         fields = ['mine']
 
 

@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 from django.utils import timezone
 

@@ -805,7 +805,7 @@
 <script>
     $(document).ready(function () {
         $.ajax({
-           url: "{% url 'employee1:profile_ajax' %}",
+           url: "{% url 'employee:profile_ajax' %}",
              beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },

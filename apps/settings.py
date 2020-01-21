@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     'theme',
     'employee',
-    'employee1',
     'MinersTracking',
     'FireExp',
     'Controlling',

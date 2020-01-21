@@ -383,11 +383,11 @@
                                 <span class="icon fa fa-users" aria-hidden="true"></span>
                                 <h4>Employee Management</h4>
                                 <div class="ots-btn-group">
-                                    <a href="{% url 'employee1:employee_add' %}">Add Employee</a>
-                                    <a href="{% url 'employee1:employee_manage' %}">Employee | Medical | Shift</a>
-                                    <a href="{% url 'employee1:add_mine' %}">Add Mine Info</a>
-                                    <a href="{% url 'employee1:manage_mine' %}">Mine Details | Mine Shift</a>
-                                    <a href="{% url 'employee1:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
+                                    <a href="{% url 'employee:employee_add' %}">Add Employee</a>
+                                    <a href="{% url 'employee:employee_manage' %}">Employee | Medical | Shift</a>
+                                    <a href="{% url 'employee:add_mine' %}">Add Mine Info</a>
+                                    <a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
+                                    <a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role &amp; Hierarchy</a>
                                     <a href="{% url 'attendance:index' %}">Add Employee Attendance</a>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@
 <script>
     $(document).ready(function(){
         $.ajax({
-           url: "{% url 'employee1:checkifuserfieldempty' %}",
+           url: "{% url 'employee:checkifuserfieldempty' %}",
            success:function(data){
                 if(data.result=='1'){
                  $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');

@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from employee1.models import MineDetails, EmployeeShiftAssign, Employee1, MineShift
+from employee.models import MineDetails, EmployeeShiftAssign, Employee, MineShift
 
 
 class Training_Rescue_Accident(models.Model):

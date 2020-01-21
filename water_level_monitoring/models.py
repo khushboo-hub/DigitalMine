@@ -3,7 +3,7 @@ from datetime import datetime
 from django.db import models
 
 # Create your models here.
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 
 class water_level_monitoring_model(models.Model):

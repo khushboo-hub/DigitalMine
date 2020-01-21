@@ -1,8 +1,8 @@
 from datetime import date
 
 from django import forms
-from employee1.models import Employee1
-from .models import Employee1
+from employee.models import Employee
+from .models import Employee
 from .models import SensorData, MineDetails, MiningRole, MineShift
 
 STATE = (
@@ -21,9 +21,9 @@ STATE = (
 )
 
 
-class EmployeeForm1(forms.ModelForm):
+class EmployeeForm(forms.ModelForm):
     def __init__(self, mine_id, *args, **kwargs):
-        super(EmployeeForm1, self).__init__(*args, **kwargs)
+        super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['mining_role'] = forms.ModelChoiceField(
             queryset=MiningRole.objects.filter(mine_id=mine_id)
         ) #Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
@@ -205,7 +205,7 @@ class EmployeeForm1(forms.ModelForm):
     photo = forms.ImageField()
 
     class Meta:
-        model = Employee1
+        model = Employee
         fields = ['empid', 'name', 'father_name', 'dob', 'address', 'email', 'mob', 'state', 'city', 'pin', 'gender',
                   'marital_status', 'photo', 'mine', 'rfid', 'designation'
             , 'token_no', 'retirement_date', 'mining_role', 'job_type', 'is_rescue', 'date_of_joining', 'cat_type',

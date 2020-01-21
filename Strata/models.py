@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.db import models
 
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 
 class Strata_location(models.Model):

@@ -3,7 +3,7 @@ from django.shortcuts import render
 import datetime
 import dateutil.parser
 # Create your views here.
-# from employee1.model import MineDetails
+# from employee.model import MineDetails
 from .forms import SupplierForm, SupplierModel, ProductModel, ProductForm, ReportForm, CategoryForm, CategoryModel, \
     DeductModel, ReorderModel, BranchForm, BranchModel, DistributeForm, DistributeModel, AlternateProdModel, \
     AlternateProdForm
@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, JsonResponse
-from employee1.models import MineDetails
+from employee.models import MineDetails
 from django.db.models import Avg, Count, Min, Sum, Max
 from django.db.models.query import QuerySet
 import math

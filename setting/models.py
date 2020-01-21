@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-from setting import migrations
+
 
 # def load_data(apps, schema_editor):
 #     DataSet1 = apps.get_model("setting", "setting")

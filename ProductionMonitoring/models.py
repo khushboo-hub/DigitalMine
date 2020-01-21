@@ -1,7 +1,7 @@
 
 from django.db import models
-from employee1.models import MineDetails
-from employee1.models import MineShift
+from employee.models import MineDetails
+from employee.models import MineShift
 from datetime import date, datetime
 
 

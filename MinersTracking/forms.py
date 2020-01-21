@@ -3,7 +3,7 @@ from .models import TrackingRouter
 from accounts.models import profile_extension
 from django import forms
 from django.shortcuts import render, get_object_or_404
-from employee1.models import MineDetails
+from employee.models import MineDetails
 
 
 class TrackingRouterForm(forms.ModelForm):

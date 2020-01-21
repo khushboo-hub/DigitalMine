@@ -1,6 +1,6 @@
 from datetime import datetime, date
 from django.db import models
-from employee1.models import MineDetails, MiningRole
+from employee.models import MineDetails, MiningRole
 
 
 class DGMS_CoalMine_Annual_Annexure_I(models.Model):
