@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    #'admin_view_permission',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,19 +49,19 @@ INSTALLED_APPS = [
 
     'accounts', ###   Barun Module
     'snippets', ###   Barun Module
-    'gasmonitoring',  ###   Barun Module
-    'gasmonitoring_auto',  ###   Barun Module
-    'gasmonitoring_live',  ###   Barun Module
-    'temp_monitoring',  ###   Barun Module
+    'gasmonitoring',  ###   amit Module
+    'gasmonitoring_auto',  ###   amit Module
+    'gasmonitoring_live',  
+    'temp_monitoring',
     'background_task', ###   Amits Task (Inbuilt Django Background Services)
     'gasmonitoring_wifi', ###   Khushboo  Module
     'inventory_management',
-    'attendance',
-    'Training_Rescue_Accident',
-    'ProductionMonitoring',
+    'attendance', ### barun
+    'Training_Rescue_Accident', ### barun
+    'ProductionMonitoring', ####trainee
     'sensor',
-    'water_level_monitoring',
-    'SMS',
+    'water_level_monitoring', #### mishhha ji
+    'SMS', 
     'news',
     'emails',
     'django_hosts',
@@ -81,7 +80,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 

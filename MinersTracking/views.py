@@ -603,4 +603,5 @@ def get_all_miners_data(request):
 
     else:
         data['result'] = "Not Ajax"
+    print(data)
     return JsonResponse(data)
