@@ -67,6 +67,7 @@
     <script src="{% static 'js/jquery.md5.min.js' %}"></script>
     <script src="/static/js/jquery.toast.js"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="{% static 'js/customJS.js' %}"></script>
 
 
 
@@ -76,9 +77,6 @@
     <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
     <style>
-        .KBmap__mapHolder{
-            width: 100%;
-        }
         div.no_sensor {
             width: 200px;
             height: 100px;
@@ -92,6 +90,9 @@
             font-size: larger;
 
             margin: auto;
+        }
+        body,html{
+            height: fit-content;
         }
     </style>
     <script>
@@ -143,6 +144,9 @@
         data: {
             'id': sensor_id
         },
+        beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
         success: function(data) {
             console.log(data);
             for(index = 0; index < data.result.length; index++) {
@@ -174,7 +178,7 @@
         },
         error: function(){
             console.log("error");
-        }
+        }, timeout: 10000
     });
 
         $("#current_date").removeAttr( 'style');
@@ -240,6 +244,9 @@
                 data: {
                          'id': sensor_id
                        },
+            beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
                 success: function(data) {
                     //console.log(data.result);
                     for(index = 0; index < data.result.length; index++) {
@@ -257,7 +264,7 @@
                         },
                 error: function(){
                         console.log("error he ji");
-                     }
+                     }, timeout: 10000
                 });
 
 

@@ -14,7 +14,7 @@ class SignupForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
     class Meta:
         model = User
-        fields = ('username', 'email', 'password1', 'password2')
+        fields = ('first_name','last_name','username', 'email', 'password1', 'password2')
 
 
 
@@ -46,7 +46,7 @@ class ProfileForm(forms.ModelForm):
 
 
 class ProfileExtensionForm(forms.ModelForm):
-    profile_avatar=forms.ImageField()
+    profile_avatar=forms.ImageField(required=False)
     user_id=forms.CharField
     class Meta:
         model=profile_extension

@@ -1,0 +1,75 @@
+{% extends "login_base.html" %}
+{% block title %}Signup{% endblock %}
+
+{% block main %}
+<style>
+ #formContent {
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  width: 100%;
+  height:100%;
+  min-height: 520px;
+  padding-top:0%;
+  max-width: 400px;
+  padding-bottom:0%;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  text-align: center;
+}
+.select-css {
+    background-color: #FFFFFF;
+    border: 1px solid #E3E3E3;
+    border-radius: 4px;
+    box-shadow: none;
+    color: #444444;
+    height: 38px;
+    padding: 6px 16px;
+}
+
+</style>
+
+<div class="row">
+
+		<div class="wrapper fadeInDown">
+			<div id="formContent">
+			<br>
+			<h3 align="center"><span class="icon fa fa-users" aria-hidden="true"></span> Sign Up </h3>
+			<br>
+
+       <form method="post">
+            {% csrf_token %}
+
+<!--           <select required class="select-css" >-->
+<!--                <option value="" class="form-control">-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;Select Mine-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+<!--               {% for m in mine%}-->
+
+<!--              <option value="{{m.id}}">{{m.name}}</option>-->
+<!--               {% endfor %}-->
+<!--            </select>-->
+
+              {% for field in form %}
+              <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+
+                {% for error in field.errors %}
+                    {% if field.help_text %}
+                        <small style="">{{ field.help_text }}</small>-->
+                     {% endif %}
+                  <p style="color: red">{{ error }}</p>
+                {% endfor %}
+              </p>
+              {% endfor %}
+
+           <input type="submit" class="fadeIn fourth" value="Sign Up"><br>
+            <br>
+            <!--<div class="text-center"><a href="{% url 'login' %}">Sign In</a></div>-->
+        </form>
+
+
+</div>
+
+        </div></div>
+
+{% endblock %}

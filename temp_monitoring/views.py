@@ -11,6 +11,12 @@ from . models import homeModel
 from .forms import homeForm
 from .forms import EraseForm
 from .forms import DisplayForm
+import datetime
+
+from datetime import datetime, timedelta
+import requests
+from django.http import HttpResponse, JsonResponse
+from django.utils.html import strip_tags
 
 
 @login_required
@@ -112,3 +118,34 @@ def delete(request):
 def choose(request):
 
     return render(request,'main/result.html')
+
+
+def live_temp_data(request):
+
+    return render(request,'main/live_temp_data.html')
+
+
+
+def fetch_sensor_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        sensor_data = []
+        sensor_id = request.GET.get('id', None)
+        
+        now = datetime.now()
+        ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
+        try:
+            response = requests.get('http://' + str(sensor_id))
+            sensor_val = strip_tags(response.text)
+            if (sensor_val):
+                sensor_data.append(str(ok_date) + ',' +str(sensor_val)) ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
+            else:
+                 sensor_data.append(str(ok_date) + ',' +'No Data')
+        except Exception as x:
+            print("catch me he "+str(x))
+            sensor_data.append(str(ok_date) + ',' +'Network Error')
+        data['result'] = sensor_data
+    else:
+        data['result'] = "Not Ajax"
+        print(data)
+    return JsonResponse(data)

@@ -12,6 +12,8 @@ from django.core import serializers
 from employee1.models import MineDetails
 from accounts.models import profile_extension
 import datetime
+from django.conf import settings
+from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail, get_connection
 @login_required
@@ -20,10 +22,13 @@ def home(request):
     current_user = request.user
     book = get_object_or_404(User, pk=current_user.id)
     profile = {}
+    #
+    # ip = get_client_ip(request)
+    # print("IP Address: ", ip)
 
-    ip = get_client_ip(request)
-    print("IP Address: ", ip)
+    session="91v0bjvs538t9i2linak028zyrite2ql"
 
+    print("Session Key",user_from_session_key(session))
     try:
         profile = profile_extension.objects.get(user_id=book)
     except:
@@ -41,6 +46,29 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
+
+def user_from_session_key(session_key):
+    """
+    Returns the User related to the given Django session key.
+    """
+    from django.conf import settings
+    from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
+    from django.contrib.auth.models import AnonymousUser
+
+    session_engine = __import__(settings.SESSION_ENGINE, {}, {}, [''])
+    session_wrapper = session_engine.SessionStore(session_key)
+    session = session_wrapper.load()
+    user_id = session.get(SESSION_KEY)
+    backend_id = session.get(BACKEND_SESSION_KEY)
+
+    if user_id and backend_id:
+        auth_backend = load_backend(backend_id)
+        user = auth_backend.get_user(user_id)
+
+        if user:
+            return user
+
+    return AnonymousUser()
 
 @login_required
 def front_page(request, template_name='front_page.html'):

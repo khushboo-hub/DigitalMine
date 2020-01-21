@@ -31,7 +31,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    #'admin_view_permission',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -50,22 +49,22 @@ INSTALLED_APPS = [
 
     'accounts', ###   Barun Module
     'snippets', ###   Barun Module
-    'gasmonitoring',  ###   Barun Module
-    'gasmonitoring_auto',  ###   Barun Module
-    'gasmonitoring_live',  ###   Barun Module
-    'temp_monitoring',  ###   Barun Module
+    'gasmonitoring',  ###   amit Module
+    'gasmonitoring_auto',  ###   amit Module
+    'gasmonitoring_live',  
+    'temp_monitoring',
     'background_task', ###   Amits Task (Inbuilt Django Background Services)
     'gasmonitoring_wifi', ###   Khushboo  Module
     'inventory_management',
-    'attendance',
-    'Training_Rescue_Accident',
-    'ProductionMonitoring',
+    'attendance', ### barun
+    'Training_Rescue_Accident', ### barun
+    'ProductionMonitoring', ####trainee
     'sensor',
-    'water_level_monitoring',
-    'SMS',
+    'water_level_monitoring', #### mishhha ji
+    'SMS', 
     'news',
     'emails',
-    'django_hosts',
+    #'django_hosts',
     'mail_templated',
     'dashboard',
     'setting',
@@ -73,7 +72,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django_hosts.middleware.HostsRequestMiddleware',
+    #'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,14 +80,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'django_hosts.middleware.HostsResponseMiddleware',
+    #'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'apps.urls'
 
-ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
-DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
+#ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
+#DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
 
 TEMPLATES = [
     {

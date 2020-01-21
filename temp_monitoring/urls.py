@@ -10,4 +10,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('temp_monitoring/show/', views.tables, name='tables'),
     path('temp_monitoring/delete/', views.delete, name='delete'),
+    path('temp_monitoring/live_temp_data/', views.live_temp_data, name='live_temp_data'),
+    path('temp_monitoring/fetch_sensor_values_ajax/', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax')
     ]

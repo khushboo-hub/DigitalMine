@@ -19,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
-from django.shortcuts import render, redirect, get_object_or_404, render_to_response
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from employee1.forms import EmployeeForm1
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
@@ -665,8 +665,8 @@ def contactview(request):
     #                           RequestContext(request))
 
 
-def thankyou(request):
-    return render_to_response('thankyou.html')
+def thankyou(request,template='thankyou.html'):
+    return render(request,template)
 
 
 @login_required

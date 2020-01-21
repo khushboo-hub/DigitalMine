@@ -28,11 +28,18 @@ def login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        try:
+            rememberMe=request.POST['rememberme']
+        except:
+            rememberMe = "off"
+            pass
+        print('Remember',rememberMe)
         user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
             return redirect(homeViews.home)
         else:
+
             messages.error(request,
                            'Please enter a correct username and password. Note that both fields may be case-sensitive.')
             return redirect('login')

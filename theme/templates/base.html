@@ -408,6 +408,7 @@
                                         class="label label-default">Manual Mode</span></a></li>
                                 <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                         class="label label-default">Manual Mode</span></a></li>
+                                        <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -744,7 +745,7 @@
                                                 class="glyphicon glyphicon-refresh"></span>
                                             Change Password </a></li>
                                         <li class="divider"></li>
-                                        <li><a href="/accounts/logout"><span class="glyphicon glyphicon-off"></span>
+                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-off"></span>
                                             Logout </a></li>
                                     </ul>
                                 </li>
@@ -888,7 +889,12 @@
             url: "{% url 'employee1:profile_ajax' %}",
             success: function (data) {
                 if (data.hasOwnProperty('profile_avatar')) {
-                    $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                    if(!isEmpty(data.profile_avatar)) {
+                        $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                    }
+                    else{
+                        $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                    }
 
                 }
                 if (data.hasOwnProperty('mine')) {
@@ -898,7 +904,7 @@
             },
             error: function () {
                 console.log('Something Went Wrong!');
-                $('img#profile_avatar').attr('src', '/media/employee_image/male_alt_photo.svg');
+                $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
             }
         });
     });

@@ -4,10 +4,18 @@
 <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
  width="20px" height="20px" viewBox="0 0 1280.000000 1280.000000"
  preserveAspectRatio="xMidYMid meet">
+    <style type="text/css">
+        #router { animation: x .8s ease alternate infinite; }
+
+        @keyframes x {
+           from { fill: #000; }
+             to { fill: #FFFF00; }
+        }
+    </style>
 <metadata>
 Created by potrace 1.15, written by Peter Selinger 2001-2017
 </metadata>
-<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
+<g id="router" transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)"
 fill="#FFFF00" stroke="none">
 <path d="M5930 10719 c-231 -10 -379 -25 -660 -65 -106 -16 -600 -112 -720
 -140 -126 -30 -628 -192 -915 -294 -513 -183 -1101 -488 -1615 -838 -484 -329
