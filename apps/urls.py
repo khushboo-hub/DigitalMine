@@ -44,6 +44,7 @@ urlpatterns = [
     path('emails/', include('emails.urls', namespace='emails')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
+    path('setting/', include('setting.urls', namespace='setting')),
 ]
 
 if settings.DEBUG:

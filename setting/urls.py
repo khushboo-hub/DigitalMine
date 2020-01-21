@@ -9,4 +9,5 @@ urlpatterns = [
     path('add_constant', views.add_constant, name='add_constant'),
     path('edit_constant/<int:id>', views.edit_constant,name='edit_constant'),
     path('delete_constant/<int:id>', views.delete_constant,name='delete_constant'),
+    path('globalWarningFunction', views.globalWarningFunction,name='globalWarningFunction'),
 ]

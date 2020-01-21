@@ -903,18 +903,145 @@
         });
     });
     <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
-    var myVar = setInterval(startGlobalWarningFunction, 1000);
+    var interval_time = 5000;
+    var myVar = setInterval(startGlobalWarningFunction, interval_time);
 
     function startGlobalWarningFunction() {
-        var d = new Date();
-        var t = d.toLocaleTimeString();
-        document.getElementById("demo").innerHTML = t;
+        $.ajax({
+            type:"GET",
+                url: "{% url 'setting:globalWarningFunction' %}",
+                success: function(data) {
+                    console.log(data);
+                    switchingWarningFunction(data);
+                },
+                error: function(){
+                        console.log("Something went wrong. Please contact admin");
+                }
+        });
     }
+
+    {#setInterval(function(){#}
+    {#    $.ajax({#}
+    {#        type:"get",#}
+    {#            url: "{% url 'Strata:warning_level_information' %}",#}
+    {#            success: function(data) {#}
+    {#            //console.log(data);#}
+    {#            //toastr.warning(data["result"]); // Vikash Changed Here#}
+    {#            //$("#fill_here").html(data["result"]); //Vikash Changed Here#}
+    {#            if(data["result"]){#}
+    {#               // $("#is_visiable").attr("style",""); //Vikash Changed Here#}
+    {#                toastr.warning(data["result"]);#}
+    {#                if(data["light_result"]){#}
+    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
+    {#                }else{#}
+    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+    {#                }#}
+    {#            }else{#}
+    {#                $("#is_visiable").attr("style","display:none");#}
+    {#                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+    {#            }#}
+    {#            },#}
+    {#            error: function(){#}
+    {#                    console.log("something went wrong");#}
+    {#            }#}
+    {#    });#}
+    {#, interval_time);#}
 
     function stopGlobalWarningFunction() {
         clearInterval(myVar);
     }
+    var total_row = 0;
+    function switchingWarningFunction(json) {
 
+         var tbl = "<table style='border-collapse: collapse;\n" +
+             "  border-spacing: 0;\n" +
+             "  width: 100%;\n" +
+             "  border: 0px solid #ddd;'>" +
+             "<head>" +
+             "<tr>" +
+             "<th>Date-Time</th>" +
+             "<th>Location" +
+             "</th>" +
+             "<th>Sensor Name/Type</th>" +
+             "<th>Warning Level</th>" +
+             "<th>Sensor Value</th>" +
+             "</head>" +
+             "<body>";
+
+
+        json.forEach(function(objArray) {
+            objArray.forEach(function(obj) {
+
+                switch (obj.module_type) {
+                    case "strata":
+                        tbl += strataWarningFunction(obj);
+                        break;
+                    case "water":
+                        tbl += waterWarningFunction(obj);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+        tbl += "</body>" +
+             "</table>";
+
+        if(total_row){
+            toastr.warning(tbl);
+        }
+    }
+
+    function strataWarningFunction(json) {
+        var popup_tbl = "";
+        if(json.is_strata_display_warning){
+            total_row++;
+            popup_tbl = "<tr>" +
+                        "<td>"+json.datetime+"</td>" +
+                        "<td>"+json.location+"</td>" +
+                        "<td>"+json.sensor_name+"</td>" +
+                        "<td>"+json.warning_level+"</td>" +
+                        "<td>"+json.value+"</td>" +
+                        "</tr>";
+        }
+        if(json.is_strata_audio){
+             if(json.audio_play_type =="text2voice"){
+                Speak(json.audio_text,9,0.5);
+            }else{
+                path = baseUrl+json.audio_song;
+                var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+        if (json.is_strata_light){
+
+        }
+
+        return popup_tbl;
+    }
+    function waterWarningFunction(json) {
+        var popup_tbl = "";
+        if(json.is_water_display_warning){
+            total_row++;
+           popup_tbl =  "<tr>" +
+                        "<td>"+json.datetime+"</td>" +
+                        "<td>"+json.location+"</td>" +
+                        "<td>"+json.sensor_name+"</td>" +
+                        "<td>"+json.warning_level+"</td>" +
+                        "<td>"+json.value+"</td>" +
+                        "</tr>";
+        }
+        if(json.is_water_audio){
+            if(json.audio_play_type =="text2voice"){
+                Speak(json.audio_text,9,0.5);
+            }else{
+                path = baseUrl+json.audio_song;
+                var playNow = new Audio(path);
+                playNow.play();
+            }
+        }
+        return popup_tbl;
+    }
     <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>

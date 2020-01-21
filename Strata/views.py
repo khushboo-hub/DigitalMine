@@ -34,7 +34,7 @@ from django.shortcuts import render, redirect
 #            (4) convergence_delete_location
 #
 # Purpose : CRUD functionality of location in strata module
-# ---------------------------------------------warning_level_information------------------------
+
 hcount = 1
 mcount = 1
 lcount = 1
@@ -535,7 +535,7 @@ def run_back_save(sensor_id):
 # Function name : warning_level_information
 # Purpose : Display alert message. this function call from ajax(base.py)
 # =======================================================================================================================
-def warning_level_information(request):  # for 1 for strata 2 for water 3 for all
+def warning_level_information(request):  # for 1 for strata 2 for water 3 for all+++++++++++++++++++++++ from front enf
 
     return_string = ""
     table = ""
