@@ -812,7 +812,11 @@
                 },
            success:function(data){
                 if(data.hasOwnProperty('profile_avatar') ){
+                    if(!isEmpty(data.profile_avatar)){
                     $('img#profile_avatar').attr('src','/media/'+data.profile_avatar);
+                    }else{
+                        $('img#profile_avatar').attr('src','/media/employee_image/male_alt_photo.svg');
+                    }
 
                 }
                if(data.hasOwnProperty('mine')){

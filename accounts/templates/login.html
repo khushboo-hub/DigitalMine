@@ -27,7 +27,7 @@
                     {% endfor %}
                   <form class="user" method="post">
                       {% csrf_token %}
-                      <input type="hidden" name="next" value="{{ request.path }}" />
+{#                      <input type="hidden" name="next" value="{{ request.path }}" />#}
                     <div class="form-group">
                       <input type="text" name="username" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
                     </div>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small">
-                        <input type="checkbox" class="custom-control-input" id="customCheck">
+                        <input type="checkbox" name="rememberme" class="custom-control-input" checked id="customCheck">
                         <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
