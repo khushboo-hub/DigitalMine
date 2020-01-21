@@ -77,9 +77,6 @@
     <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
     <style>
-        .KBmap__mapHolder{
-            width: 100%;
-        }
         div.no_sensor {
             width: 200px;
             height: 100px;
@@ -94,6 +91,9 @@
 
             margin: auto;
         }
+        body,html{
+            height: fit-content;
+        }
     </style>
     <script>
         //paste this code under the head tag or in a separate js file.
@@ -107,181 +107,186 @@
 </head>
 <body>
 <div class="se-pre-con"></div>
-{% if availability %}
-<input type="hidden" id="water_level_location" value="{{ location }}">
-<div id="chartContainer" style="height: 400px; width: 100%;"></div>
+    {% if availability %}
+    <input type="hidden" id="strata_level_location" value="{{ sensor_id }}">
+
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+{#    <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>#}
 
 <script>
+    var l_label = "Low";
+    var l_Value ="";
+	var l_color = "";
 
-    $(document).ready(function(){
-         var l_color = "#C0DF81";
-         var m_color = "#FEFE9A";
-         var h_color = "#F37C84";
+	var m_label = "Medium";
+	var m_Value ="";
+	var m_color = "";
 
-         var l_value = "";
-         var m_value = "";
-         var h_value = "";
-         var t_height = 0;
+	var h_label = "High";
+	var h_Value ="";
+	var h_endValue = "";
+	var h_color = "";
+    var unit_sensor = "";
+    var custom_title = "";
 
-         var audio_type = "";
-         var first_warning = "";
-         var second_warning = "";
-         var third_warning = "";
+    var audio_type =  "";
+    var first_warning =   "";
+    var second_warning =  "";
+    var third_warning =  "";
 
-         var first_audio = "";
-         var second_audio = "";
-         var third_audio = "";
-         var water_level_location = $("input#water_level_location").val();
-             $.ajax({
-                        type:"get",
-                        url: "{% url 'water_level_monitoring:fetch_sensor_details'%}",
-                        data: {
-                            'id': water_level_location
-                            },
-                 beforeSend: function (jqXHR) {
+    var first_audio =   "";
+    var second_audio = "";
+    var third_audio =   "";
+    sensor_id=$('input#strata_level_location').val();
+    $.ajax({
+        type:"get",
+        url: "{% url 'Strata:fetch_sensor_comman_values_ajax' %}",
+        data: {
+            'id': sensor_id
+        },
+        beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },
-                        success: function(data) {
-                                console.log(data);
-                             for(index = 0; index < data.result.length; index++) {
-                                    var str_array = data.result[index].split('@#');
-                                    {#console.log(str_array);#}
-                                    $("#ip_hidden").val(str_array[0]);
-                                    l_value = str_array[1];
-                                    m_value = str_array[2];
-                                    h_value = str_array[3];
-                                    t_height = parseInt(str_array[4]);
-                                    console.log(l_value,m_value,h_value,t_height)
+        success: function(data) {
+            console.log(data);
+            for(index = 0; index < data.result.length; index++) {
+                var str_array = data.result[index].split('@#');
+                $("#ip_hidden").val(str_array[8]);
 
-                                    audio_type = str_array[5];
-                                    first_warning =  str_array[6];
-                                    second_warning = str_array[7];
-                                    third_warning = str_array[8];
+                l_Value = parseFloat(str_array[2]);
+                l_color = str_array[5];
 
-                                    first_audio =  str_array[9];
-                                    second_audio = str_array[10];
-                                    third_audio =  str_array[11];
-                                    setTimeout(fill_water_level_graph(), 1000);
-                                }
-                         },
-                        error: function(){
-                                console.log("Something Went Wrong!");
-                             }
-                 });
+                m_Value = parseFloat(str_array[3]);
+                m_color = str_array[6];
 
-         //------------------------------------------------------------------------------------------------------------------
+                h_Value = parseFloat(str_array[4]);
+                h_color = str_array[7];
+
+                audio_type =  str_array[15];
+                first_warning =   str_array[9];
+                second_warning =  str_array[10];
+                third_warning =  str_array[11];
+
+                first_audio =   str_array[12];
+                second_audio = str_array[13];
+                third_audio =   str_array[14];
+
+                fill_graph_sensor();
 
 
+            }
+        },
+        error: function(){
+            console.log("error");
+        }, timeout: 10000
+    });
 
+        $("#current_date").removeAttr( 'style');
+    //------------------------------------------------------------------------------------------------------------------
 
-     //==================graph part================================================================================================
+    function fill_graph_sensor(){
 
+        var custom_name = $("#id_sensor_list").find(":selected").text();
+        var dps = []; // dataPoints
+        var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        axisX: {
+            title: "Time",
+		    valueFormatString: "hh:mm TT"
+	    },
+        axisY: {
+            title: custom_title,
 
-    function fill_water_level_graph(){
+            stripLines: [
+		    {
+		        label: l_label,
+				startValue:l_Value,
+				endValue:m_Value,
+				color:l_color
+			},
+			{
+		        label: m_label,
+				startValue:m_Value,
+				endValue:h_Value,
+				color:m_color
+			},
+			{
+		        label: h_label,
+				startValue:h_Value,
+				endValue:5000,
+				color:h_color
+			}
+			]
 
-            var dps = []; // dataPoints
-            var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: ""
-            },
-            axisX: {
-                title: "Time"
-            },
-            axisY: {
-                title: "Water level (in cm)",
-                //suffix: "mm"
-                maximum: parseInt(t_height),
-                stripLines: [
-                {
-                    label: "Level 1",
-                    startValue:parseFloat(l_value),
-                    endValue:parseFloat(m_value),
-                    color: "#C0DF81"
-                },
-                {
-                    label: "Level 2",
-                    startValue:parseFloat(m_value),
-                    endValue:parseFloat(h_value),
-                    color:"#FEFE9A"
-                },
-                {
-                    label: "Level 3",
-                    startValue:parseFloat(h_value),
-                    endValue:parseFloat(5000),
-                    color:"#F37C84"
-                }
-                ]
-            },
+        },
+        data: [{
+            type: "line",
+            name: "CPU Utilization",
+            connectNullData: true,
+            //nullDataLineDashType: "solid",
+            xValueType: "dateTime",
+            xValueFormatString: "DD MMM,YYYY hh:mm TT",
+            yValueFormatString: "#,##0.##\"mm\"",
+            dataPoints: dps
+        }]
 
-            data: [{
-                type: "area",
-                name: "CPU Utilization",
-                connectNullData: true,
-                //nullDataLineDashType: "solid",
-                xValueType: "dateTime",
-                xValueFormatString: "DD MMM hh:mm TT",
-                yValueFormatString: "#,##0.##\"cm\"",
-                dataPoints: dps
-            }]
-        });
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    var xVal = 0;
+    var yVal = 100;
+    var updateInterval = 5000;
+    var dataLength = 20; // number of dataPoints visible at any point
 
-        var xVal = 0;
-        var yVal = 100;
-        var updateInterval = 5000;
-        var dataLength = 20; // number of dataPoints visible at any point
-        var final_value ='';
-
-     var updateChart = function () {
-            $.ajax({
+    var updateChart = function () {
+        $.ajax({
                 type:"get",
-                url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
+                url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
                 data: {
-                         'id': water_level_location
+                         'id': sensor_id
                        },
-                beforeSend: function (jqXHR) {
+            beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },
                 success: function(data) {
-                    console.log(data.result);
+                    //console.log(data.result);
                     for(index = 0; index < data.result.length; index++) {
                         var str_array = data.result[index].split(',');
-
-                        final_value = t_height - Number(str_array[5]);
-                        console.log('final value',final_value)
+                         $("#unit_sensor").text(str_array[7]);
+                         custom_title = str_array[7];
                         dps.push({
-                            x: Date.parse(str_array[2]),
-                            y: (final_value > 0 ? final_value : 0)
+                           x: Date.parse(str_array[2]),
+                           y: Number(str_array[6])
                         });
-                        }//for loop closing
+                        checkAndPlay(Number(str_array[6]))
+                       }
 
-                        checkAndPlay(final_value);
+                    //return data;
                         },
                 error: function(){
                         console.log("error he ji");
-                     }
-            });
+                     }, timeout: 10000
+                });
 
-            //Speak('Lily Hindi voice test',9,0.5);
-            if (dps.length > dataLength) {
-                dps.shift();
-            }
 
-            chart.render();
-            $(".canvasjs-chart-credit").text('');
-        };
+        if (dps.length > dataLength) {
+            dps.shift();
+        }
 
-        updateChart(dataLength);
-        setInterval(function(){updateChart()}, updateInterval);
+        chart.render();
+    };
+    updateChart(dataLength);
+    setInterval(function(){updateChart()}, updateInterval);
     }
+
     function checkAndPlay(sensorValue){
+        console.log(sensorValue);
 
         var loc = window.location;
         var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port? ":"+loc.port : "") + "/media/" ;
 
-        if((l_value < sensorValue)&&(sensorValue < m_value)){//low level
+        if((parseFloat(l_Value) < parseFloat(sensorValue))&&(parseFloat(sensorValue) < parseFloat(m_Value))){//low level
             $.toast({
-                heading: '<b>Water Level Monitoring : First Level Warning</b>',
+                heading: '<b>Strata Monitoring : First Level Warning</b>',
                 text: first_warning,
                 showHideTransition: 'fade',
                 position: 'bottom-right',
@@ -295,15 +300,16 @@
                 playNow.play();
             }
         }
-        if((m_value < sensorValue) && (sensorValue < h_value)){//middle level
+        if((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))){//middle level
             $.toast({
-                heading: '<b>Water Level Monitoring : Second Level Warning </b>',
+                heading: '<b>Strata Monitoring : Second Level Warning </b>',
                 text: second_warning,
                 showHideTransition: 'fade',
                 position: 'bottom-right',
                 icon: 'error'
             })
              if(audio_type =="text2voice"){
+                 console.log(second_warning)
                  Speak(second_warning,9,0.5);
              }else{
                   path = baseUrl+second_audio;
@@ -311,9 +317,10 @@
                  playNow.play();
              }
         }
-        if(sensorValue > h_value) {//high level
+
+        if(parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
             $.toast({
-                heading: '<b>Water Level Monitoring : Third Level Warning</b> ',
+                heading: '<b>Strata Monitoring : Third Level Warning</b> ',
                 text: third_warning,
                 position: 'bottom-right',
                 showHideTransition: 'fade',
@@ -328,11 +335,10 @@
             }
         }
     }
-    });
-//------------------------------------------------------------------------------------------------------------------
+
 </script>
-{% else %}
-    <div class="no_sensor">No Water Sensor Available</div>
 {% endif %}
 </body>
 </html>
+
+

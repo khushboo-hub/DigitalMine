@@ -9,7 +9,7 @@ from .models import DGMS_CoalMine_Annual_Annexure_I, DGMS_CoalMine_Annual_Annexu
     DGMS_OilMines_Annual_Annexure_III, DGMS_CoalMine_Table_A_Model, DGMS_CoalMine_Table_B_Model, \
     DGMS_CoalMine_Table_C_Model, DGMS_CoalMine_Table_D_Model, DGMS_CoalMine_Table_E_Model, \
     First_Schedule_Form_iii_Model, ventilation_Model, First_schedule_form_v_Model, development_permission_model, \
-    identification_report_of_the_problem_model, extract_or_reduce_pillars_models
+    identification_report_of_the_problem_model, extract_or_reduce_pillars_models, metal_mine_extract_permission_model
 
 
 class DGMS_COALMINE_ANNUAL_Annexure_I_Forms_Subtable_1(forms.ModelForm):
@@ -3981,11 +3981,108 @@ class extract_or_reduce_pillars_forms(forms.ModelForm):
     where_permission_has_been_granted = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
     has_the_extraction_been_completed = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
     give_details_of_experience = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
-    any_other_relevant_details =forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_other_relevant_details = forms.CharField(max_length=500, required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
     signature = forms.ImageField(required=False)
     designation = forms.CharField(max_length=100, required=True,widget=forms.TextInput(attrs={'class': "form-control"}))
     sig_date = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class': "form-control datepicker"}))
 
     class Meta():
         model = extract_or_reduce_pillars_models
+        fields = '__all__'
+
+class metal_mine_extract_permission_form(forms.ModelForm):
+    name_of_mine = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_owner = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    mineral_worked = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    name_of_ore_bodies = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    location = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    thickness_of_ore = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    average_true_width = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    reff_width = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    stoping_width = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    size_of_ore_block = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    depth_of_vein_of_ore_body = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    rate_of_dip = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_there_any_parallel_reefs = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_history_of_occurance = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_history_of_fire = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    particular_about_the_working_to_be_stoped = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    max_height_and_width_of_working = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    nature_and_type_of_hanging_wall = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    general_condition_of_workings = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_working_dry_damp_naturally_wet = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    maximum_and_minimum_thickness = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    maximum = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    minimum = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_there_any_geological_dist = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    plan_showing_the_area_to_be_stoped = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_main_approach_roads = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    section_plan_of_strata_showing = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    proposed_method_of_extraction = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    manner_of_extraction_of_ore_block = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    condition_of_overlying_and_underlying = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_these_areas_free_from_water = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    are_the_deposits_extracted = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_it_has_been_extracted = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    # ======================================================
+    railway = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    public_private = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    river_nallah = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    building_dwelling = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    high_tension = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    arial_rope_way = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    water_pipe_and_gas_main = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_other_structure = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    highest_flood_level = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    damage_to_surface_structure = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_you_apprehend_danger = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_you_do_not_apprehend = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    due_to_the_vicinity_of_geological = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    a_5_into_6_stretch_of_pcc_road = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    however_there_is_no_further = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    acquisition_fencing_of_surface = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_the_surface_is_likely_to_be_affected = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    if_not_what_alternative = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    danger_of_inundation = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    is_there_any_danger_of_inundation = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    surface_water = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    under_ground_working = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    of_any_working_lying_above = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    of_the_adjoining_mines = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    whether_precautionary = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    danger_from_fire = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    danger_of_premature = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    do_you_apprehend_any_premature = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    # =============  15 complete =====================
+    division_of_the_area_into_panel = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    has_the_area_applied_for_stoping = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    systematic_timbering_rules = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    have_the_systermatic_timber = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    working_within_disputed_area = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    does_the_area_proposed = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    for_application_under_109 = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    reference_to_previous_permission = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    the_reference_number_and_date_of_letter = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    has_extraction_been_completed = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    whether_all_plans_and_section = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+    any_other_relevent_details = forms.CharField(max_length=500, required=True, widget=forms.TextInput(attrs={'class': "form-control"}))
+
+    underground_plan = forms.ImageField(required=False)
+    longitudinal_vertical_section = forms.ImageField(required=False)
+    geological_plan = forms.ImageField(required=False)
+    vertical_section = forms.ImageField(required=False)
+    plan_sections_showing = forms.ImageField(required=False)
+    schematic_diagram = forms.ImageField(required=False)
+    a_brief_write_up = forms.ImageField(required=False)
+    photo_copy_of_approved_ssr = forms.ImageField(required=False)
+    survey_report = forms.ImageField(required=False)
+    #================================================================
+    signature = forms.ImageField(required=False)
+    designation = forms.CharField(max_length=100, required=True,
+                                  widget=forms.TextInput(attrs={'class': "form-control"}))
+    sig_date = forms.CharField(max_length=100, required=True,
+                               widget=forms.TextInput(attrs={'class': "form-control datepicker"}))
+
+    class Meta():
+        model = metal_mine_extract_permission_model
         fields = '__all__'

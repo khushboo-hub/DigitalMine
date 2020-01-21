@@ -166,7 +166,7 @@ function FillRouters(mine_id){
                     },
             error: function(){
                     console.log("Something Went Wrong :(");
-                 }
+                 }, timeout: 3000
             });
 }
 function setImageData(mine_id){
@@ -188,7 +188,7 @@ function setImageData(mine_id){
                     },
             error: function(){
                     console.log("something is not right.please contact admin - 1");
-                 }
+                 }, timeout: 3000
             });
 }
 
@@ -297,7 +297,9 @@ function Get_All_Miners_Data(){
                     
                     WARNINGMINER(data);
 				return data;
-              }
+              }, error: function () {
+                    console.log("something is not right.please contact admin - 1");
+                }, timeout: 3000
             });
         //end call ajax
 
