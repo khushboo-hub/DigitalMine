@@ -15,7 +15,6 @@ urlpatterns = [
     path('', views.home),
 
     path('employee/',include('employee.urls',namespace='employee')),    ### Currently Not used : Created by:Dewangshu Earlier for testing
-    path('employee1/',include('employee1.urls',namespace='employee1')),  ### Used Now: Employee Module(Created: Dewangshu Pandit, dated:May-June-2018)
     path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')), ### Tracking Module(Created:Dewangshu, Dated: June-July-2018)
     path('FireExp/',include('FireExp.urls',namespace='FireExp')), ### Gas Monitoring/Sub-Module(Monitoring of Goaf Area,Created:Dewangshu, DATED: Aug-2018)
     path('Controlling/',include('Controlling.urls',namespace='Controlling')),## Testing purpose for Controlling mines like Light,Fan etc(Created:Dewangshu,Dated:sep-18)
@@ -44,6 +43,7 @@ urlpatterns = [
     path('emails/', include('emails.urls', namespace='emails')),
     path('dashboard/', include('dashboard.urls', namespace='dashboard')),
     path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
+    path('setting/', include('setting.urls', namespace='setting')),
 ]
 
 if settings.DEBUG:

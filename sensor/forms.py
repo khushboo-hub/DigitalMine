@@ -1,7 +1,7 @@
 from datetime import date
 
 from django import forms
-from employee1.models import Employee1
+from employee.models import Employee
 from .models import Sensor
 from .models import Node,Arduino,Sensor,Wireless,Sensor_Node
 

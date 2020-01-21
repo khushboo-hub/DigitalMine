@@ -4,7 +4,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-from employee1.models import MineDetails,Employee1,MiningRole
+from employee.models import MineDetails,Employee,MiningRole
 
 
 class TrackingRouter(models.Model):

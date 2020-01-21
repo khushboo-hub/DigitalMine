@@ -30,7 +30,7 @@
  $(document).ready(function(){
         //alert(testData);
         $.ajax({
-            url: "{% url 'employee1:fetch_role_ajax' %}",
+            url: "{% url 'employee:fetch_role_ajax' %}",
             success: function(data) {
                 alert(data);
                 var dew=JSON.parse(data);

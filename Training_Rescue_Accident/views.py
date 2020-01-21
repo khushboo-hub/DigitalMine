@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Training_Rescue_Accident, Rescue_Records, Accident_Records, Employee1, MineShift, \
+from .models import Training_Rescue_Accident, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
 from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form
 import datetime
@@ -65,7 +65,7 @@ def Training_Rescue_Accident_Manage(request, template_name='Training_Rescue_Acci
 
     for emp in emp_show:
         employee = {}
-        emp_details = Employee1.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
+        emp_details = Employee.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
         mine_details = MineDetails.objects.filter(id=emp.mine_id)
         for ob in emp_details:
             employee['emp_name'] = str(ob.name)
@@ -123,7 +123,7 @@ def fetch_employee_list(request):
         i = 0
         assigned_data = []
         for r in employee_shift_assign:  ##### 0-id
-            emp_table = Employee1.objects.get(id=str(r[1]))
+            emp_table = Employee.objects.get(id=str(r[1]))
             assigned_data.append(str(r[0]) + ',' + str(r[1]) + ',' + str(r[2]) + ',' + str(emp_table.name) + ',' + str(
                 emp_table.id) + ',' + str(mine_table.id) + ',' + str(
                 mine_table.name))  # 0-mine_shift_id 1-employee_id,2-shift_name
@@ -237,7 +237,7 @@ def fetch_miners_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('mine_id', None)
-        miners = Employee1.objects.filter(mine_id=mine_id)
+        miners = Employee.objects.filter(mine_id=mine_id)
         mn = []
         for m in miners:
             mn.append({'id': m.name, 'text': str(m.name)})

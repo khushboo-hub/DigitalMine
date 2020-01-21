@@ -1,5 +1,5 @@
-from employee1.models import MineDetails
-from employee1.models import Employee1
+from employee.models import MineDetails
+from employee.models import Employee
 from .models import EmployeeAttendance
 from django import forms
 from datetime import date
@@ -11,5 +11,5 @@ class AttendenceForm(forms.ModelForm):
     }))
 
     class Meta():
-        model = Employee1
+        model = Employee
         fields = ['mine', 'date_parent']

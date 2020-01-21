@@ -1570,7 +1570,7 @@ CREATE TABLE `emails` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `employee1`
+-- Table structure for table `employee`
 --
 
 CREATE TABLE `employee1` (
@@ -3222,7 +3222,7 @@ ALTER TABLE `emails`
   ADD KEY `emails_user_id_id_5497a9d4_fk_auth_user_id` (`user_id_id`);
 
 --
--- Indexes for table `employee1`
+-- Indexes for table `employee`
 --
 ALTER TABLE `employee1`
   ADD PRIMARY KEY (`id`),
@@ -3897,7 +3897,7 @@ ALTER TABLE `emails`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `employee1`
+-- AUTO_INCREMENT for table `employee`
 --
 ALTER TABLE `employee1`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -4380,7 +4380,7 @@ ALTER TABLE `emails`
   ADD CONSTRAINT `emails_user_id_id_5497a9d4_fk_auth_user_id` FOREIGN KEY (`user_id_id`) REFERENCES `auth_user` (`id`);
 
 --
--- Constraints for table `employee1`
+-- Constraints for table `employee`
 --
 ALTER TABLE `employee1`
   ADD CONSTRAINT `employee1_immediate_staff_id_7751309c_fk_employee1_id` FOREIGN KEY (`immediate_staff_id`) REFERENCES `employee1` (`id`),

@@ -1,23 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-.table > tbody > tr > td {
-     vertical-align: middle;
 
-}
-.table td {
-   text-align: left;
-
-}
-.row.text-center{
-    padding-bottom:10px;
-}
-td {
-    padding-top: .5em;
-    padding-bottom: .5em;
-}
-</style>
 
 <div class="container">
 
@@ -26,7 +10,7 @@ td {
             <h1 class="page-header">Manage Employee</h1>
             <div class="row text-center">
                 <div class="col-md-12">
-                    <a class="btn btn-primary" href="{% url 'employee1:employee_add' %}"  data-toggle="tooltip"
+                    <a class="btn btn-primary" href="{% url 'employee:employee_add' %}"  data-toggle="tooltip"
                                                               title="Click here to Add New Employee">Add Employee</a>
                 </div>
             </div>
@@ -34,14 +18,15 @@ td {
             <!-- Table content -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="table-responsive" align="right">
+                    <div class="table-responsive">
                         <table class="table table-bordered" id="content">
                             <thead>
                             <tr>
+
                                 <th>SL No</th>
                                 <!--                                <th>ID</th>-->
                                 <th>Name</th>
-                                <th>Mine Name</th>
+
                                 <!--                                <th>Father Name</th>-->
                                 <th>Email</th>
                                 <th>Token No</th>
@@ -58,7 +43,6 @@ td {
                                 <td>{{forloop.counter}}</td>
                                 <!--                                <td>{{ book.id }}</td>-->
                                 <td>{{ book.name }}</td>
-                                <td>{{book.mine.name}}</td>
                                 <!--                                <td>{{ book.father_name }}</td>-->
                                 <td>{{ book.email }}</td>
                                 <td>{{ book.token_no }}</td>
@@ -75,7 +59,7 @@ td {
 
                                 <td class="text-center"><span class="btn btn-info btn-sm more_details"
                                                               data-toggle="tooltip"
-                                                              data-url="{% url 'employee1:more_details_ajax' %}"
+                                                              data-url="{% url 'employee:more_details_ajax' %}"
 
                                                               id="{{book.id}}"
                                                               title="Click here to get more details">More Details</span>
@@ -83,37 +67,37 @@ td {
                                     <br>
                                     <span class="btn btn-info btn-sm generate_login"
                                                               data-toggle="tooltip"
-                                                              data-url="{% url 'employee1:generate_login_details_ajax' %}"
+                                                              data-url="{% url 'employee:generate_login_details_ajax' %}"
                                                               data-email="{{book.email}}"
                                                               id="{{book.id}}"
                                                               title="Click here generate Login">Generate Login</span>
 
                                 </td>
-                                <!--                                "{% url 'employee1:update_shift_link' book.id %}-->
+                                <!--                                "{% url 'employee:update_shift_link' book.id %}-->
                                 <td class="text-center">
                                     <span
                                             class="btn btn-success btn-sm update_shift" data-toggle="tooltip"
-                                            data-url="{% url 'employee1:update_shift_link_ajax' %}" id="{{book.id}}"
+                                            data-url="{% url 'employee:update_shift_link_ajax' %}" id="{{book.id}}"
                                             mode="0"
                                             title="Click here to update shift">Update Shift</span><br><br><a
                                         data-toggle="tooltip"
-                                        href="{% url 'employee1:details_employee_shift_assign' book.id %}"
+                                        href="{% url 'employee:details_employee_shift_assign' book.id %}"
                                         title="Click here to Check Report of an Employee"><small>Check
                                     Report</small></a></td>
-                                <td class="text-center"><a href="{% url 'employee1:update_medical' book.id %}">
+                                <td class="text-center"><a href="{% url 'employee:update_medical' book.id %}">
                                     <span
                                             class="glyphicon glyphicon-plus-sign"
                                             data-toggle="tooltip"
                                             title="Click here to update Medical Info">
 
                                     </span></a></td>
-                                <td class="text-center"><a href="{% url 'employee1:employee_edit' book.id %}"
+                                <td class="text-center"><a href="{% url 'employee:employee_edit' book.id %}"
                                                            title="Edit Employee."><span
                                         class="glyphicon glyphicon-pencil"
                                         data-toggle="tooltip"
                                         title="Click here to edit"></span></a></td>
                                 <td class="text-center"><a class="delete"
-                                                           data-url="{% url 'employee1:employee_delete' book.id %}"
+                                                           data-url="{% url 'employee:employee_delete' book.id %}"
                                                            href="#"
                                                            title="Delete Employee."><span
                                         class="glyphicon glyphicon-trash"
@@ -144,218 +128,207 @@ td {
             <div class="modal-content">
                 <div class="modal-header employee_details">
                     <button class="close" data-dismiss="modal" type="button">&times;</button>
-                    <div class="text-center" style="padding-left:10px;"><h4 class="modal-title"><span class="label label-warning">Employee Details</span></h4></div>
-
+                    <h4 class="modal-title text-center"><span class="label label-warning">Employee Details</span></h4>
+                    <br>
                     <center>
-                        <div class="text_center">
-                            <img class="image image-responsive"
-                                 height="100"
-                                 id="photo"
-                                 onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
-                                 src="/media/employee_image/miner2_my3qE2R.jpg"
-                                 width="100">
+                        <div class="text_center"><img class="image image-responsive" height="100"
+                                                      id="photo"
+                                                      onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
+                                                      src="/media/employee_image/miner2_my3qE2R.jpg"
+                                                      width="100">
                         </div>
                     </center>
                 </div>
-                <td class="modal-body">
+                <div class="modal-body">
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Personal Details</span></h3></div>
+                    </center>
+                    <table class="table table-striped">
 
-                    <div class="row text-center"><h3><span class="label label-warning">Personal Details</span></h3></div>
-                    <table class="table table-bordered" align="right">
                         <tbody>
                            <tr>
-                                <td>
-                                    <span class="label label-primary">Name</span><span id="name"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary text-left">Father's Name</span><span id="father_name"> World</span>
-                                </td>
-                                <td><span class="label label-primary">Gender</span><span
-                                    id="gender"> World</span></td>
-
+                            <th><span class="label label-primary">Name</span><span id="name"> World</span>
+                        </th>
+                            <th><span class="label label-primary">Father's Name</span><span
+                                id="father_name"> World</span></th>
+                            <th><span class="label label-primary">Gender</span><span
+                                id="gender"> World</span></th>
                           </tr>
                           <tr>
-                            <td>
-                                <span class="label label-primary">DOB</span><span id="dob"> World</span>
-                            </td>
-                            <td  class="text-left">
-                                <span class="label label-primary ">Marital Status</span><span id="marital_status"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Email</span><span id="email"> World</span>
-                            </td>
+                            <td>Mary</td>
+                            <td>Moe</td>
+                            <td>mary@example.com</td>
                           </tr>
+
                         </tbody>
                       </table>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Name</span><span id="name"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Father's Name</span><span
+                                id="father_name"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Gender</span><span
+                                id="gender"> World</span>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">DOB</span><span id="dob"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Marital Status</span><span
+                                id="marital_status"> World</span></div>
 
 
-                        <div class="row text-center" ><h3><span class="label label-warning">Contact Details</span></h3></div>
+                        <div class="col-md-4"><span class="label label-primary">Email</span><span
+                                id="email"> World</span>
+                        </div>
+                    </div>
 
-                    <table class="table table-bordered" align="right">
-                        <tbody>
-                           <tr>
-                                <td>
-                                    <span class="label label-primary">Address</span><span id="address"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">State</span><span id="state"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">City</span><span id="city"> World</span>
-                                </td>
-                          </tr>
-                          <tr>
-                            <td>
-                               <span class="label label-primary">Pin</span><span id="pin"> World</span>
-                            </td>
-                            <td  class="text-left">
-                                <span class="label label-primary">Mobile No</span><span
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Contact Details</span></h3></div>
+                    </center>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Address</span><span
+                                id="address"> World</span></div>
+
+                        <div class="col-md-4"><span class="label label-primary">State</span><span
+                                id="state"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">City</span><span id="city"> World</span>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Pin</span><span id="pin"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Mobile No</span><span
                                 id="mob"> World</span>
-                            </td>
-                              <td></td>
-                          </tr>
-                        </tbody>
-                      </table>
+                        </div>
 
-                        <div class="row text-center"><h3><span class="label label-warning">Medical Details</span></h3></div>
+                        <!--                    <div class="col-md-3"><span class="label label-primary">Photo</span><span id="photo"> World</span></div>-->
+                    </div>
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Medical Details</span></h3></div>
+                    </center>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Medical Status</span><span
+                                id="medical_status"> World</span></div>
+                        <div class="col-md-4"><span class="label label-primary">Is Rescue</span><span
+                                id="is_rescue"> World</span></div>
+                        <div class="col-md-4"><span class="label label-primary">Blood Group</span><span
+                                id="blood_group"> World</span>
+                        </div>
 
-                    <table class="table table-bordered" align="right">
-                        <tbody>
-                           <tr>
-                                <td>
-                                    <span class="label label-primary">Medical Status</span><span id="medical_status"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">Is Rescue</span><span id="is_rescue"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">Blood Group</span><span id="blood_group"> World</span>
-                                </td>
-                          </tr>
-                        </tbody>
-                      </table>
 
-                        <div class="row text-center"><h3><span class="label label-warning">Contact Details</span></h3></div>
+                    </div>
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Contact Details</span></h3></div>
+                    </center>
 
-                    <table class="table table-bordered" align="right">
-                        <tbody>
-                           <tr>
-                                <td>
-                                   <span class="label label-primary">Mine</span><span id="mine"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">RFID</span><span id="rfid"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">Designation</span><span id="designation"> World</span>
-                                </td>
-                          </tr>
-                        <tr>
-                                <td>
-                                   <span class="label label-primary">Token No</span><span id="token_no"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">DOJ</span><span id="date_of_joining"> World</span>
-                                </td>
-                                <td>
-                                   <span class="label label-primary">DOR</span><span id="retirement_date"> World</span>
-                                </td>
-                          </tr>
-                        <tr>
-                                <td>
-                                   <span class="label label-primary">Job Type</span><span id="job_type"> World</span>
-                                </td>
-                                <td>
-                                   <span class="label label-primary">Mining Role</span><span
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Mine</span><span id="mine"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">RFID</span><span id="rfid"> World</span>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Designation</span><span
+                                id="designation"> World</span>
+                        </div>
+
+
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Token No</span><span
+                                id="token_no"> World</span></div>
+                        <div class="col-md-4"><span class="label label-primary">DOJ</span><span
+                                id="date_of_joining"> World</span></div>
+                        <div class="col-md-4"><span class="label label-primary">DOR</span><span
+                                id="retirement_date"> World</span></div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Job Type</span><span
+                                id="job_type"> World</span></div>
+                        <div class="col-md-4"><span class="label label-primary">Mining Role</span><span
                                 id="mining_role"> World</span>
-                                </td>
-                                <td>
-                                   <span class="label label-primary">Cat Type</span><span
-                                id="cat_type"> World</span>
-                                </td>
-                          </tr>
-                        <tr>
-                                <td>
-                                   <span class="label label-primary">Immediate Staff</span><span id="immediat0e_staff"> World</span>
-                                </td>
-                            <td></td>
-                            <td></td>
+                        </div>
+                        <div class="col-md-4"><span class="label label-primary">Cat Type</span><span
+                                id="cat_type"> World</span></div>
 
-                          </tr>
-                        </tbody>
-                      </table>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-4"><span class="label label-primary">Immediate Staff</span><span
+                                id="immediat0e_staff"> World</span></div>
+                    </div>
 
-                        <div class="row text-center"><h3><span class="label label-warning">Bank Details</span></h3></div>
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Bank Details</span></h3></div>
+                    </center>
 
-                    <table class="table table-bordered" align="right">
-                        <tbody>
-                           <tr>
-                                <td>
-                                   <span class="label label-primary">Bank Name</span><span
-                                id="bank_name"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">Bank Acc No</span><span
-                                id="bank_ac_no"> World</span>
-                                </td>
-                                <td>
-                                    <span class="label label-primary">Bank IFSC</span><span
-                                id="bank_ifsc"> World</span>
-                                </td>
-                               <td><span class="label label-primary">Bank PF No</span><span
-                                id="bank_pf_no"> World</span></td>
-                          </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-3"><span class="label label-primary">Bank Name</span><span
+                                id="bank_name"> World</span></div>
+                        <div class="col-md-3"><span class="label label-primary">Bank Acc No</span><span
+                                id="bank_ac_no"> World</span></div>
 
+                        <div class="col-md-3"><span class="label label-primary">Bank IFSC</span><span
+                                id="bank_ifsc"> World</span></div>
+                        <div class="col-md-3"><span class="label label-primary">Bank PF No</span><span
+                                id="bank_pf_no"> World</span></div>
+                    </div>
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Document Details</span></h3></div>
+                    </center>
 
-                        <div class="row text-center"><h3><span class="label label-warning">Document Details</span></h3></div>
-
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <td>
-                               <span class="label label-primary">Aadhaar No</span><span id="aadhaar_no"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Pan No</span><span
+                    <div class="row">
+                        <div class="col-md-3"><span class="label label-primary">Aadhaar No</span><span id="aadhaar_no"> World</span>
+                        </div>
+                        <div class="col-md-3"><span class="label label-primary">Pan No</span><span
                                 id="pan_no"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Voter Id No</span><span
+                        </div>
+                        <div class="col-md-3"><span class="label label-primary">Voter Id No</span><span
                                 id="voter_id_no"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Medical Ins No</span><span
-                                id="medical_ins_no"> World</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        </div>
+                        <div class="col-md-3"><span class="label label-primary">Medical Ins No</span><span
+                                id="medical_ins_no"> World</span></div>
+                    </div>
+                    <br>
+                    <center>
+                        <div class="row"><h3><span class="label label-warning">Education Details</span></h3></div>
+                    </center>
 
-                        <div class="row text-center"><h3><span class="label label-warning">Education Details</span></h3></div>
+                    <div class="row">
+                        <div class="col-md-3"><span class="label label-primary">Course Name</span><span
+                                id="edu_course_name"> World</span></div>
+                        <div class="col-md-3"><span class="label label-primary">Board Name</span><span
+                                id="edu_board_name"> World</span></div>
+                        <div class="col-md-3"><span class="label label-primary">Year</span><span
+                                id="edu_year"> World</span></div>
+                         <div class="col-md-3"><span class="label label-primary">Percent</span><span
+                                id="edu_percent"> World</span></div>
 
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <td>
-                                <span class="label label-primary">Course Name</span><span
-                                id="edu_course_name"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Board Name</span><span
-                                id="edu_board_name"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Year</span><span
-                                id="edu_year"> World</span>
-                            </td>
-                            <td>
-                                <span class="label label-primary">Percent</span><span
-                                id="edu_percent"> World</span>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                        <!--                    <div class="col-md-3"><span>Address</span><span id="addresss"> World</span></div>-->
+                    </div>
+                    <br>
+                    <div class="row">
+<!--                        <div class="col-md-4"><span class="label label-primary">Percent</span><span-->
+<!--                                id="edu_percent"> World</span></div>-->
+<!--                        <div class="col-md-4"><span class="label label-primary">Created Date</span><span-->
+<!--                                id="created_date"> World</span></div>-->
+<!--                        <div class="col-md-4"><span class="label label-primary">Modified Date</span><span-->
+<!--                                id="modified_date"> World</span></div>-->
+                        <!--                    <div class="col-md-3"><span>Address</span><span id="addresss"> World</span></div>-->
+                    </div>
+
+                </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary hidden-print" id="btnPrint"><span aria-hidden="true"
                                                                                      class="glyphicon glyphicon-print"></span>
@@ -364,7 +337,6 @@ td {
                     <button class="btn btn-default hidden-print" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
-        </div>
 
         </div>
     </div>
@@ -401,7 +373,7 @@ td {
                 <button class="close" data-dismiss="modal" type="button">&times;</button>
                 <h4 class="modal-title " style="text-align:center" id="UpdateEmployeeTitle">Generate Login</h4>
             </div>
-            <div id="status_msg_login"></div>
+            <div id="status_msg"></div>
             <input id="MinerIdUpdateShift" type="hidden" value="">
             <div class="modal-body" id="UpdateShiftOptions">
                 <form>
@@ -418,7 +390,7 @@ td {
                 </div>
 
             <div class="modal-footer">
-                <button class="btn btn-primary" id="generate_login_submit" mode='1' type="submit" value="Generate">Generate</button>
+                <input class="btn btn-primary" id="generate_login_submit" mode='1' type="submit" value="Generate">
 
                 <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
             </div>
@@ -501,8 +473,7 @@ $(document.body).on('click',".generate_login",function(e){
     $('input#id_password').val(randomstring);
     $('#generate_login').modal('show');
     e.preventDefault();
-    $("button#generate_login_submit").unbind().click(function(){
-        e.preventDefault();
+    $('input#generate_login_submit').click(function(){
         $.ajax({
             type:'post',
             url:url,
@@ -510,32 +481,15 @@ $(document.body).on('click',".generate_login",function(e){
             data:{
                 csrfmiddlewaretoken: "{{ csrf_token }}",
                 'miner_id':id,
-                'username':$('input#id_username').val(),
                  'email':email,
                  'pass':randomstring
             },
-            beforeSend: function() {
-                 $('#status_msg_login').empty();
-                $('button#generate_login_submit').attr('disabled','true');
-                $('button#generate_login_submit').html('<span id="loading" class="glyphicon glyphicon-refresh"></span> Generating')
-            },
             success:function(data){
                 console.log(data);
-                if(!isEmpty(data.ie)){
-                    $('#status_msg_login').html('<span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;'+data.ie+'!</span>');
-                }
-                else if(!isEmpty(data.success)){
-                     $('#status_msg_login').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;'+data.success+'!</span>');
-                }
             },
             error:function(){
                 console.log('Something Went Wrong!');
-            },
-            complete: function() {
-                $('button#generate_login_submit').removeAttr('disabled');
-                 $('button#generate_login_submit').html('Generate')
             }
-
         });
     })
 })
@@ -623,9 +577,6 @@ var Y;
   body * {
     visibility:hidden;
   }
-  .close{
-    visibility:hidden !important;
-  }
 <!--  @page {size: landscape}-->
   .modal-header.employee_details, .modal-header.update_employee{
      background-color: #0480be !important;
@@ -634,7 +585,7 @@ var Y;
 .modal-header.employee_details, .modal-header.update_employee{
     padding:9px 15px;
     border-bottom:1px solid #eee;
-    background-color: #0480be !important;
+    background-color: #0480be;
     -webkit-border-top-left-radius: 5px;
     -webkit-border-top-right-radius: 5px;
     -moz-border-radius-topleft: 5px;
