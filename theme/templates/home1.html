@@ -106,15 +106,22 @@
           color: #fff;
         }
     .navbar .navbar-brand-logo .brand {
-        margin-top: 20px;
+        margin-top: 0px;
         width: 500px;
+    }
+    .logo-text{
+        padding-top:50px;
     }
 
     div.item>img{
         width:100% !important;
         height:600px !important;
     }
-
+     @media(min-width: 992px){
+         span.hr-show{
+             display: none;
+         }
+     }
 
     @media(max-width: 992px){
      .navbar .navbar-brand-logo .brand {
@@ -122,6 +129,7 @@
         width: 400px;
 
     }
+
         div.col-md-3{
             width: 100%;
         }
@@ -313,16 +321,14 @@
                     <div class="col-md-6">
                         
                         <div class="col-md-1"></div>
-                        <div class="col-md-1">
+                        <div class="col-md-2">
                             <div class="row">
                                 <strong>Developed By:</strong>
                                 <center><img class="logo img-responsive" src="{% static '/image/csir_logo.svg' %}" alt=""/></center>
                             </div>
-                            <div class="row text-center">
-                                
-                            </div>
+
                         </div>
-                        <div class="col-md-4 logo-text">
+                        <div class="col-md-6 logo-text" style="padding-left: 10px;">
 
                             <div class="row text-center">
                                 <br>
@@ -334,7 +340,7 @@
                         </div>
                        
                     </div>
-
+                <span class="hr-show"><hr></span>
                 <div class="col-md-6">
                     <div class="col-md-2"></div>
                     <div class="col-md-2">
@@ -346,7 +352,7 @@
                             <strong>सत्यमेव जयते</strong>
                         </div>
                     </div>
-                    <div class="col-md-5 logo-text">
+                    <div class="col-md-6 logo-text">
 
                 <div class="row text-center">
                     
