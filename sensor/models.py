@@ -44,46 +44,46 @@ class Node(models.Model):
     def get_absolute_url(self):
         return reverse('node:node_edit', kwargs={'pk': self.pk})
 
-class Arduino(models.Model):
-    id = models.AutoField(primary_key=True)
-    node_id = models.IntegerField(null=True, blank=True)
-    arduino_id = models.CharField('Arduino ID', max_length=200)
-    type = models.CharField('Type', max_length=200)
-    noofsensors = models.IntegerField('No of Sensors')
-    #sensorid = models.CharField('Sensor Id', max_length=200)
-    port_no = models.CharField('Port No', max_length=200)
-    baudrate = models.IntegerField('Baudrate')
-    photo = models.ImageField(upload_to='emp_img/', null=True, blank=True)
-
-
-    #mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return (self.arduino_id)
-
-    # return ('%s %s' % (self.gid, self.complaint_no))
-    # return str(self.pk) + "-" + self.name
-
-    def get_absolute_url(self):
-        return reverse('arduino:arduino_edit', kwargs={'pk': self.pk})
-class Sensor(models.Model):
-    id = models.AutoField(primary_key=True)
-    arduino_id = models.IntegerField(null=True, blank=True)
-    wireless_id = models.IntegerField(null=True, blank=True)
-    sensorid = models.CharField('Sensor Id', max_length=200)
-    sensorname = models.CharField('Sensor Name', max_length=200)
-    minrange = models.IntegerField('Min Range')
-    maxrange = models.IntegerField('Max Range')
-    sensorunit = models.CharField('Sensor Unit', max_length=200)
-    thresholdlimit = models.CharField('Threshold Limit', default='0', max_length=200)
-    greenlevel = models.CharField('Green Level Limit', default='0', max_length=200)
-    yellowlevel = models.CharField('Yellow Level Limit', default='0', max_length=200)
-    redlevel = models.CharField('Red Level Limit', default='0', max_length=200)
-    photo = models.ImageField(upload_to='emp_img/', null=True, blank=True)
-
-
-    def __str__(self):
-        return(self.sensorid)
+# class Arduino(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     node_id = models.IntegerField(null=True, blank=True)
+#     arduino_id = models.CharField('Arduino ID', max_length=200)
+#     type = models.CharField('Type', max_length=200)
+#     noofsensors = models.IntegerField('No of Sensors')
+#     #sensorid = models.CharField('Sensor Id', max_length=200)
+#     port_no = models.CharField('Port No', max_length=200)
+#     baudrate = models.IntegerField('Baudrate')
+#     photo = models.ImageField(upload_to='emp_img/', null=True, blank=True)
+#
+#
+#     #mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+#
+#     def __str__(self):
+#         return (self.arduino_id)
+#
+#     # return ('%s %s' % (self.gid, self.complaint_no))
+#     # return str(self.pk) + "-" + self.name
+#
+#     def get_absolute_url(self):
+#         return reverse('arduino:arduino_edit', kwargs={'pk': self.pk})
+# class Sensor(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     arduino_id = models.IntegerField(null=True, blank=True)
+#     wireless_id = models.IntegerField(null=True, blank=True)
+#     sensorid = models.CharField('Sensor Id', max_length=200)
+#     sensorname = models.CharField('Sensor Name', max_length=200)
+#     minrange = models.IntegerField('Min Range')
+#     maxrange = models.IntegerField('Max Range')
+#     sensorunit = models.CharField('Sensor Unit', max_length=200)
+#     thresholdlimit = models.CharField('Threshold Limit', default='0', max_length=200)
+#     greenlevel = models.CharField('Green Level Limit', default='0', max_length=200)
+#     yellowlevel = models.CharField('Yellow Level Limit', default='0', max_length=200)
+#     redlevel = models.CharField('Red Level Limit', default='0', max_length=200)
+#     photo = models.ImageField(upload_to='emp_img/', null=True, blank=True)
+#
+#
+#     def __str__(self):
+#         return(self.sensorid)
 
 
     def get_absolute_url(self):
@@ -131,13 +131,13 @@ class Wireless(models.Model):
     def get_absolute_url(self):
         return reverse('wireless:wireless_edit', kwargs={'pk': self.pk})
 
-class Connection(models.Model):
-    id = models.AutoField(primary_key=True)
-    mine_id = models.IntegerField(null=True, blank=True)
-    node_id = models.IntegerField(null=True, blank=True)
-    type = models.CharField(max_length=200, null=True, blank=True)
-    arduino_id = models.IntegerField(null=True, blank=True)
-    wireless_id = models.IntegerField(null=True, blank=True)
+# class Connection(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     mine_id = models.IntegerField(null=True, blank=True)
+#     node_id = models.IntegerField(null=True, blank=True)
+#     type = models.CharField(max_length=200, null=True, blank=True)
+#     arduino_id = models.IntegerField(null=True, blank=True)
+#     wireless_id = models.IntegerField(null=True, blank=True)
 
 
 
@@ -145,29 +145,29 @@ class Connection(models.Model):
 
     #model for nodesensor
 
-class Nodesensor(models.Model):
-    id = models.AutoField(primary_key=True)
-    #nodeid = models.CharField('Node ID', max_length=200)
-    name = models.ForeignKey(
-        Node,  on_delete=models.CASCADE, null=True, blank=True)
-    sensorid = models.ForeignKey(
-        Sensor, related_name='sensor_id', on_delete=models.CASCADE, null=True, blank=True)
-    nodesensorname = models.CharField(max_length=200)
-    #sensorname = models.ForeignKey(
-        #Sensor, related_name='sensor_name' , on_delete=models.CASCADE, null=True, blank=True)
-    thresholdvalue = models.CharField('Threshold Value', max_length=200)
-    alertcolourpriority = models.CharField('Alert Colour Priority', max_length=200)
-    description = models.TextField('Description', max_length=200)
-    created_date = models.DateTimeField(default=timezone.now)
-    modified_date = models.DateTimeField(blank=True, null=True)
-
-    # mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse('nodesensor:nodesensor_edit', kwargs={'pk': self.pk})
+# class Nodesensor(models.Model):
+#     id = models.AutoField(primary_key=True)
+#     #nodeid = models.CharField('Node ID', max_length=200)
+#     name = models.ForeignKey(
+#         Node,  on_delete=models.CASCADE, null=True, blank=True)
+#     sensorid = models.ForeignKey(
+#         Sensor, related_name='sensor_id', on_delete=models.CASCADE, null=True, blank=True)
+#     nodesensorname = models.CharField(max_length=200)
+#     #sensorname = models.ForeignKey(
+#         #Sensor, related_name='sensor_name' , on_delete=models.CASCADE, null=True, blank=True)
+#     thresholdvalue = models.CharField('Threshold Value', max_length=200)
+#     alertcolourpriority = models.CharField('Alert Colour Priority', max_length=200)
+#     description = models.TextField('Description', max_length=200)
+#     created_date = models.DateTimeField(default=timezone.now)
+#     modified_date = models.DateTimeField(blank=True, null=True)
+#
+#     # mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     def get_absolute_url(self):
+#         return reverse('nodesensor:nodesensor_edit', kwargs={'pk': self.pk})
 
 class Sensordata(models.Model):
     temp = models.CharField(max_length=200, default=0)

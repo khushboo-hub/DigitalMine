@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from pip._vendor import requests
+import requests
 
 from Strata.models import Strata_sensor_data, Strata_sensor
 from setting.forms import setting_form

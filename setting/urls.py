@@ -4,6 +4,7 @@ from setting import views
 
 
 app_name='setting'
+
 urlpatterns = [
     path('manage_constant', views.manage_constant,name='manage_constant'),
     path('add_constant', views.add_constant, name='add_constant'),

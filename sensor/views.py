@@ -10,10 +10,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import ModelForm
 
-from .models import Sensor, Arduino, Node, Nodesensor, Sensordata, Wireless, Connection, Sensor_Node, gasModel_auto
+from .models import  Node, Wireless, Sensor_Node, gasModel_auto
 from .models import MineDetails
-from .forms import NodeForm, SensorForm, ArduinoForm, WirelessForm, Sensor_NodeForm, gasModel_autoForm
-import serial
+from .forms import NodeForm, WirelessForm, Sensor_NodeForm, gasModel_autoForm
 import requests
 from background_task import background
 from datetime import datetime
@@ -21,59 +20,59 @@ from django.utils.html import strip_tags, linebreaks
 from accounts.models import profile_extension
 
 
-## Sensor Details
-def sensor_manage(request, arduino_id, template_name='sensor/sensor_manage.html'):
-    book = Sensor.objects.filter(arduino_id=arduino_id)
-
-    data = {}
-    data['object_list'] = book
-    data['arduino_id'] = arduino_id
-
-    mine_table = Arduino.objects.get(id=arduino_id)
-    data['mine_name'] = mine_table.arduino_id
-
-    return render(request, template_name, data, {'arduinoid': arduino_id})
-
-
-def sensor_add(request, arduino_id, template_name='sensor/sensor_add.html'):
-    # print(arduino_id)
-    mine_table = Arduino.objects.get(id=arduino_id)
-    arduino_arduino_id = mine_table.arduino_id
-
-    form = SensorForm(request.POST or None, request.FILES)
-    object = Sensor()
-    if form.is_valid():
-        object.sensorid = request.POST.get("sensorid")
-        object.sensorname = request.POST.get("sensorname")
-        object.minrange = request.POST.get("minrange")
-        object.maxrange = request.POST.get("maxrange")
-        object.sensorunit = request.POST.get("sensorunit")
-        object.thresholdlimit = request.POST.get("thresholdlimit")
-        object.greenlevel = request.POST.get("greenlevel")
-        object.yellowlevel = request.POST.get("yellowlevel")
-        object.redlevel = request.POST.get("redlevel")
-        object.photo = request.FILES.get("photo")
-        object.arduino_id = arduino_id
-        # form.save()
-        object.save()
-        return redirect("/sensor/node_manage")
-        # return redirect("/sensor/sensor_manage/" + str(arduino_id))
-    return render(request, template_name, {'form': form, 'arduinoinfo': arduino_arduino_id, 'arduinoid': arduino_id})
+# ## Sensor Details
+# def sensor_manage(request, arduino_id, template_name='sensor/sensor_manage.html'):
+#     book = Sensor.objects.filter(arduino_id=arduino_id)
+#
+#     data = {}
+#     data['object_list'] = book
+#     data['arduino_id'] = arduino_id
+#
+#     mine_table = Arduino.objects.get(id=arduino_id)
+#     data['mine_name'] = mine_table.arduino_id
+#
+#     return render(request, template_name, data, {'arduinoid': arduino_id})
 
 
-def sensor_edit(request, pk, arduino_id, template_name='sensor/sensor_add.html'):
-    book = get_object_or_404(Sensor, pk=pk)
-    form = SensorForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('/sensor/sensor_manage/' + str(arduino_id))
-    return render(request, template_name, {'form': form, 'arduinoid': arduino_id})
+# def sensor_add(request, arduino_id, template_name='sensor/sensor_add.html'):
+#     # print(arduino_id)
+#     mine_table = Arduino.objects.get(id=arduino_id)
+#     arduino_arduino_id = mine_table.arduino_id
+#
+#     form = SensorForm(request.POST or None, request.FILES)
+#     object = Sensor()
+#     if form.is_valid():
+#         object.sensorid = request.POST.get("sensorid")
+#         object.sensorname = request.POST.get("sensorname")
+#         object.minrange = request.POST.get("minrange")
+#         object.maxrange = request.POST.get("maxrange")
+#         object.sensorunit = request.POST.get("sensorunit")
+#         object.thresholdlimit = request.POST.get("thresholdlimit")
+#         object.greenlevel = request.POST.get("greenlevel")
+#         object.yellowlevel = request.POST.get("yellowlevel")
+#         object.redlevel = request.POST.get("redlevel")
+#         object.photo = request.FILES.get("photo")
+#         object.arduino_id = arduino_id
+#         # form.save()
+#         object.save()
+#         return redirect("/sensor/node_manage")
+#         # return redirect("/sensor/sensor_manage/" + str(arduino_id))
+#     return render(request, template_name, {'form': form, 'arduinoinfo': arduino_arduino_id, 'arduinoid': arduino_id})
 
 
-def sensor_delete(request, arduino_id, pk):
-    book = get_object_or_404(Sensor, pk=pk)
-    book.delete()
-    return redirect("/sensor/sensor_manage/" + str(arduino_id))
+# def sensor_edit(request, pk, arduino_id, template_name='sensor/sensor_add.html'):
+#     book = get_object_or_404(Sensor, pk=pk)
+#     form = SensorForm(request.POST or None, request.FILES or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('/sensor/sensor_manage/' + str(arduino_id))
+#     return render(request, template_name, {'form': form, 'arduinoid': arduino_id})
+
+#
+# def sensor_delete(request, arduino_id, pk):
+#     book = get_object_or_404(Sensor, pk=pk)
+#     book.delete()
+#     return redirect("/sensor/sensor_manage/" + str(arduino_id))
 
 
 def sensor1_manage(request, wireless_id, template_name='sensor/sensor1_manage.html'):
@@ -136,79 +135,79 @@ def sensor1_delete(request, wireless_id, pk):
 #     return render(request, template_name, data)
 
 
-##Arduino Details
-def arduino_manage(request, node_id, template_name='arduino/arduino_manage.html'):
-    book = Arduino.objects.filter(node_id=node_id)
-    data = {}
-    data['object_list'] = book
-    data['node_id'] = node_id
-
-    mine_table = Node.objects.get(id=node_id)
-    data['node_name'] = mine_table.name
-    data['node_mine_id'] = mine_table.mine_id
-    return render(request, template_name, data, {'nodeid': node_id})
+# ##Arduino Details
+# def arduino_manage(request, node_id, template_name='arduino/arduino_manage.html'):
+#     book = Arduino.objects.filter(node_id=node_id)
+#     data = {}
+#     data['object_list'] = book
+#     data['node_id'] = node_id
+#
+#     mine_table = Node.objects.get(id=node_id)
+#     data['node_name'] = mine_table.name
+#     data['node_mine_id'] = mine_table.mine_id
+#     return render(request, template_name, data, {'nodeid': node_id})
 
 
 # ************************************************************************
+#
+# def arduino_edit(request, pk, node_id, template_name='arduino/arduino_add.html'):
+#     book = get_object_or_404(Arduino, pk=pk)
+#     form = ArduinoForm(request.POST or None, request.FILES or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect("/sensor/arduino_manage/" + str(node_id))
+#     return render(request, template_name, {'form': form, 'nodeid': node_id})
 
-def arduino_edit(request, pk, node_id, template_name='arduino/arduino_add.html'):
-    book = get_object_or_404(Arduino, pk=pk)
-    form = ArduinoForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect("/sensor/arduino_manage/" + str(node_id))
-    return render(request, template_name, {'form': form, 'nodeid': node_id})
+#
+# def arduino_delete(request, pk, node_id):
+#     book = get_object_or_404(Arduino, pk=pk)
+#     book.delete()
+#     return redirect('/sensor/arduino_manage/' + str(node_id))
 
+#
+# def arduino_connection(request, template_name='arduino/arduino_connection.html'):
+#     objectlist = Arduino.objects.order_by('type')
+#     # form = ArduinoForm(request.POST or None , request.FILES)
+#     # if form.is_valid():
+#     #      form.save()
+#     # return redirect('sensor:arduino_manage')
+#     return render(request, template_name, {'objectlist': objectlist})
+#     # return render(request, template_name, {'form':form})
 
-def arduino_delete(request, pk, node_id):
-    book = get_object_or_404(Arduino, pk=pk)
-    book.delete()
-    return redirect('/sensor/arduino_manage/' + str(node_id))
-
-
-def arduino_connection(request, template_name='arduino/arduino_connection.html'):
-    objectlist = Arduino.objects.order_by('type')
-    # form = ArduinoForm(request.POST or None , request.FILES)
-    # if form.is_valid():
-    #      form.save()
-    # return redirect('sensor:arduino_manage')
-    return render(request, template_name, {'objectlist': objectlist})
-    # return render(request, template_name, {'form':form})
-
-
-def choose_connection(request, template_name='arduino/choose_connection.html'):
-    return render(request, template_name)
+#
+# def choose_connection(request, template_name='arduino/choose_connection.html'):
+#     return render(request, template_name)
 
 
 # class SensordataForm(ModelForm):
 #     class Meta:
 #         model = Sensordata
 #         fields = ['value', 'date']
-
-def arduino_getdata(request, arduino_dd):
-    # arduino_id = request.POST.get("arduino_id")
-    table_data = Arduino.objects.values_list().filter(id=arduino_dd)[0]
-    # print(arduino_dd)
-    # print(table_data)
-    a = table_data[5]
-    b = table_data[6]
-    # print(a, b)
-    try:
-        while True:
-            sr = serial.Serial(a, b)
-            st = list(str(sr.readline(), 'utf-8'))
-            sr.close()
-            ard_data = str(''.join(st[:]))
-            dataArray = ard_data.split(',')
-            print(dataArray)
-            f = Sensordata()
-            f.temp = dataArray[0]
-            f.pressure = dataArray[1]
-            # f.save()
-            # return HttpResponse(str(ard_data))
-    except:
-        tb = traceback.format_exc()
-        return HttpResponse(tb)
+#
+# def arduino_getdata(request, arduino_dd):
+#     # arduino_id = request.POST.get("arduino_id")
+#     table_data = Arduino.objects.values_list().filter(id=arduino_dd)[0]
+#     # print(arduino_dd)
+#     # print(table_data)
+#     a = table_data[5]
+#     b = table_data[6]
+#     # print(a, b)
+#     try:
+#         while True:
+#             sr = serial.Serial(a, b)
+#             st = list(str(sr.readline(), 'utf-8'))
+#             sr.close()
+#             ard_data = str(''.join(st[:]))
+#             dataArray = ard_data.split(',')
+#             print(dataArray)
+#             f = Sensordata()
+#             f.temp = dataArray[0]
+#             f.pressure = dataArray[1]
+#             # f.save()
+#             # return HttpResponse(str(ard_data))
+#     except:
+#         tb = traceback.format_exc()
+#         return HttpResponse(tb)
     # print ('%s (%s)' % (e.message, type(e)))
 
     # return HttpResponse("e")
@@ -481,31 +480,31 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     return render(request, template_name, data)
 
 
-def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
-    # print(node_id)
-    mine_table = Node.objects.get(id=node_id)
-
-    node_name = mine_table.name
-    node_mine_id = mine_table.mine_id
-    form = ArduinoForm(request.POST or None, request.FILES)
-    object = Arduino()
-    if form.is_valid():
-        print("form is valid")
-        object.arduino_id = request.POST.get("arduino_id")
-        object.type = request.POST.get("type")
-        object.noofsensors = request.POST.get("noofsensors")
-        object.port_no = request.POST.get("port_no")
-        object.baudrate = request.POST.get("baudrate")
-        object.photo = request.FILES.get("photo")
-        object.node_id = node_id
-        # print(request.POST)
-        # print(object)
-        object.save()
-        # return redirect('/employee/manage_mining_shift/' + str(mine_id))
-        # object.save()
-        return redirect('/sensor/arduino_manage/' + str(node_id))
-    return render(request, template_name,
-                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
+# def arduino_add(request, node_id, template_name='arduino/arduino_add.html'):
+#     # print(node_id)
+#     mine_table = Node.objects.get(id=node_id)
+#
+#     node_name = mine_table.name
+#     node_mine_id = mine_table.mine_id
+#     form = ArduinoForm(request.POST or None, request.FILES)
+#     object = Arduino()
+#     if form.is_valid():
+#         print("form is valid")
+#         object.arduino_id = request.POST.get("arduino_id")
+#         object.type = request.POST.get("type")
+#         object.noofsensors = request.POST.get("noofsensors")
+#         object.port_no = request.POST.get("port_no")
+#         object.baudrate = request.POST.get("baudrate")
+#         object.photo = request.FILES.get("photo")
+#         object.node_id = node_id
+#         # print(request.POST)
+#         # print(object)
+#         object.save()
+#         # return redirect('/employee/manage_mining_shift/' + str(mine_id))
+#         # object.save()
+#         return redirect('/sensor/arduino_manage/' + str(node_id))
+#     return render(request, template_name,
+#                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
 
 
 def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
@@ -573,40 +572,40 @@ def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html
 ##88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 # Code for Nodesensor
 
-class NodesensorForm(ModelForm):
-    class Meta:
-        model = Nodesensor
-        fields = ['id', 'name', 'sensorid', 'nodesensorname', 'thresholdvalue', 'alertcolourpriority', 'description']
+# class NodesensorForm(ModelForm):
+#     class Meta:
+#         model = Nodesensor
+#         fields = ['id', 'name', 'sensorid', 'nodesensorname', 'thresholdvalue', 'alertcolourpriority', 'description']
 
 
-def nodesensor_manage(request, template_name='nodesensor/nodesensor_manage.html'):
-    book = Nodesensor.objects.all()
-    data = {}
-    data['object_list'] = book
-    return render(request, template_name, data)
+# def nodesensor_manage(request, template_name='nodesensor/nodesensor_manage.html'):
+#     book = Nodesensor.objects.all()
+#     data = {}
+#     data['object_list'] = book
+#     return render(request, template_name, data)
 
 
-def nodesensor_add(request, template_name='nodesensor/nodesensor_add.html'):
-    form = NodesensorForm(request.POST or None, request.FILES)
-    if form.is_valid():
-        form.save()
-        return redirect('sensor:nodesensor_manage')
-    return render(request, template_name, {'form': form})
+# def nodesensor_add(request, template_name='nodesensor/nodesensor_add.html'):
+#     form = NodesensorForm(request.POST or None, request.FILES)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('sensor:nodesensor_manage')
+#     return render(request, template_name, {'form': form})
 
 
-def nodesensor_edit(request, pk, template_name='nodesensor/nodesensor_add.html'):
-    book = get_object_or_404(Nodesensor, pk=pk)
-    form = NodesensorForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('sensor:nodesensor_manage')
-    return render(request, template_name, {'form': form})
+# def nodesensor_edit(request, pk, template_name='nodesensor/nodesensor_add.html'):
+#     book = get_object_or_404(Nodesensor, pk=pk)
+#     form = NodesensorForm(request.POST or None, request.FILES or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('sensor:nodesensor_manage')
+#     return render(request, template_name, {'form': form})
 
-
-def nodesensor_delete(request, pk):
-    book = get_object_or_404(Nodesensor, pk=pk)
-    book.delete()
-    return redirect("sensor:nodesensor_manage")
+#
+# def nodesensor_delete(request, pk):
+#     book = get_object_or_404(Nodesensor, pk=pk)
+#     book.delete()
+#     return redirect("sensor:nodesensor_manage")
 
 
 ## Mine map with nodes
@@ -633,63 +632,63 @@ class ConnectionForm(ModelForm):
         fields = ['mine_id']
 
 
-def connection_manage(request, template_name='connection/connection_manage.html'):
-    # book = Nodesensor.objects.all()
-    # data = {}
-    # data['object_list'] = book
-    # return render(request, template_name, data)
-
-    connection_table = Connection.objects.values_list()
-    data = {}  ##data = {}
-    prepared_data = []
-    r = 0
-    for i in connection_table:
-        connect_id = Connection.objects.get(id=str(i[0]))
-        mine_table = MineDetails.objects.get(
-            id=str(i[1]))  # 3 means :mine_id (mine_id is refferenced to connection table)
-        node_table = Node.objects.get(id=str(i[2]))
-        connect_type = (str(i[3]))
-        # print(connect_type)
-        prepared_data.append([])
-        # prepared_data[r].append(mine_table.name)
-        # prepared_data[r].append(node_table.nodeid)
-        # r = r+1
-        # print(i)
-        if (i[3] == 'wired'):
-            arduino_table = Arduino.objects.get(id=str(i[4]))
-            # prepared_data.append([])
-            prepared_data[r].append(connect_id.id)
-            prepared_data[r].append(mine_table.name)
-            prepared_data[r].append(node_table.nodeid)
-            prepared_data[r].append(connect_type)
-            prepared_data[r].append(arduino_table.arduino_id)
-            prepared_data[r].append('----')
-            prepared_data[r].append(arduino_table.port_no)
-            prepared_data[r].append('----')
-
-            # r = r+1
-            # print(arduino_table)
-            # print(prepared_data)
-        else:
-            wireless_table = Wireless.objects.get(id=str(i[5]))
-            # prepared_data.append([])
-            prepared_data[r].append(connect_id.id)
-            prepared_data[r].append(mine_table.name)
-            prepared_data[r].append(node_table.nodeid)
-            prepared_data[r].append(connect_type)
-            prepared_data[r].append('-----')
-            prepared_data[r].append(wireless_table.name)
-            prepared_data[r].append('-----')
-            prepared_data[r].append(wireless_table.ipaddress)
-
-            # r = r+1
-        r = r + 1
-    # print(prepared_data)
-    # print(wireless_table)
-    data['object_list'] = prepared_data  ##data['object_list'] = book
-    # print(data)
-    return render(request, template_name, data)
-    # return HttpResponse('Ok....')
+# def connection_manage(request, template_name='connection/connection_manage.html'):
+#     # book = Nodesensor.objects.all()
+#     # data = {}
+#     # data['object_list'] = book
+#     # return render(request, template_name, data)
+#
+#     connection_table = Connection.objects.values_list()
+#     data = {}  ##data = {}
+#     prepared_data = []
+#     r = 0
+#     for i in connection_table:
+#         connect_id = Connection.objects.get(id=str(i[0]))
+#         mine_table = MineDetails.objects.get(
+#             id=str(i[1]))  # 3 means :mine_id (mine_id is refferenced to connection table)
+#         node_table = Node.objects.get(id=str(i[2]))
+#         connect_type = (str(i[3]))
+#         # print(connect_type)
+#         prepared_data.append([])
+#         # prepared_data[r].append(mine_table.name)
+#         # prepared_data[r].append(node_table.nodeid)
+#         # r = r+1
+#         # print(i)
+#         if (i[3] == 'wired'):
+#             arduino_table = Arduino.objects.get(id=str(i[4]))
+#             # prepared_data.append([])
+#             prepared_data[r].append(connect_id.id)
+#             prepared_data[r].append(mine_table.name)
+#             prepared_data[r].append(node_table.nodeid)
+#             prepared_data[r].append(connect_type)
+#             prepared_data[r].append(arduino_table.arduino_id)
+#             prepared_data[r].append('----')
+#             prepared_data[r].append(arduino_table.port_no)
+#             prepared_data[r].append('----')
+#
+#             # r = r+1
+#             # print(arduino_table)
+#             # print(prepared_data)
+#         else:
+#             wireless_table = Wireless.objects.get(id=str(i[5]))
+#             # prepared_data.append([])
+#             prepared_data[r].append(connect_id.id)
+#             prepared_data[r].append(mine_table.name)
+#             prepared_data[r].append(node_table.nodeid)
+#             prepared_data[r].append(connect_type)
+#             prepared_data[r].append('-----')
+#             prepared_data[r].append(wireless_table.name)
+#             prepared_data[r].append('-----')
+#             prepared_data[r].append(wireless_table.ipaddress)
+#
+#             # r = r+1
+#         r = r + 1
+#     # print(prepared_data)
+#     # print(wireless_table)
+#     data['object_list'] = prepared_data  ##data['object_list'] = book
+#     # print(data)
+#     return render(request, template_name, data)
+#     # return HttpResponse('Ok....')
 
 
 def connection_add(request, template_name='connection/connection_add.html'):
@@ -734,23 +733,23 @@ def fetch_node(request):
     return JsonResponse(data)
 
 
-def fetch_arduino(request):
-    data = {}
-    if request.is_ajax():
-        node_id = request.GET.get('id', None)
-        arduino_info = Arduino.objects.values_list().filter(node_id=node_id)
-
-        data = {}
-        i = 0
-        arduino_data = []
-        for r in arduino_info:
-            arduino_data.append(str(r[0]) + ',' + str(r[2]))
-            i = i + 1
-            data['result'] = arduino_data
-    else:
-        data['result'] = "Something Wen't Wrong!"
-
-    return JsonResponse(data)
+# def fetch_arduino(request):
+#     data = {}
+#     if request.is_ajax():
+#         node_id = request.GET.get('id', None)
+#         arduino_info = Arduino.objects.values_list().filter(node_id=node_id)
+#
+#         data = {}
+#         i = 0
+#         arduino_data = []
+#         for r in arduino_info:
+#             arduino_data.append(str(r[0]) + ',' + str(r[2]))
+#             i = i + 1
+#             data['result'] = arduino_data
+#     else:
+#         data['result'] = "Something Wen't Wrong!"
+#
+#     return JsonResponse(data)
 
 
 def fetch_wireless(request):
@@ -772,22 +771,22 @@ def fetch_wireless(request):
     return JsonResponse(data)
 
 
-def fetch_port(request):
-    data = {}
-    if request.is_ajax():
-        arduino_id = request.GET.get('id', None)
-        port_info = Arduino.objects.values_list().filter(id=arduino_id)
-        data = {}
-        i = 0
-        port_data = []
-        for r in port_info:
-            port_data.append(str(r[0]) + ',' + str(r[5]))
-            i = i + 1
-            data['result'] = port_data
-    else:
-        data['result'] = "Something went wrong!"
-
-    return JsonResponse(data)
+# def fetch_port(request):
+#     data = {}
+#     if request.is_ajax():
+#         arduino_id = request.GET.get('id', None)
+#         port_info = Arduino.objects.values_list().filter(id=arduino_id)
+#         data = {}
+#         i = 0
+#         port_data = []
+#         for r in port_info:
+#             port_data.append(str(r[0]) + ',' + str(r[5]))
+#             i = i + 1
+#             data['result'] = port_data
+#     else:
+#         data['result'] = "Something went wrong!"
+#
+#     return JsonResponse(data)
 
 
 def fetch_ip(request):
@@ -808,24 +807,24 @@ def fetch_ip(request):
     return JsonResponse(data)
 
 
-def save_connection(request, template_name='connection/connection_manage.html'):
-    object = Connection()
-
-    object.mine_id = request.POST.get("mine_id")
-    object.node_id = request.POST.get("node_id")
-    object.type = request.POST.get("type")
-    object.arduino_id = request.POST.get("arduino_id")
-    object.wireless_id = request.POST.get("wireless_id")
-    # print(request.POST)
-    # print(object.mine_id)
-    object.save()
-    # form.save()
-    return redirect('sensor:connection_manage')
-    # return render(request,template_name)
-
-    # print(request.POST)
-
-    # return HttpResponse("ok")
+# def save_connection(request, template_name='connection/connection_manage.html'):
+#     object = Connection()
+#
+#     object.mine_id = request.POST.get("mine_id")
+#     object.node_id = request.POST.get("node_id")
+#     object.type = request.POST.get("type")
+#     object.arduino_id = request.POST.get("arduino_id")
+#     object.wireless_id = request.POST.get("wireless_id")
+#     # print(request.POST)
+#     # print(object.mine_id)
+#     object.save()
+#     # form.save()
+#     return redirect('sensor:connection_manage')
+#     # return render(request,template_name)
+#
+#     # print(request.POST)
+#
+#     # return HttpResponse("ok")
 
 
 # Recieve continuous data wirelessly

@@ -1,9 +1,7 @@
 from datetime import date
 
 from django import forms
-from employee.models import Employee
-from .models import Sensor
-from .models import Node,Arduino,Sensor,Wireless,Sensor_Node
+from .models import Node,Wireless,Sensor_Node
 
 class NodeForm(forms.ModelForm):
 
@@ -104,77 +102,77 @@ class Sensor_NodeForm(forms.ModelForm):
         model = Sensor_Node
         fields = ['ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']
 
-class SensorForm(forms.ModelForm):
-    sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Sensor ID (Ex: S001)'
-    }))
-    sensorname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Sensor Name (Ex: CH4 )'
-    }))
-    minrange = forms.IntegerField( widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Min Range (Ex: 25)'
-    }))
-    maxrange = forms.IntegerField( widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Max Range (Ex: 56)'
-    }))
-    sensorunit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Sensor Unit (Ex: ppm)'
-    }))
-    thresholdlimit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Threshold Limit (Ex: 45)'
-    }))
-    greenlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Green Level (Ex: 25)'
-    }))
-    yellowlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Yellow Level (Ex: 30)'
-    }))
-    redlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Red Level (Ex: 52)'
-    }))
-    photo = forms.ImageField()
-
-    class Meta:
-        model = Sensor
-        fields = ['id','sensorid','sensorname','minrange','maxrange','sensorunit','thresholdlimit','greenlevel','yellowlevel','redlevel','photo']
-
-
-class ArduinoForm(forms.ModelForm):
-    arduino_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Arduino ID (Ex: Ard 001)'
-    }))
-    type = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Type (Ex: Arduino Mega)'
-    }))
-    noofsensors = forms.IntegerField(widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'No Of Sensors (Ex: 45)'
-    }))
-    port_no = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Port No (Ex: COM5)'
-    }))
-    baudrate = forms.IntegerField(widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Baudrate (Ex: 9600)'
-    }))
-    photo = forms.ImageField()
+# class SensorForm(forms.ModelForm):
+#     sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Sensor ID (Ex: S001)'
+#     }))
+#     sensorname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Sensor Name (Ex: CH4 )'
+#     }))
+#     minrange = forms.IntegerField( widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Min Range (Ex: 25)'
+#     }))
+#     maxrange = forms.IntegerField( widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Max Range (Ex: 56)'
+#     }))
+#     sensorunit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Sensor Unit (Ex: ppm)'
+#     }))
+#     thresholdlimit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Threshold Limit (Ex: 45)'
+#     }))
+#     greenlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Green Level (Ex: 25)'
+#     }))
+#     yellowlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Yellow Level (Ex: 30)'
+#     }))
+#     redlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Red Level (Ex: 52)'
+#     }))
+#     photo = forms.ImageField()
+#
+#     class Meta:
+#         model = Sensor
+#         fields = ['id','sensorid','sensorname','minrange','maxrange','sensorunit','thresholdlimit','greenlevel','yellowlevel','redlevel','photo']
 
 
-    class Meta:
-        model = Arduino
-        fields = ['id','arduino_id','type','noofsensors','port_no','baudrate','photo']
+# class ArduinoForm(forms.ModelForm):
+#     arduino_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Arduino ID (Ex: Ard 001)'
+#     }))
+#     type = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Type (Ex: Arduino Mega)'
+#     }))
+#     noofsensors = forms.IntegerField(widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'No Of Sensors (Ex: 45)'
+#     }))
+#     port_no = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Port No (Ex: COM5)'
+#     }))
+#     baudrate = forms.IntegerField(widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Baudrate (Ex: 9600)'
+#     }))
+#     photo = forms.ImageField()
+#
+#
+#     class Meta:
+#         model = Arduino
+#         fields = ['id','arduino_id','type','noofsensors','port_no','baudrate','photo']
 
 
 class WirelessForm(forms.ModelForm):

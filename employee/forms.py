@@ -96,7 +96,7 @@ class EmployeeForm(forms.ModelForm):
     #
     #                                                   }))
     # mining_role = forms.CharField(required=False, widget=forms.Select(choices=MiningRole.objects.all().values_list('id','name'),attrs={'class': 'form-control', }), )
-    # immediate_staff=forms.CharField(required=False,widget=forms.Select(choices=Employee1.objects.all().values_list('id','name'),attrs={'class': 'form-control', }))
+    # immediate_staff=forms.CharField(required=False,widget=forms.Select(choices=Employee.objects.all().values_list('id','name'),attrs={'class': 'form-control', }))
     city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Please Enter Your City / शहर'

@@ -233,7 +233,7 @@ def ajax_tracking_data(request):  ### for tabular format live data last 10 recor
 
 
             try:
-                employee_table = Employee1.objects.get(rfid=str(r.transmitter_id))
+                employee_table = Employee.objects.get(rfid=str(r.transmitter_id))
                 emp_name = employee_table.name
 
             except:
@@ -273,7 +273,7 @@ def live_tracking_in_map(request, mine_id, template_name='MinersTracking/live_tr
     data['mine_data'] = mine_data
     routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
     data['routers'] = routers
-    miners = Employee1.objects.filter(mine_id=mine_id)
+    miners = Employee.objects.filter(mine_id=mine_id)
     print(miners)
     data['miners'] = miners
 
@@ -286,7 +286,7 @@ def iframe_live_tracking_in_map(request, mine_id, template_name='MinersTracking/
     data['mine_data'] = mine_data
     routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
     data['routers'] = routers
-    miners = Employee1.objects.filter(mine_id=mine_id)
+    miners = Employee.objects.filter(mine_id=mine_id)
     print(miners)
     data['miners'] = miners
 
@@ -299,7 +299,7 @@ def live_tracking_in_map_(request, mine_id, template_name='MinersTracking/live_t
     data['mine_data'] = mine_data
     routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
     data['routers'] = routers
-    miners = Employee1.objects.filter(mine_id=mine_id)
+    miners = Employee.objects.filter(mine_id=mine_id)
     data['miners'] = miners
     return render(request, template_name, data)
 
@@ -333,7 +333,7 @@ def get_miners_data1(request):
                 pass
 
             try:
-                employee_table = Employee1.objects.get(rfid=str(r[3]))
+                employee_table = Employee.objects.get(rfid=str(r[3]))
                 emp_name = employee_table.name
             except:
                 pass
@@ -379,7 +379,7 @@ def fetch_miner_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        miner_details = Employee1.objects.values_list().filter(mine_id=mine_id)
+        miner_details = Employee.objects.values_list().filter(mine_id=mine_id)
         router_details = TrackingRouter.objects.values_list().filter(mine_id=mine_id)
         mine_details = MineDetails.objects.values_list().filter(id=mine_id)
 
@@ -443,7 +443,7 @@ def get_single_miners_data(request):
             tracking_table = MinerTracking.objects.filter(transmitter_id=miner_id).order_by('-id')[0]
             router_id = tracking_table.router_id
             router_details = TrackingRouter.objects.filter(router_id=router_id).order_by('-id')[0]
-            miner_details = Employee1.objects.filter(rfid=miner_id).order_by('-id')[0]
+            miner_details = Employee.objects.filter(rfid=miner_id).order_by('-id')[0]
         except:
             data['error']="Something Went Wrong!";
             return JsonResponse(data)
@@ -495,7 +495,7 @@ def get_single_miner_path_data(request):
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         print(date_from+" "+date_to)
-        miner_details = Employee1.objects.filter(mine_id=mine_id,rfid=miner_id).order_by('-id')[0]
+        miner_details = Employee.objects.filter(mine_id=mine_id,rfid=miner_id).order_by('-id')[0]
         miner_table = MinerTracking.objects.filter(transmitter_id=miner_id,mine_id=mine_id,created_date__range=[date_from, date_to]).order_by('id')
         router_table = TrackingRouter.objects.filter(mine_id_id=mine_id)
         router_details={}
@@ -540,7 +540,7 @@ def get_all_miners_data(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        miner_details = Employee1.objects.filter(mine_id=mine_id)
+        miner_details = Employee.objects.filter(mine_id=mine_id)
         # for r in router_details:
         #   print(r)
 
@@ -568,7 +568,7 @@ def get_all_miners_data(request):
 
 
                 try:
-                    miner_details = Employee1.objects.filter(rfid=miner_id).order_by('-id')[0]
+                    miner_details = Employee.objects.filter(rfid=miner_id).order_by('-id')[0]
                 except:
                     miner_details=None
                     pass

@@ -1,8 +1,8 @@
 from django.contrib import admin
-from .models import Sensor,Arduino,Node,Nodesensor
+from .models import Node
 
 # Register your models here.
-admin.site.register(Sensor)
-admin.site.register(Arduino)
+# admin.site.register(Sensor)
+# admin.site.register(Arduino)
 admin.site.register(Node)
-admin.site.register(Nodesensor)
+# admin.site.register(Nodesensor)
