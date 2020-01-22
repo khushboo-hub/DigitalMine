@@ -13,7 +13,7 @@ else:
 print(exceptions)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__)) # This is your Project Root
 # print(ROOT_DIR+"\\accounts")
-exceptions=['__init__.py','__pycache__']
+exceptions=['__init__.py']
 for folders in os.listdir(ROOT_DIR):
     # print(ROOT_DIR+"\\"+folders)
     if os.path.isdir(ROOT_DIR+"\\"+folders):

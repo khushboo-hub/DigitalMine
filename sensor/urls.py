@@ -7,13 +7,13 @@ app_name = 'sensor'
 
 urlpatterns = [
   # path('sensor_manage/<int:arduino_id>', views.sensor_manage, name='sensor_manage'),
-  path('sensor1_manage/<int:wireless_id>', views.sensor1_manage, name='sensor1_manage'),
+  # path('sensor1_manage/<int:wireless_id>', views.sensor1_manage, name='sensor1_manage'),
   # path('new/<int:arduino_id>', views.sensor_add, name='sensor_add'),
-  path('new1/<int:wireless_id>', views.sensor1_add, name='sensor1_add'),
+  # path('new1/<int:wireless_id>', views.sensor1_add, name='sensor1_add'),
   # path('edit/<int:pk>/<int:arduino_id>', views.sensor_edit, name='sensor_edit'),
-  path('edit/<int:pk>/<int:wireless_id>', views.sensor1_edit, name='sensor1_edit'),
+  # path('edit/<int:pk>/<int:wireless_id>', views.sensor1_edit, name='sensor1_edit'),
   # path('delete/<int:pk>/<int:arduino_id>', views.sensor_delete, name='sensor_delete'),
-  path('delete/<int:pk>/<int:wireless_id>', views.sensor1_delete, name='sensor1_delete'),
+  # path('delete/<int:pk>/<int:wireless_id>', views.sensor1_delete, name='sensor1_delete'),
   path('load_map', views.load_map, name='load_map'),
 
   path('wireless_manage/<int:node_id>', views.wireless_manage, name='wireless_manage'),

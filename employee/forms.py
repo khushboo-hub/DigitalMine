@@ -3,7 +3,7 @@ from datetime import date
 from django import forms
 from employee.models import Employee
 from .models import Employee
-from .models import SensorData, MineDetails, MiningRole, MineShift
+from .models import SensorData, MineDetails, MineShift,MiningRole
 
 STATE = (
     ('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'),
@@ -19,6 +19,37 @@ STATE = (
     ('Uttaranchal', 'Uttaranchal'), ('West Bengal', 'West Bengal'),
 
 )
+
+class MiningRoleForm(forms.ModelForm):
+    def __init__(self, mine_id, *args, **kwargs):
+        super(MiningRoleForm, self).__init__(*args, **kwargs)
+        self.fields['parent_role'] = forms.ModelChoiceField(
+            queryset=MiningRole.objects.filter(mine_id=mine_id)
+        )  #Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
+    name = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Mining Role Name (ex: GM,Manager,Foreman,Level Incharge)'
+    }))
+    description = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Description if any'
+    }))
+    MINING_TYPE1 = (
+        ('officer', 'Officer'),
+        ('worker', 'Worker'),
+    )
+    type = forms.ChoiceField(required=False, choices=MINING_TYPE1, widget=forms.RadioSelect())
+
+    parent_role = forms.CharField(required=False,
+                                  widget=forms.Select(choices=MiningRole.objects.all().values_list('id', 'name'),
+                                                      attrs={'class': 'form-control',
+                                                             }))
+    class Meta():
+        model = MiningRole
+        widgets = {
+            'type': forms.RadioSelect(),
+        }
+        fields = ['parent_role', 'name', 'type', 'description']
 
 
 class EmployeeForm(forms.ModelForm):
@@ -218,6 +249,7 @@ class EmployeeForm(forms.ModelForm):
         }
 
 
+
 class MineDetailsForm(forms.ModelForm):
     name = forms.CharField(label='Name', max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -279,39 +311,7 @@ class MineDetailsForm(forms.ModelForm):
                   'pin', 'date_of_opening', 'lin_no']
 
 
-class MiningRoleForm(forms.ModelForm):
-    def __init__(self, mine_id, *args, **kwargs):
-        super(MiningRoleForm, self).__init__(*args, **kwargs)
-        self.fields['parent_role'] = forms.ModelChoiceField(
-            queryset=MiningRole.objects.filter(mine_id=mine_id)
-        )  #Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
-    name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Mining Role Name (ex: GM,Manager,Foreman,Level Incharge)'
-    }))
-    description = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Description if any'
-    }))
-    MINING_TYPE1 = (
-        ('officer', 'Officer'),
-        ('worker', 'Worker'),
-    )
-    type = forms.ChoiceField(required=False, choices=MINING_TYPE1, widget=forms.RadioSelect())
 
-    parent_role = forms.CharField(required=False,
-                                  widget=forms.Select(choices=MiningRole.objects.all().values_list('id', 'name'),
-                                                      attrs={'class': 'form-control',
-
-
-                                                             }))
-
-    class Meta():
-        model = MiningRole
-        widgets = {
-            'type': forms.RadioSelect(),
-        }
-        fields = ['parent_role', 'name', 'type', 'description']
 
 
 class MyDataForm(forms.ModelForm):

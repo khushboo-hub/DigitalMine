@@ -58,18 +58,15 @@ def employee_add(request, template_name='employee/employee_add.html'):
     print('profile', current_user.id)
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
 
-    role=MiningRole.objects.filter(mine=profile.mine_id.id).values_list('id','name')
-    print(role)
-    print('Profile',profile.mine_id)
+    # role=MiningRole.objects.filter(mine=profile.mine_id.id).values_list('id','name')
+
     if profile.mine_id is not None:
         print('Here Inside')
         form = EmployeeForm(profile.mine_id.id,initial={'mine': profile.mine_id.id})
-        role=MiningRole.objects.filter(mine=profile.mine_id)
-        for r in role:
-            print(r)
+        # role=MiningRole.objects.filter(mine=profile.mine_id)
     else:
         print('Else Part')
-        form = EmployeeForm()
+        form = EmployeeForm(1)
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST or None, request.FILES)

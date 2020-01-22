@@ -145,36 +145,6 @@ class Sensor_NodeForm(forms.ModelForm):
 #         model = Sensor
 #         fields = ['id','sensorid','sensorname','minrange','maxrange','sensorunit','thresholdlimit','greenlevel','yellowlevel','redlevel','photo']
 
-
-# class ArduinoForm(forms.ModelForm):
-#     arduino_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Arduino ID (Ex: Ard 001)'
-#     }))
-#     type = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Type (Ex: Arduino Mega)'
-#     }))
-#     noofsensors = forms.IntegerField(widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'No Of Sensors (Ex: 45)'
-#     }))
-#     port_no = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Port No (Ex: COM5)'
-#     }))
-#     baudrate = forms.IntegerField(widget=forms.TextInput(attrs={
-#         'class': 'form-control',
-#         'placeholder': 'Baudrate (Ex: 9600)'
-#     }))
-#     photo = forms.ImageField()
-#
-#
-#     class Meta:
-#         model = Arduino
-#         fields = ['id','arduino_id','type','noofsensors','port_no','baudrate','photo']
-
-
 class WirelessForm(forms.ModelForm):
     ipaddress = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
