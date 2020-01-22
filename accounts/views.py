@@ -61,19 +61,22 @@ def signup(request):
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your Miner account.'
+            print('user',user)
+            print('domain',current_site.domain)
+            print('uid',urlsafe_base64_encode(force_bytes(user.pk)))
+            print('token',account_activation_token.make_token(user))
+
             message = render_to_string('acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user),
             })
+
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(
                 mail_subject, message, to=[to_email]
             )
-            img_content_id = 'main_image'
-            img_data = 'https://ci6.googleusercontent.com/proxy/Mv1vt7jRItJMKPEc1wTWipSM9Y6Xl0mdaG1CPTGcffum1wXsBVJZcYtXmnX8UutU847_kguTB6kkPZIZrm0PEjA1SMH_ezTGd4zH=s0-d-e1-ft#https://www.cmsnift.com/myimages/title_nift_birthday.png'
-            # email_embed_image(email, img_content_id, img_data)
             email.send()
             data['confirm_registration'] = 'Please confirm your email address to complete the registration'
             return render(request, 'acc_or_not.html', {'data': data})
