@@ -33,8 +33,15 @@ def login(request):
         except:
             rememberMe = "off"
             pass
-        print('Remember',rememberMe)
-        user = authenticate(username=username, password=password)
+        if '@' in username:
+            try:
+                user=get_object_or_404(User,email=username)
+                user = authenticate(username=user.username, password=password)
+            except:
+                user = authenticate(username=username, password=password)
+                pass
+        else:
+            user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
             return redirect(homeViews.home)

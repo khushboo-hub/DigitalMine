@@ -22,13 +22,7 @@ def home(request):
     current_user = request.user
     book = get_object_or_404(User, pk=current_user.id)
     profile = {}
-    #
-    # ip = get_client_ip(request)
-    # print("IP Address: ", ip)
 
-    session="91v0bjvs538t9i2linak028zyrite2ql"
-
-    print("Session Key",user_from_session_key(session))
     try:
         profile = profile_extension.objects.get(user_id=book)
     except:
