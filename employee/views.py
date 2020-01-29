@@ -33,7 +33,7 @@ from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 import re
 from django.db import IntegrityError
-
+from django.views.decorators.cache import cache_page
 # Create your views here.
 @login_required
 def employee_manage(request, template_name='employee/employee_manage.html'):
@@ -51,29 +51,24 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
     return render(request, template_name, data)
 
 
-@login_required
+
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
-    current_user=request.user
-    print('profile', current_user.id)
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
-
-    # role=MiningRole.objects.filter(mine=profile.mine_id.id).values_list('id','name')
-
-    if profile.mine_id is not None:
-        print('Here Inside')
-        form = EmployeeForm(profile.mine_id.id,initial={'mine': profile.mine_id.id})
-        # role=MiningRole.objects.filter(mine=profile.mine_id)
-    else:
-        print('Else Part')
-        form = EmployeeForm(1)
-
-    if request.method == 'POST':
-        form = EmployeeForm(request.POST or None, request.FILES)
-        # print(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('employee:employee_manage')
+    form = EmployeeForm(1)
+    # current_user=request.user
+    # profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    # if profile.mine_id is not None:
+    #     form = EmployeeForm(profile.mine_id.id,initial={'mine': profile.mine_id.id})
+    #     # role=MiningRole.objects.filter(mine=profile.mine_id)
+    # else:
+    #     form = EmployeeForm(1)
+    #
+    # if request.method == 'POST':
+    #     form = EmployeeForm(request.POST or None, request.FILES)
+    #     # print(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #     return redirect('employee:employee_manage')
 
     return render(request, template_name, {'form': form})
 
