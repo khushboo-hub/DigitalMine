@@ -68,10 +68,6 @@ def signup(request):
             user.save()
             current_site = get_current_site(request)
             mail_subject = 'Activate your Miner account.'
-            print('user',user)
-            print('domain',current_site.domain)
-            print('uid',urlsafe_base64_encode(force_bytes(user.pk)))
-            print('token',account_activation_token.make_token(user))
 
             message = render_to_string('acc_active_email.html', {
                 'user': user,
