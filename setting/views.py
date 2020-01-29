@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+from email.message import EmailMessage
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -58,11 +60,12 @@ def delete_constant(request, id):
 def globalWarningFunction(request):
     return_data = []
     """===============================Strata monitoring================================================="""
-    is_strata_display_warning = 1
+    is_strata_display_warning = 0
     is_strata_audio = 0
     is_strata_light = 0
     is_strata_sms = 0
     is_strata_email = 0
+    strata_mail_subject = "Strata Monitoring "
 
     sensor_table_details = Strata_sensor.objects.all().order_by("id")
     if (sensor_table_details):
@@ -71,8 +74,7 @@ def globalWarningFunction(request):
             sensor_data = Strata_sensor_data.objects.filter(sensor_id=strata_data.id).order_by("-id").first()
 
             if (sensor_data):  # Alteast one data should be save in database
-
-                current_sensor_value = 0
+                # current_sensor_value = 0
                 current_date_time = datetime.now()
 
                 if ((sensor_data.created_date >= (datetime.now() - timedelta(minutes=15))) and (
@@ -92,10 +94,16 @@ def globalWarningFunction(request):
                 # === Validate sensor value from thresold value ========
                 if ((float(strata_data.level_1_warning_unit) < float(current_sensor_value)) and (
                         float(current_sensor_value) < float(strata_data.level_2_warning_unit))):  # low level
+                    is_strata_light = 0
                     strata_data_current.append(
-                        {"module_type": "strata","is_strata_display_warning": is_strata_display_warning,"is_strata_audio":is_strata_audio,"is_strata_light":is_strata_light,"datetime": str(current_date_time.strftime("%d-%m-%Y %H:%M:%S")),"location": str(strata_data.location_id), "sensor_name": strata_data.sensor_name, "warning_level": "Low",
+                        {"module_type": "strata","is_strata_display_warning": is_strata_display_warning,"is_strata_audio":is_strata_audio,"is_strata_light":is_strata_light,
+                         "datetime": str(current_date_time.strftime("%d-%m-%Y %H:%M:%S")),"location": str(strata_data.location_id), "sensor_name": strata_data.sensor_name, "warning_level": "Low",
                          "value": current_sensor_value, "audio_text": strata_data.level_1_msg,
                          "audio_song": str(strata_data.level_1_audio), "audio_play_type": strata_data.audio_play_type})
+                    if (is_strata_email):
+                        strata_mail_subject = strata_mail_subject + "- Low"
+                        mail_html_content = "Location" + str(strata_data.location_id) + "has cross low warning level"
+                        push_mail(strata_mail_subject, mail_html_content)
 
                 elif ((float(strata_data.level_2_warning_unit) < float(current_sensor_value)) and (
                         float(current_sensor_value) < float(strata_data.level_3_warning_unit))):  # medium level
@@ -106,6 +114,11 @@ def globalWarningFunction(request):
                          "value": current_sensor_value, "audio_text": strata_data.level_2_msg,
                          "audio_song": str(strata_data.level_2_audio), "audio_play_type": strata_data.audio_play_type})
 
+                    if (is_strata_email):
+                        strata_mail_subject = strata_mail_subject + "- Medium"
+                        mail_html_content = "Location" + str(strata_data.location_id) + "has cross medium warning level"
+                        push_mail(strata_mail_subject, mail_html_content)
+
                 elif (float(current_sensor_value) > float(strata_data.level_3_warning_unit)):  # high level
                     print("High")
                     strata_data_current.append(
@@ -113,6 +126,14 @@ def globalWarningFunction(request):
                          "value": current_sensor_value, "audio_text": strata_data.level_3_msg,
                          "audio_song": str(strata_data.level_3_audio),
                          "audio_play_type": strata_data.audio_play_type})
+                    if (is_strata_email):
+                        strata_mail_subject = strata_mail_subject + "- High"
+                        mail_html_content = "Location" + str(strata_data.location_id) + "has cross high warning level"
+                        push_mail(strata_mail_subject, mail_html_content)
+                else:
+                    is_strata_light_off = 1
+                    strata_data_current.append(
+                        {"module_type": "strata","is_strata_light_off": is_strata_light_off})
                 # === Validation end =======================================
                 return_data.append(strata_data_current)
             # if condition end which check data have exist or not in Database
@@ -120,11 +141,12 @@ def globalWarningFunction(request):
         """==================================Strata monitoring End================================================="""
         """==================================Water monitoring Start================================================="""
         water_sensor_details = water_level_monitoring_model.objects.all().order_by("id")
-        is_water_display_warning = 1
+        is_water_display_warning = 0
         is_water_audio = 0
         is_water_light = 0
         is_water_sms = 0
         is_water_email = 0
+        water_mail_subject = "Water Level Monitoring"
         if (water_sensor_details):
             for water_data in water_sensor_details:
                 water_data_current = []
@@ -159,12 +181,17 @@ def globalWarningFunction(request):
 
                     if (float(h_range) > float(water_current_sensor_value)):  # high
                         water_data_current.append(
-                            {"module_type": "water","is_water_display_warning": is_water_display_warning, "is_water_audio":is_water_audio, "is_water_light":is_water_light,"datetime": str(current_water_date_time.strftime("%d-%m-%Y %H:%M:%S")),"location": str(water_data.area_name),"sensor_name": "Water Level Monitoring",
+                            {"module_type": "water","is_water_display_warning": is_water_display_warning, "is_water_audio":is_water_audio, "is_water_light":is_water_light,
+                             "datetime": str(current_water_date_time.strftime("%d-%m-%Y %H:%M:%S")),"location": str(water_data.area_name),"sensor_name": "Water Level Monitoring",
                              "warning_level": "High",
                              "value": water_value, "audio_text": water_data.level_3_msg,
                              "audio_song": str(water_data.level_3_audio),
                              "audio_play_type": water_data.audio_play_type,
                              "pump_start":water_data.moter_start_level,"pump_end":water_data.moter_stop_level})
+                        if(is_water_email):
+                            water_mail_subject =water_mail_subject+ "- High"
+                            mail_html_content = "Location" + str(water_data.area_name) + "has cross high warning level"
+                            push_mail(water_mail_subject, mail_html_content)
                     elif ((float(m_range) > (float(water_current_sensor_value))) and ((float(water_current_sensor_value)) > float(h_range))):  # medium
                         water_data_current.append(
                             {"module_type": "water","is_water_display_warning": is_water_display_warning,"is_water_audio":is_water_audio,"is_water_light":is_water_light,"datetime": str(current_water_date_time.strftime("%d-%m-%Y %H:%M:%S")), "location": str(water_data.area_name),"sensor_name": "Water Level Monitoring",
@@ -173,6 +200,10 @@ def globalWarningFunction(request):
                              "audio_song": str(water_data.level_2_audio),
                              "audio_play_type": water_data.audio_play_type,
                              "pump_start":water_data.moter_start_level,"pump_end":water_data.moter_stop_level})
+                        if (is_water_email):
+                            water_mail_subject = water_mail_subject + "- Medium"
+                            mail_html_content = "Location" + str(water_data.area_name) + "has cross medium warning level"
+                            push_mail(mail_subject, mail_html_content)
                     elif ((float(l_range) > (float(water_current_sensor_value))) and ((float(water_current_sensor_value)) < float(l_range))):  # low
                         water_data_current.append(
                             {"module_type": "water","is_water_display_warning": is_water_display_warning,"is_water_audio":is_water_audio,"is_water_light":is_water_light,"datetime": str(current_water_date_time.strftime("%d-%m-%Y %H:%M:%S")), "location": str(water_data.area_name),"sensor_name": "Water Level Monitoring",
@@ -181,8 +212,26 @@ def globalWarningFunction(request):
                              "audio_song": str(water_data.level_1_audio),
                              "audio_play_type": water_data.audio_play_type,
                              "pump_start":water_data.moter_start_level,"pump_end":water_data.moter_stop_level})
+                        if (is_water_email):
+                            water_mail_subject = water_mail_subject + "- Low"
+                            mail_html_content = "Location" + str(water_data.area_name) + "has cross low warning level"
+                            push_mail(mail_subject, mail_html_content)
+                    else: # for pump start end because pump start and end
+                        is_pump_stop = 1
+                        water_data_current.append({"module_type": "water", "pump_start": water_data.moter_start_level, "pump_end": water_data.moter_stop_level,
+                             "is_pump_stop": is_pump_stop})
                     # === Validation end =======================================
                     return_data.append(water_data_current)
                 # if condition end which check data have exist or not in Database
             # loop end
     return JsonResponse(return_data, safe=False)
+#==========================Mail function ===============================================================================
+def push_mail(mail_subject="", mail_html_content=""):
+    receiver_data = setting.objects.values_list().filter(name="receiver_email")
+    for share in receiver_data:
+        total_receiver = share[2].split(',')
+        for loop_data in total_receiver:
+            email = EmailMessage(mail_subject, mail_html_content, "", [loop_data])
+            email.content_subtype = "html"
+            res = email.send()
+

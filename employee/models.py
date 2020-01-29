@@ -114,7 +114,7 @@ class Employee(models.Model):
     bank_pf_no = models.CharField(max_length=20, blank=True, null=True)
 
     #########  Last Qualification Details   #################
-    edu_course_name=models.CharField(max_length=50, blank=True, null=True)
+    edu_course_name = models.CharField(max_length=50, blank=True, null=True)
     edu_board_name = models.CharField(max_length=50, blank=True, null=True)
     edu_year = models.CharField(max_length=20,blank=True,null=True)
     edu_percent=models.CharField(null=True,blank=True,max_length=20)

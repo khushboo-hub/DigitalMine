@@ -1016,7 +1016,10 @@
             }
         }
         if (json.is_strata_light){
-
+             $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+        }
+         if (json.is_strata_light_off){
+            $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
         }
 
         return popup_tbl;
@@ -1040,6 +1043,17 @@
                 path = baseUrl+json.audio_song;
                 var playNow = new Audio(path);
                 playNow.play();
+            }
+        }
+        if(json.is_water_light){
+            if(json.pump_start < json.value){// pump start
+                 $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+            }
+        }
+
+        if(json.is_pump_stop){
+           if (json.pump_end > json.value){// punp end
+                 $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
             }
         }
         return popup_tbl;
