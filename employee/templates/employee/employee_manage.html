@@ -152,7 +152,7 @@ td {
                                  height="100"
                                  id="photo"
                                  onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
-                                 src="/media/employee_image/miner2_my3qE2R.jpg"
+                                 src="/media/employee_image/male_alt_photo.svg"
                                  width="100">
                         </div>
                     </center>
@@ -463,7 +463,7 @@ td {
     });
     function FillDataToModel(obj){
         for(ob in obj){
-            if(ob=='photo'){
+            if(ob=='photo' && !isEmpty(obj['photo'])){
                 $('img#photo').attr("src",'/media/'+obj[ob]);
             }
             else{
