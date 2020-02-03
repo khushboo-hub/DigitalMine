@@ -53,8 +53,8 @@ if settings.DEBUG:
                       # For django versions before 2.0:
                       # url(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns
-        # urlpatterns += static(settings.MEDIA_URL,
-        #                       document_root=settings.MEDIA_ROOT)
+
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
 
 handler404 = 'apps.views.error_404_view'
