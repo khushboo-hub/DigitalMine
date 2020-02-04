@@ -956,6 +956,9 @@
         clearInterval(myVar);
     }
     var total_row = 0;
+    var path = "";
+    var baseUrl = "http://localhost:8000/media/";
+
     function switchingWarningFunction(json) {
 
          var tbl = "<table style='border-collapse: collapse;\n" +
@@ -999,6 +1002,10 @@
 
     function strataWarningFunction(json) {
         var popup_tbl = "";
+        //-------------------------------------------------------------------
+        if (typeof json.is_strata_display_warning === "undefined"){
+            json.is_strata_display_warning = 0;
+        }
         if(json.is_strata_display_warning){
             total_row++;
             popup_tbl = "<tr>" +
@@ -1009,26 +1016,41 @@
                         "<td>"+json.value+"</td>" +
                         "</tr>";
         }
+        //-------------------------------------------------------------------
+        if (typeof json.is_strata_audio === "undefined"){
+            json.is_strata_audio = 0;
+        }
         if(json.is_strata_audio){
              if(json.audio_play_type =="text2voice"){
                 Speak(json.audio_text,9,0.5);
             }else{
                 path = baseUrl+json.audio_song;
-                var playNow = new Audio(path);
                 playNow.play();
             }
+        }
+        //-------------------------------------------------------------------
+        if (typeof json.is_strata_light === "undefined"){
+            json.is_strata_light = 0;
         }
         if (json.is_strata_light){
              $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
         }
-         if (json.is_strata_light_off){
+        //-------------------------------------------------------------------
+        if (typeof json.is_strata_light_off === "undefined"){
+            json.is_strata_light_off = 0;
+        }
+        if (json.is_strata_light_off){
             $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
         }
-
+        //-------------------------------------------------------------------
         return popup_tbl;
     }
     function waterWarningFunction(json) {
         var popup_tbl = "";
+        //-------------------------------------------------------------------
+        if (typeof json.is_water_display_warning === "undefined"){
+            json.is_water_display_warning = 0;
+        }
         if(json.is_water_display_warning){
             total_row++;
            popup_tbl =  "<tr>" +
@@ -1039,26 +1061,39 @@
                         "<td>"+json.value+"</td>" +
                         "</tr>";
         }
+        //-------------------------------------------------------------------
+        if (typeof json.is_water_audio === "undefined"){
+            json.is_water_audio = 0;
+        }
         if(json.is_water_audio){
             if(json.audio_play_type =="text2voice"){
                 Speak(json.audio_text,9,0.5);
             }else{
                 path = baseUrl+json.audio_song;
                 var playNow = new Audio(path);
+                console.log(playNow)
                 playNow.play();
             }
+        }
+        //-------------------------------------------------------------------
+        if (typeof json.is_water_light === "undefined"){
+            json.is_water_light = 0;
         }
         if(json.is_water_light){
             if(json.pump_start < json.value){// pump start
                  $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
             }
         }
-
+        //-------------------------------------------------------------------
+        if (typeof json.is_pump_stop === "undefined"){
+            json.is_pump_stop = 0;
+        }
         if(json.is_pump_stop){
            if (json.pump_end > json.value){// punp end
                  $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
             }
         }
+        //-------------------------------------------------------------------
         return popup_tbl;
     }
     <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
