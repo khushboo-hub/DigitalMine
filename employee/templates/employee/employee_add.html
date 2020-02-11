@@ -136,10 +136,11 @@
                                     <div class="col-md-4">
                                         <label class="" for="id_state" id="id_state">State / राज्य </label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 autocomplete">
                                         {{form.state}}
                                         <span style="color:red">{{form.state.errors|striptags}}</span>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
@@ -147,7 +148,7 @@
                                     <div class="col-md-4">
                                         <label class="" for="id_city" id="id_city">City / शहर </label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 autocomplete">
                                         {{form.city}}
                                         <span style="color:red">{{form.city.errors|striptags}}</span>
                                     </div>
@@ -486,6 +487,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </fieldset>
 
                         <br/><br/>

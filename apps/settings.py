@@ -179,6 +179,14 @@ TAGS_INPUT_MAPPINGS = {
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 # LANGUAGE_CODE = 'hi-IN'
+
+LANGUAGES = (
+    ('en', 'English'),
+    ('zn-ch', 'Simplified Chinese'),
+    ('zn-tw', 'Traditional Chinese'),
+)
+
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
@@ -189,6 +197,9 @@ USE_L10N = True
 
 USE_TZ = False
 
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/

@@ -31,6 +31,12 @@
     <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
 
     <style>
+        #lang-switcher {
+                position: fixed;
+                bottom: 10px;
+                right: 5px;
+            }
+
         .navbar.bg-primary {
             border-radius: 0px;
         !important;
@@ -185,6 +191,7 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
     <link rel="stylesheet" href="{% static '/css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/autocomplete-custom.css' %}">
 
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
@@ -239,6 +246,9 @@
     <!-- Bootstrap Notify Includes end -->
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet"/>
 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{% static 'css/material.teal-red.min.css' %}">
+
     <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
 
@@ -256,6 +266,8 @@
     <script src="{% static 'js/workflowChart.js' %}"></script>
     <script src="{% static 'js/divjs.js' %}"></script>
     <script src="{% static 'js/jquery.toast.js' %}"></script>
+    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+
 
     <style>
         .container.tim-container {
@@ -783,6 +795,17 @@
         {% block content %}
         {% endblock %}
     </div><!-- content -->
+    <div>
+        <main>
+            <button id="lang-switcher" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">language</i>
+            </button>
+            <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="lang-switcher">
+                <a href="{% url 'setting:change_language' 'en' %}"><li class="mdl-menu__item">English</li></a>
+                <a href="{% url 'setting:change_language' 'in' %}"><li class="mdl-menu__item">हिंदी</li></a>
+            </ul>
+        </main>
+    </div>
 </div>
 <div class="modal fade" style="position:absolute" id="update_info" role="dialog">
     <div class="modal-dialog modal-confirm ">
@@ -916,7 +939,6 @@
             type:"GET",
                 url: "{% url 'setting:globalWarningFunction' %}",
                 success: function(data) {
-                    console.log(data);
                     switchingWarningFunction(data);
                 },
                 error: function(){
@@ -1064,6 +1086,7 @@
     <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
+<script src="{% static 'js/autocomplete-custom.js' %}"></script>
 <!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>

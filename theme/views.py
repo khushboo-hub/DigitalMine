@@ -20,6 +20,13 @@ from django.core.cache import cache
 
 @login_required
 def home(request):
+    print('Language',request.session['lang'])
+    template_name = "home1.html"
+    try:
+        if request.session['lang'] == 'in':
+            template_name="in/home1.html"
+    except:
+        pass
     # sms.SEND(8083475746, "Hello World")
     current_user = request.user
     book = get_object_or_404(User, pk=current_user.id)
@@ -33,7 +40,7 @@ def home(request):
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
 
-    return render(request, "home1.html", {'profile_avatar': cache.get('profile_avatar')})
+    return render(request, template_name, {'profile_avatar': cache.get('profile_avatar')})
 
 
 def get_client_ip(request):
