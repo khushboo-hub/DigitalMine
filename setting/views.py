@@ -94,11 +94,9 @@ def globalWarningFunction(request):
         for strata_data in sensor_table_details:
             strata_data_current = []
             sensor_data = Strata_sensor_data.objects.filter(sensor_id=strata_data.id).order_by("-id").first()
-
+            current_sensor_value = 0
+            current_date_time = datetime.now()
             if (sensor_data):  # Alteast one data should be save in database
-                current_sensor_value = 0
-                current_date_time = datetime.now()
-
                 if ((sensor_data.created_date >= (datetime.now() - timedelta(minutes=15))) and (
                         sensor_data.sensor_value != "Network Error")):
                     current_sensor_value = sensor_data.sensor_value
