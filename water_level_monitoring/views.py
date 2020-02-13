@@ -83,8 +83,8 @@ def show_graph_water_sensor(request):
     return render(request, "show_graph_water_sensor.html", {"form": form})
 
 def iframe_show_graph_water_sensor(request,mine_id,location):
-    print('mine_id',mine_id)
-    print('lcoation',location)
+    # print('mine_id',mine_id)
+    # print('lcoation',location)
     availability = 0
     IpAddress='0'
     try:
@@ -107,7 +107,7 @@ def fetch_sensor_details(request):  # fetch IP address and water level only (For
         i = 0
         location_data = []
         for r in location_details:
-            print(r)
+            #print(r)
             location_data.append(
                 str(r[13]) + '@#' + str(r[4]) + '@#' + str(r[5]) + '@#' + str(r[6]) + '@#' + str(r[3]) + '@#' + str(
                     r[15]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[9]) + '@#' + str(r[10]) + '@#' + str(
@@ -184,7 +184,7 @@ def run_back_save(id):
     except Exception as x:
         new_inst.sensor_value = 'Network Error'
     new_inst.save()
-    print(new_inst.sensor_value)
+    #print(new_inst.sensor_value)
     h_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_3)
     m_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_2)
     l_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_1)
