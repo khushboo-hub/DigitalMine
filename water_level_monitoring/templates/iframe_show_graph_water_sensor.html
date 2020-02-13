@@ -336,3 +336,110 @@
 {% endif %}
 </body>
 </html>
+<head>
+{#	<!-- Load plotly.js into the DOM -->#}
+{#	<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>#}
+{#</head>#}
+{##}
+{#<body>#}
+{#	<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>#}
+{#</body>#}
+{#var x=[];#}
+{#var y=[];#}
+{#var trace1 = {#}
+{#  // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],#}
+{#  x:x,#}
+{#  y: y,#}
+{#  fill: 'tonexty',#}
+{#  type: 'scatter',#}
+{#  fillcolor : '#ffffff',#}
+{#  hoverinfo:'skip',#}
+{#  mode: 'lines',#}
+{#  name: 'Safe Level',#}
+{#};#}
+{#var trace2 = {#}
+{#  // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],#}
+{#  x:x,#}
+{#  y: y,#}
+{#  fill: 'tonexty',#}
+{#  mode: 'lines',#}
+{#  fillcolor:'#fefe9a',#}
+{#  hoverinfo:'skip',#}
+{#  name: 'Second Level Warning',#}
+{#};#}
+{##}
+{#var trace3 = {#}
+{#  // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],#}
+{#  x:x,#}
+{#  y: y,#}
+{#  fill: 'tonexty',#}
+{#  type: 'scatter',#}
+{#  fillcolor : '#f4433666',#}
+{#  hoverinfo:'skip',#}
+{#  mode: 'lines',#}
+{#  name: 'Third Level Warning',#}
+{#};#}
+{##}
+{##}
+{#var trace4 = {#}
+{#  // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],#}
+{#  x:x,#}
+{#  y: y,#}
+{#  fill: 'tozeroy',#}
+{#  type: 'scatter',#}
+{#  fillcolor:'rgba(3,169,244,0.5)',#}
+{#  mode: 'none',#}
+{#  hoveron: 'points',#}
+{#  hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',#}
+{#  hoverinfo: 'text',#}
+{#  name: 'Water Level',#}
+{#};#}
+{##}
+{#var layout = {#}
+{#    // width: 800,#}
+{#    // height: 500,#}
+{#    title: "fixed-ratio axes",#}
+{#    xaxis: {#}
+{#      nticks: 10,#}
+{#      domain: [0, 1],#}
+{#      title: "Time"#}
+{#    },#}
+{#    yaxis: {#}
+{#      scaleanchor: "x",#}
+{#      domain: [0, 1],#}
+{#      title: "Water Level(cm)"#}
+{#    },#}
+{#    showlegend: true#}
+{#}#}
+{##}
+{#var data = [trace1,trace2,trace3,trace4];#}
+{# #}
+{#Plotly.newPlot('myDiv', data,layout);#}
+{##}
+{#setInterval(function() {#}
+{#  // add data to the trace via function call#}
+{#  date=formatDate(new Date()).toString();#}
+{#  #}
+{#  var update = {#}
+{#    x: [[date], [date],[date],[date]],#}
+{#    y: [[3], [6],[10],[getData()]],#}
+{#    // z:[[date],[date],[date],[date]]#}
+{#  };#}
+{#  Plotly.extendTraces('myDiv',update,[0,1,2,3]);#}
+{#}, 1000);#}
+{##}
+{#function getData() {#}
+{#     return Math.floor(Math.random() * 10);#}
+{#}#}
+{#function formatDate(date) {#}
+{#  var monthNames = [#}
+{#    "Jan", "Feb", "Mar",#}
+{#    "Apr", "May", "June", "July",#}
+{#    "Aug", "Sept", "Oct",#}
+{#    "Nov", "Dec"#}
+{#  ];#}
+{#  var day = date.getDate();#}
+{#  var monthIndex = date.getMonth();#}
+{#  var year = date.getFullYear();#}
+{#  return date.toLocaleString('en-US', { day:'numeric',month:'short',hour: 'numeric', minute: 'numeric',second:'numeric',hour12: true });#}
+{#}#}
