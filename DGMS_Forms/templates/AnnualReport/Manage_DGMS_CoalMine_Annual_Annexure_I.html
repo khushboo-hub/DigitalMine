@@ -64,10 +64,10 @@
   </div>
 <script>
     $(document.body).on('click','.delete',function(key){
-    var id = $(this).data("id");
-    var url = "/DGMS_Forms/Delete_DGMS_CoalMine_Annual_Annexure_I/"+id;
-    $("#fill_url").attr("href",url);
-    $('#myModal').modal('show');
+        var id = $(this).data("id");
+        var url = "/DGMS_Forms/Delete_DGMS_CoalMine_Annual_Annexure_I/"+id;
+        $("#fill_url").attr("href",url);
+        $('#myModal').modal('show');
     });
 </script>
 {% endblock %}
