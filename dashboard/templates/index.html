@@ -1004,7 +1004,7 @@
        WATER();
 
         function WATER(){
-            (function worker() {
+            (function waterlevel() {
             $.ajax({
                 type: "get",
                 url: "{% url 'dashboard:fetchwl' %}",
@@ -1026,7 +1026,7 @@
                     console.log("something is not right.please contact admin - 1");
                 },
                 complete: function() {
-                  setTimeout(worker, 5000);
+                  setTimeout(waterlevel, 5000);
                 }
             });
             })();

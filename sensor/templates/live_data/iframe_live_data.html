@@ -117,26 +117,33 @@
                             </div>
                         </div>
 <script>
-    setInterval(function(){
-       $.ajax({
-            type:"get",
-           beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-            success: function(data) {
-                    var result=data.result;
-                    if($.isNumeric(result)){
-                        node=document.getElementById("nodeprogress")
-                        node.innerText=result+"%";
-                        $('div#nodeprogress').width(result+"%");
-                    }
-                return data;
-                    },
-            error: function(){
-                    console.log("Something Went Wrong :(");
-                 }, timeout: 3000
-            });
- }, 5000);
+    {#setInterval(function(){#}
+
+    (function nodeajax(){
+           $.ajax({
+               type:"get",
+               beforeSend: function (jqXHR) {
+                   $.xhrPool.push(jqXHR);
+               },
+               success: function(data) {
+                   var result=data.result;
+                   if($.isNumeric(result)){
+                       node=document.getElementById("nodeprogress")
+                       node.innerText=result+"%";
+                       $('div#nodeprogress').width(result+"%");
+                   }
+                   return data;
+               },
+               error: function(){
+                   console.log("Something Went Wrong :(");
+               },
+             complete:function () {
+                 setTimeout(nodeajax,1000);
+
+             }
+           });
+       })();
+
 </script>
 </body>
 </html>
