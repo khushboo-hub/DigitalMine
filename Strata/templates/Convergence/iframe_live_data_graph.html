@@ -188,6 +188,7 @@
             hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
             hoverinfo: 'text',
             title:'Time',
+            name:'Strata level',
         };
 
         var layout = {
@@ -299,7 +300,7 @@
                         time = new Date();
                         var update = {
                             x: [[time], [time], [time],[time],[time]],
-                            y: [[l_Value], [m_Value], [h_Value],[10],[str_array[6]/10]],
+                            y: [[l_Value], [m_Value], [h_Value],[10],[str_array[6]/15]],
                         };
                         var olderTime = time.setMinutes(time.getMinutes() - 1);
                         var futureTime = time.setMinutes(time.getMinutes() + 1);
