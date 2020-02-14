@@ -11,4 +11,5 @@ urlpatterns = [
     path('edit_constant/<int:id>', views.edit_constant,name='edit_constant'),
     path('delete_constant/<int:id>', views.delete_constant,name='delete_constant'),
     path('globalWarningFunction', views.globalWarningFunction,name='globalWarningFunction'),
+    path('change_language/<str:lang>',views.change_language,name="change_language"),
 ]

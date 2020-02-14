@@ -292,3 +292,8 @@ def push_mail(mail_subject="", mail_html_content=""):
             email.content_subtype = "html"
             res = email.send()
 
+
+
+def change_language(request,lang):
+    request.session['lang'] = str(lang)
+    return redirect(request.META.get('HTTP_REFERER'))

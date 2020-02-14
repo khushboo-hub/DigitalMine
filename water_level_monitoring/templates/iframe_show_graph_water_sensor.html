@@ -68,6 +68,7 @@
     <script src="/static/js/jquery.toast.js"></script>
     <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script src="{% static 'js/customJS.js' %}"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 
 
@@ -109,11 +110,109 @@
 <div class="se-pre-con"></div>
 {% if availability %}
 <input type="hidden" id="water_level_location" value="{{ location }}">
-<div id="chartContainer" style="height: 400px; width: 100%;"></div>
-
+{#<div id="chartContainer" style="height: 400px; width: 100%;"></div>#}
+<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
 
     $(document).ready(function(){
+
+        //PLOTLY
+        var x=[];
+        var y=[];
+        var time=new Date();
+        var y_all=[];
+    {#x_all.push((new Date()).toString());#}
+    {#y_all.push("20");#}
+    var white = {
+      // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+      x:[1,2,3,4],
+      y: [1,1,1,1],
+      fill: 'tonexty',
+      type: 'scatter',
+      fillcolor : 'rgba(158,158,158,0.18)', //white
+      hoverinfo:'skip',
+      mode: 'lines',
+      name: 'Safe Level',
+
+    };
+    var green = {
+      // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+      x:[1,2,3,4],
+      y: [1,1,1,1],
+      fill: 'tonexty',
+      mode: 'lines',
+      fillcolor:'#0096888a',
+      hoverinfo:'skip',
+      name: '1st Level Warning',
+    };
+
+    var yellow = {
+      // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+      x:[1,2,3,4],
+      y: [1,1,1,1],
+      fill: 'tonexty',
+      type: 'scatter',
+      fillcolor : '#ffeb3b75',
+      hoverinfo:'skip',
+      mode: 'lines',
+      name: '2nd Level Warning',
+    };
+    var red = {
+      // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+     x:[1,2,3,4],
+      y: [1,1,1,1],
+      fill: 'tonexty',
+      type: 'scatter',
+      fillcolor : '#f443368c',
+      hoverinfo:'skip',
+      mode: 'lines',
+      name: '3rd Level Warning',
+
+    };
+
+
+    var water = {
+      // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+      x:[time],
+      y: y,
+      fill: 'tozeroy',
+      type: 'scatter',
+      fillcolor:'rgba(3,169,244,0.5)',
+      mode: 'markers+lines',
+        marker: {
+            color: 'rgba(3,169,244,1)',
+            size: 12
+          },
+      hoveron: 'points',
+      hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',
+      hoverinfo: 'text',
+      name: 'Water Level',
+    };
+
+    var layout = {
+        // width: 800,
+        // height: 500,
+        {#title: "fixed-ratio axes",#}
+        xaxis: {
+          nticks: 10,
+          domain: [0, 1],
+          title: "Time",
+        },
+        yaxis: {
+          scaleanchor: "x",
+          domain: [0, 1],
+          title: "Water Level(cm)",
+          range:[0,250]
+        },
+        showlegend: true
+    }
+
+    var data = [white,green,yellow,red,water];
+
+    Plotly.newPlot('myDiv', data,layout);
+        //PLOTLY END
+
+
          var l_color = "#C0DF81";
          var m_color = "#FEFE9A";
          var h_color = "#F37C84";
@@ -132,6 +231,7 @@
          var second_audio = "";
          var third_audio = "";
          var water_level_location = $("input#water_level_location").val();
+
              $.ajax({
                         type:"get",
                         url: "{% url 'water_level_monitoring:fetch_sensor_details'%}",
@@ -142,7 +242,7 @@
                     $.xhrPool.push(jqXHR);
                 },
                         success: function(data) {
-                                console.log(data);
+                                {#console.log(data);#}
                              for(index = 0; index < data.result.length; index++) {
                                     var str_array = data.result[index].split('@#');
                                     {#console.log(str_array);#}
@@ -161,12 +261,16 @@
                                     first_audio =  str_array[9];
                                     second_audio = str_array[10];
                                     third_audio =  str_array[11];
-                                    setTimeout(fill_water_level_graph(), 1000);
+                                    setTimeout(fill_water_level_graph(),1000);
+
                                 }
                          },
                         error: function(){
                                 console.log("Something Went Wrong!");
-                             }
+
+                             },
+
+
                  });
 
          //------------------------------------------------------------------------------------------------------------------
@@ -178,61 +282,9 @@
 
 
     function fill_water_level_graph(){
-
-            var dps = []; // dataPoints
-            var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            title: {
-                text: ""
-            },
-            axisX: {
-                title: "Time"
-            },
-            axisY: {
-                title: "Water level (in cm)",
-                //suffix: "mm"
-                maximum: parseInt(t_height),
-                stripLines: [
-                {
-                    label: "Level 1",
-                    startValue:parseFloat(l_value),
-                    endValue:parseFloat(m_value),
-                    color: "#C0DF81"
-                },
-                {
-                    label: "Level 2",
-                    startValue:parseFloat(m_value),
-                    endValue:parseFloat(h_value),
-                    color:"#FEFE9A"
-                },
-                {
-                    label: "Level 3",
-                    startValue:parseFloat(h_value),
-                    endValue:parseFloat(5000),
-                    color:"#F37C84"
-                }
-                ]
-            },
-
-            data: [{
-                type: "area",
-                name: "CPU Utilization",
-                connectNullData: true,
-                //nullDataLineDashType: "solid",
-                xValueType: "dateTime",
-                xValueFormatString: "DD MMM hh:mm TT",
-                yValueFormatString: "#,##0.##\"cm\"",
-                dataPoints: dps
-            }]
-        });
-
-        var xVal = 0;
-        var yVal = 100;
-        var updateInterval = 5000;
-        var dataLength = 20; // number of dataPoints visible at any point
         var final_value ='';
 
-     var updateChart = function () {
+        var updateChart = function () {
             $.ajax({
                 type:"get",
                 url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -243,37 +295,49 @@
                     $.xhrPool.push(jqXHR);
                 },
                 success: function(data) {
-                    console.log(data.result);
+                    console.log(data);
                     for(index = 0; index < data.result.length; index++) {
                         var str_array = data.result[index].split(',');
-
                         final_value = t_height - Number(str_array[5]);
-                        console.log('final value',final_value)
-                        dps.push({
-                            x: Date.parse(str_array[2]),
-                            y: (final_value > 0 ? final_value : 0)
-                        });
-                        }//for loop closing
+                        }
 
-                        checkAndPlay(final_value);
-                        },
+                    date=formatDate(new Date()).toString();
+                    time= new Date();
+                    var update = {
+                        x: [[time], [time],[time],[time],[time]],
+                        y: [[l_value], [m_value],[h_value],[t_height],[final_value]],
+                    };
+
+                    var olderTime = time.setMinutes(time.getMinutes() - 1);
+                    var futureTime = time.setMinutes(time.getMinutes() + 1);
+                    console.log(olderTime,futureTime);
+                    var minuteView = {
+                        xaxis: {
+                          type: 'date',
+                          range: [olderTime,futureTime],
+                            title: 'Time',
+                            nticks: 10,
+                            domain: [0, 1],
+                        }
+                      };
+                    Plotly.relayout('myDiv', minuteView);
+                    Plotly.extendTraces('myDiv',update,[0,1,2,3,4]);
+
+                        {#checkAndPlay(final_value);#}
+                },
                 error: function(){
                         console.log("error he ji");
-                     }
+                     },
+                complete:function(){
+                    updateChart();
+                }
             });
+            };
 
-            //Speak('Lily Hindi voice test',9,0.5);
-            if (dps.length > dataLength) {
-                dps.shift();
-            }
+         updateChart();
 
-            chart.render();
-            $(".canvasjs-chart-credit").text('');
-        };
+    };
 
-        updateChart(dataLength);
-        setInterval(function(){updateChart()}, updateInterval);
-    }
     function checkAndPlay(sensorValue){
 
         var loc = window.location;
@@ -328,6 +392,19 @@
             }
         }
     }
+function formatDate(date) {
+  var monthNames = [
+    "Jan", "Feb", "Mar",
+    "Apr", "May", "June", "July",
+    "Aug", "Sept", "Oct",
+    "Nov", "Dec"
+  ];
+  var day = date.getDate();
+  var monthIndex = date.getMonth();
+  var year = date.getFullYear();
+  return date.toLocaleString('en-US', { day:'numeric',month:'short',hour: 'numeric', minute: 'numeric',second:'numeric',hour12: true });
+}
+
     });
 //------------------------------------------------------------------------------------------------------------------
 </script>
@@ -336,3 +413,7 @@
 {% endif %}
 </body>
 </html>
+<head>
+
+
+

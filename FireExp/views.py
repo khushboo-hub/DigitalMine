@@ -248,23 +248,55 @@ def analysis(request,page):
     graphpoints = []
 
     if(page==0):
-        data_list = Gasdb.objects.all()
+        FireExp = Gasdb.objects.all()
     elif(page==1):
-        data_list = Fire_exp_gases.objects.all()
-    instance_count = data_list.count()
+        FireExp = Fire_exp_gases.objects.all()
+    instance_count = FireExp.count()
 
 
     idn = 1
-    while (idn <= instance_count):
+    for gas in FireExp:
         x = GraphData()
-        x.o2 = Gasdb.objects.get(id=idn).o2
-        x.co = Gasdb.objects.get(id=idn).co
-        x.ch4 = Gasdb.objects.get(id=idn).ch4
-        x.co2 = Gasdb.objects.get(id=idn).co2
-        x.h2 = Gasdb.objects.get(id=idn).h2
-        x.n2 = Gasdb.objects.get(id=idn).n2
-        x.c2h4 = Gasdb.objects.get(id=idn).c2h4
-        x.idtest = Gasdb.objects.get(id=idn).id
+
+        try:
+            x.o2 = gas.o2
+            # x.o2 = Gasdb.objects.get(id=idn).o2
+        except Gasdb.DoesNotExist:
+            x.o2 = None
+        try:
+            x.co = gas.co
+        except Gasdb.DoesNotExist:
+            x.co = None
+        try:
+            x.ch4 = gas.ch4
+        except Gasdb.DoesNotExist:
+            x.ch4 = None
+
+        try:
+            x.co2 = gas.co2
+        except Gasdb.DoesNotExist:
+            x.co2 = None
+
+        try:
+            x.h2 = gas.h2
+        except Gasdb.DoesNotExist:
+            x.h2 = None
+
+        try:
+            x.n2 = Gasdb.objects.get(id=idn).n2
+        except Gasdb.DoesNotExist:
+            x.n2 = None
+
+        try:
+            x.c2h4 = gas.c2h4
+        except Gasdb.DoesNotExist:
+            x.c2h4 = None
+
+        try:
+            x.idtest = gas.id
+        except Gasdb.DoesNotExist:
+            x.idtest = None
+
 
         ##explosibility calculation again
         x.explos = 5

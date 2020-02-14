@@ -298,17 +298,20 @@
                                                                      class="avatar img-circle"></li>
                                         <li class="divider"></li>
                                         <li><a href="{% url 'dashboard:dashboard_calling' %}"><span
-                                                class="glyphicon glyphicon-dashboard"></span>Dashboard</a></li>
-                                        <li><a href="/accounts/profile/overview/"><span
-                                                class="glyphicon glyphicon-off"></span>
-                                            Profile</a></li>
+                                                class="glyphicon glyphicon-dashboard"></span> नियंत्रण-पट्ट</a></li>
+                                        <li>
+                                            <a href="/accounts/profile/overview/">
+                                                <span class="glyphicon glyphicon-off"></span>
+                                                पार्श्वचित्र
+                                            </a>
+                                        </li>
                                         <li><a href="{% url 'theme:start_task' %}"><span
-                                                class="glyphicon glyphicon-dashboard"></span>Start Background Task</a>
+                                                class="glyphicon glyphicon-dashboard"></span> पृष्ठभूमि कार्य प्रारंभ करें</a>
                                         </li>
 
                                         <li class="divider"></li>
                                         <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
-                                                class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                                                class="glyphicon glyphicon-off"></span> लॉग आउट</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -375,7 +378,7 @@
                             <div class="col-md-1"></div>
                             <div class="col-md-2">
                                 <div class="row">
-                                    <strong>Developed By:</strong>
+                                    <strong>द्वारा विकसित:</strong>
                                     <div style="text-align: center;">
                                         <img class="logo img-responsive" src="{% static '/image/csir_logo.svg' %}" alt=""/>
                                     </div>
@@ -384,7 +387,7 @@
                             <div class="col-md-6 logo-text" style="padding-left: 10px;">
                                 <div class="row text-center">
                                     <br>
-                                    <strong>CSIR-Central Institute of Mining & Fuel Research,Dhanbad</strong>
+                                    <strong>CSIR-केंद्रीय खनन और ईंधन अनुसंधान संस्थान, धनबाद</strong>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -395,7 +398,7 @@
                             <div class="col-md-2"></div>
                             <div class="col-md-2">
                                 <div class="row">
-                                    <strong>Sponsored By:</strong>
+                                    <strong>द्वारा प्रायोजित:</strong>
                                     <div>
                                         <img  style="margin-left: auto;margin-right: auto;" class="logo img-responsive" src="{% static '/image/meity.svg' %}" alt=""/>
                                     </div>
@@ -405,10 +408,9 @@
                                 </div>
                             </div>
                             <div class="col-md-6 logo-text">
-                                <div class="row text-center">
+                                <div class="row">
                                     <br>
-                                    <strong>Ministry of Electronics and Information Technology Government of
-                                        India.</strong>
+                                    <strong>भारत सरकार के इलेक्ट्रॉनिक्स और सूचना प्रौद्योगिकी मंत्रालय</strong>
                                 </div>
                             </div>
                             <div class="col-md-2"></div>
@@ -429,63 +431,55 @@
                                 <div class="col-md-3">
                                     <div class="ots-inner text-center ripple-effect">
                                         <span class="icon fa fa-users" aria-hidden="true"></span>
-                                        <h4>Employee Management</h4>
+                                        <h4>कर्मचारी प्रबंधन</h4>
                                         <div class="ots-btn-group">
-                                            <a href="{% url 'employee:employee_add' %}">Add Employee</a>
-                                            <a href="{% url 'employee:employee_manage' %}">Employee | Medical |
-                                                Shift</a>
-                                            <a href="{% url 'employee:add_mine' %}">Add Mine Info</a>
-                                            <a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
-                                            <a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role &amp;
-                                                Hierarchy</a>
-                                            <a href="{% url 'attendance:index' %}">Add Employee Attendance</a>
+                                            <a href="{% url 'employee:employee_add' %}">कर्मचारी जोड़ें</a>
+                                            <a href="{% url 'employee:employee_manage' %}">कर्मचारी | चिकित्सा संबंधी | पाली</a>
+                                            <a href="{% url 'employee:add_mine' %}">खान से संबंधित जानकारी जोड़ें</a>
+                                            <a href="{% url 'employee:manage_mine' %}">खान की जानकारी | खान की पाली</a>
+                                            <a href="{% url 'employee:manage_mining_role' %}">खदान कर्मी की भूमिका &amp; अनुक्रम</a>
+                                            <a href="{% url 'attendance:index' %}">कर्मचारी उपस्थिति जोड़ें</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center content ripple-effect">
                                         <span class="icon fa fa-users" aria-hidden="true"></span>
-                                        <h4>Miners' Tracking</h4>
+                                        <h4>माइनर्स ट्रैकिंग</h4>
                                         <div class="ots-btn-group ">
-                                            <a href="{% url 'MinersTracking:init' %}">Router Configuration</a>
-                                            <a href="{% url 'MinersTracking:all_mine_page' %}">All Miner Tracking</a>
-                                            <a href="{% url 'MinersTracking:single_miner_page' %}">Single Miner
-                                                Tracking</a>
-                                            <a href="{% url 'MinersTracking:miner_path_history_page' %}">Miner's Path
-                                                history</a>
-                                            <a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Miner&#39;s
-                                                Tracking(Tabular)</a>
+
+                                            <a href="{% url 'MinersTracking:init' %}">राउटर कॉन्फ़िगरेशन</a>
+                                            <a href="{% url 'MinersTracking:all_mine_page' %}">सभी खदान कर्मीयों की ट्रैकिंग</a>
+                                            <a href="{% url 'MinersTracking:single_miner_page' %}">खदान कर्मी की ट्रैकिंग</a>
+                                            <a href="{% url 'MinersTracking:miner_path_history_page' %}">खदान कर्मी की पथ history</a>
+                                            <a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">खदान कर्मीयों की ट्रैकिंग(Tabular)</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center content ripple-effect">
                                         <span class="icon fa fa-industry" aria-hidden="true"></span>
-                                        <h4>Environment Monitoring</h4>
+                                        <h4>पर्यावरण की निगरानी</h4>
                                         <div class="ots-btn-group">
-                                            <a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf Area</a>
-                                            <a href="{% url 'gasmonitoring_wifi:manage_goaf_area' %}">Manage Goaf
-                                                Area</a>
+                                            <a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">गोफ क्षेत्र जोड़ें</a>
+                                            <a href="{% url 'gasmonitoring_wifi:manage_goaf_area' %}">गोफ क्षेत्र का प्रबंधन करें</a>
                                             <!--<a href="{% url 'sensor:node_add' %}">Add Wireless Node</a>-->
                                             <!--<a href="{% url 'sensor:live_data_tabular' %}">Live Data (Tabular)</a>-->
                                             <!--<a href="{% url 'sensor:live_data_graph' %}">Live Data (Graph)</a>-->
-                                            <a href="{% url 'sensor:live_map' %}">Live Data(Map)</a>
-                                            <a href="{% url 'temp_monitoring:index' %}">Show Temperature Information</a>
+                                            <a href="{% url 'sensor:live_map' %}">सक्रिय आंकड़ा(नक्शा)</a>
+                                            <a href="{% url 'temp_monitoring:index' %}">तापमान की जानकारी दिखाएँ</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center content ripple-effect">
                                         <span class="icon fa fa-bank" aria-hidden="true"></span>
-                                        <h4>E-Governance</h4>
+                                        <h4>ई-गवर्नेंस</h4>
                                         <div class="ots-btn-group">
-                                            <a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Annual
-                                                Report</a>
+                                            <a target="_blank" href="http://peso.gov.in/index.aspx">त्रैमासिक वार्षिक रिपोर्ट भरें</a>
                                             <a target="_blank"
-                                               href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
-                                                Annual Annexure I
-                                                (Coal Mine)</a>
-                                            <a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a>
+                                               href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">वार्षिक अनुबंध I (कोयला खदान) प्रबंधित</a>
+                                            <a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">मेल निर्मित करें</a>
                                         </div>
                                     </div>
                                 </div>
@@ -494,55 +488,54 @@
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center content ripple-effect">
                                         <span class="icon fa fa-cube" aria-hidden="true"></span>
-                                        <h4>Strata Monitoring</h4>
+                                        <h4>परत की निगरानी</h4>
                                         <div class="ots-btn-group">
-                                            <a href="{% url 'Strata:convergence_add_location' %}">Add Strata
-                                                Location</a>
-                                            <a href="{% url 'Strata:convergence_manage_location' %}">Manage Strata
-                                                Location</a>
-                                            <a href="{% url 'Strata:add_sensor_in_location' %}">Add Sensor</a>
-                                            <a href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
-                                            <a href="{% url 'Strata:live_data_tabular' %}">Live Data(Tabular)</a>
-                                            <a href="{% url 'Strata:show_sensor_graph' %}">Live Data(Graph)</a>
+                                            <a href="{% url 'Strata:convergence_add_location' %}">परत की
+                                                स्थिति जोड़ें</a>
+                                            <a href="{% url 'Strata:convergence_manage_location' %}">परत प्रबंधन</a>
+                                            <a href="{% url 'Strata:add_sensor_in_location' %}">सेंसर स्थापित करें</a>
+                                            <a href="{% url 'Strata:manage_sensor_in_location' %}">सेंसर प्रबंधन</a>
+                                            <a href="{% url 'Strata:live_data_tabular' %}">सक्रिय आंकड़ा(Tabular)</a>
+                                            <a href="{% url 'Strata:show_sensor_graph' %}">सक्रिय आंकड़ा(नक्शा)</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center content ripple-effect">
                                         <span class="icon fa fa-fire" aria-hidden="true"></span>
-                                        <h4>Fire Monitoring</h4>
+                                        <h4>आग की निगरानी</h4>
                                         <div class="ots-btn-group">
                                             {#                                   <a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>#}
-                                            <a href="{% url 'FireExp:manual_entry' %}">Manual</a>
+                                            <a href="{% url 'FireExp:manual_entry' %}">मैनुअल</a>
                                             <!--<a href="{% url 'FireExp:automatic_entry' %}" style="opacity:0.0">Automatic</a>-->
-                                            <a href="{% url 'FireExp:automatic_entry' %}">Automatic</a>
-                                            <a href="{% url 'FireExp:automatic_entry' %}">Automatic</a>
+                                            <a href="{% url 'FireExp:automatic_entry' %}">स्वचालित</a>
+                                            <a href="{% url 'FireExp:automatic_entry' %}">स्वचालित</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center ripple-effect">
                                         <span class="icon fa fa-bar-chart" aria-hidden="true"></span>
-                                        <h4>Production Monitoring</h4>
+                                        <h4>उत्पादन की निगरानी</h4>
                                         <div class="ots-btn-group">
-                                            <a href="{% url 'ProductionMonitoring:weighbridge_manage' %}">Manage Weighbridge</a>
-                                            <a href="{% url 'ProductionMonitoring:container_details_add' %}">Tub Information</a>
-                                            <a href="{% url 'ProductionMonitoring:production_tub_add' %}">Production Using Tub</a>
-                                            <a href="{% url 'ProductionMonitoring:report_dailyprod_dispatch' %}">Daily Production Dispatch Report</a>
+                                            <a href="{% url 'ProductionMonitoring:weighbridge_manage' %}">तुलाचौकी प्रबंधन</a>
+                                            <a href="{% url 'ProductionMonitoring:container_details_add' %}">टब सूचना</a>
+                                            <a href="{% url 'ProductionMonitoring:production_tub_add' %}">टब का उपयोग कर उत्पादन</a>
+                                            <a href="{% url 'ProductionMonitoring:report_dailyprod_dispatch' %}">दैनिक उत्पादन डिस्पैच रिपोर्ट</a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-3 ">
                                     <div class="ots-inner text-center ripple-effect">
                                         <span class="icon fa fa-cube" aria-hidden="true"></span>
-                                        <h4>Inventory Management System</h4>
+                                        <h4>वस्तुसूची प्रबंधन प्रणाली</h4>
                                         <div class="ots-btn-group">
-                                            <a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a>
-                                            <a href="{% url 'inventory_management:category_add' %}">Add Category</a>
-                                            <a href="{% url 'inventory_management:product_add' %}">Add Product</a>
-                                            <a href="{% url 'inventory_management:settings' %}">Add Branch</a>
-                                            <a href="{% url 'inventory_management:manageAll' %}">Manage All</a>
-                                            <a href="{% url 'inventory_management:outlet_viewall' %}">Reports</a>
+                                            <a href="{% url 'inventory_management:supplier_add' %}">आपूर्तिकर्ता जोड़ें</a>
+                                            <a href="{% url 'inventory_management:category_add' %}">श्रेणी जोड़ें</a>
+                                            <a href="{% url 'inventory_management:product_add' %}">उत्पादन जोड़ें</a>
+                                            <a href="{% url 'inventory_management:settings' %}"> शाखा जोड़ें</a>
+                                            <a href="{% url 'inventory_management:manageAll' %}">सभी प्रबंधित करें</a>
+                                            <a href="{% url 'inventory_management:outlet_viewall' %}">विवरण</a>
                                         </div>
                                     </div>
                                 </div>
@@ -565,8 +558,8 @@
         </div>
 
 
-        <p class="text-center">Powered By <a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> | Copyright
-            &copy; Protected | All Rights Reserved.</p>
+        <p class="text-center"><a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> द्वारा संचालित | सर्वाधिकार
+            &copy; संरक्षित | सभी अधिकार सुरक्षित.</p>
         <!-- Logout Modal-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">

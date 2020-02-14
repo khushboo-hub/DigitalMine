@@ -292,12 +292,14 @@ def getsensordata(request):
 
 @login_required
 def add_mine(request, template_name='mine/mine_add.html'):
-    form = MineDetailsForm(request.POST, request.FILES)
-    # print(request.POST)
-    if form.is_valid():
-        form.save()
+    form = MineDetailsForm()
 
-        return redirect('employee:manage_mine')
+    if request.method == 'POST':
+        form = MineDetailsForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('employee:manage_mine')
+        return render(request, template_name, {'form': form, 'action': 'Add Mine', 'mine_name': ''})
     return render(request, template_name, {'form': form,'action':'Add Mine','mine_name':''})
 
 
@@ -324,7 +326,6 @@ def edit_mine(request, pk, template_name='mine/mine_add.html'):
 @login_required
 def delete_mine(request, pk):
     book = get_object_or_404(MineDetails, pk=pk)
-    # print(book)
     book.delete()
     return redirect('employee:manage_mine')
 
