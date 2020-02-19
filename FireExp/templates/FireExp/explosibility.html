@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'dashboard/css/sb-admin-2.min.css' %}">
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header">Ellicott's Explosibility Graph(from Manual Entry)</h1>
+                <div class="container">
+                    {{ data }}
+                    <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+{% endblock %}

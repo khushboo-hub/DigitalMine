@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{#<link rel="stylesheet" href="{% static 'dashboard/css/sb-admin-2.min.css' %}">#}
+<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+{#    <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">#}
+
+    <script src="{% static 'js/customJS.js' %}"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+{#                <h1 class="page-header">Ellicott's Explosibility Graph(from Manual Entry)</h1>#}
+                <!-- Table content -->
+                <div class="container">
+{#                                        <div class="embed-responsive embed-responsive-16by9">#}
+{#                                            <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'FireExp:analysis' 0 %}"></iframe>#}
+{#                                        </div>#}
+                    <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+                    <div id='myDiv1'><!-- Plotly chart will be drawn inside this DIV --></div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function(){
+        $.ajax({
+                type: "get",
+                url: "{% url 'FireExp:explosibility' 0 %}",
+
+                beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
+                success: function (data) {
+
+                    result=data.result;
+                    var x_list=[];
+                    var y_list=[];
+                    var text=[];
+                    var color=[];
+                    for(var i=0;i<result.length;i++){
+                        x_list.push(result[i].x);
+                        y_list.push(result[i].y);
+                        text.push((i+1).toString());
+                        color.push(result[i].color);
+                    }
+                    console.log(x_list);
+                    console.log(y_list);
+
+                    var trace1 = {
+                        x: [-27, 28],
+                        y: [29, 29],
+                        mode: 'text',
+                        name: 'Lines, Markers and Text',
+                        text: ['LEAN FUEL NON-EXPLOSIVE', 'EXPLOSIVE'],
+                        hoverinfo: 'skip',
+                        textposition: 'top',
+                        textfont: {
+                            family: 'sans serif',
+                            size: 15,
+                            color: '#1f77b4'
+                        },
+                        type: 'scatter'
+                    };
+                    var trace2 = {
+                        x: [-27, 28],
+                        y: [-29, -29],
+                        mode: 'text',
+                        name: 'Lines and Text',
+                        text: ['NON COMBUSTIBLE NON-EXPLOSIVE', 'POTENTIALLY EXPLOSIVE'],
+                        hoverinfo: 'skip',
+                        textposition: 'bottom',
+                        textfont: {
+                            family: 'sans serif',
+                            size: 15,
+                            color: '#ff7f0e'
+                        },
+                        type: 'scatter'
+                    };
+
+                    var trace3 = {
+                        x: x_list,
+                        y: y_list,
+                        mode: 'text',
+                        type: 'scatter',
+                        text: text,
+                        textfont: {
+                            family: 'Times New Roman Bold',
+                            size: 20,
+                            color: color,
+                        },
+                        textposition: 'bottom center',
+                        marker: {size: 12},
+                        hoveron: 'points',
+                        hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',
+                        hoverinfo: 'text',
+                    };
+
+
+                    var data = [trace1, trace2, trace3];
+                    var layout = {
+                        title:'Ellicott\'s Explosibility Graph(from Manual Entry)',
+                        titlefont:{
+                         size: 32
+                        },
+                        width: 1200,
+                        height: 800,
+                        xaxis: {
+                            range: [-20, 20]
+                        },
+                        yaxis: {
+                            range: [-20,20]
+                        },
+                        showlegend: false
+                    };
+                    Plotly.newPlot('myDiv', data, layout);
+
+            },
+            error:function () {
+                console.log("Something Went Wrong!");
+            },
+        });
+    });
+    </script>
+
+{% endblock %}

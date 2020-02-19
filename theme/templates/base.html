@@ -32,10 +32,10 @@
 
     <style>
         #lang-switcher {
-                position: fixed;
-                bottom: 10px;
-                right: 5px;
-            }
+            position: fixed;
+            bottom: 10px;
+            right: 5px;
+        }
 
         .navbar.bg-primary {
             border-radius: 0px;
@@ -230,10 +230,10 @@
     <script src="{% static 'datetime/js/collapse.js' %}"></script>
     <script src="{% static 'datetime/js/transition.min.js' %}"></script>
     <script src="{% static 'js/printThis.js' %}"></script>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
 
     <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
-{#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>#}
+    {#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>#}
 
     <!--Tags-->
     <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/>
@@ -267,6 +267,7 @@
     <script src="{% static 'js/divjs.js' %}"></script>
     <script src="{% static 'js/jquery.toast.js' %}"></script>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 
     <style>
@@ -418,7 +419,7 @@
                                         class="label label-default">Manual Mode</span></a></li>
                                 <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                         class="label label-default">Manual Mode</span></a></li>
-                                        <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
+                                <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -756,7 +757,8 @@
                                                 class="glyphicon glyphicon-refresh"></span>
                                             Change Password </a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-off"></span>
+                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
+                                                class="glyphicon glyphicon-off"></span>
                                             Logout </a></li>
                                     </ul>
                                 </li>
@@ -801,8 +803,12 @@
                 <i class="material-icons">language</i>
             </button>
             <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="lang-switcher">
-                <a href="{% url 'setting:change_language' 'en' %}"><li class="mdl-menu__item">English</li></a>
-                <a href="{% url 'setting:change_language' 'in' %}"><li class="mdl-menu__item">हिंदी</li></a>
+                <a href="{% url 'setting:change_language' 'en' %}">
+                    <li class="mdl-menu__item">English</li>
+                </a>
+                <a href="{% url 'setting:change_language' 'in' %}">
+                    <li class="mdl-menu__item">हिंदी</li>
+                </a>
             </ul>
         </main>
     </div>
@@ -893,235 +899,246 @@
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
         });
 
-        $.ajax({
-            url: "{% url 'employee:checkifuserfieldempty' %}",
-            success: function (data) {
-                if (data.result == '1') {
-                    $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
-                } else {
-                    $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
-                }
-            },
-            error: function () {
-                console.log('Something Went Wrong!');
-            }
-        });
-
-        $.ajax({
-            url: "{% url 'employee:profile_ajax' %}",
-            success: function (data) {
-                if (data.hasOwnProperty('profile_avatar')) {
-                    if(!isEmpty(data.profile_avatar)) {
-                        $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+        (function checkuser() {
+            $.ajax({
+                url: "{% url 'employee:checkifuserfieldempty' %}",
+                success: function (data) {
+                    if (data.result == '1') {
+                        $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
+                    } else {
+                        $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
                     }
-                    else{
-                        $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
-                    }
-
-                }
-                if (data.hasOwnProperty('mine')) {
-
-                    $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
-                }
-            },
-            error: function () {
-                console.log('Something Went Wrong!');
-                $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
-            }
-        });
-    });
-    <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
-    var interval_time = 5000;
-    var myVar = setInterval(startGlobalWarningFunction, interval_time);
-
-    function startGlobalWarningFunction() {
-        $.ajax({
-            type:"GET",
-                url: "{% url 'setting:globalWarningFunction' %}",
-                success: function(data) {
-                    switchingWarningFunction(data);
                 },
-                error: function(){
-                        console.log("Something went wrong. Please contact admin");
-                }
-        });
-    }
-
-    {#setInterval(function(){#}
-    {#    $.ajax({#}
-    {#        type:"get",#}
-    {#            url: "{% url 'Strata:warning_level_information' %}",#}
-    {#            success: function(data) {#}
-    {#            //console.log(data);#}
-    {#            //toastr.warning(data["result"]); // Vikash Changed Here#}
-    {#            //$("#fill_here").html(data["result"]); //Vikash Changed Here#}
-    {#            if(data["result"]){#}
-    {#               // $("#is_visiable").attr("style",""); //Vikash Changed Here#}
-    {#                toastr.warning(data["result"]);#}
-    {#                if(data["light_result"]){#}
-    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
-    {#                }else{#}
-    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-    {#                }#}
-    {#            }else{#}
-    {#                $("#is_visiable").attr("style","display:none");#}
-    {#                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-    {#            }#}
-    {#            },#}
-    {#            error: function(){#}
-    {#                    console.log("something went wrong");#}
-    {#            }#}
-    {#    });#}
-    {#, interval_time);#}
-
-    function stopGlobalWarningFunction() {
-        clearInterval(myVar);
-    }
-    var total_row = 0;
-    var path = "";
-    var baseUrl = "http://localhost:8000/media/";
-
-    function switchingWarningFunction(json) {
-
-         var tbl = "<table style='border-collapse: collapse;\n" +
-             "  border-spacing: 0;\n" +
-             "  width: 100%;\n" +
-             "  border: 0px solid #ddd;'>" +
-             "<head>" +
-             "<tr>" +
-             "<th>Date-Time</th>" +
-             "<th>Location" +
-             "</th>" +
-             "<th>Sensor Name/Type</th>" +
-             "<th>Warning Level</th>" +
-             "<th>Sensor Value</th>" +
-             "</head>" +
-             "<body>";
-
-
-        json.forEach(function(objArray) {
-            objArray.forEach(function(obj) {
-
-                switch (obj.module_type) {
-                    case "strata":
-                        tbl += strataWarningFunction(obj);
-                        break;
-                    case "water":
-                        tbl += waterWarningFunction(obj);
-                        break;
-                    default:
-                        break;
+                error: function () {
+                    console.log('Something Went Wrong!');
                 }
             });
-        });
-        tbl += "</body>" +
-             "</table>";
+        })();
 
-        if(total_row){
-            toastr.warning(tbl);
-        }
-    }
+        (function profilepicture() {
+            $.ajax({
+                url: "{% url 'employee:profile_ajax' %}",
+                success: function (data) {
+                    if (data.hasOwnProperty('profile_avatar')) {
+                        if (!isEmpty(data.profile_avatar)) {
+                            $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                        } else {
+                            $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                        }
 
-    function strataWarningFunction(json) {
-        var popup_tbl = "";
-        //-------------------------------------------------------------------
-        if (typeof json.is_strata_display_warning === "undefined"){
-            json.is_strata_display_warning = 0;
+                    }
+                    if (data.hasOwnProperty('mine')) {
+
+                        $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                    }
+                },
+                error: function () {
+                    console.log('Something Went Wrong!');
+                    $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                }
+            });
+        })();
+
+        <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
+        {#var interval_time = 5000;#}
+        {#var myVar = setInterval(startGlobalWarningFunction, interval_time);#}
+
+        (function start() {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'setting:globalWarningFunction' %}",
+                success: function (data) {
+                    switchingWarningFunction(data);
+                },
+                error: function () {
+                    console.log("Something went wrong. Please contact admin");
+                },
+                complete: function () {
+                    setTimeout(start, 1000);
+                }
+            });
+        })();
+
+        {#setInterval(function(){#}
+        {#    $.ajax({#}
+        {#        type:"get",#}
+        {#            url: "{% url 'Strata:warning_level_information' %}",#}
+        {#            success: function(data) {#}
+        {#            //console.log(data);#}
+        {#            //toastr.warning(data["result"]); // Vikash Changed Here#}
+        {#            //$("#fill_here").html(data["result"]); //Vikash Changed Here#}
+        {#            if(data["result"]){#}
+        {#               // $("#is_visiable").attr("style",""); //Vikash Changed Here#}
+        {#                toastr.warning(data["result"]);#}
+        {#                if(data["light_result"]){#}
+        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
+        {#                }else{#}
+        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {#                }#}
+        {#            }else{#}
+        {#                $("#is_visiable").attr("style","display:none");#}
+        {#                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {#            }#}
+        {#            },#}
+        {#            error: function(){#}
+        {#                    console.log("something went wrong");#}
+        {#            }#}
+        {#    });#}
+        {#, interval_time);#}
+
+        function stopGlobalWarningFunction() {
+            clearInterval(myVar);
         }
-        if(json.is_strata_display_warning){
-            total_row++;
-            popup_tbl = "<tr>" +
-                        "<td>"+json.datetime+"</td>" +
-                        "<td>"+json.location+"</td>" +
-                        "<td>"+json.sensor_name+"</td>" +
-                        "<td>"+json.warning_level+"</td>" +
-                        "<td>"+json.value+"</td>" +
-                        "</tr>";
-        }
-        //-------------------------------------------------------------------
-        if (typeof json.is_strata_audio === "undefined"){
-            json.is_strata_audio = 0;
-        }
-        if(json.is_strata_audio){
-             if(json.audio_play_type =="text2voice"){
-                Speak(json.audio_text,9,0.5);
-            }else{
-                path = baseUrl+json.audio_song;
-                playNow.play();
+
+        var total_row = 0;
+        var path = "";
+        var baseUrl = "http://localhost:8000/media/";
+
+        function switchingWarningFunction(json) {
+
+            var tbl = "<table style='border-collapse: collapse;\n" +
+                "  border-spacing: 0;\n" +
+                "  width: 100%;\n" +
+                "  border: 0px solid #ddd;'>" +
+                "<head>" +
+                "<tr>" +
+                "<th>Date-Time</th>" +
+                "<th>Location" +
+                "</th>" +
+                "<th>Sensor Name/Type</th>" +
+                "<th>Warning Level</th>" +
+                "<th>Sensor Value</th>" +
+                "</head>" +
+                "<body>";
+
+
+            json.forEach(function (objArray) {
+                objArray.forEach(function (obj) {
+
+                    switch (obj.module_type) {
+                        case "strata":
+                            tbl += strataWarningFunction(obj);
+                            break;
+                        case "water":
+                            tbl += waterWarningFunction(obj);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            });
+            tbl += "</body>" +
+                "</table>";
+
+            if (total_row) {
+                toastr.warning(tbl);
             }
         }
-        //-------------------------------------------------------------------
-        if (typeof json.is_strata_light === "undefined"){
-            json.is_strata_light = 0;
-        }
-        if (json.is_strata_light){
-             $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
-        }
-        //-------------------------------------------------------------------
-        if (typeof json.is_strata_light_off === "undefined"){
-            json.is_strata_light_off = 0;
-        }
-        if (json.is_strata_light_off){
-            $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
-        }
-        //-------------------------------------------------------------------
-        return popup_tbl;
-    }
-    function waterWarningFunction(json) {
-        var popup_tbl = "";
-        //-------------------------------------------------------------------
-        if (typeof json.is_water_display_warning === "undefined"){
-            json.is_water_display_warning = 0;
-        }
-        if(json.is_water_display_warning){
-            total_row++;
-           popup_tbl =  "<tr>" +
-                        "<td>"+json.datetime+"</td>" +
-                        "<td>"+json.location+"</td>" +
-                        "<td>"+json.sensor_name+"</td>" +
-                        "<td>"+json.warning_level+"</td>" +
-                        "<td>"+json.value+"</td>" +
-                        "</tr>";
-        }
-        //-------------------------------------------------------------------
-        if (typeof json.is_water_audio === "undefined"){
-            json.is_water_audio = 0;
-        }
-        if(json.is_water_audio){
-            if(json.audio_play_type =="text2voice"){
-                Speak(json.audio_text,9,0.5);
-            }else{
-                path = baseUrl+json.audio_song;
-                var playNow = new Audio(path);
-                console.log(playNow)
-                playNow.play();
+
+        function strataWarningFunction(json) {
+            var popup_tbl = "";
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_display_warning === "undefined") {
+                json.is_strata_display_warning = 0;
             }
-        }
-        //-------------------------------------------------------------------
-        if (typeof json.is_water_light === "undefined"){
-            json.is_water_light = 0;
-        }
-        if(json.is_water_light){
-            if(json.pump_start < json.value){// pump start
-                 $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+            if (json.is_strata_display_warning) {
+                total_row++;
+                popup_tbl = "<tr>" +
+                    "<td>" + json.datetime + "</td>" +
+                    "<td>" + json.location + "</td>" +
+                    "<td>" + json.sensor_name + "</td>" +
+                    "<td>" + json.warning_level + "</td>" +
+                    "<td>" + json.value + "</td>" +
+                    "</tr>";
             }
-        }
-        //-------------------------------------------------------------------
-        if (typeof json.is_pump_stop === "undefined"){
-            json.is_pump_stop = 0;
-        }
-        if(json.is_pump_stop){
-           if (json.pump_end > json.value){// punp end
-                 $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_audio === "undefined") {
+                json.is_strata_audio = 0;
             }
+            if (json.is_strata_audio) {
+                if (json.audio_play_type == "text2voice") {
+                    Speak(json.audio_text, 9, 0.5);
+                } else {
+                    path = baseUrl + json.audio_song;
+                    playNow.play();
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_light === "undefined") {
+                json.is_strata_light = 0;
+            }
+            if (json.is_strata_light) {
+                $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_light_off === "undefined") {
+                json.is_strata_light_off = 0;
+            }
+            if (json.is_strata_light_off) {
+                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+            }
+            //-------------------------------------------------------------------
+            return popup_tbl;
         }
-        //-------------------------------------------------------------------
-        return popup_tbl;
-    }
-    <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
+
+        function waterWarningFunction(json) {
+            var popup_tbl = "";
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_display_warning === "undefined") {
+                json.is_water_display_warning = 0;
+            }
+            if (json.is_water_display_warning) {
+                total_row++;
+                popup_tbl = "<tr>" +
+                    "<td>" + json.datetime + "</td>" +
+                    "<td>" + json.location + "</td>" +
+                    "<td>" + json.sensor_name + "</td>" +
+                    "<td>" + json.warning_level + "</td>" +
+                    "<td>" + json.value + "</td>" +
+                    "</tr>";
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_audio === "undefined") {
+                json.is_water_audio = 0;
+            }
+            if (json.is_water_audio) {
+                if (json.audio_play_type == "text2voice") {
+                    Speak(json.audio_text, 9, 0.5);
+                } else {
+                    path = baseUrl + json.audio_song;
+                    var playNow = new Audio(path);
+                    console.log(playNow)
+                    playNow.play();
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_light === "undefined") {
+                json.is_water_light = 0;
+            }
+            if (json.is_water_light) {
+                if (json.pump_start < json.value) {// pump start
+                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_pump_stop === "undefined") {
+                json.is_pump_stop = 0;
+            }
+            if (json.is_pump_stop) {
+                if (json.pump_end > json.value) {// punp end
+                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+                }
+            }
+            //-------------------------------------------------------------------
+            return popup_tbl;
+        }
+
+        <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
+    });
+
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
-<script src="{% static 'js/autocomplete-custom.js' %}"></script>
+{#<script src="{% static 'js/autocomplete-custom.js' %}"></script>#}
 <!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>
