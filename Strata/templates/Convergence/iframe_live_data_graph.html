@@ -110,293 +110,289 @@
 {% if availability %}
     <input type="hidden" id="strata_level_location" value="{{ sensor_id }}">
 
-{#    <div id="chartContainer" style="height: 300px; width: 100%;"></div>#}
+    {#    <div id="chartContainer" style="height: 300px; width: 100%;"></div>#}
     <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
 
     {#    <div id="current_date" style="display:none"><center><b>Date : {% now "jS F Y" %}</b></center></div>#}
 
     <script>
-         $(document).ready(function(){
-        //PLOTLY
-        var x = [];
-        var y = [];
-        var time = new Date();
-        var y_all = [];
-        {#x_all.push((new Date()).toString());#}
-        {#y_all.push("20");#}
-        var white = {
-            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
-            x: [1, 2, 3, 4],
-            y: [0.000001, 0.000001, 0.000001, 0.000001],
-            fill: 'tonexty',
-            type: 'scatter',
-            fillcolor: 'rgba(158,158,158,0.18)', //white
-            hoverinfo: 'skip',
-            mode: 'lines',
-            name: 'Safe Level',
+        $(document).ready(function () {
+            //PLOTLY
+            var x = [];
+            var y = [];
+            var time = new Date();
+            var y_all = [];
+            {#x_all.push((new Date()).toString());#}
+            {#y_all.push("20");#}
+            var white = {
+                // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                x: [1, 2, 3, 4],
+                y: [0.000001, 0.000001, 0.000001, 0.000001],
+                fill: 'tonexty',
+                type: 'scatter',
+                fillcolor: 'rgba(158,158,158,0.18)', //white
+                hoverinfo: 'skip',
+                mode: 'lines',
+                name: 'Safe Level',
 
-        };
-        var green = {
-            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
-            x: [1, 2, 3, 4],
-            y: [0.000001, 0.000001, 0.000001, 0.000001],
-            fill: 'tonexty',
-            mode: 'lines',
-            fillcolor: '#0096888a',
-            hoverinfo: 'skip',
-            name: '1st Level Warning',
-        };
+            };
+            var green = {
+                // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                x: [1, 2, 3, 4],
+                y: [0.000001, 0.000001, 0.000001, 0.000001],
+                fill: 'tonexty',
+                mode: 'lines',
+                fillcolor: '#0096888a',
+                hoverinfo: 'skip',
+                name: '1st Level Warning',
+            };
 
-        var yellow = {
-            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
-            x: [1, 2, 3, 4],
-            y: [0.000001, 0.000001, 0.000001, 0.000001],
-            fill: 'tonexty',
-            type: 'scatter',
-            fillcolor: '#ffeb3b75',
-            hoverinfo: 'skip',
-            mode: 'lines',
-            name: '2nd Level Warning',
-        };
-        var red = {
-            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
-            x: [1, 2, 3, 4],
-            y: [0.000001, 0.000001, 0.000001, 0.000001],
-            fill: 'tonexty',
-            type: 'scatter',
-            fillcolor: '#f443368c',
-            hoverinfo: 'skip',
-            mode: 'lines',
-            name: '3rd Level Warning',
+            var yellow = {
+                // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                x: [1, 2, 3, 4],
+                y: [0.000001, 0.000001, 0.000001, 0.000001],
+                fill: 'tonexty',
+                type: 'scatter',
+                fillcolor: '#ffeb3b75',
+                hoverinfo: 'skip',
+                mode: 'lines',
+                name: '2nd Level Warning',
+            };
+            var red = {
+                // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                x: [1, 2, 3, 4],
+                y: [0.000001, 0.000001, 0.000001, 0.000001],
+                fill: 'tonexty',
+                type: 'scatter',
+                fillcolor: '#f443368c',
+                hoverinfo: 'skip',
+                mode: 'lines',
+                name: '3rd Level Warning',
 
-        };
+            };
 
 
-        var strata = {
-            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
-            x: [time],
-            y: y,
-            type: 'scatter',
-            fillcolor: 'rgba(3,169,244,0.5)',
-            mode: 'markers+lines',
-            marker: {
-                color: 'rgba(3,169,244,1)',
-                size: 12
-            },
-            hoveron: 'points',
-            hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
-            hoverinfo: 'text',
-            title:'Time',
-            name:'Strata level',
-        };
+            var strata = {
+                // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                x: [time],
+                y: y,
+                type: 'scatter',
+                fillcolor: 'rgba(3,169,244,0.5)',
+                mode: 'markers+lines',
+                marker: {
+                    color: 'rgba(3,169,244,1)',
+                    size: 12
+                },
+                hoveron: 'points',
+                hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
+                hoverinfo: 'text',
+                title: 'Time',
+                name: 'Strata level',
+            };
 
-        var layout = {
-            // width: 800,
-            // height: 500,
-            {#title: "fixed-ratio axes",#}
-            xaxis: {
-                nticks: 10,
-                domain: [0, 1],
-                title: "Time",
-            },
-            yaxis: {
-                scaleanchor: "x",
-                domain: [0, 1],
-                title: "Strata Level (in mm)",
-                range: [0, 10]
-            },
-            images: [{
-        name: 'watermark_1',
-        source: "http://localhost:8000/static/image/csir_logo.svg",
-        xref: "paper",
-        yref: "paper",
-        x: 0.25,
-        y: 0.9,
-        sizex: 0.7,
-        sizey: 0.7,
-        opacity: 0.1,
-        layer: "below"
-      }],
-            showlegend: true
-        }
+            var layout = {
+                // width: 800,
+                // height: 500,
+                {#title: "fixed-ratio axes",#}
+                xaxis: {
+                    nticks: 10,
+                    domain: [0, 1],
+                    title: "Time",
+                },
+                yaxis: {
+                    domain: [0, 1],
+                    title: "Strata Level (in mm)",
+                    range: [0, 10]
+                },
+                images: [{
+                    name: 'watermark_1',
+                    source: "http://localhost:8000/static/image/csir_logo.svg",
+                    xref: "paper",
+                    yref: "paper",
+                    x: 0.25,
+                    y: 0.9,
+                    sizex: 0.7,
+                    sizey: 0.7,
+                    opacity: 0.1,
+                    layer: "below"
+                }],
+                showlegend: true
+            }
 
-        var data = [white, green, yellow,red, strata];
+            var data = [white, green, yellow, red, strata];
 
-        Plotly.newPlot('myDiv', data, layout);
+            Plotly.newPlot('myDiv', data, layout);
 
-        var l_label = "Low";
-        var l_Value = "";
-        var l_color = "";
+            var l_label = "Low";
+            var l_Value = "";
+            var l_color = "";
 
-        var m_label = "Medium";
-        var m_Value = "";
-        var m_color = "";
+            var m_label = "Medium";
+            var m_Value = "";
+            var m_color = "";
 
-        var h_label = "High";
-        var h_Value = "";
-        var h_endValue = "";
-        var h_color = "";
-        var unit_sensor = "";
-        var custom_title = "";
+            var h_label = "High";
+            var h_Value = "";
+            var h_endValue = "";
+            var h_color = "";
+            var unit_sensor = "";
+            var custom_title = "";
 
-        var audio_type = "";
-        var first_warning = "";
-        var second_warning = "";
-        var third_warning = "";
+            var audio_type = "";
+            var first_warning = "";
+            var second_warning = "";
+            var third_warning = "";
 
-        var first_audio = "";
-        var second_audio = "";
-        var third_audio = "";
-        sensor_id = $('input#strata_level_location').val();
-        $.ajax({
-            type: "get",
-            url: "{% url 'Strata:fetch_sensor_comman_values_ajax' %}",
-            data: {
-                'id': sensor_id
-            },
-            beforeSend: function (jqXHR) {
-                $.xhrPool.push(jqXHR);
-            },
-            success: function (data) {
-                for (index = 0; index < data.result.length; index++) {
-                    var str_array = data.result[index].split('@#');
-                    $("#ip_hidden").val(str_array[8]);
-                    l_Value = parseFloat(str_array[2]);
-                    l_color = str_array[5];
+            var first_audio = "";
+            var second_audio = "";
+            var third_audio = "";
+            sensor_id = $('input#strata_level_location').val();
+            $.ajax({
+                type: "get",
+                url: "{% url 'Strata:fetch_sensor_comman_values_ajax' %}",
+                data: {
+                    'id': sensor_id
+                },
+                beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+                },
+                success: function (data) {
+                    var strata = data.result;
+                    $("#ip_hidden").val(strata.ip);
+                    l_Value = parseFloat(strata.level1);
+                    l_color = strata.level1_color;
 
-                    m_Value = parseFloat(str_array[3]);
-                    m_color = str_array[6];
+                    m_Value = parseFloat(strata.level2);
+                    m_color = strata.level2_color;
 
-                    h_Value = parseFloat(str_array[4]);
-                    h_color = str_array[7];
+                    h_Value = parseFloat(strata.level3);
+                    h_color = strata.level3_color;
 
-                    audio_type = str_array[15];
-                    first_warning = str_array[9];
-                    second_warning = str_array[10];
-                    third_warning = str_array[11];
+                    audio_type = strata.audio_type;
+                    first_warning = strata.level1_msg;
+                    second_warning = strata.level2_msg;
+                    third_warning = strata.level3_msg;
 
-                    first_audio = str_array[12];
-                    second_audio = str_array[13];
-                    third_audio = str_array[14];
+                    first_audio = strata.level1_audio;
+                    second_audio = strata.level2_audio;
+                    third_audio = strata.level3_audio;
                     fill_graph_sensor();
+                },
+                error: function () {
+                    console.log("error");
+                }, timeout: 10000
+            });
 
-                }
-            },
-            error: function () {
-                console.log("error");
-            }, timeout: 10000
-        });
+            $("#current_date").removeAttr('style');
 
-        $("#current_date").removeAttr('style');
+            //------------------------------------------------------------------------------------------------------------------
 
-        //------------------------------------------------------------------------------------------------------------------
-
-        function fill_graph_sensor() {
-            (function stratamonitoring() {
-                $.ajax({
-                    type: "get",
-                    url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
-                    data: {
-                        'id': sensor_id
-                    },
-                    beforeSend: function (jqXHR) {
-                        $.xhrPool.push(jqXHR);
-                    },
-                    success: function (data) {
-                        for (index = 0; index < data.result.length; index++) {
-                            var str_array = data.result[index].split(',');
-                            $("#unit_sensor").text(str_array[7]);
-                            custom_title = str_array[7];
-                        }
-                        time = new Date();
-                        var update = {
-                            x: [[time], [time], [time],[time],[time]],
-                            y: [[l_Value], [m_Value], [h_Value],[10],[str_array[6]/15]],
-                        };
-                        var olderTime = time.setMinutes(time.getMinutes() - 1);
-                        var futureTime = time.setMinutes(time.getMinutes() + 1);
-                        var minuteView = {
-                            xaxis: {
-                                type: 'date',
-                                range: [olderTime, futureTime],
-                                title: 'Time',
-                                nticks: 10,
-                                domain: [0, 1],
+            function fill_graph_sensor() {
+                (function stratamonitoring() {
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
+                        data: {
+                            'id': sensor_id
+                        },
+                        beforeSend: function (jqXHR) {
+                            $.xhrPool.push(jqXHR);
+                        },
+                        success: function (data) {
+                            for (index = 0; index < data.result.length; index++) {
+                                var str_array = data.result[index].split(',');
+                                $("#unit_sensor").text(str_array[7]);
+                                custom_title = str_array[7];
                             }
-                        };
-                        Plotly.relayout('myDiv', minuteView);
-                        Plotly.extendTraces('myDiv', update, [0, 1, 2, 3,4]);
-                        {#checkAndPlay(Number(str_array[6]))#}
+                            time = new Date();
+                            var update = {
+                                x: [[time], [time], [time], [time], [time]],
+                                y: [[l_Value], [m_Value], [h_Value], [10], [str_array[6] / 15]],
+                            };
+                            var olderTime = time.setMinutes(time.getMinutes() - 1);
+                            var futureTime = time.setMinutes(time.getMinutes() + 1);
+                            var minuteView = {
+                                xaxis: {
+                                    type: 'date',
+                                    range: [olderTime, futureTime],
+                                    title: 'Time',
+                                    nticks: 10,
+                                    domain: [0, 1],
+                                }
+                            };
+                            Plotly.relayout('myDiv', minuteView);
+                            Plotly.extendTraces('myDiv', update, [0, 1, 2, 3, 4]);
+                            {#checkAndPlay(Number(str_array[6]))#}
 
-                    },
-                    error: function () {
-                        console.log("error he ji");
-                    },
-                    complete: function () {
-                        setTimeout(stratamonitoring,100);
+                        },
+                        error: function () {
+                            console.log("error he ji");
+                        },
+                        complete: function () {
+                            setTimeout(stratamonitoring, 100);
+                        }
+                    });
+                })();
+            }
+
+            function checkAndPlay(sensorValue) {
+                console.log(sensorValue);
+
+                var loc = window.location;
+                var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
+
+                if ((parseFloat(l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_Value))) {//low level
+                    $.toast({
+                        heading: '<b>Strata Monitoring : First Level Warning</b>',
+                        text: first_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error'
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(first_warning, 9, 0.5);
+                    } else {
+                        path = baseUrl + first_audio;
+                        var playNow = new Audio(path);
+                        playNow.play();
                     }
-                });
-            })();
-        }
+                }
+                if ((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))) {//middle level
+                    $.toast({
+                        heading: '<b>Strata Monitoring : Second Level Warning </b>',
+                        text: second_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error'
+                    })
+                    if (audio_type == "text2voice") {
+                        console.log(second_warning)
+                        Speak(second_warning, 9, 0.5);
+                    } else {
+                        path = baseUrl + second_audio;
+                        var playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
 
-        function checkAndPlay(sensorValue) {
-            console.log(sensorValue);
-
-            var loc = window.location;
-            var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
-
-            if ((parseFloat(l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_Value))) {//low level
-                $.toast({
-                    heading: '<b>Strata Monitoring : First Level Warning</b>',
-                    text: first_warning,
-                    showHideTransition: 'fade',
-                    position: 'bottom-right',
-                    icon: 'error'
-                })
-                if (audio_type == "text2voice") {
-                    Speak(first_warning, 9, 0.5);
-                } else {
-                    path = baseUrl + first_audio;
-                    var playNow = new Audio(path);
-                    playNow.play();
+                if (parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
+                    $.toast({
+                        heading: '<b>Strata Monitoring : Third Level Warning</b> ',
+                        text: third_warning,
+                        position: 'bottom-right',
+                        showHideTransition: 'fade',
+                        icon: 'error'
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(third_warning, 9, 0.5);
+                    } else {
+                        path = baseUrl + third_audio;
+                        var playNow = new Audio(path);
+                        playNow.play();
+                    }
                 }
             }
-            if ((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))) {//middle level
-                $.toast({
-                    heading: '<b>Strata Monitoring : Second Level Warning </b>',
-                    text: second_warning,
-                    showHideTransition: 'fade',
-                    position: 'bottom-right',
-                    icon: 'error'
-                })
-                if (audio_type == "text2voice") {
-                    console.log(second_warning)
-                    Speak(second_warning, 9, 0.5);
-                } else {
-                    path = baseUrl + second_audio;
-                    var playNow = new Audio(path);
-                    playNow.play();
-                }
-            }
-
-            if (parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
-                $.toast({
-                    heading: '<b>Strata Monitoring : Third Level Warning</b> ',
-                    text: third_warning,
-                    position: 'bottom-right',
-                    showHideTransition: 'fade',
-                    icon: 'error'
-                })
-                if (audio_type == "text2voice") {
-                    Speak(third_warning, 9, 0.5);
-                } else {
-                    path = baseUrl + third_audio;
-                    var playNow = new Audio(path);
-                    playNow.play();
-                }
-            }
-        }
-         });
+        });
 
     </script>
 {% endif %}

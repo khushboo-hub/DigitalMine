@@ -34,6 +34,7 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{% static 'dashboard/css/sb-admin-2.min.css' %}">
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <style>
         @keyframes spin {
             0% {
@@ -608,10 +609,10 @@
     {#                                <div class="chart-area">#}
                                         <div class="container">
     {#                                    <canvas id="myAreaChart"></canvas>#}
-
-                                        <div class="embed-responsive embed-responsive-16by9">
-                                         <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'Strata:iframe_show_sensor_graph' selected iframe_strata_location iframe_strata_sensor %}"></iframe>
-                                        </div>
+                                                 <div id='stratamonitoring' data-strata-location="{{iframe_strata_location}}" data-strata-sensor="{{iframe_strata_sensor}}"><!-- Plotly chart will be drawn inside this DIV --></div>
+{#                                        <div class="embed-responsive embed-responsive-16by9">#}
+{#                                         <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'Strata:iframe_show_sensor_graph' selected iframe_strata_location iframe_strata_sensor %}"></iframe>#}
+{#                                        </div>#}
                                     </div>
                             </div>
                         </div>
@@ -619,7 +620,7 @@
                       <div class="card shadow mb-4">
                         <!-- Card Header - Dropdown -->
                         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                          <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                          <h6 class="m-0 font-weight-bold text-primary">Fire Explosibility</h6>
                           <div class="dropdown no-arrow">
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
@@ -635,20 +636,8 @@
                         </div>
                         <!-- Card Body -->
                         <div class="card-body">
-                          <div class="chart-pie pt-4 pb-2"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="myPieChart" width="486" height="245" class="chartjs-render-monitor" style="display: block; width: 486px; height: 245px;"></canvas>
-                          </div>
-                          <div class="mt-4 text-center small">
-                            <span class="mr-2">
-                              <i class="fas fa-circle text-primary"></i> Direct
-                            </span>
-                            <span class="mr-2">
-                              <i class="fas fa-circle text-success"></i> Social
-                            </span>
-                            <span class="mr-2">
-                              <i class="fas fa-circle text-info"></i> Referral
-                            </span>
-                          </div>
+
+
                         </div>
                       </div>
                     </div>
@@ -924,7 +913,13 @@
 
 <script>
     $(document).ready(function () {
-
+     $.xhrPool = [];
+        $.xhrPool.abortAll = function() {
+            $(this).each(function(i, jqXHR) {   //  cycle through list of recorded connection
+                jqXHR.abort();  //  aborts connection
+                $.xhrPool.splice(i, 1); //  removes from list by index
+            });
+        }
         $.ajax({
            url: "{% url 'employee:profile_ajax' %}",
              beforeSend: function (jqXHR) {
@@ -966,12 +961,19 @@
         $('a.strata-location-dropdown').click(function(){
             let  location_id=$(this).attr('data-strata-location');
             let sensor_id = this.id
-            let iframe_link=$('iframe#strata_monitoring_iframe')[0].src;
-            let new_link = replaceAt(iframe_link, iframe_link.lastIndexOf('/') + 1, sensor_id.toString());
-            new_link = replaceAt(new_link, new_link.lastIndexOf('/') - 1, location_id.toString());
+             $.xhrPool.abortAll();
+            {#clearInterval(stratamonitoringajax);#}
+            {#stratamonitoringajax.abort()#}
+            {#Plotly.deleteTraces('stratamonitoring', [0,1,2,3,4]);#}
+            {#plotly_initialize();#}
+            strataStart(sensor_id);
 
-            $('iframe#strata_monitoring_iframe').attr('src',new_link);
-           $('span#strata_location_name').text(this.innerText);
+            {#let iframe_link=$('iframe#strata_monitoring_iframe')[0].src;#}
+            {#let new_link = replaceAt(iframe_link, iframe_link.lastIndexOf('/') + 1, sensor_id.toString());#}
+            {#new_link = replaceAt(new_link, new_link.lastIndexOf('/') - 1, location_id.toString());#}
+
+            {#$('iframe#strata_monitoring_iframe').attr('src',new_link);#}
+           {#$('span#strata_location_name').text(this.innerText);#}
         });
 
         $('div.water.location').click(function(){
@@ -1067,7 +1069,299 @@
 
             $('span#' + Id).html(waterLevelPercentage);
         }
-    });
+
+        //PLOTLY
+
+
+
+
+
+        var l_label = "Low";
+        var l_Value = "";
+        var l_color = "";
+
+        var m_label = "Medium";
+        var m_Value = "";
+        var m_color = "";
+
+        var h_label = "High";
+        var h_Value = "";
+        var h_endValue = "";
+        var h_color = "";
+        var unit_sensor = "";
+        var custom_title = "";
+
+        var audio_type = "";
+        var first_warning = "";
+        var second_warning = "";
+        var third_warning = "";
+
+        var first_audio = "";
+        var second_audio = "";
+        var third_audio = "";
+        sensor_id =$('#stratamonitoring').attr('data-strata-sensor');
+
+        strataStart(sensor_id);
+        var ajaxFunc;
+        function strataStart(sensor_id){
+
+            console.log('start sensor',sensor_id);
+            $.ajax({
+                type: "get",
+                url: "{% url 'Strata:fetch_sensor_comman_values_ajax' %}",
+                data: {
+                    'id': sensor_id
+                },
+                beforeSend: function (jqXHR) {
+                    $.xhrPool.push(jqXHR);
+
+                },
+                success: function (data) {
+                        var strata=data.result;
+                        $("#ip_hidden").val(strata.ip);
+                        l_Value = parseFloat(strata.level1);
+                        l_color = strata.level1_color;
+
+                        m_Value = parseFloat(strata.level2);
+                        m_color = strata.level2_color;
+
+                        h_Value = parseFloat(strata.level3);
+                        h_color = strata.level3_color;
+
+                        audio_type = strata.audio_type;
+                        first_warning = strata.level1_msg;
+                        second_warning = strata.level2_msg;
+                        third_warning = strata.level3_msg;
+
+                        first_audio = strata.level1_audio;
+                        second_audio = strata.level2_audio;
+                        third_audio = strata.level3_audio;
+
+
+                        //INITIALIZING PLOTLY
+                        var y = [];
+                        var time = new Date();
+
+                        var white = {
+                            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                            x: [1, 2, 3, 4],
+                            y: [0.000001, 0.000001, 0.000001, 0.000001],
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: 'rgba(158,158,158,0.18)', //white
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: 'Safe Level',
+
+                        };
+                        var green = {
+                            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                            x: [1, 2, 3, 4],
+                            y: [0.000001, 0.000001, 0.000001, 0.000001],
+                            fill: 'tonexty',
+                            mode: 'lines',
+                            fillcolor: '#0096888a',
+                            hoverinfo: 'skip',
+                            name: '1st Level Warning',
+                        };
+                        var yellow = {
+                            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                            x: [1, 2, 3, 4],
+                            y: [0.000001, 0.000001, 0.000001, 0.000001],
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#ffeb3b75',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '2nd Level Warning',
+                        };
+                        var red = {
+                            // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
+                            x: [1, 2, 3, 4],
+                            y: [0.000001, 0.000001, 0.000001, 0.000001],
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#f443368c',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '3rd Level Warning',
+
+                        };
+                        var strata = {
+                            x: [time],
+                            y: y,
+                            type: 'scatter',
+                            fillcolor: 'rgba(3,169,244,0.5)',
+                            mode: 'markers+lines',
+                            marker: {
+                                color: 'rgba(3,169,244,1)',
+                                size: 12
+                            },
+                            hoveron: 'points',
+                            hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
+                            hoverinfo: 'text',
+                            title: 'Time',
+                            name: 'Strata level',
+                        };
+
+                        var layout = {
+                            xaxis: {
+                                nticks: 10,
+                                domain: [0, 1],
+                                title: "Time",
+                            },
+                            yaxis: {
+                                domain: [0, 1],
+                                title: "Strata Level (in mm)",
+                                range: [0, h_Value*1.2]
+                            },
+                            images: [{
+                                name: 'watermark_1',
+                                source: "http://localhost:8000/static/image/csir_logo.svg",
+                                xref: "paper",
+                                yref: "paper",
+                                x: 0.25,
+                                y: 0.9,
+                                sizex: 0.7,
+                                sizey: 0.7,
+                                opacity: 0.1,
+                                layer: "below"
+                            }],
+                            showlegend: true
+                        }
+
+                        var data = [white, green, yellow, red, strata];
+
+                        Plotly.newPlot('stratamonitoring', data, layout);
+
+                        //PLOTLY INITIALZATION END
+
+
+                        stratamonitoringajax();
+
+                },
+                error: function () {
+                    console.log("error");
+                }, timeout: 10000
+            });
+        }
+
+        $("#current_date").removeAttr('style');
+
+
+
+
+        //------------------------------------------------------------------------------------------------------------------
+
+            var stratamonitoringajax=function(){
+                console.log('stratamonitoringajax');
+
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'Strata:fetch_sensor_values_ajax' %}",
+                    data: {
+                        'id': sensor_id
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                        console.log('before send');
+
+                    },
+                    success: function (data) {
+                        for (index = 0; index < data.result.length; index++) {
+                            var str_array = data.result[index].split(',');
+                            $("#unit_sensor").text(str_array[7]);
+                            custom_title = str_array[7];
+                        }
+                        time = new Date();
+                        console.log('Generate',l_Value,m_Value,h_Value);
+                        var update = {
+                            x: [[time], [time], [time],[time],[time]],
+                            y: [[l_Value], [m_Value], [h_Value],[h_Value+10],[str_array[6]/15]],
+                        };
+                        var olderTime = time.setMinutes(time.getMinutes() - 1);
+                        var futureTime = time.setMinutes(time.getMinutes() + 1);
+                        var minuteView = {
+                            xaxis: {
+                                type: 'date',
+                                range: [olderTime, futureTime],
+                                title: 'Time',
+                                nticks: 10,
+                                domain: [0, 1],
+                            }
+                        };
+                        Plotly.relayout('stratamonitoring', minuteView);
+                        Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3,4]);
+                        {#checkAndPlay(Number(str_array[6]))#}
+
+                    },
+                    error: function () {
+                        console.log("error he ji");
+                    },
+                    complete: function () {
+                        setTimeout(stratamonitoringajax,100);
+                    },timeout:60000,
+                });
+            }
+
+        function checkAndPlay(sensorValue) {
+            console.log(sensorValue);
+
+            var loc = window.location;
+            var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
+
+            if ((parseFloat(l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_Value))) {//low level
+                $.toast({
+                    heading: '<b>Strata Monitoring : First Level Warning</b>',
+                    text: first_warning,
+                    showHideTransition: 'fade',
+                    position: 'bottom-right',
+                    icon: 'error'
+                })
+                if (audio_type == "text2voice") {
+                    Speak(first_warning, 9, 0.5);
+                } else {
+                    path = baseUrl + first_audio;
+                    var playNow = new Audio(path);
+                    playNow.play();
+                }
+            }
+            if ((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))) {//middle level
+                $.toast({
+                    heading: '<b>Strata Monitoring : Second Level Warning </b>',
+                    text: second_warning,
+                    showHideTransition: 'fade',
+                    position: 'bottom-right',
+                    icon: 'error'
+                })
+                if (audio_type == "text2voice") {
+                    console.log(second_warning)
+                    Speak(second_warning, 9, 0.5);
+                } else {
+                    path = baseUrl + second_audio;
+                    var playNow = new Audio(path);
+                    playNow.play();
+                }
+            }
+
+            if (parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
+                $.toast({
+                    heading: '<b>Strata Monitoring : Third Level Warning</b> ',
+                    text: third_warning,
+                    position: 'bottom-right',
+                    showHideTransition: 'fade',
+                    icon: 'error'
+                })
+                if (audio_type == "text2voice") {
+                    Speak(third_warning, 9, 0.5);
+                } else {
+                    path = baseUrl + third_audio;
+                    var playNow = new Audio(path);
+                    playNow.play();
+                }
+            }
+        }
+         });
 </script>
   <!--END- MINERS TRACKING START-->
 </body>

@@ -259,23 +259,40 @@ def fetch_sensor_comman_values_ajax(request):
         # sensor_id = 13
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         if (sensor_details):
-            sensor_data.append(str(sensor_details.id) + '@#' +
-                               str(sensor_details.sensor_unit) + '@#' +
-                               str(sensor_details.level_1_warning_unit) + '@#' +
-                               str(sensor_details.level_2_warning_unit) + '@#' +
-                               str(sensor_details.level_3_warning_unit) + '@#' +
-                               str(sensor_details.level_1_color) + '@#' +
-                               str(sensor_details.level_2_color) + '@#' +
-                               str(sensor_details.level_3_color) + '@#' +
-                               str(sensor_details.ip_address) + '@#' +
-                               str(sensor_details.level_1_msg) + '@#' +
-                               str(sensor_details.level_2_msg) + '@#' +
-                               str(sensor_details.level_3_msg) + '@#' +
-                               str(sensor_details.level_1_audio) + '@#' +
-                               str(sensor_details.level_2_audio) + '@#' +
-                               str(sensor_details.level_3_audio) + '@#' +
-                               str(sensor_details.audio_play_type) + '@#'
-                               )
+            sensor_data = {'id': str(sensor_details.id),
+                           'unit': str(sensor_details.sensor_unit),
+                           'ip': str(sensor_details.ip_address),
+                           'level1': str(sensor_details.level_1_warning_unit),
+                           'level2': str(sensor_details.level_2_warning_unit),
+                           'level3': str(sensor_details.level_3_warning_unit),
+                           'level1_color': str(sensor_details.level_1_color),
+                           'level2_color': str(sensor_details.level_2_color),
+                           'level3_color': str(sensor_details.level_3_color),
+                           'level1_msg': str(sensor_details.level_1_msg),
+                           'level2_msg': str(sensor_details.level_2_msg),
+                           'level3_msg': str(sensor_details.level_3_msg),
+                           'level1_audio': str(sensor_details.level_1_audio),
+                           'level2_audio': str(sensor_details.level_2_audio),
+                           'level3_audio': str(sensor_details.level_3_audio),
+                           'audio_type': str(sensor_details.audio_play_type)
+                           }
+            # sensor_data.append(str(sensor_details.id) + '@#' +
+            #                    str(sensor_details.sensor_unit) + '@#' +
+            #                    str(sensor_details.level_1_warning_unit) + '@#' +
+            #                    str(sensor_details.level_2_warning_unit) + '@#' +
+            #                    str(sensor_details.level_3_warning_unit) + '@#' +
+            #                    str(sensor_details.level_1_color) + '@#' +
+            #                    str(sensor_details.level_2_color) + '@#' +
+            #                    str(sensor_details.level_3_color) + '@#' +
+            #                    str(sensor_details.ip_address) + '@#' +
+            #                    str(sensor_details.level_1_msg) + '@#' +
+            #                    str(sensor_details.level_2_msg) + '@#' +
+            #                    str(sensor_details.level_3_msg) + '@#' +
+            #                    str(sensor_details.level_1_audio) + '@#' +
+            #                    str(sensor_details.level_2_audio) + '@#' +
+            #                    str(sensor_details.level_3_audio) + '@#' +
+            #                    str(sensor_details.audio_play_type) + '@#'
+            #                    )
             data['result'] = sensor_data
         else:
             data['result'] = "No Data"
@@ -330,18 +347,32 @@ def fetch_sensor_values_ajax(request):
 # =======================================================================================================================
 def fetch_sensor_details(request):
     data = {}
+    sensor_data = []
     if request.is_ajax():
         sensor_id = request.GET.get('sensor_id', None)
-        sensor_details = Strata_sensor.objects.values_list().filter(id=sensor_id)
-        data = {}
-        i = 0
-        sensor_data = []
-        for r in sensor_details:
-            sensor_data.append(
-                str(r[6]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[12]) + '@#' + str(r[13]) + '@#' + str(
-                    r[14]) + '@#' + str(r[15]) + '@#' + str(r[16]) + '@#' + str(r[17]) + '@#' + str(r[20]))
-            i = i + 1
-        data['result'] = sensor_data
+        sensor_details = Strata_sensor.objects.get(id=sensor_id)
+        if sensor_details:
+            sensor_data = {'id': str(sensor_details.id),
+                           'unit': str(sensor_details.sensor_unit),
+                           'ip': str(sensor_details.ip_address),
+                           'level1': str(sensor_details.level_1_warning_unit),
+                           'level2': str(sensor_details.level_2_warning_unit),
+                           'level3': str(sensor_details.level_3_warning_unit),
+                           'level1_color': str(sensor_details.level_1_color),
+                           'level2_color': str(sensor_details.level_2_color),
+                           'level3_color': str(sensor_details.level_3_color),
+                           'level1_msg': str(sensor_details.level_1_msg),
+                           'level2_msg': str(sensor_details.level_2_msg),
+                           'level3_msg': str(sensor_details.level_3_msg),
+                           'level1_audio': str(sensor_details.level_1_audio),
+                           'level2_audio': str(sensor_details.level_2_audio),
+                           'level3_audio': str(sensor_details.level_3_audio),
+                           'audio_type': str(sensor_details.audio_play_type)
+                           }
+            data['result'] = sensor_data
+
+        else:
+            data['result']="No Data!"
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -353,21 +384,22 @@ def show_sensor_graph(request, template_name='Convergence/live_data_graph.html')
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+
 @login_required
-def iframe_show_sensor_graph(request, mine_id, location_id,sensors_id, template_name = 'Convergence/iframe_live_data_graph.html'):
+def iframe_show_sensor_graph(request, mine_id, location_id, sensors_id,
+                             template_name='Convergence/iframe_live_data_graph.html'):
     availability = 0
     sensor_id = ""
-    print('mine_id',mine_id)
-    print('sensor_id',sensors_id)
     try:
-        strata = get_object_or_404(Strata_sensor, id=sensors_id, mine_name = mine_id,location_id = location_id)
+        strata = get_object_or_404(Strata_sensor, id=sensors_id, mine_name=mine_id, location_id=location_id)
         print(strata)
         sensor_id = strata.id
         availability = 1
     except:
         pass
 
-    return render(request, template_name, {'availability': availability,'sensor_id':sensor_id})
+    return render(request, template_name, {'availability': availability, 'sensor_id': sensor_id})
+
 
 @background(schedule=5)
 def run_back_save(sensor_id):
@@ -747,7 +779,8 @@ def ajx_sensor_graph_date_range(request):
 
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
 
-        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(created_date__range=(from_d, from_t))
+        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(
+            created_date__range=(from_d, from_t))
         # print(sensor_table_details)
         prepared_data = []
         i = 0

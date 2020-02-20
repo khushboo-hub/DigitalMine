@@ -34,6 +34,7 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{% static 'dashboard/css/sb-admin-2.min.css' %}">
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <style>
         @keyframes spin {
             0% {
@@ -167,35 +168,118 @@
             <div class="sidebar-heading">Interface</div>
         <!-- Nav Item - Pages Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#environment"
                aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Environment</span>
             </a>
-            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="environment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Conditions:</h6>
                     <a class="collapse-item" href="buttons.html">Gas Monitoring</a>
                     <a class="collapse-item" href="cards.html">Temp Monitoring</a>
                 </div>
-            </li>
+            </div>
+        </li>
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#tracking"
                aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Tracking</span>
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Miners' Tracking</span>
             </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
+            <div id="tracking" class="collapse" aria-labelledby="headingUtilities"
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rprofile_avatarounded">
-                    <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Track Single Miner</a>
-                    <a class="collapse-item" href="utilities-border.html">Tabular Format</a>
-                    <a class="collapse-item" href="utilities-animation.html">All Miners Tracking</a>
-                    <a class="collapse-item" href="utilities-other.html">Vehicle Tracking</a>
+                    <h6 class="collapse-header">Tracking:</h6>
+                    <a class="collapse-item" href="{% url 'MinersTracking:init' %}">Router Config.</a>
+                    <a class="collapse-item" href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Tracking(Tabular)</a>
+                    <a class="collapse-item" href="{% url 'MinersTracking:all_mine_page' %}">Tracking(Live)</a>
+                    <a class="collapse-item" href="{%  url 'MinersTracking:single_miner_page' %}">Single Miner Tracking</a>
+                    <a class="collapse-item" href="{% url 'MinersTracking:miner_path_history_page' %}">Miners' Path history</a>
                 </div>
-            </li>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#strata"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Strata Monitoring</span>
+            </a>
+            <div id="strata" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rprofile_avatarounded">
+                    <h6 class="collapse-header">Strata Monitoring:</h6>
+                    <a class="collapse-item" href="{% url 'Strata:convergence_add_location' %}">Add Strata Location</a>
+                    <a class="collapse-item" href="{% url 'Strata:convergence_manage_location' %}">Manage Location</a>
+                    <a class="collapse-item" href="{% url 'Strata:add_sensor_in_location' %}">Add Sensor</a>
+                     <a class="collapse-item" href="{%  url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
+                    <a class="collapse-item" href="{%  url 'Strata:live_data_tabular' %}">Live Data(Tabular)</a>
+                    <a class="collapse-item" href="{% url 'Strata:show_sensor_graph' %}">Live Data(Graph)</a>
+                    <a class="collapse-item" href="{%  url 'Strata:date_range_tabular' %}">Data b/w Dates</a>
+                    <a class="collapse-item" href="{% url 'Strata:show_graph_date_range' %}">Graph b/w Dates</a>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#inventory"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Inventory Management</span>
+            </a>
+            <div id="inventory" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rprofile_avatarounded">
+                    <h6 class="collapse-header">Inventory:</h6>
+                    <a class="collapse-item" href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a>
+                    <a class="collapse-item" href="{% url 'inventory_management:category_add' %}">Add Category</a>
+                    <a class="collapse-item" href="{% url 'inventory_management:product_add' %}">Add Product</a>
+                     <a class="collapse-item" href="{%  url 'inventory_management:settings' %}">Add Branch</a>
+                    <a class="collapse-item" href="{%  url 'inventory_management:manageAll' %}">Manage All</a>
+                    <a class="collapse-item" href="{% url 'inventory_management:outlet_viewall' %}">Reports</a>
+                    <a class="collapse-item" href="{%  url 'inventory_management:inventory_reorder' %}">Add Inventory</a>
+                    <a class="collapse-item" href="{% url 'inventory_management:Inventory_deduct' %}">Deduct Inventory</a>
+                     <a class="collapse-item" href="{% url 'inventory_management:inventory_branchdeduct' %}">Deduct Branch Inventory</a>
+                    <a class="collapse-item" href="{% url 'inventory_management:distribute_prod' %}">Distribute Product</a>
+                </div>
+            </div>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#production"
+               aria-expanded="true" aria-controls="collapseUtilities">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Production Monitoring</span>
+            </a>
+            <div id="production" class="collapse" aria-labelledby="headingUtilities"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rprofile_avatarounded">
+                    <h6 class="collapse-header">Vechicle:</h6>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:vehicle_add' %}">Add Vehicle</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:weighbridge_add' %}">Add Weighbridge</a>
+                     <a class="collapse-item" href="{%  url 'ProductionMonitoring:manualentry_add' %}">Manual Entry(Coal/Ore)</a>
+                    <a class="collapse-item" href="{%  url 'ProductionMonitoring:report_data' %}">Report</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:container_details_add' %}">Tub Info</a>
+                    <a class="collapse-item" href="{%  url 'ProductionMonitoring:production_tub_add' %}">Production using Tub</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_production_dispatch' %}">Production Report(Tub)</a>
+                     <a class="collapse-item" href="{% url 'ProductionMonitoring:production_wastematerial_add' %}">Production(Waste Material)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_dailyentry_add' %}">Daily Entry(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_monthly_add' %}">Monthly Entry(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_yearlyentry_add' %}">Yearly Entry(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_dailydispatch_add' %}">Daily Dispatch(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_monthlydispatch_add' %}">Monthly Dispatch(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:production_yearlydispatch_add' %}">Yearly Dispatch(Coal/Ore)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_dailyentry' %}">Daily Entry(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_monthlyentry' %}">Monthly Entry(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_yearlyentry' %}">Yearly Entry(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_dailydispatch' %}">Daily Dispatch(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_monthlydispatch' %}">Monthly Dispatch(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_yearlydispatch' %}">Yearly Dispatch(Report)</a>
+                    <a class="collapse-item" href="{% url 'ProductionMonitoring:report_dailyprod_dispatch' %}">Daily Production/Dispatch(Report)</a>
+                </div>
+            </div>
+        </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider">
@@ -532,49 +616,31 @@
                                     </div>
                             </div>
                         </div>
-
-                        <div class="col-xl-6 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Strata Condition (Location: <span id="strata_location_name">{{ iframe_strata_location_name }}</span>)</h6>
-
-
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                             aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Choose Strata Location:</div>
-                                            {% for location in strata %}
-                                                {% for key,loc in location.items %}
-                                                <div class="strata-dropdown dropdown-item strata location"  >
-                                                    <div class="strata-dropbtn" >{{ key }}</div>
-                                                    <div class="strata-dropdown-content">
-                                                       {% for sensor in loc %}
-                                                            <a class="strata-location-dropdown" id="{{ sensor.id }}" data-strata-location="{{ sensor.strata_location_id }}">{{sensor.sensor_name}}</a>
-                                                        {% endfor %}
-                                                    </div>
-                                                </div>
-                                            {% endfor %}
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-
-    {#                                <div class="chart-area">#}
-                                        <div class="container">
-    {#                                    <canvas id="myAreaChart"></canvas>#}
-
-                                        <div class="embed-responsive embed-responsive-16by9">
-                                         <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'Strata:iframe_show_sensor_graph' selected iframe_strata_location iframe_strata_sensor %}"></iframe>
-                                        </div>
-                                    </div>
+                    <div class="col-xl-6 col-lg-7">
+                      <div class="card shadow mb-4">
+                        <!-- Card Header - Dropdown -->
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                          <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                          <div class="dropdown no-arrow">
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                              <div class="dropdown-header">Dropdown Header:</div>
+                              <a class="dropdown-item" href="#">Action</a>
+                              <a class="dropdown-item" href="#">Another action</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#">Something else here</a>
                             </div>
+                          </div>
                         </div>
+                        <!-- Card Body -->
+                        <div class="card-body">
+                          <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+
+                        </div>
+                      </div>
+                    </div>
                     </div>
 
                     <!-- Content Row -->
@@ -841,12 +907,13 @@
 <script src="{% static 'dashboard/vendor/chart.js/Chart.min.js' %}"></script>
 
 <!-- Page level custom scripts -->
-{#<script src="{% static 'dashboard/js/demo/chart-area-demo.js' %}"></script>#}
-{#<script src="{% static 'dashboard/js/demo/chart-pie-demo.js' %}"></script>#}
+<script src="{% static 'dashboard/js/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'dashboard/js/demo/chart-pie-demo.js' %}"></script>
 <script src="{% static 'js/customJS.js' %}"></script>
 
 <script>
     $(document).ready(function () {
+
         $.ajax({
            url: "{% url 'employee:profile_ajax' %}",
              beforeSend: function (jqXHR) {
@@ -922,12 +989,11 @@
                 }
             });
         }***/
-             setInterval(function () {
-                WATER();
-             },3000
-        );
+
+       WATER();
 
         function WATER(){
+            (function waterlevel() {
             $.ajax({
                 type: "get",
                 url: "{% url 'dashboard:fetchwl' %}",
@@ -936,8 +1002,6 @@
                     $.xhrPool.push(jqXHR);
                 },
                 success: function (data) {
-                    console.log('water level',data)
-                    //StrataMonitoring(data.result,208);
                     GasMonitoring(data.result, 208, "waterLevel");
                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");
                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
@@ -947,28 +1011,17 @@
                 },
                 error: function () {
                     console.log("something is not right.please contact admin - 1");
-                }, timeout: 3000
+                },
+                complete: function() {
+                  setTimeout(waterlevel, 5000);
+                }
             });
+            })();
         }
 
         document.getElementById("overlay").style.display = "block";
 
 
-        function StrataMonitoring(strata, UpperLimit) {
-            strata = parseFloat(strata);
-            {#strata=scale(strata,0,UpperLimit,100,0);#}
-            strata = strata.toFixed(2);
-            var dt = new Date();
-            var time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-            {#myLineChart.data.labels.push("Post " + postId++);#}
-            if (myLineChart.data.labels.length > 20) {
-                myLineChart.data.labels.shift();
-                myLineChart.data.datasets[0].data.shift();
-            }
-            myLineChart.data.labels.push(time);
-            myLineChart.data.datasets[0].data.push(strata);
-            myLineChart.update()
-        }
         const scale = (num, in_min, in_max, out_min, out_max) => {
             return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
         }
