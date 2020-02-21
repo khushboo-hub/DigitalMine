@@ -484,10 +484,12 @@ function create_router() {
                  
                 // $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
                   var pkc=JSON.parse(json.book)[0].pk;
+                  console.log('pkc',pkc)
                   var Mid=parseInt($("#myTable").DataTable().rows().count())+1
                  // var deletebutton='<a href="#" data-url="{% url "MinersTracking:delete_router"  % '+pkc+'}" class="delete" title="Delete Router."><span class="glyphicon glyphicon-trash"></span></a>';
                   var deletebutton='<a href="#" data-url="'+pkc+'" class="delete" title="Delete Router."><span class="glyphicon glyphicon-trash"></span></a>';
-                  var editbutton='<a href="{% url "MinersTracking:delete_router"  % '+pkc+'}" class="editRouter"title="Edit Router."><span class="glyphicon glyphicon-pencil"></span></a>'
+                  var editbutton='<a href="update_router/'+pkc+'" class="editRouter" title="Edit Router."><span class="glyphicon glyphicon-pencil"></span></a>'
+                    console.log(editbutton);
                   datatable=$('#myTable').DataTable();
                  // $('td:last').addClass('text-center');
 

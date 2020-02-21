@@ -24,6 +24,9 @@ from .models import Strata_location, MineDetails, Strata_sensor, Strata_sensor_d
 from background_task import background
 # from pygame import mixer  # Load the required library
 from django.shortcuts import render, redirect
+from background_task.models import Task
+from background_task.models_completed import CompletedTask
+from django.utils import timezone
 
 # from annoying.functions import get_object_or_None
 
@@ -88,7 +91,6 @@ def convergence_edit_location(request, pk, template_name='Convergence/add_locati
     form = Strata_location_Form(request.POST or None, instance=book)
     if form.is_valid():
         form.save()
-        # 75
         return redirect('Strata:convergence_manage_location')
     return render(request, template_name, {'form': form})
 
@@ -116,7 +118,6 @@ def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_loc
         form = Strata_sensor_Form(request.POST, request.FILES)
         # print(form)
         if form.is_valid():
-            print(request.POST)
             form.save()
             return redirect('Strata:manage_sensor_in_location')
         else:
@@ -128,26 +129,35 @@ def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_loc
 
 @login_required
 def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_in_location.html'):
-    sensors = Strata_sensor.objects.values_list().filter()
+    sensors = Strata_sensor.objects.all()
     # print(sensors)
     data = {}
     prepared_data = []
-    i = 0
-    for r in sensors:
-        location_table = Strata_location.objects.get(id=str(r[2]))
-        mine_table = MineDetails.objects.get(id=str(r[1]))
-        prepared_data.append([])
-        prepared_data[i].append(str(r[0]))
-        prepared_data[i].append(mine_table.name)
-        prepared_data[i].append(location_table.location_name)
-        prepared_data[i].append(str(r[3]))
-        prepared_data[i].append(str(r[4]))
-        prepared_data[i].append(str(r[5]))
-        prepared_data[i].append(str(r[18]))
-        i = i + 1
-    # print(prepared_data)
-    # return HttpResponse("ok")
+    background_task=0
+    for s in sensors:
+        background_task = 0
+        try:
+            task=Task.objects.get(task_name='Strata.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",locked_at__isnull=True)
+            background_task=1
+        except:
+            pass
+
+
+        # background_task.append({'id':task.id})
+        location_table = Strata_location.objects.get(id=s.location_id_id)
+        mine_table = MineDetails.objects.get(id=s.mine_name_id)
+        prepared_data.append({'id': s.id,
+                              'mine': mine_table.name,
+                              'location': location_table.location_name,
+                              'sensor': s.sensor_name,
+                              'unit': s.sensor_unit,
+                              'tag': s.tag_no,
+                              'ip': s.ip_address,
+                              'background':background_task
+                              })
+
     data['result'] = prepared_data
+    data['background']=background_task
 
     return render(request, template_name, data)
 
@@ -181,14 +191,10 @@ def fetch_location_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        location_details = Strata_location.objects.values_list().filter(mine_name_id=mine_id)
-
-        data = {}
-        i = 0
+        location = Strata_location.objects.filter(mine_name_id=mine_id)
         location_data = []
-        for r in location_details:
-            location_data.append(str(r[0]) + ',' + str(r[2]))
-            i = i + 1
+        for l in location:
+            location_data.append({'id': l.id, 'name': l.location_name})
         data['result'] = location_data
     else:
         data['result'] = "Not Ajax"
@@ -209,14 +215,10 @@ def fetch_sensor_ajax(request):
     data = {}
     if request.is_ajax():
         location_id = request.GET.get('id', None)
-        sensor_details = Strata_sensor.objects.values_list().filter(location_id=location_id)
-
-        data = {}
-        i = 0
+        sensor = Strata_sensor.objects.filter(location_id=location_id)
         sensor_data = []
-        for r in sensor_details:
-            sensor_data.append(str(r[0]) + ',' + str(r[3]))
-            i = i + 1
+        for s in sensor:
+            sensor_data.append({'id': s.id, 'name': s.sensor_name})
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
@@ -304,40 +306,50 @@ def fetch_sensor_comman_values_ajax(request):
 
 def fetch_sensor_values_ajax(request):
     data = {}
+    sensor_data = []
     if request.is_ajax():
-        sensor_data = []
+
         sensor_id = request.GET.get('id', None)
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
+
         try:
             response = requests.get('http://' + str(sensor_details.ip_address))
             sensor_val = strip_tags(response.text)
-            if (sensor_val):
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                        sensor_details.sensor_name) + ',' + str(sensor_val) + ',' + str(
-                        sensor_details.sensor_unit) + ',' + str(
-                        sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
+            if sensor_val:
+                sensor_data = {'id': str(sensor_details.id),
+                               'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               'location': str(sensor_details.location_id),
+                               'sensor_name': str(sensor_details.sensor_name),
+                               'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': str(sensor_val),
+                               'tag': str(sensor_details.tag_no)}
             else:
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                        sensor_details.sensor_name) + ',' + 'No Data' + ',' + str(
-                        sensor_details.sensor_unit) + ',' + str(
-                        sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
-                # sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + 'No Data')
+                sensor_data = {'id': str(sensor_details.id),
+                               'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               'location': str(sensor_details.location_id),
+                               'sensor_name': str(sensor_details.sensor_name),
+                               'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': 'No data',
+                               'tag': str(sensor_details.tag_no)}
+
         except Exception as x:
-            # print("catch me he "+str(x))
-            sensor_data.append(
-                str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                    mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                    sensor_details.sensor_name) + ',' + 'Network Error' + ',' + str(
-                    sensor_details.sensor_unit) + ',' + str(
-                    sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
-            # sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + 'Network Error')
+            sensor_data = {'id': str(sensor_details.id),
+                           'ip': str(sensor_details.ip_address),
+                           'date': str(ok_date),
+                           'mine': str(mine_details.name),
+                           'location': str(sensor_details.location_id),
+                           'sensor_name': str(sensor_details.sensor_name),
+                           'unit': str(sensor_details.sensor_unit),
+                           'sensor_value': 'Network Error',
+                           'tag': str(sensor_details.tag_no)}
+
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
@@ -372,7 +384,7 @@ def fetch_sensor_details(request):
             data['result'] = sensor_data
 
         else:
-            data['result']="No Data!"
+            data['result'] = "No Data!"
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -678,31 +690,29 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
-    # print("before save")
-    run_back_save(sensor_id, repeat=5)
-    # manage_sensor_in_location(request)
-    # return HttpResponse("ok"+str(sensor_id))
-    sensors = Strata_sensor.objects.values_list().filter()
-    # print(sensors)
+    task=Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",locked_at__isnull=True)
+    if task:
+        task.delete()
+    else:
+        run_back_save(sensor_id, repeat=5)
+    sensors = Strata_sensor.objects.all()
+
     data = {}
     prepared_data = []
-    i = 0
-    for r in sensors:
-        location_table = Strata_location.objects.get(id=str(r[2]))
-        mine_table = MineDetails.objects.get(id=str(r[1]))
-        prepared_data.append([])
-        prepared_data[i].append(str(r[0]))
-        prepared_data[i].append(mine_table.name)
-        prepared_data[i].append(location_table.location_name)
-        prepared_data[i].append(str(r[3]))
-        prepared_data[i].append(str(r[4]))
-        prepared_data[i].append(str(r[5]))
-        prepared_data[i].append(str(r[18]))
-        i = i + 1
-    # print(prepared_data)
-    # return HttpResponse("ok")
+    for s in sensors:
+        location_table = Strata_location.objects.get(id=s.location_id_id)
+        mine_table = MineDetails.objects.get(id=s.mine_name_id)
+        prepared_data.append({'id': s.id,
+                              'mine': mine_table.name,
+                              'location': location_table.location_name,
+                              'sensor': s.sensor_name,
+                              'unit': s.sensor_unit,
+                              'tag': s.tag_no,
+                              'ip': s.ip_address,
+                              })
+
     data['result'] = prepared_data
-    return render(request, template_name, data)
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
