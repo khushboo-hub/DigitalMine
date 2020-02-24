@@ -133,15 +133,15 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
     # print(sensors)
     data = {}
     prepared_data = []
-    background_task=0
+    background_task = 0
     for s in sensors:
         background_task = 0
         try:
-            task=Task.objects.get(task_name='Strata.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",locked_at__isnull=True)
-            background_task=1
+            task = Task.objects.get(task_name='Strata.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",
+                                    locked_at__isnull=True)
+            background_task = 1
         except:
             pass
-
 
         # background_task.append({'id':task.id})
         location_table = Strata_location.objects.get(id=s.location_id_id)
@@ -153,11 +153,11 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
                               'unit': s.sensor_unit,
                               'tag': s.tag_no,
                               'ip': s.ip_address,
-                              'background':background_task
+                              'background': background_task
                               })
 
     data['result'] = prepared_data
-    data['background']=background_task
+    data['background'] = background_task
 
     return render(request, template_name, data)
 
@@ -253,7 +253,7 @@ def get_data_from_node_mcu(request):
     return JsonResponse(data)
 
 
-def fetch_sensor_comman_values_ajax(request):
+def fetch_sensor_common_values_ajax(request):
     data = {}
     sensor_data = []
     if request.is_ajax():
@@ -690,7 +690,8 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
-    task=Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",locked_at__isnull=True)
+    task = Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
+                               locked_at__isnull=True)
     if task:
         task.delete()
     else:
@@ -740,32 +741,20 @@ def fetch_sensor_date_range(request):
         from_d = from_d.replace(microsecond=000000)
         from_t = from_t.replace(microsecond=999999)
 
-        # from_d = datetime.strptime('2019-04-07 11:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-        # from_t = datetime.strptime('2019-06-27 11:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-
-        # print("Form Date:"+from_d+"To Date:"+from_t)
-
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         location_details = Strata_location.objects.get(id=sensor_details.location_id_id)
         mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
-        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(
+        sensor_table_details = Strata_sensor_data.objects.filter(sensor_id=sensor_id).filter(
             created_date__range=(from_d, from_t)).order_by('-id')
-        # print(sensor_table_details)
         prepared_data = []
-        i = 0
-        for r in sensor_table_details:
-            # prepared_data.append([])
-            prepared_data.append(str(r[
-                                         3]) + ',' + mine_details.name + ',' + location_details.location_name + ',' + sensor_details.sensor_name + ',' + str(
-                r[2]) + ',' + sensor_details.sensor_unit + ',' + sensor_details.tag_no)
-            # prepared_data[i].append(str(r[3]))
-            # prepared_data[i].append(mine_details.name)
-            # prepared_data[i].append(location_details.location_name)
-            # prepared_data[i].append(sensor_details.sensor_name)
-            # prepared_data[i].append(str(r[2]))
-            # prepared_data[i].append(sensor_details.sensor_unit)
-            # prepared_data[i].append(sensor_details.tag_no)
-            i = i + 1
+        for s in sensor_table_details:
+            prepared_data.append({'date':str(s.created_date),
+                                  'mine':str(mine_details.name),
+                                  'location':str(location_details.location_name),
+                                  'sensor':str(sensor_details.sensor_name),
+                                  'sensor_value':str(s.sensor_value),
+                                  'unit':str(sensor_details.sensor_unit),
+                                  'tag':str(sensor_details.tag_no)})
 
         data['result'] = prepared_data
     else:

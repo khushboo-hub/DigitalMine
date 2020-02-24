@@ -93,7 +93,7 @@
 {#    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>#}
 
     <script>
-
+    var X;
         $(document).ready(function () {
             d_table();
             console.log('Table');
@@ -168,7 +168,6 @@
                 $("#btn_show").val("Please wait...");
                 $("#btn_show").prop('disabled', true);
                 if (sensor_id) {
-
                     date_from = $("#from_date").val();
                     date_to = $("#to_date").val();
                     $("#sensor_content_body").empty();//empty the table on each click
@@ -181,14 +180,11 @@
                             'date_to': date_to,
                         },
                         success: function (data) {
-                            console.log(data.result);
-                            <!--alert(data.result);-->
                             fill_table_sensor(data.result);
-
                             return data;
                         },
                         error: function () {
-                            console.log("error he ji");
+                            console.log("Something Went Wrong!");
                         }
                     });
                 } else {
@@ -198,17 +194,17 @@
             });
 
             function fill_table_sensor(result) {
-                if ($.fn.DataTable.isDataTable('#sensor_content')) {
-                    $('#sensor_content').DataTable().destroy();
-                }
-                for (index = 0; index < result.length; index++) {
-                    var str_array = result[index].split(',');
-                    $("#ip_hidden").val(str_array[1]);
-                    $("#sensor_content_body").append($("<tr><td>" + moment(str_array[0]).format("DD-MM-YYYY HH:mm:ss") + "</td><td>" + str_array[1] + "</td><td>" + str_array[2] + "</td><td>" + str_array[3] + "</td><td>" + str_array[4] + "</td><td>" + str_array[5] + "</td><td>" + str_array[6] + "</td></tr>"));
-                }
-                d_table();
-                $("#btn_show").val("Show");
-                $("#btn_show").prop('disabled', false);
+                    X=result;
+                    var Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
+                    datatable = $('#sensor_content').DataTable();
+                    for(strata in result) {
+                        if (result.hasOwnProperty(strata)) {
+                            var row = datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
+                            {#checkAndPlay(result.sensor_value);#}
+                        }
+                    }
+                    $("#btn_show").val("Show");
+                    $("#btn_show").prop('disabled', false);
             }
 
             function d_table() {
@@ -224,5 +220,6 @@
             }
 
         });
+
     </script>
 {% endblock %}

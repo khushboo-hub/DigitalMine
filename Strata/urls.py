@@ -34,7 +34,7 @@ urlpatterns = [
     path('warning_level_information', views.warning_level_information, name='warning_level_information'),
     path('multi_sensor_warning', views.multi_sensor_warning, name='multi_sensor_warning'),
 
-    path('fetch_sensor_comman_values_ajax', views.fetch_sensor_comman_values_ajax, name='fetch_sensor_comman_values_ajax'),
+    path('fetch_sensor_common_values_ajax', views.fetch_sensor_common_values_ajax, name='fetch_sensor_common_values_ajax'),
     path('edit_sensor_in_location/<int:sensor_id>', views.edit_sensor_in_location,name='edit_sensor_in_location'),
     path('audio_setting/<int:sensor_id>', views.audio_setting,name='audio_setting'),
     path('fetch_map_image', views.fetch_map_image, name='fetch_map_image'),
