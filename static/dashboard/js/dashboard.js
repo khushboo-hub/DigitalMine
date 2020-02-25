@@ -1,10 +1,10 @@
- $.xhrPool = [];
-    $.xhrPool.abortAll = function () {
-        $(this).each(function (i, jqXHR) {   //  cycle through list of recorded connection
-            jqXHR.abort();  //  aborts connection
-            $.xhrPool.splice(i, 1); //  removes from list by index
-        });
-    };
+$.xhrPool = [];
+$.xhrPool.abortAll = function () {
+    $(this).each(function (i, jqXHR) {   //  cycle through list of recorded connection
+        jqXHR.abort();  //  aborts connection
+        $.xhrPool.splice(i, 1); //  removes from list by index
+    });
+};
 $(document).ready(function () {
 
     let strata_url = $('#stratamonitoring').attr('data-url');
@@ -13,6 +13,8 @@ $(document).ready(function () {
     let water_values_url = $('#watermonitoring').attr('data-values-url');
     let fire_exp_url = $('#fireExp').attr('data-url');
     var StrataAjax;
+    var strataFlag = 0;
+    var waterFlag = 0;
 
 
     let profile_avatar = $('img#profile_avatar').attr('data-url');
@@ -52,13 +54,18 @@ $(document).ready(function () {
         $.xhrPool.abortAll();
         StrataAjax.abort();
         Plotly.purge('stratamonitoring');
+        $.xhrPool.abortAll();
+        strataFlag = 1;
         strataStart(sensor_id, strata_url);
     });
     $('div.water-dropdown-location').click(function () {
         let location_id = $(this).attr('data-strata-location');
-        let sensor_id = this.id
+        let sensor_id = this.id;
+        console.log('sensor id', sensor_id);
+        Plotly.purge('watermonitoring');
         $.xhrPool.abortAll();
-        strataStart(sensor_id, strata_url);
+        waterFlag = 1;
+        waterStart(sensor_id, water_url);
     });
 
     $('div.water.location').click(function () {
@@ -172,6 +179,7 @@ $(document).ready(function () {
     strataStart(sensor_id, strata_url);
 
     function strataStart(sensor_id, url) {
+        $.xhrPool.abortAll();
         $.ajax({
             type: "get",
             url: url,
@@ -216,7 +224,7 @@ $(document).ready(function () {
                     fillcolor: 'rgba(158,158,158,0.18)', //white
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: 'Safe Level',
+                    name: 'Safe',
 
                 };
                 var strata_green = {
@@ -227,7 +235,7 @@ $(document).ready(function () {
                     mode: 'lines',
                     fillcolor: '#0096888a',
                     hoverinfo: 'skip',
-                    name: '1st Level Warning',
+                    name: '1st Level',
                 };
                 var strata_yellow = {
                     // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
@@ -238,7 +246,7 @@ $(document).ready(function () {
                     fillcolor: '#ffeb3b75',
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: '2nd Level Warning',
+                    name: '2nd Level',
                 };
                 var strata_red = {
                     // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
@@ -249,7 +257,7 @@ $(document).ready(function () {
                     fillcolor: '#f443368c',
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: '3rd Level Warning',
+                    name: '3rd Level',
 
                 };
                 var strata = {
@@ -266,7 +274,7 @@ $(document).ready(function () {
                     hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
                     hoverinfo: 'text',
                     title: 'Time',
-                    name: 'Strata level',
+                    name: 'Strata',
                 };
 
                 var strata_layout = {
@@ -292,7 +300,14 @@ $(document).ready(function () {
                         opacity: 0.1,
                         layer: "below"
                     }],
-                    showlegend: true
+                    showlegend: true,
+                    legend: {
+                        xanchor: "left",//"auto" | "left" | "center" | "right"
+                        yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                        y: 1,//number between or equal to -2 and 3
+                        x: 0,//number between or equal to -2 and 3
+                        orientation: "h"
+                    }
                 }
 
                 var strata_data = [strata_white, strata_green, strata_yellow, strata_red, strata];
@@ -315,7 +330,8 @@ $(document).ready(function () {
     //------------------------------------------------------------------------------------------------------------------
 
     var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url) {
-        StrataAjax=$.ajax({
+        console.log('flag', strataFlag);
+        StrataAjax = $.ajax({
             type: "get",
             url: url,
             data: {
@@ -325,7 +341,7 @@ $(document).ready(function () {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
-                console.log('new l m h',strata_l_Value,strata_m_Value,strata_h_Value);
+                console.log('new l m h', strata_l_Value, strata_m_Value, strata_h_Value);
                 var value = data.result.sensor_value;
                 time = new Date();
                 var update = {
@@ -335,6 +351,13 @@ $(document).ready(function () {
                 var olderTime = time.setMinutes(time.getMinutes() - 1);
                 var futureTime = time.setMinutes(time.getMinutes() + 1);
                 var minuteView = {
+                    legend: {
+                        xanchor: "left",//"auto" | "left" | "center" | "right"
+                        yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                        y: 1,//number between or equal to -2 and 3
+                        x: 0,//number between or equal to -2 and 3
+                        orientation: "h"
+                    },
                     xaxis: {
                         type: 'date',
                         range: [olderTime, futureTime],
@@ -353,6 +376,10 @@ $(document).ready(function () {
                 console.log("Something Went Wrong!");
             },
             complete: function () {
+                if (strataFlag == 1) {
+                    strataFlag = 0;
+                    return;
+                }
                 setTimeout(stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, url), 100);
             }, timeout: 60000,
         });
@@ -436,9 +463,9 @@ $(document).ready(function () {
     var water_second_audio = "";
     var water_third_audio = "";
 
-    water_sensor_id = $('#watermonitoring').attr('data-water-sensor');
+    var water_sensor_id = $('#watermonitoring').attr('data-water-sensor');
 
-    //waterStart(water_sensor_id, water_url);
+    waterStart(water_sensor_id, water_url);
 
     function waterStart(sensor_id, url) {
 
@@ -486,7 +513,7 @@ $(document).ready(function () {
                     fillcolor: 'rgba(158,158,158,0.18)', //white
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: 'Safe Level',
+                    name: 'Safe',
 
                 };
                 var water_green = {
@@ -497,7 +524,7 @@ $(document).ready(function () {
                     mode: 'lines',
                     fillcolor: '#0096888a',
                     hoverinfo: 'skip',
-                    name: '1st Level Warning',
+                    name: '1st Level',
                 };
 
                 var water_yellow = {
@@ -509,7 +536,7 @@ $(document).ready(function () {
                     fillcolor: '#ffeb3b75',
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: '2nd Level Warning',
+                    name: '2nd Level',
                 };
                 var water_red = {
                     // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
@@ -520,7 +547,7 @@ $(document).ready(function () {
                     fillcolor: '#f443368c',
                     hoverinfo: 'skip',
                     mode: 'lines',
-                    name: '3rd Level Warning',
+                    name: '3rd Level',
 
                 };
 
@@ -541,7 +568,7 @@ $(document).ready(function () {
                     hoveron: 'points',
                     hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',
                     hoverinfo: 'text',
-                    name: 'Water Level',
+                    name: 'Water',
                 };
 
                 var water_layout = {
@@ -571,12 +598,18 @@ $(document).ready(function () {
                         opacity: 0.1,
                         layer: "below"
                     }],
-                    showlegend: true
+                    showlegend: true,
+                    legend: {
+                        xanchor: "left",//"auto" | "left" | "center" | "right"
+                        yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                        y: 1,//number between or equal to -2 and 3
+                        x: 0,//number between or equal to -2 and 3
+                        orientation: "h"
+                    }
                 }
 
                 var water_data = [water_white, water_green, water_yellow, water_red, water];
-                Plotly.purge('watermonitoring');
-                Plotly.newPlot('watermonitoring', water_data, water_layout);
+                Plotly.react('watermonitoring', water_data, water_layout);
 
                 //PLOTLY INITIALZATION END
 
@@ -637,6 +670,10 @@ $(document).ready(function () {
                 console.log("Something Went Wrong!");
             },
             complete: function () {
+                if (waterFlag == 1) {
+                    waterFlag = 0;
+                    return;
+                }
                 setTimeout(watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, url), 100);
             }, timeout: 60000,
         });
