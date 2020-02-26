@@ -20,7 +20,6 @@ from django.core.cache import cache
 
 @login_required
 def home(request):
-    print('Language',request.session['lang'])
     template_name = "home1.html"
     try:
         if request.session['lang'] == 'in':
