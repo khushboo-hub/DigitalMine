@@ -191,7 +191,7 @@
     <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
     <link rel="stylesheet" href="{% static '/css/dataTables.bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/autocomplete-custom.css' %}">
-
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fonts/Roboto.css' %}" rel='stylesheet' type='text/css'>
@@ -214,7 +214,7 @@
     <script src="{% static 'js/buttons.html5.min.js' %}"></script>
     <script src="{% static 'js/buttons.print.min.js' %}"></script>
 
-    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
+{#    <script src="{% static 'js/plotly-latest.min.js' %}"></script>#}
     <script src="{% static 'js/KBmapmarkers.js' %}"></script>
     <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
     <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
@@ -266,7 +266,7 @@
     <script src="{% static 'js/divjs.js' %}"></script>
     <script src="{% static 'js/jquery.toast.js' %}"></script>
     <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
 
 
     <style>
@@ -1011,21 +1011,21 @@
                 "<body>";
 
 
-            {#json.forEach(function (objArray) {#}
-            {#    objArray.forEach(function (obj) {#}
-            {##}
-            {#        switch (obj.module_type) {#}
-            {#            case "strata":#}
-            {#                tbl += strataWarningFunction(obj);#}
-            {#                break;#}
-            {#            case "water":#}
-            {#                tbl += waterWarningFunction(obj);#}
-            {#                break;#}
-            {#            default:#}
-            {#                break;#}
-            {#        }#}
-            {#    });#}
-            {#});#}
+            json.forEach(function (objArray) {
+               objArray.forEach(function (obj) {
+
+                   switch (obj.module_type) {
+                       case "strata":
+                           tbl += strataWarningFunction(obj);
+                           break;
+                       case "water":
+                           tbl += waterWarningFunction(obj);
+                           break;
+                       default:
+                           break;
+                   }
+               });
+            });
             tbl += "</body>" +
                 "</table>";
 

@@ -33,6 +33,7 @@
             bottom: 10px;
             right: 5px;
         }
+
         .navbar.bg-primary {
             border-radius: 0px;
         !important;
@@ -770,57 +771,55 @@
 </div>
 
 
-    <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
 
-    <script src="{% static 'js/customJS.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/customJS.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 
-    <script src="{% static 'js/dataTable.js' %}"></script>
-    <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'Js/jszip.min.js' %}"></script>
-    <script src="{% static 'js/pdfmake.min.js' %}"></script>
-    <script src="{% static 'js/vfs_fonts.js' %}"></script>
-    <script src="{% static 'js/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/buttons.print.min.js' %}"></script>
+<script src="{% static 'js/dataTable.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'Js/jszip.min.js' %}"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+{#<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>#}
+<script src="{% static 'js/plotly-latest.min.js' %}"></script>
+<script src="{% static 'js/KBmapmarkers.js' %}"></script>
+<script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+<script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
+<script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+<script src="{% static 'js/ObjectEquate.js' %}"></script>
+<script src="{% static 'js/jquery.connectingLine.js' %}"></script>
+<script src="{% static 'js/jquery.svg.min.js' %}"></script>
+<script src="{% static 'js/jquery.md5.min.js' %}"></script>
 
-    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
-    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
-    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
-    <script src="{% static 'js/ObjectEquate.js' %}"></script>
-    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
-    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
-    <script src="{% static 'js/jquery.md5.min.js' %}"></script>
+<script src="{% static 'datetime/js/moment.js' %}"></script>
+<script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
+<script src="{% static 'datetime/js/collapse.js' %}"></script>
+<script src="{% static 'datetime/js/transition.min.js' %}"></script>
+<script src="{% static 'js/printThis.js' %}"></script>
 
-    <script src="{% static 'datetime/js/moment.js' %}"></script>
-    <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
-    <script src="{% static 'datetime/js/collapse.js' %}"></script>
-    <script src="{% static 'datetime/js/transition.min.js' %}"></script>
-    <script src="{% static 'js/printThis.js' %}"></script>
-
-    <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
-    <script src="{% static 'js/select2.min.js' %}"></script>
-    <script src="{% static 'js/toastr.min.js' %}"></script>
-    <script src="{% static 'js/prettify.js' %}"></script>
-    <script src="{% static 'js/filepond.js' %}"></script>
-    <script src="{% static 'js/svg.min.js' %}"></script>
-    <script src="{% static 'js/workflowChart.js' %}"></script>
-    <script src="{% static 'js/divjs.js' %}"></script>
-    <script src="{% static 'js/jquery.toast.js' %}"></script>
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $(".se-pre-con").fadeOut("slow");
-        });
-    </script>
+<script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'js/select2.min.js' %}"></script>
+<script src="{% static 'js/toastr.min.js' %}"></script>
+<script src="{% static 'js/prettify.js' %}"></script>
+<script src="{% static 'js/filepond.js' %}"></script>
+<script src="{% static 'js/svg.min.js' %}"></script>
+<script src="{% static 'js/workflowChart.js' %}"></script>
+<script src="{% static 'js/divjs.js' %}"></script>
+<script src="{% static 'js/jquery.toast.js' %}"></script>
+<script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $(".se-pre-con").fadeOut("slow");
+    });
+</script>
 
 <script>
-
-
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
         $('ul.nav li.dropdown').hover(function () {
@@ -1082,7 +1081,5 @@
 
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
-{#<script src="{% static 'js/autocomplete-custom.js' %}"></script>#}
-<!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>

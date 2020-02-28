@@ -165,7 +165,7 @@
                     if (sensor_id) {
                         strataFlag = 1;
                         strataStart(sensor_id, strata_url);
-                        strataFlag=0;
+                        strataFlag = 0;
                     }
                 });
 
@@ -260,6 +260,7 @@
                                     color: 'rgba(3,169,244,1)',
                                     size: 12
                                 },
+
                                 hoveron: 'points',
                                 hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
                                 hoverinfo: 'text',
@@ -302,7 +303,7 @@
 
                             var strata_data = [strata_white, strata_green, strata_yellow, strata_red, strata];
                             var config = {responsive: true};
-                            Plotly.react('stratamonitoring', strata_data, strata_layout,config);
+                            Plotly.react('stratamonitoring', strata_data, strata_layout, config);
 
                             //PLOTLY INITIALZATION END
 
