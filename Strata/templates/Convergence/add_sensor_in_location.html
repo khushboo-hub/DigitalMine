@@ -28,7 +28,8 @@
                                         <label for="" class="" id="">Choose Location:<font color="red">*</font></label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="form-control" id="id_location_id" name="location_id">
+                                        <select class="form-control" id="id_location_id"
+                                                data-url="{% url 'Strata:fetch_location_ajax' %}" name="location_id">
                                             <option>--Select Location--</option>
                                         </select>
                                     </div>
@@ -255,10 +256,11 @@
             $("#id_mine_name").addClass('form-control');
 
             $("#id_mine_name").on("change", function () {
-                mine_id = this.value;
+                let mine_id = this.value;
+                let url = $("#id_location_id").data('url');
                 $.ajax({
                     type: "get",
-                    url: "{% url 'Strata:fetch_location_ajax' %}",
+                    url: url,
                     data: {
                         'id': mine_id
                     },
@@ -295,17 +297,14 @@
             }
 
             $("input[name$='audio_play_type']").change(function () {
-
-                var is_value = $(this).val();
+                let is_value = $(this).val();
                 if (is_value == "text2voice") {
                     $("#audio_container").hide();
                 } else {
                     $("#audio_container").show();
                 }
-
             });
         });
     </script>
-
 {% endblock %}
 

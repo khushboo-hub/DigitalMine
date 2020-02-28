@@ -144,17 +144,20 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
             pass
 
         # background_task.append({'id':task.id})
-        location_table = Strata_location.objects.get(id=s.location_id_id)
-        mine_table = MineDetails.objects.get(id=s.mine_name_id)
-        prepared_data.append({'id': s.id,
-                              'mine': mine_table.name,
-                              'location': location_table.location_name,
-                              'sensor': s.sensor_name,
-                              'unit': s.sensor_unit,
-                              'tag': s.tag_no,
-                              'ip': s.ip_address,
-                              'background': background_task
-                              })
+        try:
+            location_table = Strata_location.objects.get(id=s.location_id_id)
+            mine_table = MineDetails.objects.get(id=s.mine_name_id)
+            prepared_data.append({'id': s.id,
+                                  'mine': mine_table.name,
+                                  'location': location_table.location_name,
+                                  'sensor': s.sensor_name,
+                                  'unit': s.sensor_unit,
+                                  'tag': s.tag_no,
+                                  'ip': s.ip_address,
+                                 'background': background_task
+                                })
+        except:
+            pass
 
     data['result'] = prepared_data
     data['background'] = background_task
@@ -210,6 +213,10 @@ def live_data_tabular(request, template_name='Convergence/live_data_tabular.html
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+@login_required
+def show_strata_location(request, template_name='Convergence/show_location.html'):
+    form = Live_data_tabular(request.POST)
+    return render(request, template_name, {'form': form})
 
 def fetch_sensor_ajax(request):
     data = {}

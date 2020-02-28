@@ -17,7 +17,8 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Choose Mine:<font color="red">*</font> </label>
+                                        <label for="" class="" id="">Choose Mine:<span style="color: red; ">*</span>
+                                        </label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.mine_name }}
@@ -25,7 +26,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Choose Location:<font color="red">*</font></label>
+                                        <label for="" class="" id="stratamonitoring"
+                                               data-url="{% url 'Strata:fetch_location_ajax' %}">Choose Location:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.location_id }}
@@ -35,7 +38,8 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor Name:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor Name:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.sensor_name }}
@@ -43,7 +47,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor Unit:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.sensor_unit }}
@@ -235,7 +240,6 @@
                                 </div>
                             </div>
 
-
                             <div class="text-center">
                                 <input type="submit" class="btn btn-primary" value="Submit"/>
                             </div>
@@ -252,29 +256,41 @@
         $(document).ready(function () {
             $("#id_mine_name").addClass('form-control');
             $("#id_location_id").addClass('form-control');
+            $("#id_location_id").prop('required',true);
+            let strata_url = $('#stratamonitoring').data('url');
+            let selected = $('#id_mine_name option:selected').val();
+            let selectedLocation = $('#id_location_id option:selected').val();
+            if (!isEmpty(selected)) {
+                strataLocation(strata_url, selected);
 
-
+            }
             $("#id_mine_name").on("change", function () {
-                mine_id = this.value;
+                console.log('selected locatikon',selectedLocation)
+                let mine_id = this.value;
+                strataLocation(strata_url, mine_id);
+
+            });
+
+            function strataLocation(strata_url, mine_id) {
                 $.ajax({
                     type: "get",
-                    url: "{% url 'Strata:fetch_location_ajax' %}",
+                    url: strata_url,
                     data: {
                         'id': mine_id
                     },
                     success: function (data) {
-                        console.log(data);
                         fill_dropdown(data.result);
+                        $('#id_location_id').val(selectedLocation);
                         return data;
                     },
                     error: function () {
                         console.log("Something Went Wrong!");
                     }
                 });
-            });
+            }
 
             function fill_dropdown(result) {
-                $("#id_location_id").html("<option>--Select Location--</option>");
+                $("#id_location_id").html("<option value='' required >--Select Location--</option>");
                 for (var strata in result) {
                     if (result.hasOwnProperty(strata)) {
                         $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));

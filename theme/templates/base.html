@@ -1012,21 +1012,21 @@
                 "<body>";
 
 
-            json.forEach(function (objArray) {
-                objArray.forEach(function (obj) {
-
-                    switch (obj.module_type) {
-                        case "strata":
-                            tbl += strataWarningFunction(obj);
-                            break;
-                        case "water":
-                            tbl += waterWarningFunction(obj);
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            });
+            {#json.forEach(function (objArray) {#}
+            {#    objArray.forEach(function (obj) {#}
+            {##}
+            {#        switch (obj.module_type) {#}
+            {#            case "strata":#}
+            {#                tbl += strataWarningFunction(obj);#}
+            {#                break;#}
+            {#            case "water":#}
+            {#                tbl += waterWarningFunction(obj);#}
+            {#                break;#}
+            {#            default:#}
+            {#                break;#}
+            {#        }#}
+            {#    });#}
+            {#});#}
             tbl += "</body>" +
                 "</table>";
 

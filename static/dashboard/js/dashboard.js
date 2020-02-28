@@ -49,7 +49,7 @@ $(document).ready(function () {
 
     $('a.strata-location-dropdown').click(function () {
         let location_id = $(this).attr('data-strata-location');
-        let sensor_id = this.id
+        let sensor_id = this.id;
         $('span#strata_location_name').text(this.innerHTML);
         $.xhrPool.abortAll();
         StrataAjax.abort();
@@ -216,7 +216,6 @@ $(document).ready(function () {
                 var time = new Date();
 
                 var strata_white = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [strata_l_Value, strata_l_Value, strata_l_Value, strata_l_Value],
                     fill: 'tonexty',
@@ -228,7 +227,6 @@ $(document).ready(function () {
 
                 };
                 var strata_green = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [strata_m_Value, strata_m_Value, strata_m_Value, strata_m_Value],
                     fill: 'tonexty',
@@ -238,7 +236,6 @@ $(document).ready(function () {
                     name: '1st Level',
                 };
                 var strata_yellow = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [strata_h_Value, strata_h_Value, strata_h_Value, strata_h_Value],
                     fill: 'tonexty',
@@ -249,7 +246,6 @@ $(document).ready(function () {
                     name: '2nd Level',
                 };
                 var strata_red = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2],
                     fill: 'tonexty',
@@ -311,7 +307,8 @@ $(document).ready(function () {
                 }
 
                 var strata_data = [strata_white, strata_green, strata_yellow, strata_red, strata];
-                Plotly.react('stratamonitoring', strata_data, strata_layout);
+                var config = {responsive: true}
+                Plotly.react('stratamonitoring', strata_data, strata_layout,config);
 
                 //PLOTLY INITIALZATION END
 
@@ -483,8 +480,6 @@ $(document).ready(function () {
             success: function (data) {
                 for (index = 0; index < data.result.length; index++) {
                     var str_array = data.result[index].split('@#');
-                    // {#console.log(str_array);#}
-                    //$("#ip_hidden").val(str_array[0]);
                     water_l_value = str_array[1];
                     water_m_value = str_array[2];
                     water_h_value = str_array[3];
@@ -499,13 +494,11 @@ $(document).ready(function () {
                     water_first_audio = str_array[9];
                     water_second_audio = str_array[10];
                     water_third_audio = str_array[11];
-                    // {#setTimeout(fill_water_level_graph(),1000);#}
                 }
 
 
                 //INITIALIZING PLOTLY
                 var water_white = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [water_l_value, water_l_value, water_l_value, water_l_value],
                     fill: 'tonexty',
@@ -517,7 +510,6 @@ $(document).ready(function () {
 
                 };
                 var water_green = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [water_m_value, water_m_value, water_m_value, water_m_value],
                     fill: 'tonexty',
@@ -528,7 +520,6 @@ $(document).ready(function () {
                 };
 
                 var water_yellow = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [water_h_value, water_h_value, water_h_value, water_h_value],
                     fill: 'tonexty',
@@ -539,7 +530,6 @@ $(document).ready(function () {
                     name: '2nd Level',
                 };
                 var water_red = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [1, 2, 3, 4],
                     y: [water_t_height, water_t_height, water_t_height, water_t_height],
                     fill: 'tonexty',
@@ -554,7 +544,6 @@ $(document).ready(function () {
                 var time = new Date();
                 var y = [];
                 var water = {
-                    // x: [1, 2, 3, 4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20],
                     x: [time],
                     y: y,
                     fill: 'tozeroy',
@@ -572,9 +561,6 @@ $(document).ready(function () {
                 };
 
                 var water_layout = {
-                    // width: 800,
-                    // height: 500,
-                    //{#title: "fixed-ratio axes",#}
                     xaxis: {
                         nticks: 10,
                         domain: [0, 1],
@@ -609,7 +595,8 @@ $(document).ready(function () {
                 }
 
                 var water_data = [water_white, water_green, water_yellow, water_red, water];
-                Plotly.react('watermonitoring', water_data, water_layout);
+                var config = {responsive: true}
+                Plotly.react('watermonitoring', water_data, water_layout,config);
 
                 //PLOTLY INITIALZATION END
 
@@ -638,21 +625,18 @@ $(document).ready(function () {
             },
             beforeSend: function (jqXHR) {
                 $.xhrPool.push(jqXHR);
-                console.log('before send');
-
             },
             success: function (data) {
-                var value = water_t_height - data.result.sensor_value
-                // {#var value = data.result.sensor_value;#}
+                let value = water_t_height - data.result.sensor_value
                 time = new Date();
                 console.log('Generate', water_l_value, water_m_value, water_h_value);
-                var update = {
+                let update = {
                     x: [[time], [time], [time], [time], [time]],
                     y: [[water_l_value], [water_m_value], [water_h_value], [water_t_height], [value]],
                 };
-                var olderTime = time.setMinutes(time.getMinutes() - 1);
-                var futureTime = time.setMinutes(time.getMinutes() + 1);
-                var minuteView = {
+                let olderTime = time.setMinutes(time.getMinutes() - 1);
+                let futureTime = time.setMinutes(time.getMinutes() + 1);
+                let minuteView = {
                     xaxis: {
                         type: 'date',
                         range: [olderTime, futureTime],
@@ -720,8 +704,6 @@ $(document).ready(function () {
                 var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                 console.log(lowest, highest);
                 var trace1 = {
-                    // {#x: [-1*((highest*lowest)/2)*.4, ((highest*lowest)/2)*0.5],#}
-                    //{#y: [((highest*lowest)/2)*0.8, ((highest*lowest)/2)*0.8],#}
                     x: [-65, 80],
                     y: [18, 18],
                     mode: 'text',
@@ -737,8 +719,6 @@ $(document).ready(function () {
                     type: 'scatter'
                 };
                 var trace2 = {
-                    //{#x: [-1*((highest*lowest)/2)*0.5, ((highest*lowest)/2)*0.5],#}
-                    //{#y: [-1*((highest*lowest)/2)*0.9, -1*((highest*lowest)/2)*0.9],#}
                     x: [-65, 75],
                     y: [-18, -18],
                     mode: 'text',
@@ -761,10 +741,8 @@ $(document).ready(function () {
                     xa: dates,
                     mode: 'text+dates+markers',
                     type: 'scatter',
-                    //{#name:dates,#}
                     text: text,
                     textfont: {
-                        //  {#family: 'sans serif',#}
                         size: 20,
                         color: color,
                         weight: '900'
@@ -786,16 +764,12 @@ $(document).ready(function () {
                     titlefont: {
                         size: 25
                     },
-                    //{#width: 1200,#}
-                    //{#height: 800,#}
-
                     xaxis: {
                         title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
                         tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
                         tick0: 0,
                         dtick: 10,
                         autoscale: false,
-                        //  {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
                         range: [-100, 100],
                         ticks: "outside",
                         showgrid: true,
@@ -816,9 +790,7 @@ $(document).ready(function () {
                         tick0: 0,
                         dtick: 2,
                         autoscale: false,
-                        //{#yanchor:'right',#}
                         ticks: 'inside',
-                        // {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
                         range: [-20, 20],
                         showgrid: true,
                         zeroline: true,
@@ -835,7 +807,8 @@ $(document).ready(function () {
 
                     showlegend: false
                 };
-                Plotly.newPlot('fireExp', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+                var config = {responsive: true}
+                Plotly.newPlot('fireExp', data, layout,config, {modeBarButtonsToRemove: ['autoScale2d']});
 
             },
             error: function () {
