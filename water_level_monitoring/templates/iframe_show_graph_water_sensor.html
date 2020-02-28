@@ -199,11 +199,23 @@
           title: "Time",
         },
         yaxis: {
-          scaleanchor: "x",
+          {#scaleanchor: "x",#}
           domain: [0, 1],
           title: "Water Level(cm)",
           range:[0,250]
         },
+         images: [{
+        name: 'watermark_1',
+        source: "http://localhost:8000/static/image/csir_logo.svg",
+        xref: "paper",
+        yref: "paper",
+        x: 0.40,
+        y: 0.9,
+        sizex: 0.7,
+        sizey: 0.7,
+        opacity: 0.1,
+        layer: "below"
+      }],
         showlegend: true
     }
 
@@ -320,6 +332,7 @@
                             domain: [0, 1],
                         }
                       };
+
                     Plotly.relayout('myDiv', minuteView);
                     Plotly.extendTraces('myDiv',update,[0,1,2,3,4]);
 

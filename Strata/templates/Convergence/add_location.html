@@ -1,252 +1,261 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2 class="page-header"><b>Strata: Add Location</b><small>   Here you can add different location in underground mine</small></h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2 class="page-header"><b>Strata: Add Location</b>
+                    <small> Here you can add different location in underground mine</small>
+                </h2>
 
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  id="get_url" data-url="Strata/fetch_map_image" class=""
-                                           id="choose_mine">1. Choose Mine:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.mine_name}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  class="" id="loc_name">2. Location name:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.location_name}}
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label id="get_url" data-url="{% url 'Strata:fetch_map_image' %}" class=""
+                                               id="choose_mine">1. Choose Mine:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.mine_name }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  class="" id="tag_no">3. Tag No:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.tag_no}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  class="" id="x_axis">4. X-Axis:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.x_axis}}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="loc_name">2. Location name:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.location_name }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  class="" id="y_axis">4. Y-Axis:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.y_axis}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label class="" id="desc">5. Description:</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.description}}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="tag_no">3. Tag No:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.tag_no }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-4">
-                                    <label  class="" id="created_on">6. Created On:</label>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="x_axis">4. X-Axis:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.x_axis }}
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="y_axis">4. Y-Axis:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.y_axis }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="desc">5. Description:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.description }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label class="" id="created_on">6. Created On:</label>
+                                    </div>
 
-                                <div class="col-md-8">
-                                    <div class='input-group date' id='doo_date_time_picker'>
-                                           {{form.created_date}}
+                                    <div class="col-md-8">
+                                        <div class='input-group date' id='doo_date_time_picker'>
+                                            {{ form.created_date }}
 
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
 
                                         </div>
-                                        <span style="color:red">{{form.date_of_opening.errors|striptags}}</span>
+                                        <span style="color:red">{{ form.date_of_opening.errors|striptags }}</span>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                        <div class="text-center">
-                            <button type="submit" id="StrataCreate" class="btn btn-primary" value="Submit">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div><!--end Table content -->
+                            <div class="text-center">
+                                <button type="submit" id="StrataCreate" class="btn btn-primary" value="Submit">Submit
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </div>
+
         </div>
-            
+
     </div>
+    <section class="KBmap" id="KBtestmap"></section>
 
-</div>
-<section class="KBmap" id="KBtestmap"></section>
+    <script>
 
-<script>
+        $(document).ready(function () {
+            $("#id_location_name").addClass('form-control');
+            $("#id_mine_name").addClass('form-control');
+            var date_from = $('#doo_date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD '
+            });
 
-$(document).ready(function(){
-    $("#id_location_name").addClass('form-control');
-    $("#id_mine_name").addClass('form-control');
-    var date_from=$('#doo_date_time_picker').datetimepicker({
-                     format: 'YYYY-MM-DD '
+            if (!isEmpty($("#id_mine_name").val())) {
+                setImageData($("#id_mine_name").val());
+                $('#StrataCreate').prop("disabled", false);
+            } else {
+                $('#StrataCreate').prop("disabled", true);
+            }
+            $('#KBtestmap').hide();
+
+
+            $("#id_mine_name").change(function () {
+                if (!isEmpty($(this).val())) {
+
+                    setImageData(this.value);
+                    $('#StrataCreate').prop("disabled", false);
+                } else {
+                    $('#StrataCreate').prop("disabled", true);
+                }
+                $('#KBtestmap').hide();
+            });
+
+            $("#id_x_axis").click(function () {
+                PointInit();
+            });
+            $("#id_y_axis").click(function () {
+                PointInit();
+            });
+
+            function PointInit() {
+                if (!isEmpty($('#id_mine_name').val())) {
+
+                    if (isEmpty($('#id_x_axis').val())) {
+                        PointInitialization();
+                    } else {
+                        InitialPoint($('#id_x_axis').val(), $('#id_y_axis').val());
+                        $('.KBmap__marker').not(':last').remove();
+                    }
+                    var elem = document.getElementById("KBtestmap");
+                    openFullscreen(elem);
+                    PointInitialization();   // FULLSCREEN();
+                }
+            }
+
+            function setImageData(mine_id) {
+                let url = $("#get_url").data('url');
+
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        CreateKBtestMap(data.result.image_url);
+                    },
+                    error: function () {
+                        console.log("something is not right.please contact admin - 1");
+                    }
                 });
-        
-    if(!isEmpty($("#id_mine_name").val())){
-      setImageData($("#id_mine_name").val());
-      $('#StrataCreate').prop("disabled", false); 
-    }
-    else{
-      $('#StrataCreate').prop("disabled", true);
-    }
-    $('#KBtestmap').hide();
-        
-});
+            }
 
-$("#id_mine_name").change(function(){
-  if(!isEmpty($(this).val())){
+            function CreateKBtestMap(data) {
+                var img = data;
+                //console.log(url);
+                if (addedKBmaps.length > 0) {
+                    addedKBmaps.pop();
+                    $('.KBmap__mapContainer').remove();
+                }
+                if (img) {
+                    createKBmap('KBtestmap', '/media/' + img);
+                } else {
+                    $("#map").css("");
+                    $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+                }
+            };
 
-    setImageData(this.value);
-    $('#StrataCreate').prop("disabled", false);
-  }
-  else{
-    $('#StrataCreate').prop("disabled", true);
-  }
-  $('#KBtestmap').hide();
-});
+            function PointInitialization() {
+                $(".KBmap__mapHolder").click(function (e) {
 
-$("#id_x_axis").click(function(){PointInit();});
-$("#id_y_axis").click(function(){PointInit();});
+                    if (added == 0) {
+                        var temp = mousePositionElement(e);
+                        var offset = $(this).offset();
+                        var PosX = temp.x;
+                        var PosY = temp.y - ((document.documentElement.scrollTop)) / 7.8;
+                        console.log(PosX + " " + PosY);
+                        InitialPoint(PosX, PosY)
+                        $('#id_x_axis').val(PosX);
+                        $('#id_y_axis').val(PosY);
+                        $('.KBmap__marker').not(':last').remove();
+                    }
+                });
+            }
 
-function PointInit(){
-  if(!isEmpty($('#id_mine_name').val())){
+            function InitialPoint(PosX, PosY) {
+                var icon = "/static/image/router.svg";
+                var strata_tag_name = $('#id_tag_no').val();
+                var strata_mine_name = $('#id_mine_name').children("option:selected").text();
+                var markerName = "Test";
+                var NodeName = strata_tag_name + "||" + strata_mine_name + "||";
+                // var ipAddress=$('#id_ip_add').val();
+                var strataLocation = $('#id_location_name').val();
+                var strataDescription = $('#id_description').val();
+                // var routerAddress=$('#id_address').val();
+                // var Blocked=$('#id_is_block').val();
+                var NodeContent = "<small>";
 
-    if(isEmpty($('#id_x_axis').val())){
-       PointInitialization();
-    }
-    else{
-      InitialPoint($('#id_x_axis').val(),$('#id_y_axis').val());
-      $('.KBmap__marker').not(':last').remove();
-    }
-    var elem = document.getElementById("KBtestmap");
-    openFullscreen(elem);
-    PointInitialization();   // FULLSCREEN();
-  }
-}
+                NodeContent += "<strong >" + "Strata Location : ";
+                NodeContent += "<span class='badge'>";
+                NodeContent += strataLocation;
+                NodeContent += "</span>";
+                NodeContent += "</strong></br>";
 
-function setImageData(mine_id){
-  url=$("#get_url").data('url');
+                NodeContent += "<strong >" + "Description : ";
+                NodeContent += "<span class='badge'>";
+                NodeContent += strataDescription;
+                NodeContent += "</span>";
+                NodeContent += "</strong></small>";
 
-  $.ajax({
-          type:"get",
-          url: "{% url 'Strata:fetch_map_image' %}",
-          data: {
-                 'id': mine_id
-                },
-          success: function(data) {
-            CreateKBtestMap(data.result.image_url);
-          },
-          error: function(){
-            console.log("something is not right.please contact admin - 1");
-          }
+                var KBkeys = KBtestmap.mapMarkers;
+                if ("Test" in KBkeys) KBkeys.Test.removeMarker();
+                KBtestmap.addMarker(icon, PosX, PosY, markerName);
+                KBtestmap.mapMarkers[markerName].addModal(NodeName, NodeContent);
+                KBtestmap.showAllMapMarkers();
+            }
+
+            var added = 0;
+            var c = 0;
+
+            document.addEventListener("fullscreenchange", function () {
+                if (checkFullScreenStatus()) {
+                    $('#KBtestmap').show();
+                    $("body").css({"overflow": "hidden"});
+                } else {
+                    $('#KBtestmap').hide();
+                    $("body").css({"overflow": "visible"});
+                }
+            });
         });
-}
-function CreateKBtestMap(data){
-    var img=data;
-            //console.log(url);
-    if(addedKBmaps.length>0){
-      addedKBmaps.pop();
-      $('.KBmap__mapContainer').remove();
-    }
-    if(img){
-      createKBmap('KBtestmap', '/media/'+img);
-		}
-    else{
-      $("#map").css("");
-      $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-    }
-};
 
-function PointInitialization(){
-  $(".KBmap__mapHolder").click(function(e){
-
-    if(added==0){
-      var temp= mousePositionElement(e);
-      var offset = $(this).offset();
-      var PosX=temp.x;
-      var PosY=temp.y-((document.documentElement.scrollTop))/7.8;
-      console.log(PosX+" "+PosY);
-      InitialPoint(PosX,PosY)
-      $('#id_x_axis').val(PosX);
-      $('#id_y_axis').val(PosY);
-      $('.KBmap__marker').not(':last').remove();
-    }
-  });
-}
-
-function InitialPoint(PosX,PosY){
-  var icon="/static/image/router.svg";
-  var strata_tag_name=$('#id_tag_no').val();
-  var strata_mine_name=$('#id_mine_name').children("option:selected").text();
-  var markerName="Test";
-  var NodeName=strata_tag_name+"||"+strata_mine_name+"||";
-  // var ipAddress=$('#id_ip_add').val();
-  var strataLocation=$('#id_location_name').val();
-  var strataDescription=$('#id_description').val();
-  // var routerAddress=$('#id_address').val();
-  // var Blocked=$('#id_is_block').val();
-  var NodeContent="<small>";
-                  
-  NodeContent+="<strong >"+"Strata Location : ";
-  NodeContent+="<span class='badge'>";
-  NodeContent+=strataLocation;
-  NodeContent+="</span>";
-  NodeContent+="</strong></br>";
-
-  NodeContent+="<strong >"+"Description : ";
-  NodeContent+="<span class='badge'>";
-  NodeContent+=strataDescription;
-  NodeContent+="</span>";                 
-  NodeContent+="</strong></small>";
-
-  var KBkeys=KBtestmap.mapMarkers;
-  if("Test" in KBkeys)KBkeys.Test.removeMarker();
-  KBtestmap.addMarker(icon,PosX,PosY,markerName);
-  KBtestmap.mapMarkers[markerName].addModal(NodeName,NodeContent);
-  KBtestmap.showAllMapMarkers();
-}    
-
-var added=0;
-var c=0;
-
-document.addEventListener("fullscreenchange", function () {
-    if(checkFullScreenStatus()){$('#KBtestmap').show();$("body").css({"overflow":"hidden"});}
-    else{$('#KBtestmap').hide();$("body").css({"overflow":"visible"});}
-});
-
-</script>
+    </script>
 {% endblock %}
 

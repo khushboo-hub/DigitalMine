@@ -284,7 +284,7 @@ function fill_table_miner(result){
      for(r in result){
         emergency=(result[r].emergency==0)?"NO":"YES";
         emergency_class=(result[r].emergency==0)?"label-primary":"label-danger";
-       item=$("<tr><td>"+result[r].time+"</td><td>"+result[r].emp_name+"</td><td>"+result[r].miner_id+"</td><td>"+result[r].router_id+"</td><td>"+result[r].router_location+"</td><td><span class='label "+emergency_class+"'>"+emergency+"</span></td><td>"+result[r].ip_add+"</td></tr>")
+        item=$("<tr><td>"+result[r].time+"</td><td>"+result[r].emp_name+"</td><td>"+result[r].miner_id+"</td><td>"+result[r].router_id+"</td><td>"+result[r].router_location+"</td><td><span class='label "+emergency_class+"'>"+emergency+"</span></td><td>"+result[r].ip_add+"</td></tr>")
         .hide()
         .fadeIn(1000);
         $("#miner_body").append(item);
