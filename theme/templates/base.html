@@ -82,7 +82,6 @@
 
         }
 
-
         .wrap {
             width: 1000px;
             height: 1000px;
@@ -190,49 +189,6 @@
 
     <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fonts/Roboto.css' %}" rel='stylesheet' type='text/css'>
-<<<<<<< HEAD
-=======
-
-
-    <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
-
-    <script src="{% static 'js/customJS.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!--<script src="{% static 'js/bootstrap.js' %}"></script>-->
-    <!--<script src="{% static 'js/bootstrap-datepicker.js' %}"></script>-->
-
-    <script src="{% static 'js/dataTable.js' %}"></script>
-    <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'Js/jszip.min.js' %}"></script>
-    <script src="{% static 'js/pdfmake.min.js' %}"></script>
-    <script src="{% static 'js/vfs_fonts.js' %}"></script>
-    <script src="{% static 'js/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/buttons.print.min.js' %}"></script>
-
-    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
-    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
-    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
-    <script src="{% static 'js/ObjectEquate.js' %}"></script>
-    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
-    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
-    <script src="{% static 'js/jquery.md5.min.js' %}"></script>
-
-    <script src="{% static 'datetime/js/moment.js' %}"></script>
-    <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
-    <script src="{% static 'datetime/js/collapse.js' %}"></script>
-    <script src="{% static 'datetime/js/transition.min.js' %}"></script>
-    <script src="{% static 'js/printThis.js' %}"></script>
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
-
-    <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
-    {#    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>#}
-
-    <!--Tags-->
->>>>>>> 2d32bc4d0a9e9b923436016009aaf19d5b61872e
     <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -242,20 +198,8 @@
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/prettify.css' %}" rel="stylesheet"/>
     <link href="{% static 'fonts/GrandHotel.css' %}" rel='stylesheet' type='text/css'>
-<<<<<<< HEAD
-=======
-    <script src="{% static 'js/filepond.js' %}"></script>
-    <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>-->
-    <!--    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>-->
-    <script src="{% static 'js/svg.min.js' %}"></script>
-    <script src="{% static 'js/workflowChart.js' %}"></script>
-    <script src="{% static 'js/divjs.js' %}"></script>
-    <script src="{% static 'js/jquery.toast.js' %}"></script>
-    <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 
-
->>>>>>> 2d32bc4d0a9e9b923436016009aaf19d5b61872e
     <style>
         .navbar-transparent {
             background-color: #34ACDC;
@@ -825,7 +769,7 @@
     </div>
 </div>
 
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
     <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
 
@@ -967,56 +911,11 @@
                 success: function (data) {
                     switchingWarningFunction(data);
                 },
-<<<<<<< HEAD
-                error: function(){
-                        console.log("Something went wrong. Please contact admin");
-                }
-        });
-    }
-    function stopGlobalWarningFunction() {
-        clearInterval(myVar);
-    }
-    var total_row = 0;
-    var path = "";
-    var baseUrl = "http://localhost:8000/media/";
-
-    function switchingWarningFunction(json) {
-
-         var tbl = "<table style='border-collapse: collapse;\n" +
-             "  border-spacing: 0;\n" +
-             "  width: 100%;\n" +
-             "  border: 0px solid #ddd;'>" +
-             "<head>" +
-             "<tr>" +
-             "<th>Date-Time</th>" +
-             "<th>Location" +
-             "</th>" +
-             "<th>Sensor Name/Type</th>" +
-             "<th>Warning Level</th>" +
-             "<th>Sensor Value</th>" +
-             "</head>" +
-             "<body>";
-
-
-        json.forEach(function(objArray) {
-            objArray.forEach(function(obj) {
-
-                switch (obj.module_type) {
-                    case "strata":
-                        tbl += strataWarningFunction(obj);
-                        break;
-                    case "water":
-                        tbl += waterWarningFunction(obj);
-                        break;
-                    default:
-                        break;
-=======
                 error: function () {
                     console.log("Something went wrong. Please contact admin");
                 },
                 complete: function () {
                     setTimeout(start, 1000);
->>>>>>> 2d32bc4d0a9e9b923436016009aaf19d5b61872e
                 }
             });
         })();
@@ -1072,23 +971,6 @@
                 "<th>Sensor Value</th>" +
                 "</head>" +
                 "<body>";
-
-
-            {#json.forEach(function (objArray) {#}
-            {#    objArray.forEach(function (obj) {#}
-            {##}
-            {#        switch (obj.module_type) {#}
-            {#            case "strata":#}
-            {#                tbl += strataWarningFunction(obj);#}
-            {#                break;#}
-            {#            case "water":#}
-            {#                tbl += waterWarningFunction(obj);#}
-            {#                break;#}
-            {#            default:#}
-            {#                break;#}
-            {#        }#}
-            {#    });#}
-            {#});#}
             tbl += "</body>" +
                 "</table>";
 
