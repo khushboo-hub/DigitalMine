@@ -636,16 +636,16 @@ def analysis_wifi(request, pk, template_name='gasmonitoring_wifi/manage_goaf_are
     instance_count = data_list.count()
 
     idn = 1
-    while (idn <= instance_count):
+    for gas in data_list:
         x = GraphData()
-        x.o2 = Fire_exp_gasesWifi.objects.get(id=idn).o2
-        x.co = Fire_exp_gasesWifi.objects.get(id=idn).co
-        x.ch4 = Fire_exp_gasesWifi.objects.get(id=idn).ch4
-        x.co2 = Fire_exp_gasesWifi.objects.get(id=idn).co2
-        x.h2 = Fire_exp_gasesWifi.objects.get(id=idn).h2
-        x.n2 = Fire_exp_gasesWifi.objects.get(id=idn).n2
-        x.c2h4 = Fire_exp_gasesWifi.objects.get(id=idn).c2h4
-        x.idtest = Fire_exp_gasesWifi.objects.get(id=idn).id
+        x.o2 = gas.o2
+        x.co = gas.co
+        x.ch4 = gas.ch4
+        x.co2 = gas.co2
+        x.h2 = gas.h2
+        x.n2 = gas.n2
+        x.c2h4 = gas.c2h4
+        x.idtest = gas.id
 
         ##explosibility calculation again
         x.explos = 5

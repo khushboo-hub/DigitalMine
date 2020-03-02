@@ -253,7 +253,7 @@ function Get_All_Miners_Data(){
     var HashDataPrev="";
     var HashDataCurr="";
 
-    setInterval(function(){
+   (function minersTracking(){
         //call ajax
          $.ajax({
             data:{'id':mine_id},
@@ -294,16 +294,19 @@ function Get_All_Miners_Data(){
                     KB_flag=1;
 
                     KBtestmap.importJSON(data);
-                    
+
                     WARNINGMINER(data);
 				return data;
               }, error: function () {
                     console.log("something is not right.please contact admin - 1");
-                }, timeout: 3000
+                },
+             complete:function () {
+                 setTimeout(minersTracking,1000);
+             }
             });
         //end call ajax
 
-    }, 3000);//time in milliseconds
+    })();
 }
 var X;
 //var elem = document.getElementById("KBtestmap");

@@ -117,8 +117,13 @@ class EmployeeForm(forms.ModelForm):
         'rows': '3',
         'placeholder': 'Please Enter Permanent Address here / पता '
     }))
+    state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+        'name':'myState',
+        'id':'mystate',
+        'placeholder': 'State /राज्य'
+    }))
 
-    state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
+   # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
 
     # mine = forms.CharField(required=False,
     #                        widget=forms.Select(choices=MineDetails.objects.all().values_list('id', 'name'),
@@ -128,8 +133,9 @@ class EmployeeForm(forms.ModelForm):
     #                                                   }))
     # mining_role = forms.CharField(required=False, widget=forms.Select(choices=MiningRole.objects.all().values_list('id','name'),attrs={'class': 'form-control', }), )
     # immediate_staff=forms.CharField(required=False,widget=forms.Select(choices=Employee.objects.all().values_list('id','name'),attrs={'class': 'form-control', }))
-    city = forms.CharField(required=False, max_length=100, widget=forms.TextInput(attrs={
-        'class': 'form-control',
+    city = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'name':'myCity',
+        'id':'mycity',
         'placeholder': 'Please Enter Your City / शहर'
     }))
     pin = forms.CharField(required=False, widget=forms.TextInput(attrs={
@@ -263,16 +269,24 @@ class MineDetailsForm(forms.ModelForm):
     #     'class': 'form-control',
     #     'placeholder': 'State /राज्य का नाम '
     # }))
-    state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
-    latitude = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
+
+    state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+        'name': 'myState',
+        'id': 'mystate',
+        'placeholder': 'State /राज्य'
+    }))
+    latitude = forms.FloatField(required=False, min_value=0,widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Latitude (ex:23.7413105) '
     }))
-    longitude = forms.CharField(required=False, widget=forms.TextInput(attrs={
+
+    longitude = forms.FloatField(required=False, widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Logitude (ex:86.4067042) '
     }))
-    mine_map_unit = forms.CharField(required=False, widget=forms.TextInput(attrs={
+
+    mine_map_unit = forms.FloatField(required=False, widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Map Scalling Unit (ex: 1 CM= 8M)'
     }))
@@ -287,6 +301,7 @@ class MineDetailsForm(forms.ModelForm):
         'placeholder': 'Tehsil /Taluka / Sub Division'
     }))
     district = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'id':'mycity',
         'class': 'form-control',
         'placeholder': 'District'
     }))

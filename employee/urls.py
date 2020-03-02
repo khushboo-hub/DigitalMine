@@ -1,12 +1,13 @@
 from django.urls import path
 
 from employee import views
+from django.views.decorators.cache import  cache_page
 
 app_name = 'employee'
 
 urlpatterns = [
     path('', views.employee_manage, name='employee_manage'),
-    path('new', views.employee_add, name='employee_add'),
+    path('new',views.employee_add, name='employee_add'),
     path('edit/<int:pk>', views.employee_edit, name='employee_edit'),
     path('delete/<int:pk>', views.employee_delete, name='employee_delete'),
     path('more_details_ajax', views.more_details_ajax, name='more_details_ajax'),

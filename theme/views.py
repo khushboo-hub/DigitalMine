@@ -16,26 +16,30 @@ from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
 from django.core.mail import EmailMessage
 from django.core.mail import send_mail, get_connection
+from django.core.cache import cache
+
 @login_required
 def home(request):
+    template_name = "home.html"
+    try:
+        if request.session['lang'] == 'in':
+            template_name = "in/home.html"
+    except:
+        pass
     # sms.SEND(8083475746, "Hello World")
     current_user = request.user
     book = get_object_or_404(User, pk=current_user.id)
     profile = {}
-    #
-    # ip = get_client_ip(request)
-    # print("IP Address: ", ip)
-
-    session="91v0bjvs538t9i2linak028zyrite2ql"
-
-    print("Session Key",user_from_session_key(session))
     try:
         profile = profile_extension.objects.get(user_id=book)
+        cache.set('profile_avatar', profile.profile_avatar, 3600)
+
     except:
+        # cache.set('profile_avatar','employee_image/male_alt_photo.svg', 30)
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
 
-    return render(request, "home1.html", {'profile': profile})
+    return render(request, template_name, {'profile_avatar': cache.get('profile_avatar')})
 
 
 def get_client_ip(request):

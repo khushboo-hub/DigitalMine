@@ -8,6 +8,7 @@ urlpatterns = [
   path('', views.manual_entry, name='manual_entry'),
   path('show_database', views.show_database, name='show_database'),
   path('analysis_button', views.analysis_button, name='analysis_button'),
+  path('explosibility/<int:page>', views.explosibility, name='explosibility'),
   path('analysis/<int:page>', views.analysis, name='analysis'),
 
 

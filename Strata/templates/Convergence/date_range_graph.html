@@ -1,25 +1,22 @@
 {% extends "base.html" %}
 {% block content %}
-<!--<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>-->
-<!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
-<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />-->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h2 class="page-header" style="text-align: left;"><b>Show Strata Graph between dates</b></h2>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header" style="text-align: left;"><b>Show Strata Graph between dates</b></h2>
                 <div class="row">
                     <div class="col-md-1">
                         <label for="" class="" id="">Choose Mine:</label>
                     </div>
                     <div class="col-md-3">
-                        {{form.mine_name}}
+                        {{ form.mine_name }}
                     </div>
                     <div class="col-md-1">
                         <label for="" class="" id="">Choose Location:</label>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="id_location_list">
+                        <select class="form-control" id="id_location_id"
+                                data-url="{% url 'Strata:fetch_location_ajax' %}">
                             <option value="">--Select Location--</option>
                         </select>
                     </div>
@@ -27,7 +24,8 @@
                         <label for="" class="" id="">Choose Sensor:</label>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="id_sensor_list">
+                        <select class="form-control" id="id_sensor_list"
+                                data-url="{% url 'Strata:fetch_sensor_ajax' %}">>
                             <option value="">--Select Sensor--</option>
                         </select>
                     </div>
@@ -49,170 +47,276 @@
                         <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
                     </div>
                 </div>
-                <div class="row" style="margin-top:15px;">
-                    <input type="button" style="display:none" id="btn_print" class="btn btn-success btn-sm" value="Print"/>
-                    <div class="table-responsive">
-                        <div id="chartContainer" style="width: 100%; height: 500px;"></div>
+                <div id='stratamonitoring' data-strata-location="{{ iframe_strata_location }}"
+                     data-strata-sensor="{{ iframe_strata_sensor }}"
+                     data-values-url="{% url 'Strata:fetch_sensor_date_range' %}"
+                     data-url="{% url 'Strata:fetch_sensor_common_values_ajax' %}">
 
-                    </div>
-                </div>
-        </section>
+                    <!-- Plotly chart will be drawn inside this DIV --></div>
+            </section>
+        </div>
     </div>
-</div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-<script>
-    $('#from_date').datetimepicker({
-        format: 'YYYY-MM-DD hh:mm:ss'
-    });
-    $('#to_date').datetimepicker({
-        format: 'YYYY-MM-DD hh:mm:ss'
-    });
+    <script>
 
-    <!--$("#from_date").datepicker({ format: 'yyyy-mm-dd'});-->
-    <!--$("#to_date").datepicker({ format: 'yyyy-mm-dd'});-->
-    $("#id_mine_name").addClass('form-control');
-    $("#id_mine_name").on("change",function(){
-    mine_id=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_location_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                //console.log(data.result);
-                //alert(data.result[0]);
-                fill_dropdown(data.result);
+        $(document).ready(function () {
 
-                return data;
-                    },
-            error: function(){
-                    console.log("error he ji");
-                 }
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
-});
-function fill_dropdown(result){
-    $("#id_location_list").html("<option>--Select Location--</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
-    $("#id_location_list").on("change",function(){
-    location_id=this.value;
-    $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_sensor_ajax' %}",
-            data: {
-                     'id': location_id
-                   },
-            success: function(data) {
-                //console.log(data.result);
-                //alert(data.result[0]);
-                fill_dropdown_sensor(data.result);
-
-                return data;
-                    },
-            error: function(){
-                    console.log("error he ji");
-                 }
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
             });
-});
-function fill_dropdown_sensor(result){
-    $("#id_sensor_list").html("<option>--Select Sensor--</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_sensor_list").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
-    $("#btn_show").click(function(){
-        $("#btn_show").val("Please wait...");
-        $("#btn_show").prop('disabled', true);
-
-         sensor_id=$("#id_sensor_list").val();
-        if(sensor_id){
-            datefrom=$("#from_date").val();
-            dateto=$("#to_date").val();
-
-
-            $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_sensor_date_range' %}",
-            data: {
-                     'id': sensor_id,
-                     'date_from':datefrom,
-                     'date_to':dateto,
-                   },
-            success: function(data) {
-                console.log(data)
-                    var x_data=[];
-                    var y_data=[];
-                    for (index = 0; index < data.result.length; index++) {
-                        var str_array = data.result[index].split(',');
-                        x_data.push(moment(str_array[0]).format("DD-MM-YYYY HH:mm:ss"));
-                        y_data.push(str_array[4]);
+            let strata_location_url = $('#id_location_id').attr('data-url');
+            let strata_sensor_url = $('#id_sensor_list').attr('data-url');
+            $("#id_mine_name").addClass('form-control');
+            $("#id_mine_name").on("change", function () {
+                let mine_id = this.value;
+                console.log(mine_id);
+                $.ajax({
+                    type: "get",
+                    url: strata_location_url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
                     }
-                    console.log(x_data);
-                    console.log(y_data);
-                    var data = [{
-                    x: x_data.reverse(),
-                    y: y_data.reverse(),
-                    type: 'scatter'
-                    }];
-                    Plotly.newPlot('chartContainer', data, {}, {showSendToCloud: true});
-                    $("#btn_show").val("Show");
-                    $("#btn_show").prop('disabled', false);
-                return data;
-                    },
-            error: function(){
-                    console.log("error he ji");
-                 }
+                });
             });
-        }else{
-            alert("Please choose sensor");
-        }
 
-    });
-// function call_graph(data){
-//     var dps = [];
-//     for(index = 0; index < data.length; index++) {
-//                     var str_array = data[index].split(',');
-//                     dps.push({
-// 			            x: Date.parse(str_array[0]),
-// 			            y: Number(str_array[1])
-// 		            });
-//     }
-// var chart = new CanvasJS.Chart("chartContainer", {
-// 	animationEnabled: true,
-// 	theme: "light2",
-// 	title:{
-// 		text: "Sensor Data Records"
-// 	},
-// 	axisX: {
-// 		valueFormatString: "DD MMM"
-// 	},
-// 	axisY: {
-// 		title: "mm",
-// 		maximum: 20
-// 	},
-// 	data: [{
-// 		type: "splineArea",
-// 		color: "#6599FF",
-// 		xValueType: "dateTime",
-// 		xValueFormatString: "DD MMM",
-// 		yValueFormatString: "#,##0.##\"mm\"",
-// 		dataPoints: dps
-// 	}]
-// });
+            function fill_dropdown(result) {
+                console.log(result);
+                $("#id_location_id").html("<option>--Select Location--</option>");
+                for (var strata in result) {
+                    if (result.hasOwnProperty(strata)) {
+                        $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
+                    }
+                }
+            }
 
-//chart.render();
-//}
+            $("#id_location_id").on("change", function () {
+                let location_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: strata_sensor_url,
+                    data: {
+                        'id': location_id
+                    },
+                    success: function (data) {
+                        fill_dropdown_sensor(data.result);
 
-</script>
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown_sensor(result) {
+
+                $("#id_sensor_list").html("<option>--Select Location--</option>");
+                for (var sensor in result) {
+                    if (result.hasOwnProperty(sensor)) {
+                        $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                    }
+                }
+            }
+
+            let strata_url = $('#stratamonitoring').attr('data-url');
+            let strata_values_url = $('#stratamonitoring').attr('data-values-url');
+
+            $("#btn_show").click(function () {
+                $("#btn_show").val("Please wait...");
+                $("#btn_show").prop('disabled', true);
+
+                let sensor_id = $("#id_sensor_list").val();
+                if (sensor_id) {
+                    let datefrom = $("#from_date").val();
+                    let dateto = $("#to_date").val();
+                    strataStart(sensor_id, strata_url, datefrom, dateto);
+                }
+            });
+
+            function strataStart(sensor_id, url, datefrom, dateto) {
+                $.xhrPool.abortAll();
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': sensor_id
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                    },
+                    success: function (data) {
+                        var strata = data.result;
+                        $("#ip_hidden").val(strata.ip);
+                        let strata_l_Value = parseFloat(strata.level1);
+                        let strata_l_color = strata.level1_color;
+
+                        let strata_m_Value = parseFloat(strata.level2);
+                        let strata_m_color = strata.level2_color;
+
+                        let strata_h_Value = parseFloat(strata.level3);
+                        let strata_h_color = strata.level3_color;
+
+                        let strata_audio_type = strata.audio_type;
+                        let strata_first_warning = strata.level1_msg;
+                        let strata_second_warning = strata.level2_msg;
+                        let strata_third_warning = strata.level3_msg;
+
+                        let strata_first_audio = strata.level1_audio;
+                        let strata_second_audio = strata.level2_audio;
+                        let strata_third_audio = strata.level3_audio;
+                        //INITIALIZING PLOTLY
+
+                        stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, sensor_id, datefrom, dateto);
+
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }, timeout: 10000
+                });
+            }
+
+            var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, sensor_id, datefrom, dateto) {
+
+                StrataAjax = $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': sensor_id,
+                        'date_from': datefrom,
+                        'date_to': dateto,
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                    },
+                    success: function (data) {
+                        let time = [];
+                        let strataValue = [];
+                        let strataL = [];
+                        let strataM = [];
+                        let strataH = [];
+                        let strataHH = [];
+                        let strata = data.result;
+                        for (let st in strata) {
+                            if (strata.hasOwnProperty(st)) {
+                                time.push(strata[st].date);
+                                strataValue.push(strata[st].sensor_value / 15);
+                                strataL.push(strata_l_Value);
+                                strataM.push(strata_m_Value);
+                                strataH.push(strata_h_Value);
+                                strataHH.push(strata_h_Value * 1.2);
+                            }
+                        }
+                        let sL = {
+                            x: time,
+                            y: strataL.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: 'rgba(158,158,158,0.18)', //white
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: 'Safe',
+                        };
+                        let sM = {
+                            x: time,
+                            y: strataM.reverse(),
+                            fill: 'tonexty',
+                            mode: 'lines',
+                            fillcolor: '#0096888a',
+                            hoverinfo: 'skip',
+                            name: '1st Level',
+
+                        };
+                        let sH = {
+                            x: time,
+                            y: strataH.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#ffeb3b75',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '2nd Level',
+
+                        };
+                        let sHH = {
+                            x: time,
+                            y: strataHH.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#f443368c',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '3rd Level',
+
+                        };
+                        let s = {
+                            x: time,
+                            y: strataValue.reverse(),
+                            type: 'scatter',
+                            fillcolor: 'rgba(3,169,244,0.5)',
+                            mode: 'markers+lines',
+                            marker: {
+                                color: 'rgba(3,169,244,1)',
+                                size: 12
+                            },
+                            hoveron: 'points',
+                            hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
+                            hoverinfo: 'text',
+                            title: 'Time',
+                            name: 'Strata',
+                        };
+
+
+                        let strata_layout = {
+                            xaxis: {
+                                nticks: 10,
+                                domain: [0, 1],
+                                title: "Time",
+                            },
+                            yaxis: {
+                                domain: [0, 1],
+                                title: "Strata Level (in mm)",
+                                range: [0, strata_h_Value * 1.2]
+                            },
+                            images: [{
+                                name: 'watermark_1',
+                                source: "http://localhost:8000/static/image/csir_logo.svg",
+                                xref: "paper",
+                                yref: "paper",
+                                x: 0.25,
+                                y: 0.9,
+                                sizex: 0.7,
+                                sizey: 0.7,
+                                opacity: 0.1,
+                                layer: "below"
+                            }],
+                            showlegend: true,
+                            legend: {
+                                xanchor: "left",//"auto" | "left" | "center" | "right"
+                                yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                                y: 1,//number between or equal to -2 and 3
+                                x: 0,//number between or equal to -2 and 3
+                                orientation: "h"
+                            }
+                        };
+                        let config = {responsive: true};
+                        let update = [sL, sM, sH, sHH, s];
+                        Plotly.react('stratamonitoring', update, strata_layout, config, [0, 1, 2, 3, 4]);
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    },
+                    timeout: 60000,
+                })
+            };
+        });
+    </script>
 {% endblock %}

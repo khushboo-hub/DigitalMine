@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     {% load static %}
+    {% load staticfiles %}
     <title>Digital Mine (IoT) | CSIR-CIMFR</title>
 
     <meta charset="utf-8">
@@ -12,9 +13,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
-    <!-- Canonical SEO -->
-    {#    <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>#}
-
+    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">
 
     <meta name="keywords"
           content="csir,cimfr,central institute mining and fuel research digital, Council of Scientific and Industrial Research, digital mine, internet of things,
@@ -29,6 +28,12 @@
     <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
 
     <style>
+        #lang-switcher {
+            position: fixed;
+            bottom: 10px;
+            right: 5px;
+        }
+
         .navbar.bg-primary {
             border-radius: 0px;
         !important;
@@ -77,7 +82,6 @@
             border-radius: 5px;
 
         }
-
 
         .wrap {
             width: 1000px;
@@ -153,12 +157,7 @@
             text-align: center;
         }
 
-        @media (min-width: 768px)
-            @mdiapadding-top : 220px;
-
-
     </style>
-
     <script>
         window.onload = function () {
             if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -167,17 +166,16 @@
         }
     </script>
 
-    <!--=======end PAHLE KA===================-->
+    <link rel="stylesheet" href="{% static 'css/kisku_custom.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/filepond.css' %}">
-
+    <link rel="stylesheet" href="{% static 'css/MaterialIcons.css' %}">
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
     <link rel="stylesheet" href="{% static '/css/w3.css' %}">
-    <!--<link rel="stylesheet" href="{% static '/css/bootstrap-datetimepicker.css' %}">-->
-    <!--&lt;!&ndash;<link rel="stylesheet" href="{% static '/css/datepicker.css' %}">&ndash;&gt; if this is added then bootstrap-datetimepicker does not work properly-->
+
     <link rel="stylesheet" href="{% static '/css/dataTable.css' %}">
     <link rel="stylesheet" href="{% static '/css/custom_style.css' %}">
 
@@ -187,99 +185,30 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
     <link rel="stylesheet" href="{% static '/css/KBmapmarkers.css' %}">
     <link rel="stylesheet" href="{% static '/css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/autocomplete-custom.css' %}">
 
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
     <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fonts/Roboto.css' %}" rel='stylesheet' type='text/css'>
-
-
-    <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
-
-    <script src="{% static 'js/customJS.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <!--<script src="{% static 'js/bootstrap.js' %}"></script>-->
-    <!--<script src="{% static 'js/bootstrap-datepicker.js' %}"></script>-->
-
-    <script src="{% static 'js/dataTable.js' %}"></script>
-    <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
-    <script src="{% static 'js/buttons.flash.min.js' %}"></script>
-    <script src="{% static 'Js/jszip.min.js' %}"></script>
-    <script src="{% static 'js/pdfmake.min.js' %}"></script>
-    <script src="{% static 'js/vfs_fonts.js' %}"></script>
-    <script src="{% static 'js/buttons.html5.min.js' %}"></script>
-    <script src="{% static 'js/buttons.print.min.js' %}"></script>
-
-    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkers.js' %}"></script>
-    <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
-    <script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
-    <script src="{% static 'js/jquery.mousewheel.js' %}"></script>
-    <script src="{% static 'js/ObjectEquate.js' %}"></script>
-    <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
-    <script src="{% static 'js/jquery.svg.min.js' %}"></script>
-    <script src="{% static 'js/jquery.md5.min.js' %}"></script>
-
-    <script src="{% static 'datetime/js/moment.js' %}"></script>
-    <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
-    <script src="{% static 'datetime/js/collapse.js' %}"></script>
-    <script src="{% static 'datetime/js/transition.min.js' %}"></script>
-    <script src="{% static 'js/printThis.js' %}"></script>
-    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.9.4/cytoscape.min.js"></script>#}
-
-    <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
-    <!--<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>-->
-
-    <!--Tags-->
     <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/>
-    <script src="{% static 'js/select2.min.js' %}"></script>
-    <!--Tags End-->
-
-    <!-- BootStrap Notify Includes -->
-    <script src="{% static 'js/toastr.min.js' %}"></script>
-
-    <!-- Bootstrap Notify Includes end -->
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet"/>
-
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{% static 'css/material.teal-red.min.css' %}">
     <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
-
-    <!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css" rel="stylesheet"/>-->
-
-    <!--     Font Awesome     -->
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
-    <script src="{% static 'js/prettify.js' %}"></script>
     <link href="{% static 'css/prettify.css' %}" rel="stylesheet"/>
     <link href="{% static 'fonts/GrandHotel.css' %}" rel='stylesheet' type='text/css'>
-    <script src="{% static 'js/filepond.js' %}"></script>
-    <!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.min.js"></script>-->
-    <!--    <script src="https://code.jquery.com/jquery-3.0.0.slim.min.js"></script>-->
-    <script src="{% static 'js/svg.min.js' %}"></script>
-    <script src="{% static 'js/workflowChart.js' %}"></script>
-    <script src="{% static 'js/divjs.js' %}"></script>
-    <script src="{% static 'js/jquery.toast.js' %}"></script>
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
 
     <style>
-        .container.tim-container {
-            width: 99%;
-        }
-
         .navbar-transparent {
             background-color: #34ACDC;
             background-color: rgba(52, 172, 220, 0.98);
 
         }
-
     </style>
 
-    <script>
-        //paste this code under the head tag or in a separate js file.
-        // Wait for window load
-        $(document).ready(function () {
-            // Animate loader off screen
-            $(".se-pre-con").fadeOut("slow");
-        });
-    </script>
 
 </head>
 <body>
@@ -408,7 +337,7 @@
                                         class="label label-default">Manual Mode</span></a></li>
                                 <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                         class="label label-default">Manual Mode</span></a></li>
-                                        <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
+                                <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -551,7 +480,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color ">
+                            <ul class="dropdown-menu  navbar-color">
 
                                 <li><a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a></li>
                                 <li><a href="{% url 'inventory_management:category_add' %}">Add Category</a></li>
@@ -711,6 +640,7 @@
                                 <li><a href="{% url 'employee:aboutdigitalmine' %}">About Digital Mine</a></li>
                                 <li><a href="{% url 'employee:contactus' %}">Contact Us</a></li>
                                 <li><a href="{% url 'news:index' %}">News</a></li>
+                                <li><a href="{% url 'setting:manage_constant' %}">Manage Settings</a></li>
                             </ul>
                         </li>
 
@@ -745,24 +675,20 @@
                                                 class="glyphicon glyphicon-refresh"></span>
                                             Change Password </a></li>
                                         <li class="divider"></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span class="glyphicon glyphicon-off"></span>
+                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
+                                                class="glyphicon glyphicon-off"></span>
                                             Logout </a></li>
                                     </ul>
                                 </li>
                             {% endif %}
                         </ul>
-
                     </ul>
-
-
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-
         <div class="blurred-container"></div>
     </div> <!-- end menu-dropdown -->
 </div>
-
 
 <div class="row">
     <div class="col-md-2"></div>
@@ -784,6 +710,21 @@
         {% block content %}
         {% endblock %}
     </div><!-- content -->
+    <div>
+        <main>
+            <button id="lang-switcher" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">language</i>
+            </button>
+            <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="lang-switcher">
+                <a href="{% url 'setting:change_language' 'en' %}">
+                    <li class="mdl-menu__item">English</li>
+                </a>
+                <a href="{% url 'setting:change_language' 'in' %}">
+                    <li class="mdl-menu__item">हिंदी</li>
+                </a>
+            </ul>
+        </main>
+    </div>
 </div>
 <div class="modal fade" style="position:absolute" id="update_info" role="dialog">
     <div class="modal-dialog modal-confirm ">
@@ -829,9 +770,56 @@
     </div>
 </div>
 
+
+<script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
+
+<script src="{% static 'js/customJS.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+
+<script src="{% static 'js/dataTable.js' %}"></script>
+<script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'Js/jszip.min.js' %}"></script>
+<script src="{% static 'js/pdfmake.min.js' %}"></script>
+<script src="{% static 'js/vfs_fonts.js' %}"></script>
+<script src="{% static 'js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'js/buttons.print.min.js' %}"></script>
+{#<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>#}
+<script src="{% static 'js/plotly-latest.min.js' %}"></script>
+<script src="{% static 'js/KBmapmarkers.js' %}"></script>
+<script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
+<script src="{% static 'js/jquery.panzoom.min.js' %}"></script>
+<script src="{% static 'js/jquery.mousewheel.js' %}"></script>
+<script src="{% static 'js/ObjectEquate.js' %}"></script>
+<script src="{% static 'js/jquery.connectingLine.js' %}"></script>
+<script src="{% static 'js/jquery.svg.min.js' %}"></script>
+<script src="{% static 'js/jquery.md5.min.js' %}"></script>
+
+<script src="{% static 'datetime/js/moment.js' %}"></script>
+<script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
+<script src="{% static 'datetime/js/collapse.js' %}"></script>
+<script src="{% static 'datetime/js/transition.min.js' %}"></script>
+<script src="{% static 'js/printThis.js' %}"></script>
+
+<script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'js/select2.min.js' %}"></script>
+<script src="{% static 'js/toastr.min.js' %}"></script>
+<script src="{% static 'js/prettify.js' %}"></script>
+<script src="{% static 'js/filepond.js' %}"></script>
+<script src="{% static 'js/svg.min.js' %}"></script>
+<script src="{% static 'js/workflowChart.js' %}"></script>
+<script src="{% static 'js/divjs.js' %}"></script>
+<script src="{% static 'js/jquery.toast.js' %}"></script>
+<script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
 <script>
+    $(document).ready(function () {
+        $(".se-pre-con").fadeOut("slow");
+    });
+</script>
 
-
+<script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
         $('ul.nav li.dropdown').hover(function () {
@@ -871,186 +859,227 @@
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
         });
 
-        $.ajax({
-            url: "{% url 'employee:checkifuserfieldempty' %}",
-            success: function (data) {
-                if (data.result == '1') {
-                    $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
-                } else {
-                    $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
-                }
-            },
-            error: function () {
-                console.log('Something Went Wrong!');
-            }
-        });
-
-        $.ajax({
-            url: "{% url 'employee:profile_ajax' %}",
-            success: function (data) {
-                if (data.hasOwnProperty('profile_avatar')) {
-                    if(!isEmpty(data.profile_avatar)) {
-                        $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+        (function checkuser() {
+            $.ajax({
+                url: "{% url 'employee:checkifuserfieldempty' %}",
+                success: function (data) {
+                    if (data.result == '1') {
+                        $('span.label.incomplete_profile_check').addClass('show').removeClass('hidden');
+                    } else {
+                        $('span.label.incomplete_profile_check').addClass('hidden').removeClass('show');
                     }
-                    else{
-                        $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
-                    }
-
-                }
-                if (data.hasOwnProperty('mine')) {
-
-                    $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
-                }
-            },
-            error: function () {
-                console.log('Something Went Wrong!');
-                $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
-            }
-        });
-    });
-    <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
-    var interval_time = 5000;
-    var myVar = setInterval(startGlobalWarningFunction, interval_time);
-
-    function startGlobalWarningFunction() {
-        $.ajax({
-            type:"GET",
-                url: "{% url 'setting:globalWarningFunction' %}",
-                success: function(data) {
-                    console.log(data);
-                    switchingWarningFunction(data);
                 },
-                error: function(){
-                        console.log("Something went wrong. Please contact admin");
-                }
-        });
-    }
-
-    {#setInterval(function(){#}
-    {#    $.ajax({#}
-    {#        type:"get",#}
-    {#            url: "{% url 'Strata:warning_level_information' %}",#}
-    {#            success: function(data) {#}
-    {#            //console.log(data);#}
-    {#            //toastr.warning(data["result"]); // Vikash Changed Here#}
-    {#            //$("#fill_here").html(data["result"]); //Vikash Changed Here#}
-    {#            if(data["result"]){#}
-    {#               // $("#is_visiable").attr("style",""); //Vikash Changed Here#}
-    {#                toastr.warning(data["result"]);#}
-    {#                if(data["light_result"]){#}
-    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
-    {#                }else{#}
-    {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-    {#                }#}
-    {#            }else{#}
-    {#                $("#is_visiable").attr("style","display:none");#}
-    {#                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
-    {#            }#}
-    {#            },#}
-    {#            error: function(){#}
-    {#                    console.log("something went wrong");#}
-    {#            }#}
-    {#    });#}
-    {#, interval_time);#}
-
-    function stopGlobalWarningFunction() {
-        clearInterval(myVar);
-    }
-    var total_row = 0;
-    function switchingWarningFunction(json) {
-
-         var tbl = "<table style='border-collapse: collapse;\n" +
-             "  border-spacing: 0;\n" +
-             "  width: 100%;\n" +
-             "  border: 0px solid #ddd;'>" +
-             "<head>" +
-             "<tr>" +
-             "<th>Date-Time</th>" +
-             "<th>Location" +
-             "</th>" +
-             "<th>Sensor Name/Type</th>" +
-             "<th>Warning Level</th>" +
-             "<th>Sensor Value</th>" +
-             "</head>" +
-             "<body>";
-
-
-        json.forEach(function(objArray) {
-            objArray.forEach(function(obj) {
-
-                switch (obj.module_type) {
-                    case "strata":
-                        tbl += strataWarningFunction(obj);
-                        break;
-                    case "water":
-                        tbl += waterWarningFunction(obj);
-                        break;
-                    default:
-                        break;
+                error: function () {
+                    console.log('Something Went Wrong!');
                 }
             });
-        });
-        tbl += "</body>" +
-             "</table>";
+        })();
 
-        if(total_row){
-            toastr.warning(tbl);
-        }
-    }
+        (function profilepicture() {
+            $.ajax({
+                url: "{% url 'employee:profile_ajax' %}",
+                success: function (data) {
+                    if (data.hasOwnProperty('profile_avatar')) {
+                        if (!isEmpty(data.profile_avatar)) {
+                            $('img#profile_avatar').attr('src', '/media/' + data.profile_avatar);
+                        } else {
+                            $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                        }
 
-    function strataWarningFunction(json) {
-        var popup_tbl = "";
-        if(json.is_strata_display_warning){
-            total_row++;
-            popup_tbl = "<tr>" +
-                        "<td>"+json.datetime+"</td>" +
-                        "<td>"+json.location+"</td>" +
-                        "<td>"+json.sensor_name+"</td>" +
-                        "<td>"+json.warning_level+"</td>" +
-                        "<td>"+json.value+"</td>" +
-                        "</tr>";
+                    }
+                    if (data.hasOwnProperty('mine')) {
+
+                        $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                    }
+                },
+                error: function () {
+                    console.log('Something Went Wrong!');
+                    $('img#profile_avatar').attr('src', 'http://localhost:8000/media/employee_image/male_alt_photo.svg');
+                }
+            });
+        })();
+
+        <!-- --------------------------Global warning for STRATA, Water and gas Monitoring (Start Here)----------------- -->
+        {#var interval_time = 5000;#}
+        {#var myVar = setInterval(startGlobalWarningFunction, interval_time);#}
+
+        (function start() {
+            $.ajax({
+                type: "GET",
+                url: "{% url 'setting:globalWarningFunction' %}",
+                success: function (data) {
+                    switchingWarningFunction(data);
+                },
+                error: function () {
+                    console.log("Something went wrong. Please contact admin");
+                },
+                complete: function () {
+                    setTimeout(start, 1000);
+                }
+            });
+        })();
+
+        {#setInterval(function(){#}
+        {#    $.ajax({#}
+        {#        type:"get",#}
+        {#            url: "{% url 'Strata:warning_level_information' %}",#}
+        {#            success: function(data) {#}
+        {#            //console.log(data);#}
+        {#            //toastr.warning(data["result"]); // Vikash Changed Here#}
+        {#            //$("#fill_here").html(data["result"]); //Vikash Changed Here#}
+        {#            if(data["result"]){#}
+        {#               // $("#is_visiable").attr("style",""); //Vikash Changed Here#}
+        {#                toastr.warning(data["result"]);#}
+        {#                if(data["light_result"]){#}
+        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");#}
+        {#                }else{#}
+        {#                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {#                }#}
+        {#            }else{#}
+        {#                $("#is_visiable").attr("style","display:none");#}
+        {#                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");#}
+        {#            }#}
+        {#            },#}
+        {#            error: function(){#}
+        {#                    console.log("something went wrong");#}
+        {#            }#}
+        {#    });#}
+        {#, interval_time);#}
+
+        function stopGlobalWarningFunction() {
+            clearInterval(myVar);
         }
-        if(json.is_strata_audio){
-             if(json.audio_play_type =="text2voice"){
-                Speak(json.audio_text,9,0.5);
-            }else{
-                path = baseUrl+json.audio_song;
-                var playNow = new Audio(path);
-                playNow.play();
+
+        var total_row = 0;
+        var path = "";
+        var baseUrl = "http://localhost:8000/media/";
+
+        function switchingWarningFunction(json) {
+
+            var tbl = "<table style='border-collapse: collapse;\n" +
+                "  border-spacing: 0;\n" +
+                "  width: 100%;\n" +
+                "  border: 0px solid #ddd;'>" +
+                "<head>" +
+                "<tr>" +
+                "<th>Date-Time</th>" +
+                "<th>Location" +
+                "</th>" +
+                "<th>Sensor Name/Type</th>" +
+                "<th>Warning Level</th>" +
+                "<th>Sensor Value</th>" +
+                "</head>" +
+                "<body>";
+            tbl += "</body>" +
+                "</table>";
+
+            if (total_row) {
+                toastr.warning(tbl);
             }
         }
-        if (json.is_strata_light){
 
-        }
-
-        return popup_tbl;
-    }
-    function waterWarningFunction(json) {
-        var popup_tbl = "";
-        if(json.is_water_display_warning){
-            total_row++;
-           popup_tbl =  "<tr>" +
-                        "<td>"+json.datetime+"</td>" +
-                        "<td>"+json.location+"</td>" +
-                        "<td>"+json.sensor_name+"</td>" +
-                        "<td>"+json.warning_level+"</td>" +
-                        "<td>"+json.value+"</td>" +
-                        "</tr>";
-        }
-        if(json.is_water_audio){
-            if(json.audio_play_type =="text2voice"){
-                Speak(json.audio_text,9,0.5);
-            }else{
-                path = baseUrl+json.audio_song;
-                var playNow = new Audio(path);
-                playNow.play();
+        function strataWarningFunction(json) {
+            var popup_tbl = "";
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_display_warning === "undefined") {
+                json.is_strata_display_warning = 0;
             }
+            if (json.is_strata_display_warning) {
+                total_row++;
+                popup_tbl = "<tr>" +
+                    "<td>" + json.datetime + "</td>" +
+                    "<td>" + json.location + "</td>" +
+                    "<td>" + json.sensor_name + "</td>" +
+                    "<td>" + json.warning_level + "</td>" +
+                    "<td>" + json.value + "</td>" +
+                    "</tr>";
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_audio === "undefined") {
+                json.is_strata_audio = 0;
+            }
+            if (json.is_strata_audio) {
+                if (json.audio_play_type == "text2voice") {
+                    Speak(json.audio_text, 9, 0.5);
+                } else {
+                    path = baseUrl + json.audio_song;
+                    playNow.play();
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_light === "undefined") {
+                json.is_strata_light = 0;
+            }
+            if (json.is_strata_light) {
+                $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_strata_light_off === "undefined") {
+                json.is_strata_light_off = 0;
+            }
+            if (json.is_strata_light_off) {
+                $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+            }
+            //-------------------------------------------------------------------
+            return popup_tbl;
         }
-        return popup_tbl;
-    }
-    <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
+
+        function waterWarningFunction(json) {
+            var popup_tbl = "";
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_display_warning === "undefined") {
+                json.is_water_display_warning = 0;
+            }
+            if (json.is_water_display_warning) {
+                total_row++;
+                popup_tbl = "<tr>" +
+                    "<td>" + json.datetime + "</td>" +
+                    "<td>" + json.location + "</td>" +
+                    "<td>" + json.sensor_name + "</td>" +
+                    "<td>" + json.warning_level + "</td>" +
+                    "<td>" + json.value + "</td>" +
+                    "</tr>";
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_audio === "undefined") {
+                json.is_water_audio = 0;
+            }
+            if (json.is_water_audio) {
+                if (json.audio_play_type == "text2voice") {
+                    Speak(json.audio_text, 9, 0.5);
+                } else {
+                    path = baseUrl + json.audio_song;
+                    var playNow = new Audio(path);
+                    console.log(playNow)
+                    playNow.play();
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_water_light === "undefined") {
+                json.is_water_light = 0;
+            }
+            if (json.is_water_light) {
+                if (json.pump_start < json.value) {// pump start
+                    $("#myframe").attr("src", "http://192.168.1.227/LEDOn2");
+                }
+            }
+            //-------------------------------------------------------------------
+            if (typeof json.is_pump_stop === "undefined") {
+                json.is_pump_stop = 0;
+            }
+            if (json.is_pump_stop) {
+                if (json.pump_end > json.value) {// punp end
+                    $("#myframe").attr("src", "http://192.168.1.227/LEDOff2");
+                }
+            }
+            //-------------------------------------------------------------------
+            return popup_tbl;
+        }
+
+        <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
+    });
+
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
-<!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>

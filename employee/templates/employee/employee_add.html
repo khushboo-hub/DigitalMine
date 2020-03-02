@@ -1,17 +1,11 @@
 {% extends "base.html" %}
-
 {% block content %}
-{% load staticfiles %}
-<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-<!--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">-->
 <div class="container">
     <div class="row">
         <section class="col-md-12">
             <h1 class="page-header">Add Employee
                 <small>&nbsp&nbsp&nbspHere you can add/edit basic info of miners</small>
-                </sma></h1>
+            </h1>
             <div class="row text-center">
                 <div class="col-md-12">
                     <a class="btn btn-primary" data-toggle="tooltip" href="{% url 'employee:employee_manage' %}"
@@ -25,14 +19,14 @@
                     <form class="form-horizontal" enctype="multipart/form-data" method="post">{% csrf_token %}
 
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue"> Personal Details</font></legend>
+                            <legend class="scheduler-border"><span style="color: blue; "> Personal Details</span></legend>
 
 
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label class="" for="id_empid" id="id_empid">Emp-ID / आए डी<font
-                                                color="red">*</font>
+                                        <label class="" for="id_empid" id="id_empid">Emp-ID / आए डी<span
+                                                style="color: red; ">*</span>
                                         </label>
                                     </div>
                                     <div class="col-md-8">
@@ -43,9 +37,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label class="" for="id_name" id="id_name">Name / नाम<font color="red">*</font>
-                                        </label>
-                                        </label>
+                                        <label class="" for="id_name" id="id_name">Name / नाम<span style="color:red">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{form.name}}
@@ -58,7 +50,6 @@
                                     <div class="col-md-4">
                                         <label class="" for="id_father_name" id="id_father_name">Father's Name / पिता का
                                             नाम </label>
-                                        </label>
                                     </div>
                                     <div class="col-md-8">
                                         {{form.father_name}}
@@ -67,9 +58,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label class="" for="id_email" id="id_email">Email / ईमेल <font
-                                                color="red">*</font></label>
-                                        </label>
+                                        <label class="" for="id_email" id="id_email">Email / ईमेल <span
+                                                style="color: red; ">*</span></label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.email}}
@@ -81,7 +72,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_dob" id="id_dob">Date of Birth / जन्म तिथि </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         <div class='input-group date' id='dob_date_time_picker'>
@@ -98,7 +89,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_mob" id="id_mob">Mobile No / मोबाइल </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.mob}}
@@ -110,7 +101,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_gender" id="id_gender">Gender / लिंग </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.gender}}
@@ -122,7 +113,7 @@
                                         <label class="" for="id_marital_status" id="id_marital_status">Marital Status /
                                             वैवाहिक
                                             स्थिति </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.marital_status}}
@@ -134,7 +125,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_address" id="id_address">Address / पता </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.address}}
@@ -144,21 +135,20 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_state" id="id_state">State / राज्य </label>
-                                        </label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 autocomplete">
                                         {{form.state}}
                                         <span style="color:red">{{form.state.errors|striptags}}</span>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_city" id="id_city">City / शहर </label>
-                                        </label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8 autocomplete">
                                         {{form.city}}
                                         <span style="color:red">{{form.city.errors|striptags}}</span>
                                     </div>
@@ -166,7 +156,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_pin" id="id_pin">Pin / पिन </label>
-                                        </label>
+
                                     </div>
                                     <div class="col-md-8">
                                         {{form.pin}}
@@ -178,7 +168,6 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label class="" for="id_photo" id="id_photo">Image / फोटो </label>
-                                        </label>
                                     </div>
                                     <div class="col-md-8" id="CurrentPhotoCheck">
                                         {{form.photo}}
@@ -200,7 +189,7 @@
                         <br/><br/>
 
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Mining Info</font></legend>
+                            <legend class="scheduler-border"><span style="color: blue; ">Mining Info</span></legend>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
@@ -364,7 +353,7 @@
                         </fieldset>
                         <br/><br/>
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Additional Info</font></legend>
+                            <legend class="scheduler-border"><span style="color: blue; ">Additional Info</span></legend>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
@@ -410,7 +399,7 @@
 
                         <br/><br/>
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Last Qualification</font></legend>
+                            <legend class="scheduler-border"><span style="color: blue; ">Last Qualification</span></legend>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
@@ -457,7 +446,7 @@
 
                         <br/><br/>
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Bank Details</font></legend>
+                            <legend class="scheduler-border"><span style="color: blue; ">Bank Details</span></legend>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
@@ -498,6 +487,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </fieldset>
 
                         <br/><br/>
@@ -512,20 +502,19 @@
 </div>
 <style>
     fieldset.scheduler-border {
-    border: solid 1px #DDD !important;
-    padding: 0 10px 10px 10px;
-    border-bottom: none;
-}
+        padding: 0 10px 10px 10px;
+        border: 1px solid #DDD !important;
+    }
 
-legend.scheduler-border {
-    width: auto !important;
-    border: none;
-    font-size: 14px;
-}
-fieldset ul {list-style:none}
+    legend.scheduler-border {
+        width: auto !important;
+        border: none;
+    }
+    legend.scheduler-border {
+        font-size: 14px;
+    }
 
-
-
+    fieldset ul {list-style:none}
 
 </style>
 <script>
@@ -533,6 +522,21 @@ $(document).ready(function(){
     $('select#id_mine').addClass('form-control');
      $('select#id_immediate_staff').addClass('form-control');
       $('select#id_mining_role').addClass('form-control');
+       if( $('div#CurrentPhotoCheck').children('a').length>0 ){
+          $( "#CurrentPhotoCheck" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover')
+          $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="'+$('#CurrentPhotoCheckOnHover').attr("href")+'" />').insertAfter('#CurrentPhotoCheckOnHover');
+
+          $('img#CurrentPhotoCheckOnHover').attr('data-toggle','tooltip');
+
+          $('img#CurrentPhotoCheckOnHover').attr('class','red-tooltip');
+          $('img#CurrentPhotoCheckOnHover').attr('title',"<img width='250px' src='"+$('#CurrentPhotoCheckOnHover').attr("href")+"' />");
+          $("a#CurrentPhotoCheckOnHover").remove();
+          $('img[data-toggle="tooltip"]').tooltip({
+                animated: 'fade',
+                placement: 'bottom',
+                html: true
+          });
+   }
 });
 
 
@@ -563,22 +567,6 @@ $(function () {
                     $('#doj_date_time_picker').data("DateTimePicker").maxDate(e.date);
                 });
         });
-
-   if( $('div#CurrentPhotoCheck').children('img').length>0 ){
-          $( "#CurrentPhotoCheck" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover')
-          $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="'+$('#CurrentPhotoCheckOnHover').attr("href")+'" />').insertAfter('#CurrentPhotoCheckOnHover');
-
-          $('img#CurrentPhotoCheckOnHover').attr('data-toggle','tooltip');
-
-          $('img#CurrentPhotoCheckOnHover').attr('class','red-tooltip');
-          $('img#CurrentPhotoCheckOnHover').attr('title',"<img width='250px' src='"+$('#CurrentPhotoCheckOnHover').attr("href")+"' />");
-          $("a#CurrentPhotoCheckOnHover").remove();
-          $('img[data-toggle="tooltip"]').tooltip({
-                animated: 'fade',
-                placement: 'bottom',
-                html: true
-          });
-   }
 
 
 

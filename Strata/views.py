@@ -24,6 +24,9 @@ from .models import Strata_location, MineDetails, Strata_sensor, Strata_sensor_d
 from background_task import background
 # from pygame import mixer  # Load the required library
 from django.shortcuts import render, redirect
+from background_task.models import Task
+from background_task.models_completed import CompletedTask
+from django.utils import timezone
 
 # from annoying.functions import get_object_or_None
 
@@ -88,7 +91,6 @@ def convergence_edit_location(request, pk, template_name='Convergence/add_locati
     form = Strata_location_Form(request.POST or None, instance=book)
     if form.is_valid():
         form.save()
-        # 75
         return redirect('Strata:convergence_manage_location')
     return render(request, template_name, {'form': form})
 
@@ -116,7 +118,6 @@ def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_loc
         form = Strata_sensor_Form(request.POST, request.FILES)
         # print(form)
         if form.is_valid():
-            print(request.POST)
             form.save()
             return redirect('Strata:manage_sensor_in_location')
         else:
@@ -128,26 +129,38 @@ def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_loc
 
 @login_required
 def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_in_location.html'):
-    sensors = Strata_sensor.objects.values_list().filter()
+    sensors = Strata_sensor.objects.all()
     # print(sensors)
     data = {}
     prepared_data = []
-    i = 0
-    for r in sensors:
-        location_table = Strata_location.objects.get(id=str(r[2]))
-        mine_table = MineDetails.objects.get(id=str(r[1]))
-        prepared_data.append([])
-        prepared_data[i].append(str(r[0]))
-        prepared_data[i].append(mine_table.name)
-        prepared_data[i].append(location_table.location_name)
-        prepared_data[i].append(str(r[3]))
-        prepared_data[i].append(str(r[4]))
-        prepared_data[i].append(str(r[5]))
-        prepared_data[i].append(str(r[18]))
-        i = i + 1
-    # print(prepared_data)
-    # return HttpResponse("ok")
+    background_task = 0
+    for s in sensors:
+        background_task = 0
+        try:
+            task = Task.objects.get(task_name='Strata.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",
+                                    locked_at__isnull=True)
+            background_task = 1
+        except:
+            pass
+
+        # background_task.append({'id':task.id})
+        try:
+            location_table = Strata_location.objects.get(id=s.location_id_id)
+            mine_table = MineDetails.objects.get(id=s.mine_name_id)
+            prepared_data.append({'id': s.id,
+                                  'mine': mine_table.name,
+                                  'location': location_table.location_name,
+                                  'sensor': s.sensor_name,
+                                  'unit': s.sensor_unit,
+                                  'tag': s.tag_no,
+                                  'ip': s.ip_address,
+                                 'background': background_task
+                                })
+        except:
+            pass
+
     data['result'] = prepared_data
+    data['background'] = background_task
 
     return render(request, template_name, data)
 
@@ -181,14 +194,10 @@ def fetch_location_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        location_details = Strata_location.objects.values_list().filter(mine_name_id=mine_id)
-
-        data = {}
-        i = 0
+        location = Strata_location.objects.filter(mine_name_id=mine_id)
         location_data = []
-        for r in location_details:
-            location_data.append(str(r[0]) + ',' + str(r[2]))
-            i = i + 1
+        for l in location:
+            location_data.append({'id': l.id, 'name': l.location_name})
         data['result'] = location_data
     else:
         data['result'] = "Not Ajax"
@@ -204,19 +213,19 @@ def live_data_tabular(request, template_name='Convergence/live_data_tabular.html
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+@login_required
+def show_strata_location(request, template_name='Convergence/show_location.html'):
+    form = Live_data_tabular(request.POST)
+    return render(request, template_name, {'form': form})
 
 def fetch_sensor_ajax(request):
     data = {}
     if request.is_ajax():
         location_id = request.GET.get('id', None)
-        sensor_details = Strata_sensor.objects.values_list().filter(location_id=location_id)
-
-        data = {}
-        i = 0
+        sensor = Strata_sensor.objects.filter(location_id=location_id)
         sensor_data = []
-        for r in sensor_details:
-            sensor_data.append(str(r[0]) + ',' + str(r[3]))
-            i = i + 1
+        for s in sensor:
+            sensor_data.append({'id': s.id, 'name': s.sensor_name})
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
@@ -251,7 +260,7 @@ def get_data_from_node_mcu(request):
     return JsonResponse(data)
 
 
-def fetch_sensor_comman_values_ajax(request):
+def fetch_sensor_common_values_ajax(request):
     data = {}
     sensor_data = []
     if request.is_ajax():
@@ -259,23 +268,40 @@ def fetch_sensor_comman_values_ajax(request):
         # sensor_id = 13
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         if (sensor_details):
-            sensor_data.append(str(sensor_details.id) + '@#' +
-                               str(sensor_details.sensor_unit) + '@#' +
-                               str(sensor_details.level_1_warning_unit) + '@#' +
-                               str(sensor_details.level_2_warning_unit) + '@#' +
-                               str(sensor_details.level_3_warning_unit) + '@#' +
-                               str(sensor_details.level_1_color) + '@#' +
-                               str(sensor_details.level_2_color) + '@#' +
-                               str(sensor_details.level_3_color) + '@#' +
-                               str(sensor_details.ip_address) + '@#' +
-                               str(sensor_details.level_1_msg) + '@#' +
-                               str(sensor_details.level_2_msg) + '@#' +
-                               str(sensor_details.level_3_msg) + '@#' +
-                               str(sensor_details.level_1_audio) + '@#' +
-                               str(sensor_details.level_2_audio) + '@#' +
-                               str(sensor_details.level_3_audio) + '@#' +
-                               str(sensor_details.audio_play_type) + '@#'
-                               )
+            sensor_data = {'id': str(sensor_details.id),
+                           'unit': str(sensor_details.sensor_unit),
+                           'ip': str(sensor_details.ip_address),
+                           'level1': str(sensor_details.level_1_warning_unit),
+                           'level2': str(sensor_details.level_2_warning_unit),
+                           'level3': str(sensor_details.level_3_warning_unit),
+                           'level1_color': str(sensor_details.level_1_color),
+                           'level2_color': str(sensor_details.level_2_color),
+                           'level3_color': str(sensor_details.level_3_color),
+                           'level1_msg': str(sensor_details.level_1_msg),
+                           'level2_msg': str(sensor_details.level_2_msg),
+                           'level3_msg': str(sensor_details.level_3_msg),
+                           'level1_audio': str(sensor_details.level_1_audio),
+                           'level2_audio': str(sensor_details.level_2_audio),
+                           'level3_audio': str(sensor_details.level_3_audio),
+                           'audio_type': str(sensor_details.audio_play_type)
+                           }
+            # sensor_data.append(str(sensor_details.id) + '@#' +
+            #                    str(sensor_details.sensor_unit) + '@#' +
+            #                    str(sensor_details.level_1_warning_unit) + '@#' +
+            #                    str(sensor_details.level_2_warning_unit) + '@#' +
+            #                    str(sensor_details.level_3_warning_unit) + '@#' +
+            #                    str(sensor_details.level_1_color) + '@#' +
+            #                    str(sensor_details.level_2_color) + '@#' +
+            #                    str(sensor_details.level_3_color) + '@#' +
+            #                    str(sensor_details.ip_address) + '@#' +
+            #                    str(sensor_details.level_1_msg) + '@#' +
+            #                    str(sensor_details.level_2_msg) + '@#' +
+            #                    str(sensor_details.level_3_msg) + '@#' +
+            #                    str(sensor_details.level_1_audio) + '@#' +
+            #                    str(sensor_details.level_2_audio) + '@#' +
+            #                    str(sensor_details.level_3_audio) + '@#' +
+            #                    str(sensor_details.audio_play_type) + '@#'
+            #                    )
             data['result'] = sensor_data
         else:
             data['result'] = "No Data"
@@ -287,40 +313,50 @@ def fetch_sensor_comman_values_ajax(request):
 
 def fetch_sensor_values_ajax(request):
     data = {}
+    sensor_data = []
     if request.is_ajax():
-        sensor_data = []
+
         sensor_id = request.GET.get('id', None)
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
+
         try:
             response = requests.get('http://' + str(sensor_details.ip_address))
             sensor_val = strip_tags(response.text)
-            if (sensor_val):
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                        sensor_details.sensor_name) + ',' + str(sensor_val) + ',' + str(
-                        sensor_details.sensor_unit) + ',' + str(
-                        sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
+            if sensor_val:
+                sensor_data = {'id': str(sensor_details.id),
+                               'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               'location': str(sensor_details.location_id),
+                               'sensor_name': str(sensor_details.sensor_name),
+                               'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': str(sensor_val),
+                               'tag': str(sensor_details.tag_no)}
             else:
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                        sensor_details.sensor_name) + ',' + 'No Data' + ',' + str(
-                        sensor_details.sensor_unit) + ',' + str(
-                        sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
-                # sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + 'No Data')
+                sensor_data = {'id': str(sensor_details.id),
+                               'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               'location': str(sensor_details.location_id),
+                               'sensor_name': str(sensor_details.sensor_name),
+                               'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': 'No data',
+                               'tag': str(sensor_details.tag_no)}
+
         except Exception as x:
-            # print("catch me he "+str(x))
-            sensor_data.append(
-                str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                    mine_details.name) + ',' + str(sensor_details.location_id) + ',' + str(
-                    sensor_details.sensor_name) + ',' + 'Network Error' + ',' + str(
-                    sensor_details.sensor_unit) + ',' + str(
-                    sensor_details.tag_no))  ##format(id,ip,datetime,minename,location,sensor,value,unit,tag)
-            # sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + 'Network Error')
+            sensor_data = {'id': str(sensor_details.id),
+                           'ip': str(sensor_details.ip_address),
+                           'date': str(ok_date),
+                           'mine': str(mine_details.name),
+                           'location': str(sensor_details.location_id),
+                           'sensor_name': str(sensor_details.sensor_name),
+                           'unit': str(sensor_details.sensor_unit),
+                           'sensor_value': 'Network Error',
+                           'tag': str(sensor_details.tag_no)}
+
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
@@ -330,18 +366,32 @@ def fetch_sensor_values_ajax(request):
 # =======================================================================================================================
 def fetch_sensor_details(request):
     data = {}
+    sensor_data = []
     if request.is_ajax():
         sensor_id = request.GET.get('sensor_id', None)
-        sensor_details = Strata_sensor.objects.values_list().filter(id=sensor_id)
-        data = {}
-        i = 0
-        sensor_data = []
-        for r in sensor_details:
-            sensor_data.append(
-                str(r[6]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[12]) + '@#' + str(r[13]) + '@#' + str(
-                    r[14]) + '@#' + str(r[15]) + '@#' + str(r[16]) + '@#' + str(r[17]) + '@#' + str(r[20]))
-            i = i + 1
-        data['result'] = sensor_data
+        sensor_details = Strata_sensor.objects.get(id=sensor_id)
+        if sensor_details:
+            sensor_data = {'id': str(sensor_details.id),
+                           'unit': str(sensor_details.sensor_unit),
+                           'ip': str(sensor_details.ip_address),
+                           'level1': str(sensor_details.level_1_warning_unit),
+                           'level2': str(sensor_details.level_2_warning_unit),
+                           'level3': str(sensor_details.level_3_warning_unit),
+                           'level1_color': str(sensor_details.level_1_color),
+                           'level2_color': str(sensor_details.level_2_color),
+                           'level3_color': str(sensor_details.level_3_color),
+                           'level1_msg': str(sensor_details.level_1_msg),
+                           'level2_msg': str(sensor_details.level_2_msg),
+                           'level3_msg': str(sensor_details.level_3_msg),
+                           'level1_audio': str(sensor_details.level_1_audio),
+                           'level2_audio': str(sensor_details.level_2_audio),
+                           'level3_audio': str(sensor_details.level_3_audio),
+                           'audio_type': str(sensor_details.audio_play_type)
+                           }
+            data['result'] = sensor_data
+
+        else:
+            data['result'] = "No Data!"
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
@@ -353,21 +403,22 @@ def show_sensor_graph(request, template_name='Convergence/live_data_graph.html')
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+
 @login_required
-def iframe_show_sensor_graph(request, mine_id, location_id,sensors_id, template_name = 'Convergence/iframe_live_data_graph.html'):
+def iframe_show_sensor_graph(request, mine_id, location_id, sensors_id,
+                             template_name='Convergence/iframe_live_data_graph.html'):
     availability = 0
     sensor_id = ""
-    print('mine_id',mine_id)
-    print('sensor_id',sensors_id)
     try:
-        strata = get_object_or_404(Strata_sensor, id=sensors_id, mine_name = mine_id,location_id = location_id)
+        strata = get_object_or_404(Strata_sensor, id=sensors_id, mine_name=mine_id, location_id=location_id)
         print(strata)
         sensor_id = strata.id
         availability = 1
     except:
         pass
 
-    return render(request, template_name, {'availability': availability,'sensor_id':sensor_id})
+    return render(request, template_name, {'availability': availability, 'sensor_id': sensor_id})
+
 
 @background(schedule=5)
 def run_back_save(sensor_id):
@@ -646,31 +697,30 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
-    # print("before save")
-    run_back_save(sensor_id, repeat=5)
-    # manage_sensor_in_location(request)
-    # return HttpResponse("ok"+str(sensor_id))
-    sensors = Strata_sensor.objects.values_list().filter()
-    # print(sensors)
+    task = Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
+                               locked_at__isnull=True)
+    if task:
+        task.delete()
+    else:
+        run_back_save(sensor_id, repeat=5)
+    sensors = Strata_sensor.objects.all()
+
     data = {}
     prepared_data = []
-    i = 0
-    for r in sensors:
-        location_table = Strata_location.objects.get(id=str(r[2]))
-        mine_table = MineDetails.objects.get(id=str(r[1]))
-        prepared_data.append([])
-        prepared_data[i].append(str(r[0]))
-        prepared_data[i].append(mine_table.name)
-        prepared_data[i].append(location_table.location_name)
-        prepared_data[i].append(str(r[3]))
-        prepared_data[i].append(str(r[4]))
-        prepared_data[i].append(str(r[5]))
-        prepared_data[i].append(str(r[18]))
-        i = i + 1
-    # print(prepared_data)
-    # return HttpResponse("ok")
+    for s in sensors:
+        location_table = Strata_location.objects.get(id=s.location_id_id)
+        mine_table = MineDetails.objects.get(id=s.mine_name_id)
+        prepared_data.append({'id': s.id,
+                              'mine': mine_table.name,
+                              'location': location_table.location_name,
+                              'sensor': s.sensor_name,
+                              'unit': s.sensor_unit,
+                              'tag': s.tag_no,
+                              'ip': s.ip_address,
+                              })
+
     data['result'] = prepared_data
-    return render(request, template_name, data)
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -698,32 +748,20 @@ def fetch_sensor_date_range(request):
         from_d = from_d.replace(microsecond=000000)
         from_t = from_t.replace(microsecond=999999)
 
-        # from_d = datetime.strptime('2019-04-07 11:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-        # from_t = datetime.strptime('2019-06-27 11:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-
-        # print("Form Date:"+from_d+"To Date:"+from_t)
-
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         location_details = Strata_location.objects.get(id=sensor_details.location_id_id)
         mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
-        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(
+        sensor_table_details = Strata_sensor_data.objects.filter(sensor_id=sensor_id).filter(
             created_date__range=(from_d, from_t)).order_by('-id')
-        # print(sensor_table_details)
         prepared_data = []
-        i = 0
-        for r in sensor_table_details:
-            # prepared_data.append([])
-            prepared_data.append(str(r[
-                                         3]) + ',' + mine_details.name + ',' + location_details.location_name + ',' + sensor_details.sensor_name + ',' + str(
-                r[2]) + ',' + sensor_details.sensor_unit + ',' + sensor_details.tag_no)
-            # prepared_data[i].append(str(r[3]))
-            # prepared_data[i].append(mine_details.name)
-            # prepared_data[i].append(location_details.location_name)
-            # prepared_data[i].append(sensor_details.sensor_name)
-            # prepared_data[i].append(str(r[2]))
-            # prepared_data[i].append(sensor_details.sensor_unit)
-            # prepared_data[i].append(sensor_details.tag_no)
-            i = i + 1
+        for s in sensor_table_details:
+            prepared_data.append({'date':str(s.created_date),
+                                  'mine':str(mine_details.name),
+                                  'location':str(location_details.location_name),
+                                  'sensor':str(sensor_details.sensor_name),
+                                  'sensor_value':str(s.sensor_value),
+                                  'unit':str(sensor_details.sensor_unit),
+                                  'tag':str(sensor_details.tag_no)})
 
         data['result'] = prepared_data
     else:
@@ -747,7 +785,8 @@ def ajx_sensor_graph_date_range(request):
 
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
 
-        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(created_date__range=(from_d, from_t))
+        sensor_table_details = Strata_sensor_data.objects.values_list().filter(sensor_id=sensor_id).filter(
+            created_date__range=(from_d, from_t))
         # print(sensor_table_details)
         prepared_data = []
         i = 0

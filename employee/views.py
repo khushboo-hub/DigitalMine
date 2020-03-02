@@ -33,7 +33,7 @@ from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 import re
 from django.db import IntegrityError
-
+from django.views.decorators.cache import cache_page
 # Create your views here.
 @login_required
 def employee_manage(request, template_name='employee/employee_manage.html'):
@@ -51,26 +51,17 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
     return render(request, template_name, data)
 
 
-@login_required
+
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
-    current_user=request.user
-    print('profile', current_user.id)
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
-
-    # role=MiningRole.objects.filter(mine=profile.mine_id.id).values_list('id','name')
-
+    profile = get_object_or_404(profile_extension, user_id=request.user.id)
     if profile.mine_id is not None:
-        print('Here Inside')
         form = EmployeeForm(profile.mine_id.id,initial={'mine': profile.mine_id.id})
-        # role=MiningRole.objects.filter(mine=profile.mine_id)
     else:
-        print('Else Part')
         form = EmployeeForm(1)
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST or None, request.FILES)
-        # print(request.POST)
         if form.is_valid():
             form.save()
         return redirect('employee:employee_manage')
@@ -80,14 +71,8 @@ def employee_add(request, template_name='employee/employee_add.html'):
 @login_required
 def employee_edit(request, pk, template_name='employee/employee_add.html'):
     book = get_object_or_404(Employee, pk=pk)
-    print("book",book)
-    # print(pk)
-    # print(book)
-    current_user=request.user
-
     form = EmployeeForm(book.mine_id,request.POST or None, request.FILES or None, instance=book)
-    print('Form Errors',form.errors)
-    # print(form.errors)
+    print('Form Errors', form.errors)
     if form.is_valid():
         print('form is valid')
         try:
@@ -97,6 +82,7 @@ def employee_edit(request, pk, template_name='employee/employee_add.html'):
         except Exception as e:
             print('ERROR')
             print("error msg-->", e)
+
     return render(request, template_name, {'form': form})
 
 
@@ -161,8 +147,6 @@ def more_details_ajax(request):
                 mine_name = str(e.mine)
                 mining_role = str(e.mining_role)
 
-            print(mine_name)
-            print(mining_role)
             data['mine_name'] = mine_name
             data['mining_role'] = mining_role
             return JsonResponse(data)
@@ -308,12 +292,14 @@ def getsensordata(request):
 
 @login_required
 def add_mine(request, template_name='mine/mine_add.html'):
-    form = MineDetailsForm(request.POST, request.FILES)
-    # print(request.POST)
-    if form.is_valid():
-        form.save()
+    form = MineDetailsForm()
 
-        return redirect('employee:manage_mine')
+    if request.method == 'POST':
+        form = MineDetailsForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('employee:manage_mine')
+        return render(request, template_name, {'form': form, 'action': 'Add Mine', 'mine_name': ''})
     return render(request, template_name, {'form': form,'action':'Add Mine','mine_name':''})
 
 
@@ -340,7 +326,6 @@ def edit_mine(request, pk, template_name='mine/mine_add.html'):
 @login_required
 def delete_mine(request, pk):
     book = get_object_or_404(MineDetails, pk=pk)
-    # print(book)
     book.delete()
     return redirect('employee:manage_mine')
 
