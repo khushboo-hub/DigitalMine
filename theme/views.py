@@ -20,10 +20,10 @@ from django.core.cache import cache
 
 @login_required
 def home(request):
-    template_name = "home1.html"
+    template_name = "home.html"
     try:
         if request.session['lang'] == 'in':
-            template_name = "in/home1.html"
+            template_name = "in/home.html"
     except:
         pass
     # sms.SEND(8083475746, "Hello World")

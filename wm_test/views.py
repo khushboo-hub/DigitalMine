@@ -80,7 +80,7 @@ def delete(request, pk):
     return redirect('wm_test:manage_sensor')
 
 
-# def get_data_from_node_mcu(request,template_name='home1.html'):
+# def get_data_from_node_mcu(request,template_name='home.html'):
 #     # data = {}
 #     # sensor_data = []
 #     sensor_id = 1  ## hardcoded
@@ -206,7 +206,7 @@ def run_back_save(setting_id):
         inst.save()
 
 
-def start_save_sensor(request,template_name='home1.html'):
+def start_save_sensor(request,template_name='home.html'):
     print("before save")
     setting_id=1
     run_back_save(setting_id,repeat=10)

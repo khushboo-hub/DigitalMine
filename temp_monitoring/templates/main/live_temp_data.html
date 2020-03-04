@@ -16,7 +16,7 @@
                                  <label>Temperature Sensor IP:</label>
                             </div>
                             <div class="col-md-4">
-                                <input type="text" class="form-control" name="" value="192.168.1.6" id="id_sensor_list">
+                                <input type="text" class="form-control" name="" value="192.168.1.11" id="id_sensor_list">
                             </div>
                              <div class="col-md-2">
                                  <label for="" class="" id="">Time Interval <small>  (in Seconds)</small>:</label>
@@ -42,7 +42,11 @@
                                         <th>Sensor Name</th>
                                         <th>WBT Value</th>
                                         <th>DBT Value</th>
-                                        
+                                        <th>Relative Humidity</th>
+                                        <th>Dew Point Temp</th>
+                                        <th>Moisture Content</th>
+                                        <th>Sigma Heat</th>
+                                        <th>Enthalpy</th>
                                     </tr>
                                 </thead>
                                 <tbody id="sensor_content_body">
@@ -118,7 +122,8 @@
             var str_array = result[index].split(',');
             console.log(str_array);
             // $("#ip_hidden").val(str_array[1]);
-            $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[0]+"</td><td>LM-35 (Temp Sensor)</td><td>"+str_array[1]+" &#8451;</td><td>"+str_array[2]+" &#8451;</td></tr>"));
+            
+            $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[0]+"</td><td>LM-35 (Temp Sensor)</td><td>"+str_array[1]+" &#8451;</td><td>"+str_array[2]+" &#8451;</td><td>"+str_array[3]+"<br>"+str_array[8]+"</td><td>"+str_array[4]+"<br>"+str_array[9]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td></tr>"));
            
         }
 
