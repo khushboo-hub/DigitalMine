@@ -79,6 +79,7 @@ urlpatterns = [
   path('fetch_sensor_values_ajax_sensor_body', views.fetch_sensor_values_ajax_sensor_body, name='fetch_sensor_values_ajax_sensor_body'),
   path('fetch_map_image', views.fetch_map_image, name="fetch_map_image"),
   path('node_sensor_data', views.node_sensor_data,name='node_sensor_data'),
+  path('start_save_sensor/<int:sensor_id>',views.start_save_sensor,name="start_save_sensor")
 
 ]
 

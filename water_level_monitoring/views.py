@@ -227,7 +227,7 @@ def run_back_save(id):
     m_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_2)
     l_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_1)
     water = float(sensor_details.distance_bet_roof_and_water) - float(sensor_val)
-    if (new_inst.sensor_value != "Network Error"):
+    if new_inst.sensor_value != "Network Error":
         if (float(h_range) > float(new_inst.sensor_value)):  # high
             mail_subject = "WATER WARNING MESSAGES - High"
             mail_html_content = "Water Level Warning : High Warning level. current value is " + str(water)
