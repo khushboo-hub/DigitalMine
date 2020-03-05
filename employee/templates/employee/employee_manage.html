@@ -493,14 +493,15 @@ function printElement(elem) {
 var XX;
 
 $(document.body).on('click',".generate_login",function(e){
-    url=$(this).data('url');
-    email=$(this).data('email');
-    id=this.id;
+    let url=$(this).data('url');
+    let email=$(this).data('email');
+    let id=this.id;
     $('input#id_username').val(email.split('@')[0]);
     var randomstring = Math.random().toString(36).slice(-8);
     $('input#id_password').val(randomstring);
     $('#generate_login').modal('show');
     e.preventDefault();
+
     $("button#generate_login_submit").unbind().click(function(){
         e.preventDefault();
         $.ajax({
@@ -512,7 +513,7 @@ $(document.body).on('click',".generate_login",function(e){
                 'miner_id':id,
                 'username':$('input#id_username').val(),
                  'email':email,
-                 'pass':randomstring
+                 'pass':$('input#id_password').val()
             },
             beforeSend: function() {
                  $('#status_msg_login').empty();

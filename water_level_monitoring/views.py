@@ -21,6 +21,7 @@ from apps.settings import MEDIA_ROOT
 from employee.models import MineDetails
 from water_level_monitoring.forms import add_water_sensor_form
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model
+from background_task.models import Task
 
 whcount = 1
 wmcount = 1
@@ -39,8 +40,37 @@ def add_water_sensor(request):
 
 
 def manage_water_sensor(request):
-    water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
-    return render(request, "manage_water_sensor.html", {"water_level_sensor_details": water_level_sensor_details})
+    # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
+
+    sensors = water_level_monitoring_model.objects.all().order_by('-id')
+    # print(sensors)
+    data = {}
+    prepared_data = []
+    background_task = 0
+    for s in sensors:
+        background_task = 0
+        try:
+            task = Task.objects.get(task_name='water_level_monitoring.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",
+                                    locked_at__isnull=True)
+            background_task = 1
+        except:
+            pass
+
+        # background_task.append({'id':task.id})
+        try:
+            mine_table = MineDetails.objects.get(id=s.mine_id_id)
+            prepared_data.append({'id': s.id,
+                                  'mine': mine_table.name,
+                                  'area_name': s.area_name,
+                                  'ip': s.ip_address,
+                                  'desc': s.desc,
+                                  'background': background_task
+                                  })
+        except:
+            pass
+
+    data['result'] = prepared_data
+    return render(request, "manage_water_sensor.html", data)
 
 
 def edit_water_sensor(request, id):
@@ -82,20 +112,22 @@ def show_graph_water_sensor(request):
     form = add_water_sensor_form()
     return render(request, "show_graph_water_sensor.html", {"form": form})
 
-def iframe_show_graph_water_sensor(request,mine_id,location):
+
+def iframe_show_graph_water_sensor(request, mine_id, location):
     # print('mine_id',mine_id)
     # print('lcoation',location)
     availability = 0
-    IpAddress='0'
+    IpAddress = '0'
     try:
-        IpAddress=get_object_or_404(water_level_monitoring_model,mine_id=mine_id,id=location)
-        IpAddress=IpAddress.ip_address
+        IpAddress = get_object_or_404(water_level_monitoring_model, mine_id=mine_id, id=location)
+        IpAddress = IpAddress.ip_address
         availability = 1
     except:
         availability = 0
         pass
 
-    return render(request, "iframe_show_graph_water_sensor.html", {'address':IpAddress,'location':location,'availability':availability})
+    return render(request, "iframe_show_graph_water_sensor.html",
+                  {'address': IpAddress, 'location': location, 'availability': availability})
 
 
 def fetch_sensor_details(request):  # fetch IP address and water level only (For graph)
@@ -107,7 +139,7 @@ def fetch_sensor_details(request):  # fetch IP address and water level only (For
         i = 0
         location_data = []
         for r in location_details:
-            #print(r)
+            # print(r)
             location_data.append(
                 str(r[13]) + '@#' + str(r[4]) + '@#' + str(r[5]) + '@#' + str(r[6]) + '@#' + str(r[3]) + '@#' + str(
                     r[15]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[9]) + '@#' + str(r[10]) + '@#' + str(
@@ -152,10 +184,16 @@ def fetch_water_level_ajax(request):
     return JsonResponse(data)
 
 
-def start_save_water_data(request, id):
-    run_back_save(id, repeat=5)
-    messages.success(request, 'Sensor data acquisition has been started')
-    return redirect('water_level_monitoring:manage_water_sensor')
+def start_save_water_data(request,sensor_id):
+
+    task = Task.objects.filter(task_name='water_level_monitoring.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
+                               locked_at__isnull=True)
+    if task:
+        task.delete()
+    else:
+        run_back_save(sensor_id, repeat=5)
+
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def push_mail(mail_subject="", mail_html_content=""):
@@ -184,7 +222,7 @@ def run_back_save(id):
     except Exception as x:
         new_inst.sensor_value = 'Network Error'
     new_inst.save()
-    #print(new_inst.sensor_value)
+    # print(new_inst.sensor_value)
     h_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_3)
     m_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_2)
     l_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_1)
