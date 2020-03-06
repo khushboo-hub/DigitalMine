@@ -10,7 +10,7 @@ class gasModel_auto(models.Model):
     mine_id = models.IntegerField()
     node_id = models.IntegerField()
     gas_name= models.CharField(max_length=10, default='Null')
-    gas_value = models.FloatField(default=0.00)
+    gas_value = models.CharField(max_length=50, default='Null')
     date_time = models.DateTimeField(default=timezone.now)
 
     class Meta:

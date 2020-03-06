@@ -18,6 +18,7 @@ from background_task import background
 from datetime import datetime
 from django.utils.html import strip_tags, linebreaks
 from accounts.models import profile_extension
+from background_task.models import Task
 
 
 # ## Sensor Details
@@ -459,24 +460,65 @@ def load_map(request):
 #     return render(request, template_name, {'form': form})
 
 def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
-    current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    if current_user.is_superuser:
-        book = Sensor_Node.objects.filter(mine_id=mine_id,node_id=node_id)
-        # print(book)
-    else:
-        book = Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node_id)
-    data = {}
-    data['object_list'] = book
-    data['node_id'] = node_id
+    # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
 
-    mine_table = Node.objects.get(id=node_id)
-    data['node_name1'] = mine_table.name
-    node_mine_id = mine_table.mine_id_id
+    sensors = Sensor_Node.objects.filter(mine_id_id=mine_id,node_id_id=node_id)
+
+    # print(sensors)
+    data = {}
+    prepared_data = []
+    background_task = 0
+    node_table = Node.objects.get(id=node_id)
+    mine_table = MineDetails.objects.get(id=mine_id)
+    for s in sensors:
+        print('sensors', s.id,mine_table.name,node_table.name,s.sensorname,s.ip_add,s.sensorunit,s.thresholdlimit)
+        background_task = 0
+        try:
+            task = Task.objects.get(task_name='sensor.views.run_back_save',
+                                    task_params="[[" + str(s.id) + "], {}]")
+            if task:
+                background_task = 1
+        except:
+            pass
+
+        # background_task.append({'id':task.id})
+        try:
+            prepared_data.append({'id': s.id,
+                                  'mine_name': mine_table.name,
+                                  'node_name': node_table.name,
+                                  'node_id' : node_table.id,
+                                  'sensor_name':s.sensorname,
+                                  'ip': s.ip_add,
+                                  'unit' : s.sensorunit,
+                                  'thresholdlimit': s.thresholdlimit,
+                                  'background' : background_task
+                                  })
+        except:
+            pass
+
+    data['mine']=mine_id
     data['node_id']=node_id
-    mine_table1 = MineDetails.objects.get(id=node_mine_id)
-    data['mine_name1'] = mine_table1.name
-    data['mine']=mine_table1.id
+    data['result'] = prepared_data
+    #
+    #
+    # current_user = request.user
+    # profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    # if current_user.is_superuser:
+    #     book = Sensor_Node.objects.filter(mine_id=mine_id,node_id=node_id)
+    #     print(book)
+    # else:
+    #     book = Sensor_Node.objects.filter(mine_id=profile.mine_id.id, node_id=node_id)
+    # data = {}
+    # data['object_list'] = book
+    # data['node_id'] = node_id
+    #
+    # mine_table = Node.objects.get(id=node_id)
+    # data['node_name1'] = mine_table.name
+    # node_mine_id = mine_table.mine_id_id
+    # data['node_id']=node_id
+    # mine_table1 = MineDetails.objects.get(id=node_mine_id)
+    # data['mine_name1'] = mine_table1.name
+    # data['mine']=mine_table1.id
     return render(request, template_name, data)
 
 
@@ -531,7 +573,7 @@ def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.h
 def delete_sensor(request, pk, node_id):
     book = get_object_or_404(Sensor_Node, pk=pk)
     book.delete()
-    return redirect('/sensor/manage_sensor/' + str(node_id))
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html'): #pk is Sensor Id of a node, node_id=> id the of wirelss node
@@ -828,6 +870,57 @@ def fetch_ip(request):
 
 
 # Recieve continuous data wirelessly
+
+def start_save_sensor(request,sensor_id):
+
+    task = Task.objects.filter(task_name='sensor.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]")
+    if task:
+        task.delete()
+    else:
+        run_back_save(sensor_id, repeat=15)
+
+    return redirect(request.META.get('HTTP_REFERER'))
+
+
+@background(schedule=5)
+def run_back_save(sensor_id):
+    print("================Gas Sensor Background task start")
+    inst = gasModel_auto()
+    sensor_node = Sensor_Node.objects.get(pk=sensor_id)
+    inst.mine_id = sensor_node.mine_id_id
+
+    inst.node_id =sensor_node.node_id_id
+    inst.gas_name = sensor_node.sensorname
+    inst.gas_value = '0.00'
+    print(sensor_node.node_id)
+    print(sensor_node.sensorname)
+    try:
+        response = requests.get('http://' + str(sensor_node.ip_add))
+        sensor_val = strip_tags(response.text)
+        if sensor_val:
+            print(sensor_val)
+            inst.gas_value = str(float(sensor_val))
+            print('sensor vaule',float(sensor_val))
+        else:
+            print('else part')
+            inst.gas_value = 'No Data'
+            print("NO data")
+    except Exception as x:
+        print('exception part')
+        inst.gas_value = 'Network Error'
+        print("Network Error")
+    print('before saveing instance')
+    try:
+        inst.save()
+    except Exception as e:
+        print(e)
+    print("================Gas Sensor Background task end")
+
+
+
+
+
+
 @background(schedule=5)
 def getsensordata(ip, mine_id, node_id, gas_name):
     print("##############")

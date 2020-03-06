@@ -704,22 +704,22 @@ def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sens
     else:
         run_back_save(sensor_id, repeat=5)
     sensors = Strata_sensor.objects.all()
-
-    data = {}
-    prepared_data = []
-    for s in sensors:
-        location_table = Strata_location.objects.get(id=s.location_id_id)
-        mine_table = MineDetails.objects.get(id=s.mine_name_id)
-        prepared_data.append({'id': s.id,
-                              'mine': mine_table.name,
-                              'location': location_table.location_name,
-                              'sensor': s.sensor_name,
-                              'unit': s.sensor_unit,
-                              'tag': s.tag_no,
-                              'ip': s.ip_address,
-                              })
-
-    data['result'] = prepared_data
+    #
+    # data = {}
+    # prepared_data = []
+    # for s in sensors:
+    #     location_table = Strata_location.objects.get(id=s.location_id_id)
+    #     mine_table = MineDetails.objects.get(id=s.mine_name_id)
+    #     prepared_data.append({'id': s.id,
+    #                           'mine': mine_table.name,
+    #                           'location': location_table.location_name,
+    #                           'sensor': s.sensor_name,
+    #                           'unit': s.sensor_unit,
+    #                           'tag': s.tag_no,
+    #                           'ip': s.ip_address,
+    #                           })
+    #
+    # data['result'] = prepared_data
     return redirect(request.META.get('HTTP_REFERER'))
 
 
