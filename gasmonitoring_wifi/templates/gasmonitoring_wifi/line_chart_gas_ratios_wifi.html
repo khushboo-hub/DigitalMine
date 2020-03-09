@@ -3,303 +3,280 @@
 {% block content %}
 
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<div class="d-flex p-2">
-    <div class="row">
-        <section class="col-md-12">
-            <center>
-            <h1 class="page-header">Graphical Report</h1>
-         <!-- Table content -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="row"><center>
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data" >{% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                <div class="col-md-1">
-                                    <label for="" class="form" id=""></label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="form pull-right" id="">Choose Mine:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    {{form.mine_id}}
-                                </div>
-                                <div class="col-md-2" style="margin-right: 15px;">
-                                    <label for="" class="pull-right" id="">Choose Location:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-control" id="id_area_id" name="area_id">
-                                        <option>--Select Area--</option>
-                                    </select>
-                                </div>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <div class="d-flex p-2">
+        <div class="row">
+            <section class="col-md-12">
+                <div style="text-align: center;">
+                    <h1 class="page-header">Graphical Report</h1>
+                    <!-- Table content -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div style="text-align: center;">
+                                    <div class="form-group">
+                                        <form class="form-horizontal" method="post"
+                                              enctype="multipart/form-data">{% csrf_token %}
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-12">
+                                                    <div class="col-md-1">
+                                                        <label for="" class="form" id=""></label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="" class="form pull-right" id="">Choose Mine:</label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        {{ form.mine_id }}
+                                                    </div>
+                                                    <div class="col-md-2" style="margin-right: 15px;">
+                                                        <label for="" class="pull-right" id="">Choose Location:</label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <select class="form-control" id="id_area_id" name="area_id">
+                                                            <option>--Select Area--</option>
+                                                        </select>
+                                                    </div>
 
-                                <div class="col-md-2">
+                                                    <div class="col-md-2">
 
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12" style="margin-top:30px;">
+                                                    <div class="col-md-1">
+                                                        <label for="" class="form" id=""></label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="" class="pull-right" id="">From Date:</label>
+                                                    </div>
+                                                    <div class="col-md-2" style="margin-right: 15px;">
+                                                        <input type="text" required class="form-control" id="from_date"
+                                                               value='{% now "Y-m-d" %}' name="">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label for="" class="pull-right" id="">To Date:</label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" required class="form-control" id="to_date"
+                                                               value='{% now "Y-m-d" %}' name="">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div>
+                                    <div class="col-md-12" style="margin-top:30px;">
+                                        <div class="text-center">
+                                            <input type="submit" id="btn_reportShow" class="btn btn-warning"
+                                                   style="width:200px" value="Line chart Ratio Graph"/>
+                                            <input type="submit" id="btn_Show_ratio_report" style="width:200px"
+                                                   class="btn btn-danger" value="Young's CO Ratio Graph"/>
+                                            <a class="btn btn-success btn-sm" style="width:100px"
+                                               href="{% url 'gasmonitoring_wifi:show_area' %}">Back</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-12" style="margin-top:30px;">
-                                <div class="col-md-1">
-                                    <label for="" class="form" id=""></label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="pull-right" id="">From Date:</label>
-                                </div>
-                                <div class="col-md-2" style="margin-right: 15px;">
-                                    <input type="text" required class="form-control" id="from_date" value='{% now "Y-m-d" %}' name="">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="pull-right" id="">To Date:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="text" required class="form-control" id="to_date" value='{% now "Y-m-d" %}' name="">
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-                        </center>
-                    <div class="col-md-12" style="margin-top:30px;">
-                        <div class="text-center">
-                            <input type="submit" id="btn_reportShow" class="btn btn-warning" style="width:200px" value="Line chart Ratio Graph"/>
-                            <input type="submit" id="btn_Show_ratio_report" style="width:200px" class="btn btn-danger" value="Young's CO Ratio Graph"/>
-                            <a class="btn btn-success btn-sm" style="width:100px" href="{% url 'gasmonitoring_wifi:show_area' %}">Back</a>
                         </div>
                     </div>
-
-                    </section>
-                              <div class="col-md-2">
-
-                                </div>
-                        <div class="col-md-10">
-                            <div id="linechart_material">
-                                <!--LINE CHART GOES HERE-->
-                            </div>
-                        </div>
                 </div>
-            </div><!--end Table content -->
 
+                <div class="col-md-10">
+                    <div id="linechart">
+                        <!--LINE CHART GOES HERE-->
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-</div>
 
-<script>
+    <script>
 
-$(document).ready(function(){
-        $("#id_mine_id").addClass('form-control');
-});
+        $(document).ready(function () {
 
-$("#id_mine_id").on("change",function(){
-    mine_id=this.value;
-     $.ajax({
-            type:"get",
-            url: "{% url 'gasmonitoring_wifi:fetch_area_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                console.log(data.result);
-               //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                return data;
-                    },
-            error: function(){
-                    console.log("error");
-                 }
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD'
             });
-});
-function fill_dropdown(result){
-    $("#id_area_id").html("<option>--Select Area--</option>");
-    for (index = 0; index < result.length; index++) {
-    var str_array = result[index].split(',');
-    $("#id_area_id").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
-$(function() {
-$("#from_date").datepicker({ format: 'yyyy-mm-dd' });
-$("#to_date").datepicker({ format: 'yyyy-mm-dd' });
-});
-
-google.charts.load('current', {'packages':['line']});
-
-$("#btn_reportShow").click(function(){
-    $("#linechart_material").html("");
-    drawChart();
-});
-$("#btn_Show_ratio_report").click(function(){
-    $("#linechart_material").html("");
-    drawChart2();
-});
-
-function drawChart() {
-      area_id=$("#id_area_id").val();
-      //alert(area_id)
-
-      date_from=$("#from_date").val();
-      date_to=$("#to_date").val();
-      var data = new google.visualization.DataTable();
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $("#id_mine_id").addClass('form-control');
 
 
-      data.addColumn('string', 'Days');
-      data.addColumn('number', 'CO');
-      data.addColumn('number', 'Graham-s');
-      data.addColumn('number', 'CO/CO2');
-      data.addColumn('number', 'Jones&T');
+            $("#id_mine_id").on("change", function () {
+                let mine_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'gasmonitoring_wifi:fetch_area_ajax' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        console.log("error");
+                    }
+                });
+            });
 
-      var endpoint = '{% url 'gasmonitoring_wifi:fetch_gas_ratios_ajax_wifi' %}';
-
-      var defaultData = [];
-        $.ajax({
-            method: "GET",
-            url:endpoint,
-            data:{
-                      'id': area_id,
-                      'date_from':date_from,
-                      'date_to':date_to,
-                   },
-            success: function(data_ajax){
-
-                 <!--console.log(data_ajax.result);-->
-                 defaultData = data_ajax.default;
-
-                 console.log(defaultData);
-                 data.addRows(defaultData);
-             },
-             error: function(error_data){
-                  console.log("error occurred")
-                  console.log(error_data)
-                  alert("Please select Mine and location to see graph")
-                 }
-          });
-
-      var options = {
-        <!--chart: {-->
-          <!--title: '',-->
-          <!--subtitle: 'in millions of dollars (USD)'-->
-        <!--},-->
-        hAxis: {
-          title: 'Days',
-          textStyle: {
-            color: '#01579b',
-            fontSize: 20,
-            fontName: 'Arial',
-            bold: true,
-            italic: true
-          },
-          titleTextStyle: {
-            color: '#01579b',
-            fontSize: 16,
-            fontName: 'Arial',
-            bold: false,
-            italic: true
-          }
-        },
-        vAxis: {
-          title: 'Ratio & CO ,per cent',
-          textStyle: {
-            color: '#1a237e',
-            fontSize: 24,
-            bold: true
-          },
-          titleTextStyle: {
-            color: '#1a237e',
-            fontSize: 24,
-            bold: true
-          }
-        },
-
-        width: 1200,
-        height: 700
-      };
-
-      var chart = new google.charts.Line(document.getElementById('linechart_material'));
-
-      chart.draw(data, google.charts.Line.convertOptions(options));
-
-    }
+            function fill_dropdown(result) {
+                $("#id_area_id").html("<option>--Select Area--</option>");
+                for (index = 0; index < result.length; index++) {
+                    var str_array = result[index].split(',');
+                    $("#id_area_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+                }
+            }
 
 
-function drawChart2() {
-      area_id=$("#id_area_id").val();
-      date_from=$("#from_date").val();
-      date_to=$("#to_date").val();
-      var data = new google.visualization.DataTable();
-      data.addColumn('string', 'Days');
-      data.addColumn('number', 'Youngs');
-      data.addColumn('number', 'CO');
+            $("#btn_reportShow").click(function () {
+                $("#linechart").html("");
+                drawChart();
+            });
+
+            $("#btn_Show_ratio_report").click(function () {
+                $("#linechart").html("");
+                drawChart2();
+            });
+
+            function drawChart() {
+                let area_id = $("#id_area_id").val();
+                //alert(area_id)
+
+                let date_from = $("#from_date").val();
+                let date_to = $("#to_date").val();
+                let endpoint = '{% url 'gasmonitoring_wifi:fetch_gas_ratios_ajax_wifi' %}';
+
+                let defaultData = [];
+                $.ajax({
+                    method: "GET",
+                    url: endpoint,
+                    data: {
+                        'id': area_id,
+                        'date_from': date_from,
+                        'date_to': date_to,
+                    },
+                    success: function (data_ajax) {
+
+                        <!--console.log(data_ajax.result);-->
+                        defaultData = data_ajax.result;
+                        console.log(defaultData);
+                        let co = [];
+                        let graham_ratio = [];
+                        let coco2_ratio = [];
+                        let jtr_ratio = [];
+                        let date = [];
+                        for (data in defaultData) {
+                            if (defaultData.hasOwnProperty(data)) {
+                                date.push(defaultData[data].date);
+                                co.push(defaultData[data].co);
+                                graham_ratio.push(defaultData[data].graham_ratio);
+                                coco2_ratio.push(defaultData[data].coco2_ratio);
+                                jtr_ratio.push(defaultData[data].jtr_ratio);
+                            }
+
+                        }
+                        console.log(date, co, graham_ratio, coco2_ratio, jtr_ratio);
+                        var co_trace = {
+                            x: date,
+                            y: co,
+                            type: 'scatter',
+                            name: 'CO Ratio'
+                        };
+
+                        var graham_ratio_trace = {
+                            x: date,
+                            y: graham_ratio,
+                            type: 'scatter',
+                            name: "Graham Ratio"
+                        };
+                        var coco2_ratio_trace = {
+                            x: date,
+                            y: coco2_ratio,
+                            type: 'scatter',
+                            name: 'COCO<sub>2</sub> Ratio'
+                        };
+                        var jtr_ratio_trace = {
+                            x: date,
+                            y: jtr_ratio,
+                            type: 'scatter',
+                            name: 'JTR Ratio'
+                        };
+
+                        var data = [co_trace, graham_ratio_trace, coco2_ratio_trace, jtr_ratio_trace];
+
+                        Plotly.newPlot('linechart', data);
+                        {#data.addRows(defaultData);#}
+                    },
+                    error: function (error_data) {
+                        console.log("error occurred")
+                        console.log(error_data)
+                        alert("Please select Mine and location to see graph")
+                    }
+                });
+
+            }
 
 
-      var endpoint = '{% url 'gasmonitoring_wifi:fetch_young_co_ajax_wifi' %}';
-      var defaultData = [];
-        $.ajax({
-            method: "GET",
-            url:endpoint,
-            data:{
-                      'id': area_id,
-                      'date_from':date_from,
-                      'date_to':date_to,
-                   },
-            success: function(data_ajax){
-                 //alert(data_ajax);
-                 defaultData = data_ajax.default;
-                 //alert(defaultData);
-                 data.addRows(defaultData);
+            function drawChart2() {
+                let area_id = $("#id_area_id").val();
+                let date_from = $("#from_date").val();
+                let date_to = $("#to_date").val();
 
 
-             },
-             error: function(error_data){
-                  console.log("error he ji")
-                  console.log(error_data)
-                  alert("Please select Mine and location to see graph")
-                 }
-          });
+                let endpoint = '{% url 'gasmonitoring_wifi:fetch_young_co_ajax_wifi' %}';
+                $.ajax({
+                    method: "GET",
+                    url: endpoint,
+                    data: {
+                        'id': area_id,
+                        'date_from': date_from,
+                        'date_to': date_to,
+                    },
+                    success: function (data_ajax) {
+                        defaultData = data_ajax.result;
+                        console.log(defaultData);
+                        let co = [];
+                        let young_ratio = [];
+                        let co_ratio = [];
+                        let date = [];
+                        for (data in defaultData) {
+                            if (defaultData.hasOwnProperty(data)) {
+                                date.push(defaultData[data].date);
+                                co_ratio.push(defaultData[data].co_ratio);
+                                young_ratio.push(defaultData[data].young_ratio);
+                            }
 
-      var options = {
-        <!--chart: {-->
-          <!--title: 'Box Office Earnings in First Two Weeks of Opening',-->
-          <!--subtitle: 'in millions of dollars (USD)'-->
-        <!--},-->
-        hAxis: {
-          title: 'Days',
-          textStyle: {
-            color: '#01579b',
-            fontSize: 20,
-            fontName: 'Arial',
-            bold: true,
-            italic: true
-          },
-          titleTextStyle: {
-            color: '#01579b',
-            fontSize: 16,
-            fontName: 'Arial',
-            bold: false,
-            italic: true
-          }
-        },
-        vAxis: {
-          title: 'Ratio & CO ,per cent',
-          textStyle: {
-            color: '#1a237e',
-            fontSize: 24,
-            bold: true
-          },
-          titleTextStyle: {
-            color: '#1a237e',
-            fontSize: 24,
-            bold: true
-          }
-        },
+                        }
+                        var co_ratio_trace = {
+                            x: date,
+                            y: co_ratio,
+                            type: 'scatter',
+                            name: 'CO Ratio'
+                        };
 
-        width: 1200,
-        height: 700
-      };
+                        var young_ratio_trace = {
+                            x: date,
+                            y: young_ratio,
+                            type: 'scatter',
+                            name: "Graham Ratio"
+                        };
 
-      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+                        var data = [co_ratio_trace, young_ratio_trace];
 
-      chart.draw(data, google.charts.Line.convertOptions(options));
-    }
+                        Plotly.newPlot('linechart', data);
+
+                    },
+                    error: function (error_data) {
+                        console.log("error he ji")
+                        console.log(error_data)
+                        alert("Please select Mine and location to see graph")
+                    }
+                });
+            }
+        })
+        ;
 
 
-</script>
+    </script>
 {% endblock %}
