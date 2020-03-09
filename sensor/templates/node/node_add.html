@@ -102,7 +102,7 @@
 
                             <div class="form-group col-md-12">
                                 <div class="text-center">
-                                    <input type="checkbox" data-toggle="toggle" data-on="Goaf"
+                                    <input id="isGoaf" type="checkbox" data-toggle="toggle" data-on="Goaf"
                                            data-off="Not Goaf" data-onstyle="success" data-offstyle="danger">
                                 </div>
                             </div>
@@ -197,6 +197,7 @@
     </div>
     <section class="KBmap" id="KBtestmap"/>
     <script>
+        function goaf(){console.log($('#isGoaf').prop('checked'));}
         $(document).ready(function () {
             if ($('#id_mine_id').val() != '') {
                 $('#RouterCreate').prop("disabled", false)
