@@ -811,7 +811,7 @@
 <script src="{% static 'js/workflowChart.js' %}"></script>
 <script src="{% static 'js/divjs.js' %}"></script>
 <script src="{% static 'js/jquery.toast.js' %}"></script>
-<script src="{%  static 'js/material.min.js' %}"></script>
+<script src="{% static 'js/material.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-toggle.min.js' %}"></script>
 
 <script>
@@ -888,10 +888,17 @@
                         }
 
                     }
-                    if (data.hasOwnProperty('mine')) {
+                    if (data.hasOwnProperty('admin')) {
+                        if (data.admin) {
+                            $('li#mine_name').html('SuperUser(All Mine Access)');
+                        } else {
+                            if (data.hasOwnProperty('mine')) {
 
-                        $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                                $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                            }
+                        }
                     }
+
                 },
                 error: function () {
                     console.log('Something Went Wrong!');

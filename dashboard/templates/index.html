@@ -34,7 +34,7 @@
 
     <!-- Custom styles for this template-->
     <link rel="stylesheet" href="{% static 'dashboard/css/sb-admin-2.min.css' %}">
-    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script src='{% static 'js/plotly-latest.min.js' %}'></script>
     <style>
         @keyframes spin {
             0% {
@@ -58,8 +58,6 @@
             z-index: 2;
             cursor: pointer;
         }
-
-        py manaage.py runserver
         #text {
             position: absolute;
             top: 50%;

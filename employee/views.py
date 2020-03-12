@@ -718,6 +718,13 @@ def profile_ajax(request):
         profile = profile_extension.objects.get(user_id=book)
         data['profile_avatar'] = str(profile.profile_avatar)
         data['mine']=str(profile.mine_id)
+        admin_or_not=0
+        if request.user.is_superuser:
+            admin_or_not = 1
+        else:
+            admin_or_not = 0
+
+        data['admin'] = admin_or_not
         print(profile.profile_avatar)
         return JsonResponse(data)
 
