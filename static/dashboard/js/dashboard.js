@@ -78,13 +78,13 @@ $(document).ready(function () {
         return string.substring(0, index) + replace + string.substring(index + 1);
     }
 
-     WATER();
+    WATER();
 
     function WATER() {
         (function waterlevel() {
             $.ajax({
                 type: "get",
-                url:$('#waterLevel').data('url'),
+                url: $('#waterLevel').data('url'),
                 beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },
@@ -307,11 +307,11 @@ $(document).ready(function () {
 
                 var strata_data = [strata_white, strata_green, strata_yellow, strata_red, strata];
                 var config = {responsive: true}
-                Plotly.react('stratamonitoring', strata_data, strata_layout,config);
+                Plotly.react('stratamonitoring', strata_data, strata_layout, config);
 
                 //PLOTLY INITIALZATION END
 
-                stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url);
+                stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
 
             },
             error: function () {
@@ -325,7 +325,7 @@ $(document).ready(function () {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url) {
+    var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
         console.log('flag', strataFlag);
         StrataAjax = $.ajax({
             type: "get",
@@ -337,6 +337,7 @@ $(document).ready(function () {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
+                console.log('strata', data);
                 console.log('new l m h', strata_l_Value, strata_m_Value, strata_h_Value);
                 var value = data.result.sensor_value;
                 time = new Date();
@@ -365,7 +366,7 @@ $(document).ready(function () {
 
                 Plotly.relayout('stratamonitoring', minuteView);
                 Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
-                //{#checkAndPlay(Number(str_array[6]))#}
+                checkAndPlay(Number(value), strata_l_Value, strata_m_Value, strata_h_Value, "Strata Warning", audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio);
 
             },
             error: function () {
@@ -381,15 +382,15 @@ $(document).ready(function () {
         });
     };
 
-    function checkAndPlay(sensorValue) {
+    function checkAndPlay(sensorValue, l_value, m_value, h_value, string, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
         console.log(sensorValue);
 
         var loc = window.location;
         var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
 
-        if ((parseFloat(l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_Value))) {//low level
+        if ((parseFloat(l_value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_value))) {//low level
             $.toast({
-                heading: '<b>Strata Monitoring : First Level Warning</b>',
+                heading: '<b>' + string + ' : First Level Warning</b>',
                 text: first_warning,
                 showHideTransition: 'fade',
                 position: 'bottom-right',
@@ -403,9 +404,9 @@ $(document).ready(function () {
                 playNow.play();
             }
         }
-        if ((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))) {//middle level
+        if ((parseFloat(m_value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_value))) {//middle level
             $.toast({
-                heading: '<b>Strata Monitoring : Second Level Warning </b>',
+                heading: '<b>' + string + ' : Second Level Warning </b>',
                 text: second_warning,
                 showHideTransition: 'fade',
                 position: 'bottom-right',
@@ -421,9 +422,9 @@ $(document).ready(function () {
             }
         }
 
-        if (parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
+        if (parseFloat(h_value) < parseFloat(sensorValue)) {//high level
             $.toast({
-                heading: '<b>Strata Monitoring : Third Level Warning</b> ',
+                heading: '<b>' + string + ' : Third Level Warning</b> ',
                 text: third_warning,
                 position: 'bottom-right',
                 showHideTransition: 'fade',
@@ -569,7 +570,7 @@ $(document).ready(function () {
                         //{#scaleanchor: "x",#}
                         domain: [0, 1],
                         title: "Water Level(cm)",
-                        range: [0, water_t_height*1.2]
+                        range: [0, water_t_height * 1.2]
                     },
                     images: [{
                         name: 'watermark_1',
@@ -595,12 +596,12 @@ $(document).ready(function () {
 
                 var water_data = [water_white, water_green, water_yellow, water_red, water];
                 var config = {responsive: true}
-                Plotly.react('watermonitoring', water_data, water_layout,config);
+                Plotly.react('watermonitoring', water_data, water_layout, config);
 
                 //PLOTLY INITIALZATION END
 
 
-                watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url);
+                watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
 
             },
             error: function () {
@@ -614,7 +615,7 @@ $(document).ready(function () {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    var watermonitoringajax = function (water_l_value, water_m_value, water_h_value, water_t_height, url) {
+    var watermonitoringajax = function (water_l_value, water_m_value, water_h_value, water_t_height, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
 
         $.ajax({
             type: "get",
@@ -646,7 +647,7 @@ $(document).ready(function () {
                 };
                 Plotly.relayout('watermonitoring', minuteView);
                 Plotly.extendTraces('watermonitoring', update, [0, 1, 2, 3, 4]);
-                // {#checkAndPlay(Number(str_array[6]))#}
+                checkAndPlay(Number(value), water_l_value, water_m_value, water_h_value, "Water Level Warning", audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio);
 
             },
             error: function () {
@@ -807,7 +808,7 @@ $(document).ready(function () {
                     showlegend: false
                 };
                 var config = {responsive: true}
-                Plotly.newPlot('fireExp', data, layout,config, {modeBarButtonsToRemove: ['autoScale2d']});
+                Plotly.newPlot('fireExp', data, layout, config, {modeBarButtonsToRemove: ['autoScale2d']});
 
             },
             error: function () {

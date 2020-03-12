@@ -176,4 +176,4 @@ def delete_carousal(request):
 
 def start_background_tast(request):
     os.system('manage.py process_tasks')
-    pass
+    return redirect(request.META.get('HTTP_REFERER'))
