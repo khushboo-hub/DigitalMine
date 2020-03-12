@@ -377,7 +377,7 @@ $(document).ready(function () {
                     strataFlag = 0;
                     return;
                 }
-                setTimeout(stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, url), 100);
+                setTimeout(stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
             }, timeout: 60000,
         });
     };
@@ -658,7 +658,7 @@ $(document).ready(function () {
                     waterFlag = 0;
                     return;
                 }
-                setTimeout(watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, url), 100);
+                setTimeout(watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, url,audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
             }, timeout: 60000,
         });
     };
