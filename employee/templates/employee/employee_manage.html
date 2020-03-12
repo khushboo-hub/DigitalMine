@@ -512,7 +512,7 @@ $(document.body).on('click',".generate_login",function(e){
                 'miner_id':id,
                 'username':$('input#id_username').val(),
                  'email':email,
-                 'pass':randomstring
+                 'pass':$('input#id_password').val()
             },
             beforeSend: function() {
                  $('#status_msg_login').empty();
