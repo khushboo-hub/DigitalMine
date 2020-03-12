@@ -343,7 +343,7 @@ $(document).ready(function () {
                 time = new Date();
                 var update = {
                     x: [[time], [time], [time], [time], [time]],
-                    y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value / 15]],
+                    y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value]],
                 };
                 var olderTime = time.setMinutes(time.getMinutes() - 1);
                 var futureTime = time.setMinutes(time.getMinutes() + 1);
