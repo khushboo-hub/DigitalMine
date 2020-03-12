@@ -18,6 +18,6 @@ urlpatterns = [
     path('fetch_location_ajax', views.fetch_location_ajax, name='fetch_location_ajax'),
     path('fetch_sensor_details', views.fetch_sensor_details, name='fetch_sensor_details'),
     path('fetch_water_level_ajax', views.fetch_water_level_ajax, name='fetch_water_level_ajax'),
-    path('start_save_water_data/<int:id>', views.start_save_water_data, name='start_save_water_data'),
+    path('start_save_water_data/<int:sensor_id>', views.start_save_water_data, name='start_save_water_data'),
     path('graph_water_data_bet_two_datetime', views.graph_water_data_bet_two_datetime, name='graph_water_data_bet_two_datetime'),
 ]

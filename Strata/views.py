@@ -697,30 +697,41 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
-    task = Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
+    data={}
+    if request.is_ajax():
+        try:
+            task = Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
                                locked_at__isnull=True)
-    if task:
-        task.delete()
-    else:
-        run_back_save(sensor_id, repeat=5)
-    sensors = Strata_sensor.objects.all()
+            if task:
+                task.delete()
+            else:
+                run_back_save(sensor_id, repeat=5)
+            sensors = Strata_sensor.objects.all()
+            data['result'] = "success"
+        except:
+            data['result'] = "error"
+            pass
+        return JsonResponse(data)
 
-    data = {}
-    prepared_data = []
-    for s in sensors:
-        location_table = Strata_location.objects.get(id=s.location_id_id)
-        mine_table = MineDetails.objects.get(id=s.mine_name_id)
-        prepared_data.append({'id': s.id,
-                              'mine': mine_table.name,
-                              'location': location_table.location_name,
-                              'sensor': s.sensor_name,
-                              'unit': s.sensor_unit,
-                              'tag': s.tag_no,
-                              'ip': s.ip_address,
-                              })
-
-    data['result'] = prepared_data
-    return redirect(request.META.get('HTTP_REFERER'))
+    data['result']="Not Ajax"
+    return JsonResponse(data)
+    #
+    # data = {}
+    # prepared_data = []
+    # for s in sensors:
+    #     location_table = Strata_location.objects.get(id=s.location_id_id)
+    #     mine_table = MineDetails.objects.get(id=s.mine_name_id)
+    #     prepared_data.append({'id': s.id,
+    #                           'mine': mine_table.name,
+    #                           'location': location_table.location_name,
+    #                           'sensor': s.sensor_name,
+    #                           'unit': s.sensor_unit,
+    #                           'tag': s.tag_no,
+    #                           'ip': s.ip_address,
+    #                           })
+    #
+    # data['result'] = prepared_data
+    # return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required

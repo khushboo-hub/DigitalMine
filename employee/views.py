@@ -167,8 +167,11 @@ def generate_login_details_ajax(request):
         try:
             email = request.POST.get('email')
             password = request.POST.get('pass')
+
             username = request.POST.get('username')
             print('username',username)
+            print('pass', password)
+            print('email', email)
             data['result'] = email
             user = User.objects.create_user(username=username,
                                             email=email,
@@ -200,8 +203,14 @@ def generate_login_details_ajax(request):
             data['success'] = "Account Creation Successfully! User need to Confirm email to login!"
             return JsonResponse(data)
         except IntegrityError as e:
-            print(e)
             data['ie']="Account with this username and email address already exists!"
+        except Exception as e:
+            print('error',e)
+            data['ie'] = "Something went wrong.Try again later"
+            user.delete()
+            fs.delete()
+
+
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
 

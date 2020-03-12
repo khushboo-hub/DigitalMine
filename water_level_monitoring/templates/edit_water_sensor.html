@@ -185,7 +185,7 @@
 
 
                         <div class="text-center">
-                            <input type="submit" id="btn_show" class="btn btn-primary" value="Submit" onclick="return Validate()"/>
+                            <input type="submit" id="btn_show" class="btn btn-primary" value="Submit" />
                         </div>
                     </form>
                 </div>
@@ -199,19 +199,9 @@
 <script>
 $(document).ready(function(){
     $("#id_mine_id").addClass('form-control');
+    $("#id_mine_id").prop("required",true);
 
-});
 
-function Validate() {
-        var id_mine_id = document.getElementById("id_mine_id");
-        if (id_mine_id.value == "") {
-            //If the "Please Select" option is selected display error.
-            alert("Please select a Mine!");
-            return false;
-        }
-        return true;
-    }
-$(document).ready(function(){
      if($('#id_audio_play_type_0').is(':checked')) { $("#audio_container").hide(); }
 
     $("input[name$='audio_play_type']").change(function() {
@@ -225,5 +215,16 @@ $(document).ready(function(){
 
     });
 });
+
+{#function Validate() {#}
+{#        var id_mine_id = document.getElementById("id_mine_id");#}
+{#        if (id_mine_id.value == "") {#}
+{#            //If the "Please Select" option is selected display error.#}
+{#            alert("Please select a Mine!");#}
+{#            return false;#}
+{#        }#}
+{#        return true;#}
+{#    }#}
+
 </script>
 {% endblock %}

@@ -1,217 +1,221 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% load staticfiles %}
+    {% load staticfiles %}
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
-    <div class="row">
-        <section class="col-md-12">
-            <center>
-            <h1 class="page-header">Fire Explosive Gas - Tabular Report</h1></center>
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data" >{% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="col-md-12">
-                                                                <div class="col-md-1">
+        <div class="row">
+            <section class="col-md-12">
+                <div style="text-align: center;">
+                    <h1 class="page-header">Fire Explosive Gas - Tabular Report</h1>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
 
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="" class="form pull-right" id="">Choose Mine:</label>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        {{ form.mine_id }}
+                                    </div>
+                                    <div class="col-md-2" style="margin-right: 15px;">
+                                        <label for="" class="pull-right" id="">Choose Location:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <select class="form-control" id="id_area_id" name="area_id">
+                                            <option>--Select Area--</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-2">
+
+                                    </div>
                                 </div>
-                                <div class="col-md-2">
-                                    <label for="" class="form pull-right" id="">Choose Mine:</label>
-                                </div>
-
-                                <div class="col-md-2">
-                                    {{form.mine_id}}
-                                </div>
-                                <div class="col-md-2" style="margin-right: 15px;">
-                                    <label for="" class="pull-right" id="">Choose Location:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <select class="form-control" id="id_area_id" name="area_id">
-                                        <option>--Select Area--</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-2">
-
+                                <div class="col-md-12" style="margin-top:30px;">
+                                    <div class="col-md-1">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">From Date:</label>
+                                    </div>
+                                    <div class="col-md-2" style="margin-right: 15px;">
+                                        <input type="text" required class="form-control pull-right" id="from_date"
+                                               name="" value='{% now "Y-m-d" %}'>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="" class="pull-right" id="">To Date:</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input type="text" required class="form-control" id="to_date" name=""
+                                               value='{% now "Y-m-d" %}'>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-12" style="margin-top:30px;">
-                                <div class="col-md-1">
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="pull-right" id="">From Date:</label>
-                                </div>
-                                <div class="col-md-2" style="margin-right: 15px;">
-                                    <input type="text" required class="form-control pull-right" id="from_date"  name="" value='{% now "Y-m-d" %}'>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="" class="pull-right" id="">To Date:</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="text" required class="form-control" id="to_date"  name="" value='{% now "Y-m-d" %}'>
-                                </div>
-                            </div>
-                        </div>
-
-                    </form>
-                    <div class="col-md-12" style="margin-top:30px;">
-                        <div class="text-center">
-                            <input type="submit" id="btn_reportShow" class="btn btn-primary" style="width:150px" value="Show Report"/>
-                            <a class="btn btn-warning" style="width:150px" href="{% url 'gasmonitoring_wifi:show_area' %}">Back</a>
-                            <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:150px" value="Print"/>
-                        </div>
-
-
-                        <div class="col-md-12" style="margin-top:15px;">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="GasAnalysis_content">
-                                    <thead>
-                                    <tr>
-                                        <th>SL No</th>
-                                        <th>Date</th>
-                                        <th>Mine Name</th>
-                                        <th>Area Name</th>
-                                        <th>Wifi Address</th>
-                                        <th>O2</th>
-                                        <th>CO</th>
-                                        <th>CH4</th>
-                                        <th>CO2</th>
-                                        <th>H2</th>
-                                        <th>N2</th>
-                                        <th>C2H4</th>
-                                        <th>Graham's Ratio <br> (Message)</th>
-                                        <th>Young's Ratio <br> (Message)</th>
-                                        <th>COCO2's Ratio <br> (Message)</th>
-                                        <th>JTR Ratio <br> (Message)</th>
-                                        <th>C/H Ratio <br> (Message)</th>
-                                        <th><font color="red"> Explosibility(Result)</font></th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="Table_data">
-                                    {% for book in gas_table %}
-                                    <tr>
-                                        <td>{{forloop.counter}}</td>
-                                        <td>{{book.date}}</td>
-                                        <td>{{ book.mine_id }}</td>
-                                        <td>{{ book.Area_name }}</td>
-                                        <td>{{ book.Wifi_IP }}</td>
-                                        <td>{{ book.o2 }}</td>
-                                        <td>{{ book.co }}</td>
-                                        <td>{{ book.ch4 }}</td>
-                                        <td>{{ book.co2 }}</td>
-                                        <td>{{ book.h2 }}</td>
-                                        <td>{{ book.n2 }}</td>
-                                        <td>{{ book.c2h4 }}</td>
-                                        <td>{{ book.graham_ratio }}<br>({{ book.graham_msg }})</td>
-                                        <td>{{ book.young_ratio }}<br>({{ book.young_msg }})</td>
-                                        <td>{{ book.coco2_ratio }}<br>({{ book.coco2_msg }})</td>
-                                        <td>{{ book.jtr_ratio }}<br>({{ book.jtr_msg }})</td>
-                                        <td>{{ book.chra_ratio }}<br>({{ book.chra_msg }})</td>
-                                        <td>{{ book.explosm_result }})</td>
-                                    </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
+                        </form>
                     </div>
-                    <div class="container">
+                </div>
 
-                        <script>
-$(document).ready(function(){
-        $("#id_mine_id").addClass('form-control');
+                <div class="col-md-12" style="margin-top:30px;">
+                    <div class="text-center">
+                        <input type="submit" id="btn_reportShow" class="btn btn-primary" style="width:150px"
+                               value="Show Report"/>
+                        <a class="btn btn-warning" style="width:150px"
+                           href="{% url 'gasmonitoring_wifi:show_area' %}">Back</a>
+                        <input type="submit" id="btn_print" class="btn btn-success btn-sm" style="width:150px"
+                               value="Print"/>
+                    </div>
+                </div>
 
-});
 
+                <div class="col-md-12" style="margin-top:15px;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="GasAnalysis_content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Date</th>
+                                <th>Mine Name</th>
+                                <th>Area Name</th>
+                                <th>Wifi Address</th>
+                                <th>O2</th>
+                                <th>CO</th>
+                                <th>CH4</th>
+                                <th>CO2</th>
+                                <th>H2</th>
+                                <th>N2</th>
+                                <th>C2H4</th>
+                                <th>Graham's Ratio <br> (Message)</th>
+                                <th>Young's Ratio <br> (Message)</th>
+                                <th>COCO2's Ratio <br> (Message)</th>
+                                <th>JTR Ratio <br> (Message)</th>
+                                <th>C/H Ratio <br> (Message)</th>
+                                <th><font color="red"> Explosibility(Result)</font></th>
+                            </tr>
+                            </thead>
+                            <tbody id="Table_data">
+                            {% for book in gas_table %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.date }}</td>
+                                    <td>{{ book.mine_id }}</td>
+                                    <td>{{ book.Area_name }}</td>
+                                    <td>{{ book.Wifi_IP }}</td>
+                                    <td>{{ book.o2 }}</td>
+                                    <td>{{ book.co }}</td>
+                                    <td>{{ book.ch4 }}</td>
+                                    <td>{{ book.co2 }}</td>
+                                    <td>{{ book.h2 }}</td>
+                                    <td>{{ book.n2 }}</td>
+                                    <td>{{ book.c2h4 }}</td>
+                                    <td>{{ book.graham_ratio }}<br>({{ book.graham_msg }})</td>
+                                    <td>{{ book.young_ratio }}<br>({{ book.young_msg }})</td>
+                                    <td>{{ book.coco2_ratio }}<br>({{ book.coco2_msg }})</td>
+                                    <td>{{ book.jtr_ratio }}<br>({{ book.jtr_msg }})</td>
+                                    <td>{{ book.chra_ratio }}<br>({{ book.chra_msg }})</td>
+                                    <td>{{ book.explosm_result }})</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-
-$("#id_mine_id").on("change",function(){
-    mine_id=this.value;
-     $.ajax({
-            type:"get",
-            url: "{% url 'gasmonitoring_wifi:fetch_area_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                console.log(data.result);
-               //alert(data.result[0]);
-                fill_dropdown(data.result);
-
-                return data;
-                    },
-            error: function(){
-                    console.log("error");
-                 }
+            </section>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD'
             });
-});
-function fill_dropdown(result){
-    $("#id_area_id").html("<option>--Select Area--</option>");
-    for (index = 0; index < result.length; index++) {
-    //alert(result[index]);
-    var str_array = result[index].split(',');
-    //alert("id="+str_array[0]+":name="+str_array[1]);
-    $("#id_area_id").append($("<option />").val(str_array[0]).text(str_array[1]));
-    }
-}
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $("#id_mine_id").addClass('form-control');
 
-
-$(function() {
-$("#from_date").datepicker({ format: 'yyyy-mm-dd'});
-$("#to_date").datepicker({ format: 'yyyy-mm-dd'});
-
-});
-
-$("#btn_reportShow").click(function(){
-
-    area_id=$("#id_area_id").val();
-    if(area_id!="--Select Area--")
-    {
-            date_from=$("#from_date").val();
-            date_to=$("#to_date").val();
-                 $("#Table_data").empty();//empty the table on each click
-                  $.ajax({
-                    type:"get",
-                    url: "{% url 'gasmonitoring_wifi:fetch_Report_ajax' %}",
+            $("#id_mine_id").on("change", function () {
+                mine_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'gasmonitoring_wifi:fetch_area_ajax' %}",
                     data: {
-                              'id': area_id,
-                              'date_from':date_from,
-                              'date_to':date_to,
-                           },
-                    success: function(data) {
-                             console.log(data.result);
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result[0]);
+                        fill_dropdown(data.result);
 
-                             fill_Report_table(data.result);
-                             alert(data)
-                             return data;
-                            },
-                    error: function(){
+                        return data;
+                    },
+                    error: function () {
+                        console.log("error");
+                    }
+                });
+            });
+
+            function fill_dropdown(result) {
+                $("#id_area_id").html("<option>--Select Area--</option>");
+                for (index = 0; index < result.length; index++) {
+                    //alert(result[index]);
+                    var str_array = result[index].split(',');
+                    //alert("id="+str_array[0]+":name="+str_array[1]);
+                    $("#id_area_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+                }
+            }
+
+            $("#btn_reportShow").click(function () {
+
+                area_id = $("#id_area_id").val();
+                if (area_id != "--Select Area--") {
+                    date_from = $("#from_date").val();
+                    date_to = $("#to_date").val();
+                    $("#Table_data").empty();//empty the table on each click
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'gasmonitoring_wifi:fetch_Report_ajax' %}",
+                        data: {
+                            'id': area_id,
+                            'date_from': date_from,
+                            'date_to': date_to,
+                        },
+                        success: function (data) {
+                            console.log(data.result);
+
+                            fill_Report_table(data.result);
+                            alert(data)
+                            return data;
+                        },
+                        error: function () {
                             console.log("error");
-                         }
+                        }
 
                     });
+                } else {
+                    alert("Please Select Mine then Area");
+                }
+            });
+
+            function fill_Report_table(result) {
+                for (index = 0; index <= result.length; index++) {
+                    var str_array = result[index].split(',');
+                    $("#GasAnalysis_content").append($("<tr><td>" + str_array[0] + "</td><td>" + str_array[14] + "</td><td>" + str_array[15] + "</td><td>" + str_array[16] + "</td><td>" + str_array[17] + "</td><td>" + str_array[1] + "</td><td>" + str_array[2] + "</td><td>" + str_array[3] + "</td><td>" + str_array[4] + "</td><td>" + str_array[5] + "</td><td>" + str_array[6] + "</td><td>" + str_array[7] + "</td><td>" + str_array[8] + "</td><td>" + str_array[9] + "</td><td>" + str_array[10] + "</td><td>" + str_array[11] + "</td><td>" + str_array[12] + "</td><td>" + str_array[13] + "</td></tr>"));
+                    $("#ip_hidden").val(str_array[17]);
+
+                }
             }
-     else
-     {
-        alert("Please Select Mine then Area");
-     }
-});
 
-function fill_Report_table(result){
-    for (index = 0; index <= result.length; index++) {
-    var str_array = result[index].split(',');
-    $("#GasAnalysis_content").append($("<tr><td>"+str_array[0]+"</td><td>"+str_array[14]+"</td><td>"+str_array[15]+"</td><td>"+str_array[16]+"</td><td>"+str_array[17]+"</td><td>"+str_array[1]+"</td><td>"+str_array[2]+"</td><td>"+str_array[3]+"</td><td>"+str_array[4]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td><td>"+str_array[8]+"</td><td>"+str_array[9]+"</td><td>"+str_array[10]+"</td><td>"+str_array[11]+"</td><td>"+str_array[12]+"</td><td>"+str_array[13]+"</td></tr>"));
-    $("#ip_hidden").val(str_array[17]);
+            $("#btn_print").click(function () {
+                window.print();
+            });
 
-    }
-}
+        });
+    </script>
 
-$("#btn_print").click(function(){
-    window.print();
-});
-  </script>
-
-                        {% endblock %}
+{% endblock %}

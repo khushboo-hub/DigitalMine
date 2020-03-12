@@ -511,7 +511,9 @@ def fetch_WiFiReport_ajax(request):
             data['result'] = wifi_data
         except Exception as e:
             # return HttpResponse("<body bgcolor='#E59887'><h2><center>Please check wifi network.</br></h2></center><small>" + str(e) + "</small></body>")
-            return HttpResponse("<body bgcolor='#E59887'><h2><center>Please check wifi network..</br></h2></center><small>" + str(e) + "</small></body>")
+            return HttpResponse(
+                "<body bgcolor='#E59887'><h2><center>Please check wifi network..</br></h2></center><small>" + str(
+                    e) + "</small></body>")
     else:
         data['result'] = "Not Ajax"
 
@@ -525,27 +527,22 @@ def line_chart_gas_ratios_wifi(request, template_name="gasmonitoring_wifi/line_c
 
 
 def fetch_gas_ratios_ajax_wifi(request):
-    area_id = request.GET.get('id', None)
-    date_from = request.GET.get('date_from', None)
-    date_to = request.GET.get('date_to', None)
-    default_items = []
-    i = 0
-    gas_table = Fire_exp_gasesWifi.objects.filter(date__range=(date_from, date_to), Area_id=area_id)
-    print("gas table")
-    print(gas_table)
-    for rr in gas_table:
-        default_items.append([])
-        default_items[i].append(str(rr.date.strftime("%d-%b")))
-        default_items[i].append(float(rr.co))
-        default_items[i].append(float(rr.graham_ratio))
-        default_items[i].append(float(rr.coco2_ratio))
-        default_items[i].append(float(rr.jtr_ratio))
-        i += 1
-    print("default_items")
-    print(default_items)
-    data = {
-        "default": default_items,
-    }
+    data = {}
+    if request.is_ajax():
+        area_id = request.GET.get('id', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        default_items = []
+        gas_table = Fire_exp_gasesWifi.objects.filter(date__range=(date_from, date_to), Area_id=area_id)
+
+        for rr in gas_table:
+            default_items.append(
+                {'date': rr.date.strftime("%d-%b"), 'co': float(rr.co), 'graham_ratio': float(rr.graham_ratio),
+                 'coco2_ratio': float(rr.coco2_ratio), 'jtr_ratio': float(rr.jtr_ratio)})
+
+        data['result'] = default_items
+    else:
+        data['result'] = "Not Ajax"
     return JsonResponse(data)
 
 
@@ -556,24 +553,21 @@ def young_co_ratio_page_wifi(request):
 
 @login_required
 def fetch_young_co_ajax_wifi(request):
-    area_id = request.GET.get('id', None)
-    date_from = request.GET.get('date_from', None)
-    date_to = request.GET.get('date_to', None)
-    gas_table = Fire_exp_gasesWifi.objects.filter(date__range=(date_from, date_to), Area_id=area_id)
-    print(gas_table)
-    default_items = []
-    i = 0
-    for rr in gas_table:
-        default_items.append([])
-        default_items[i].append(str(rr.date.strftime("%d-%b")))
-        default_items[i].append(float(rr.young_ratio))
-        default_items[i].append(float(rr.co))
-        i += 1
+    data={}
+    if request.is_ajax():
+        area_id = request.GET.get('id', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        gas_table = Fire_exp_gasesWifi.objects.filter(date__range=(date_from, date_to), Area_id=area_id)
+        print(gas_table)
+        default_items = []
+        i = 0
+        for rr in gas_table:
+            default_items.append({'date':str(rr.date.strftime("%d-%b")),'young_ratio':float(rr.young_ratio),'co_ratio':float(rr.co)})
+        data['result']=default_items
+    else:
+        data['result']="Not Ajax"
 
-    # print(default_items)
-    data = {
-        "default": default_items,
-    }
     return JsonResponse(data)
 
 
