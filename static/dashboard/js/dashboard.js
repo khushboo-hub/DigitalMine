@@ -78,14 +78,13 @@ $(document).ready(function () {
         return string.substring(0, index) + replace + string.substring(index + 1);
     }
 
-    //  WATER();
+     WATER();
 
     function WATER() {
         (function waterlevel() {
             $.ajax({
                 type: "get",
-                url: "{% url 'dashboard:fetchwl' %}",
-
+                url:$('#waterLevel').data('url'),
                 beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);
                 },
@@ -101,7 +100,7 @@ $(document).ready(function () {
                     console.log("something is not right.please contact admin - 1");
                 },
                 complete: function () {
-                    setTimeout(waterlevel, 5000);
+                    setTimeout(waterlevel, 3000);
                 }
             });
         })();
@@ -570,7 +569,7 @@ $(document).ready(function () {
                         //{#scaleanchor: "x",#}
                         domain: [0, 1],
                         title: "Water Level(cm)",
-                        range: [0, 250]
+                        range: [0, water_t_height*1.2]
                     },
                     images: [{
                         name: 'watermark_1',

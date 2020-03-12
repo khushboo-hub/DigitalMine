@@ -709,11 +709,11 @@ def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sens
             sensors = Strata_sensor.objects.all()
             data['result'] = "success"
         except:
-            data['result'] = "error"
+            data['error'] = "error"
             pass
         return JsonResponse(data)
 
-    data['result']="Not Ajax"
+    data['error']="Not Ajax"
     return JsonResponse(data)
     #
     # data = {}

@@ -49,7 +49,7 @@ class MiningRoleForm(forms.ModelForm):
         widgets = {
             'type': forms.RadioSelect(),
         }
-        fields = ['parent_role', 'name', 'type', 'description']
+        fields = ['mine','parent_role', 'name', 'type', 'description']
 
 
 class EmployeeForm(forms.ModelForm):
