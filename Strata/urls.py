@@ -38,6 +38,8 @@ urlpatterns = [
     path('edit_sensor_in_location/<int:sensor_id>', views.edit_sensor_in_location,name='edit_sensor_in_location'),
     path('audio_setting/<int:sensor_id>', views.audio_setting,name='audio_setting'),
     path('fetch_map_image', views.fetch_map_image, name='fetch_map_image'),
+    path('daily_report', views.daily_report, name='daily_report'),
+    path('warning_report', views.warning_report, name='warning_report'),
     # path('show_strata_location',views.show_strata_location,name='show_strata_location'),
 
 ]

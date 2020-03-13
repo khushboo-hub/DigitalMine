@@ -184,6 +184,7 @@
                         success: function (data) {
 
                             var strata = data.result;
+                            console.log(strata);
                             $("#ip_hidden").val(strata.ip);
                             let strata_l_Value = parseFloat(strata.level1);
                             let strata_l_color = strata.level1_color;
@@ -361,7 +362,8 @@
 
                             Plotly.relayout('stratamonitoring', minuteView);
                             Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
-                            //{#checkAndPlay(Number(str_array[6]))#}
+
+                            checkAndPlay(Number(str_array[6]))
 
                         },
                         error: function () {
@@ -379,6 +381,7 @@
 
                 function checkAndPlay(sensorValue) {
                     console.log(sensorValue);
+                    console.log("Value Came");
 
                     var loc = window.location;
                     var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";

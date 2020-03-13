@@ -269,7 +269,7 @@
                     let Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
                     let datatable = $('#sensor_content').DataTable();
                     let row = datatable.row.add([result.date, result.mine, result.location, result.sensor_name, result.sensor_value, result.unit, result.tag]).draw().node();
-                    {#checkAndPlay(result.sensor_value);#}
+                    checkAndPlay(result.sensor_value);
 
                     $("#btn_show").val("Show");
                     $("#btn_show").prop('disabled', false);
