@@ -28,16 +28,16 @@ import random
 def init(request, template_name='MinersTracking/create_router.html'):
     err={}
     err['msg']=2
-
-
     current_user = request.user
-    profile=get_object_or_404(profile_extension,user_id=current_user.id)
-    if profile.mine_id is not None:
-        form = TrackingRouterForm(initial={'mine_id':profile.mine_id.id})
-        book = TrackingRouter.objects.filter(mine_id=profile.mine_id.id)
-    else:
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+
+    if request.user.is_superuser:
         form = TrackingRouterForm()
         book = TrackingRouter.objects.all()
+    else:
+        form = TrackingRouterForm(initial={'mine_id':profile.mine_id.id})
+        book = TrackingRouter.objects.filter(mine_id=profile.mine_id.id)
+
     # print('Profile',profile.mine_id)
     # form = TrackingRouterForm(initial={'mine_id':profile.mine_id.id})
     # form = TrackingRouterForm()
@@ -50,8 +50,14 @@ def init(request, template_name='MinersTracking/create_router.html'):
 @csrf_protect
 @login_required
 def update_router(request, pk, template_name='MinersTracking/update_router.html'):
+    current_user = request.user
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+
     book = get_object_or_404(TrackingRouter, pk=pk)
-    books = TrackingRouter.objects.all()
+    if request.user.is_superuser:
+        books = TrackingRouter.objects.all()
+    else:
+        books = TrackingRouter.objects.filter(mine_id=profile.mine_id.id)
     form = TrackingRouterForm(request.POST or None, instance=book)
     if form.is_valid():
         form.save()

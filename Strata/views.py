@@ -154,8 +154,8 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
                                   'unit': s.sensor_unit,
                                   'tag': s.tag_no,
                                   'ip': s.ip_address,
-                                 'background': background_task
-                                })
+                                  'background': background_task
+                                  })
         except:
             pass
 
@@ -213,10 +213,12 @@ def live_data_tabular(request, template_name='Convergence/live_data_tabular.html
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+
 @login_required
 def show_strata_location(request, template_name='Convergence/show_location.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
+
 
 def fetch_sensor_ajax(request):
     data = {}
@@ -334,7 +336,14 @@ def fetch_sensor_values_ajax(request):
                                'sensor_name': str(sensor_details.sensor_name),
                                'unit': str(sensor_details.sensor_unit),
                                'sensor_value': str(sensor_val),
-                               'tag': str(sensor_details.tag_no)}
+                               'tag': str(sensor_details.tag_no),
+                               'audio_type': str(sensor_details.audio_play_type),
+                               'first_warning_msg': str(sensor_details.level_1_msg),
+                               'second_warning_msg': str(sensor_details.level_2_msg),
+                               'third_warning_msg': str(sensor_details.level_3_msg),
+                               'first_warning_audio': str(sensor_details.level_1_audio),
+                               'second_warning_audio': str(sensor_details.level_2_audio),
+                               'third_warning_audio': str(sensor_details.level_3_audio)}
             else:
                 sensor_data = {'id': str(sensor_details.id),
                                'ip': str(sensor_details.ip_address),
@@ -344,7 +353,15 @@ def fetch_sensor_values_ajax(request):
                                'sensor_name': str(sensor_details.sensor_name),
                                'unit': str(sensor_details.sensor_unit),
                                'sensor_value': 'No data',
-                               'tag': str(sensor_details.tag_no)}
+                               'tag': str(sensor_details.tag_no),
+                               'audio_type': str(sensor_details.audio_play_type),
+                               'first_warning_msg': str(sensor_details.level_1_msg),
+                               'second_warning_msg': str(sensor_details.level_2_msg),
+                               'third_warning_msg': str(sensor_details.level_3_msg),
+                               'first_warning_audio': str(sensor_details.level_1_audio),
+                               'second_warning_audio': str(sensor_details.level_2_audio),
+                               'third_warning_audio': str(sensor_details.level_3_audio)}
+
 
         except Exception as x:
             sensor_data = {'id': str(sensor_details.id),
@@ -355,7 +372,14 @@ def fetch_sensor_values_ajax(request):
                            'sensor_name': str(sensor_details.sensor_name),
                            'unit': str(sensor_details.sensor_unit),
                            'sensor_value': 'Network Error',
-                           'tag': str(sensor_details.tag_no)}
+                           'tag': str(sensor_details.tag_no),
+                           'audio_type': str(sensor_details.audio_play_type),
+                           'first_warning_msg': str(sensor_details.level_1_msg),
+                           'second_warning_msg': str(sensor_details.level_2_msg),
+                           'third_warning_msg': str(sensor_details.level_3_msg),
+                           'first_warning_audio': str(sensor_details.level_1_audio),
+                           'second_warning_audio': str(sensor_details.level_2_audio),
+                           'third_warning_audio': str(sensor_details.level_3_audio)}
 
         data['result'] = sensor_data
     else:
@@ -697,13 +721,25 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
-    task = Task.objects.filter(task_name='Strata.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
-                               locked_at__isnull=True)
-    if task:
-        task.delete()
-    else:
-        run_back_save(sensor_id, repeat=5)
-    sensors = Strata_sensor.objects.all()
+    data = {}
+    if request.is_ajax():
+        try:
+            task = Task.objects.filter(task_name='Strata.views.run_back_save',
+                                       task_params="[[" + str(sensor_id) + "], {}]",
+                                       locked_at__isnull=True)
+            if task:
+                task.delete()
+            else:
+                run_back_save(sensor_id, repeat=5)
+            sensors = Strata_sensor.objects.all()
+            data['result'] = "success"
+        except:
+            data['error'] = "error"
+            pass
+        return JsonResponse(data)
+
+    data['error'] = "Not Ajax"
+    return JsonResponse(data)
     #
     # data = {}
     # prepared_data = []
@@ -720,7 +756,7 @@ def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sens
     #                           })
     #
     # data['result'] = prepared_data
-    return redirect(request.META.get('HTTP_REFERER'))
+    # return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -755,13 +791,13 @@ def fetch_sensor_date_range(request):
             created_date__range=(from_d, from_t)).order_by('-id')
         prepared_data = []
         for s in sensor_table_details:
-            prepared_data.append({'date':str(s.created_date),
-                                  'mine':str(mine_details.name),
-                                  'location':str(location_details.location_name),
-                                  'sensor':str(sensor_details.sensor_name),
-                                  'sensor_value':str(s.sensor_value),
-                                  'unit':str(sensor_details.sensor_unit),
-                                  'tag':str(sensor_details.tag_no)})
+            prepared_data.append({'date': str(s.created_date),
+                                  'mine': str(mine_details.name),
+                                  'location': str(location_details.location_name),
+                                  'sensor': str(sensor_details.sensor_name),
+                                  'sensor_value': str(s.sensor_value),
+                                  'unit': str(sensor_details.sensor_unit),
+                                  'tag': str(sensor_details.tag_no)})
 
         data['result'] = prepared_data
     else:

@@ -200,6 +200,7 @@
     <link href="{% static 'css/prettify.css' %}" rel="stylesheet"/>
     <link href="{% static 'fonts/GrandHotel.css' %}" rel='stylesheet' type='text/css'>
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link href="{% static 'css/bootstrap-toggle.min.css' %}" rel="stylesheet">
 
     <style>
         .navbar-transparent {
@@ -239,9 +240,7 @@
                         <div class="logo">
                             <img src="{% static '/image/csir_logo.svg' %}" width="60px">
                         </div>
-                        <div class="brand" style="width:200px;"> Development of Digital Mine Using Internet of Things
-                            (IoT).
-                        </div>
+                        <div class="brand" style="width:200px;">Digital Mine Using Internet of Things(IoT)</div>
                     </a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -811,7 +810,9 @@
 <script src="{% static 'js/workflowChart.js' %}"></script>
 <script src="{% static 'js/divjs.js' %}"></script>
 <script src="{% static 'js/jquery.toast.js' %}"></script>
-<script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+<script src="{% static 'js/material.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-toggle.min.js' %}"></script>
+
 <script>
     $(document).ready(function () {
         $(".se-pre-con").fadeOut("slow");
@@ -886,10 +887,17 @@
                         }
 
                     }
-                    if (data.hasOwnProperty('mine')) {
+                    if (data.hasOwnProperty('admin')) {
+                        if (data.admin) {
+                            $('li#mine_name').html('SuperUser(All Mine Access)');
+                        } else {
+                            if (data.hasOwnProperty('mine')) {
 
-                        $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                                $('li#mine_name').html(data.mine.substring(data.mine.indexOf('(') + 1, data.mine.indexOf(')')));
+                            }
+                        }
                     }
+
                 },
                 error: function () {
                     console.log('Something Went Wrong!');

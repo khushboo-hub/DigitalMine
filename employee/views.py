@@ -345,16 +345,34 @@ def delete_mine(request, pk):
 def add_mining_role(request, template_name='mine/add_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    admin_or_not=0
+    if request.user.is_superuser:
+        admin_or_not=1
+    else:
+        admin_or_not=0
+
     form = MiningRoleForm(profile.mine_id.id,request.POST)  # Passed Mine id as an argument
     mine_name=MineDetails.objects.get(id=profile.mine_id.id)
     if form.is_valid():
         fs=form.save(commit=False)
-        fs.mine_id=profile.mine_id.id
+        if not request.user.is_superuser:
+            fs.mine_id=profile.mine_id.id
         fs.save()
         return redirect('employee:manage_mining_role')
 
-    return render(request, template_name, {'form': form,'mine_name':mine_name})
+    return render(request, template_name, {'form': form,'mine_name':mine_name,'admin':admin_or_not})
 
+
+@login_required
+def mine_role_fetch_ajax(request):
+    data = {}
+    if request.is_ajax():
+        mine = request.GET.get('mine_id')
+        data['result'] = serializers.serialize('json', MiningRole.objects.filter(mine_id=mine), fields=('id','name'
+                                                                              ))
+    else:
+        data['result']="Not Ajax"
+    return JsonResponse(data)
 
 @login_required
 def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
@@ -363,16 +381,23 @@ def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     mine_name=MineDetails.objects.get(id=profile.mine_id.id)
+    admin_or_not=0
     try:
         current_user=request.user
         profile=get_object_or_404(profile_extension,user_id=current_user.id)
-        print('PRofile ID',str(profile.mine_id.id))
-        book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+        if request.user.is_superuser:
+            book = MiningRole.objects.all().order_by('mine_id')
+            admin_or_not=1
+        else:
+            book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            admin_or_not = 0
     except:
         pass
     data = {}
     data['object_list'] = book
     data['mine_name']=mine_name
+    data['admin']=admin_or_not
+
     return render(request, template_name, data)
 
 
@@ -693,6 +718,13 @@ def profile_ajax(request):
         profile = profile_extension.objects.get(user_id=book)
         data['profile_avatar'] = str(profile.profile_avatar)
         data['mine']=str(profile.mine_id)
+        admin_or_not=0
+        if request.user.is_superuser:
+            admin_or_not = 1
+        else:
+            admin_or_not = 0
+
+        data['admin'] = admin_or_not
         print(profile.profile_avatar)
         return JsonResponse(data)
 

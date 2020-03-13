@@ -315,8 +315,14 @@ def node_add(request, template_name='node/node_add.html'):
 @csrf_protect
 @login_required
 def node_manage(request, pk, template_name='node/node_manage.html'):
+    current_user=request.user
+    profile=get_object_or_404(profile_extension,user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
-    books = Node.objects.all()
+    if current_user.is_superuser:
+        books = Node.objects.all()
+    else:
+        books = Node.objects.filter(mine_id=profile.mine_id.id)
+
     form = NodeForm(request.POST or None, request.FILES or None, instance=book)
     if form.is_valid():
         try:

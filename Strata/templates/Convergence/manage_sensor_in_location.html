@@ -54,9 +54,18 @@
                                         <td>{{ strata.unit }}</td>
                                         <td>{{ strata.tag }}</td>
                                         <td>{{ strata.ip }}</td>
-                                        <td class="text-center"><a href="{% url 'Strata:start_save_sensor' strata.id %}"
-                                                                   title="{% if strata.background %}Stop {% else %}Start {% endif %}sensor data acquisition" style="color:{% if strata.background %}green {% endif %}"><span
-                                                class="glyphicon glyphicon-record"></span></a></td>
+                                        <td class="text-center"><input {% if strata.background %}checked {% endif %}
+                                                                       data-url="{% url 'Strata:start_save_sensor' strata.id %}"
+                                                                       id="isGoaf{{ strata.id }}"
+                                                                       data-val="{{ strata.id }}" class="isGoaf"
+                                                                       type="checkbox"
+                                                                       data-toggle="toggle" data-on="On"
+                                                                       data-off="off" data-onstyle="success"
+                                                                       data-offstyle="danger"></td>
+                                        {#                                        <td class="text-center"><a href="{% url 'Strata:start_save_sensor' strata.id %}"#}
+                                        {#                                                                   title="{% if strata.background %}Stop {% else %}Start {% endif %}sensor data acquisition"#}
+                                        {#                                                                   style="color:{% if strata.background %}green {% endif %}"><span#}
+                                        {#                                                class="glyphicon glyphicon-record"></span></a></td>#}
                                         <td class="text-center"><a href="{% url 'Strata:audio_setting' strata.id %}"
                                                                    title="Stop audio warning notification."><span
                                                 class="glyphicon glyphicon-stop"></span></a></td>
@@ -79,9 +88,33 @@
         </div>
     </div>
     <script>
-        $(document.body).on("click", ".delete", function () {
-            $("#sureDelete").attr("href", $(this).data('url'));
-            $('#update_info').modal('show');
+        $(document).ready(function () {
+            $(document.body).on("click", ".delete", function () {
+                $("#sureDelete").attr("href", $(this).data('url'));
+                $('#update_info').modal('show');
+            });
+
+            $('.isGoaf').change(function () {
+                let goafId=this.id;0
+                $.ajax({
+                    type: "post",
+                    url: $(this).data('url'),
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function (json) {
+                        console.log(json);
+                        if(json.hasOwnProperty("error")){
+                            $('#'+goafId).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                         $('#'+goafId).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+                console.log($(this).data('val'), $(this).prop('checked'));
+            });
         });
     </script>
 {% endblock %}

@@ -129,29 +129,29 @@
                 }
 
                 //------------------------------------------------------------------------------------------------------------------
-                var l_label = "Low";
-                var l_Value = "";
-                var l_color = "";
+                var strata_l_label = "Low";
+                var strata_l_Value = "";
+                var strata_l_color = "";
 
-                var m_label = "Medium";
-                var m_Value = "";
-                var m_color = "";
+                var strata_m_label = "Medium";
+                var strata_m_Value = "";
+                var strata_m_color = "";
 
-                var h_label = "High";
-                var h_Value = "";
-                var h_endValue = "";
-                var h_color = "";
-                var unit_sensor = "";
-                var custom_title = "";
+                var strata_h_label = "High";
+                var strata_h_Value = "";
+                var strata_h_endValue = "";
+                var strata_h_color = "";
+                var strata_unit_sensor = "";
+                var strata_custom_title = "";
 
-                var audio_type = "";
-                var first_warning = "";
-                var second_warning = "";
-                var third_warning = "";
+                var strata_audio_type = "";
+                var strata_first_warning = "";
+                var strata_second_warning = "";
+                var strata_third_warning = "";
 
-                var first_audio = "";
-                var second_audio = "";
-                var third_audio = "";
+                var strata_first_audio = "";
+                var strata_second_audio = "";
+                var strata_third_audio = "";
 
                 let strataFlag = 0;
                 let strata_url = $('#stratamonitoring').attr('data-url');
@@ -186,23 +186,23 @@
                             var strata = data.result;
                             console.log(strata);
                             $("#ip_hidden").val(strata.ip);
-                            let strata_l_Value = parseFloat(strata.level1);
-                            let strata_l_color = strata.level1_color;
+                             strata_l_Value = parseFloat(strata.level1);
+                             strata_l_color = strata.level1_color;
 
-                            let strata_m_Value = parseFloat(strata.level2);
-                            let strata_m_color = strata.level2_color;
+                             strata_m_Value = parseFloat(strata.level2);
+                             strata_m_color = strata.level2_color;
 
-                            let strata_h_Value = parseFloat(strata.level3);
-                            let strata_h_color = strata.level3_color;
+                             strata_h_Value = parseFloat(strata.level3);
+                             strata_h_color = strata.level3_color;
 
-                            let strata_audio_type = strata.audio_type;
-                            let strata_first_warning = strata.level1_msg;
-                            let strata_second_warning = strata.level2_msg;
-                            let strata_third_warning = strata.level3_msg;
+                             strata_audio_type = strata.audio_type;
+                             strata_first_warning = strata.level1_msg;
+                             strata_second_warning = strata.level2_msg;
+                             strata_third_warning = strata.level3_msg;
 
-                            let strata_first_audio = strata.level1_audio;
-                            let strata_second_audio = strata.level2_audio;
-                            let strata_third_audio = strata.level3_audio;
+                             strata_first_audio = strata.level1_audio;
+                             strata_second_audio = strata.level2_audio;
+                             strata_third_audio = strata.level3_audio;
 
                             console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
 
@@ -339,7 +339,7 @@
                             time = new Date();
                             var update = {
                                 x: [[time], [time], [time], [time], [time]],
-                                y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value / 15]],
+                                y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value]],
                             };
                             var olderTime = time.setMinutes(time.getMinutes() - 1);
                             var futureTime = time.setMinutes(time.getMinutes() + 1);
@@ -356,6 +356,9 @@
                                     range: [olderTime, futureTime],
                                     title: 'Time',
                                     nticks: 10,
+
+
+
                                     domain: [0, 1],
                                 }
                             };
@@ -363,7 +366,7 @@
                             Plotly.relayout('stratamonitoring', minuteView);
                             Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
 
-                            checkAndPlay(Number(str_array[6]))
+                            checkAndPlay(value);
 
                         },
                         error: function () {
@@ -380,59 +383,56 @@
                 };
 
                 function checkAndPlay(sensorValue) {
-                    console.log(sensorValue);
-                    console.log("Value Came");
-
                     var loc = window.location;
                     var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
 
-                    if ((parseFloat(l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(m_Value))) {//low level
+                    if ((parseFloat(strata_l_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(strata_m_Value))) {//low level
                         $.toast({
                             heading: '<b>Strata Monitoring : First Level Warning</b>',
-                            text: first_warning,
+                            text: strata_first_warning,
                             showHideTransition: 'fade',
                             position: 'bottom-right',
                             icon: 'error'
                         })
                         if (audio_type == "text2voice") {
-                            Speak(first_warning, 9, 0.5);
+                            Speak(strata_first_warning, 9, 0.5);
                         } else {
-                            path = baseUrl + first_audio;
+                            path = baseUrl + strata_first_audio;
                             var playNow = new Audio(path);
                             playNow.play();
                         }
                     }
-                    if ((parseFloat(m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(h_Value))) {//middle level
+                    if ((parseFloat(strata_m_Value) < parseFloat(sensorValue)) && (parseFloat(sensorValue) < parseFloat(strata_h_Value))) {//middle level
                         $.toast({
                             heading: '<b>Strata Monitoring : Second Level Warning </b>',
                             heading: '<b>Strata Monitoring : Second Level Warning </b>',
-                            text: second_warning,
+                            text: strata_second_warning,
                             showHideTransition: 'fade',
                             position: 'bottom-right',
                             icon: 'error'
                         })
                         if (audio_type == "text2voice") {
-                            console.log(second_warning)
-                            Speak(second_warning, 9, 0.5);
+                            console.log(strata_second_warning)
+                            Speak(strata_second_warning, 9, 0.5);
                         } else {
-                            path = baseUrl + second_audio;
+                            path = baseUrl + strata_second_audio;
                             var playNow = new Audio(path);
                             playNow.play();
                         }
                     }
 
-                    if (parseFloat(h_Value) < parseFloat(sensorValue)) {//high level
+                    if (parseFloat(strata_h_Value) < parseFloat(sensorValue)) {//high level
                         $.toast({
                             heading: '<b>Strata Monitoring : Third Level Warning</b> ',
-                            text: third_warning,
+                            text: strata_third_warning,
                             position: 'bottom-right',
                             showHideTransition: 'fade',
                             icon: 'error'
                         })
                         if (audio_type == "text2voice") {
-                            Speak(third_warning, 9, 0.5);
+                            Speak(strata_third_warning, 9, 0.5);
                         } else {
-                            path = baseUrl + third_audio;
+                            path = baseUrl + strata_third_audio;
                             var playNow = new Audio(path);
                             playNow.play();
                         }

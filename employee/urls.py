@@ -27,6 +27,7 @@ urlpatterns = [
     path('manage_mining_role', views.manage_mining_role, name='manage_mining_role'),
     path('edit_mining_role/<int:pk>', views.edit_mining_role, name='edit_mining_role'),
     path('delete_mining_role/<int:pk>', views.delete_mining_role, name='delete_mining_role'),
+    path('mine_role_fetch_ajax', views.mine_role_fetch_ajax, name='mine_role_fetch_ajax'),
 
     path('manage_mining_shift/<int:mine_id>', views.manage_mining_shift, name='manage_mining_shift'),
     path('add_mining_shift/<int:mine_id>', views.add_mining_shift, name='add_mining_shift'),
