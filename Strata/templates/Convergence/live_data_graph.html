@@ -394,7 +394,7 @@
                             position: 'bottom-right',
                             icon: 'error'
                         })
-                        if (audio_type == "text2voice") {
+                        if (strata_audio_type == "text2voice") {
                             Speak(strata_first_warning, 9, 0.5);
                         } else {
                             path = baseUrl + strata_first_audio;
@@ -411,7 +411,7 @@
                             position: 'bottom-right',
                             icon: 'error'
                         })
-                        if (audio_type == "text2voice") {
+                        if (strata_audio_type == "text2voice") {
                             console.log(strata_second_warning)
                             Speak(strata_second_warning, 9, 0.5);
                         } else {
@@ -429,7 +429,7 @@
                             showHideTransition: 'fade',
                             icon: 'error'
                         })
-                        if (audio_type == "text2voice") {
+                        if (strata_audio_type == "text2voice") {
                             Speak(strata_third_warning, 9, 0.5);
                         } else {
                             path = baseUrl + strata_third_audio;
