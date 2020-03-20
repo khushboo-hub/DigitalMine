@@ -937,3 +937,9 @@ def fetch_map_image(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+def daily_report(request):
+    return HttpResponse("Under Development")
+
+def warning_report(request):
+    return HttpResponse("Under Development")

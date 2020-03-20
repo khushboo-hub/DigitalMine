@@ -357,7 +357,8 @@
                                 <li><a href="{% url 'Strata:show_sensor_graph' %}">Live Data in Graph</a></li>
                                 <li><a href="{% url 'Strata:date_range_tabular' %}">Data b/n Dates</a></li>
                                 <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
-
+                                <li><a href="{% url 'Strata:daily_report' %}">Daily Average Report</a></li>
+                                <li><a href="{% url 'Strata:warning_report' %}">Warning Report</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -480,7 +481,6 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-
                                 <li><a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a></li>
                                 <li><a href="{% url 'inventory_management:category_add' %}">Add Category</a></li>
                                 <li><a href="{% url 'inventory_management:product_add' %}">Add Product</a></li>
@@ -510,7 +510,6 @@
                                 <li class="col-sm-6">
                                     <ul class="">
                                         <li class="dropdown-header" style="color:white;">Sword of Truth</li>
-
                                         <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Add Vehicle</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Manage Vehicle</a>
                                         </li>
