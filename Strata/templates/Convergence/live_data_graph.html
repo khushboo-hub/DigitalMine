@@ -185,25 +185,23 @@
 
                             var strata = data.result;
                             $("#ip_hidden").val(strata.ip);
-                            let strata_l_Value = parseFloat(strata.level1);
-                            let strata_l_color = strata.level1_color;
+                            l_Value = parseFloat(strata.level1);
+                            l_color = strata.level1_color;
 
-                            let strata_m_Value = parseFloat(strata.level2);
-                            let strata_m_color = strata.level2_color;
+                            m_Value = parseFloat(strata.level2);
+                            m_color = strata.level2_color;
 
-                            let strata_h_Value = parseFloat(strata.level3);
-                            let strata_h_color = strata.level3_color;
+                            h_Value = parseFloat(strata.level3);
+                            h_color = strata.level3_color;
 
-                            let strata_audio_type = strata.audio_type;
-                            let strata_first_warning = strata.level1_msg;
-                            let strata_second_warning = strata.level2_msg;
-                            let strata_third_warning = strata.level3_msg;
+                            audio_type = strata.audio_type;
+                            first_warning = strata.level1_msg;
+                            second_warning = strata.level2_msg;
+                            third_warning = strata.level3_msg;
 
-                            let strata_first_audio = strata.level1_audio;
-                            let strata_second_audio = strata.level2_audio;
-                            let strata_third_audio = strata.level3_audio;
-
-                            console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
+                            first_audio = strata.level1_audio;
+                            second_audio = strata.level2_audio;
+                            third_audio = strata.level3_audio;
 
                             //INITIALIZING PLOTLY
                             var y = [];
@@ -211,7 +209,7 @@
 
                             var strata_white = {
                                 x: [1, 2, 3, 4],
-                                y: [strata_l_Value, strata_l_Value, strata_l_Value, strata_l_Value],
+                                y: [l_Value, l_Value, l_Value, l_Value],
                                 fill: 'tonexty',
                                 type: 'scatter',
                                 fillcolor: 'rgba(158,158,158,0.18)', //white
@@ -222,7 +220,7 @@
                             };
                             var strata_green = {
                                 x: [1, 2, 3, 4],
-                                y: [strata_m_Value, strata_m_Value, strata_m_Value, strata_m_Value],
+                                y: [m_Value, m_Value, m_Value, m_Value],
                                 fill: 'tonexty',
                                 mode: 'lines',
                                 fillcolor: '#0096888a',
@@ -231,7 +229,7 @@
                             };
                             var strata_yellow = {
                                 x: [1, 2, 3, 4],
-                                y: [strata_h_Value, strata_h_Value, strata_h_Value, strata_h_Value],
+                                y: [h_Value, h_Value, h_Value, h_Value],
                                 fill: 'tonexty',
                                 type: 'scatter',
                                 fillcolor: '#ffeb3b75',
@@ -241,7 +239,7 @@
                             };
                             var strata_red = {
                                 x: [1, 2, 3, 4],
-                                y: [strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2],
+                                y: [h_Value * 1.2, h_Value * 1.2, h_Value * 1.2,h_Value * 1.2],
                                 fill: 'tonexty',
                                 type: 'scatter',
                                 fillcolor: '#f443368c',
@@ -277,7 +275,7 @@
                                 yaxis: {
                                     domain: [0, 1],
                                     title: "Strata Level (in mm)",
-                                    range: [0, strata_h_Value * 1.2]
+                                    range: [0, h_Value * 1.2]
                                 },
                                 images: [{
                                     name: 'watermark_1',
@@ -307,7 +305,7 @@
 
                             //PLOTLY INITIALZATION END
 
-                            stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, sensor_id);
+                            stratamonitoringajax(l_Value, m_Value, h_Value, strata_values_url, sensor_id);
 
                         },
                         error: function () {
@@ -321,7 +319,7 @@
 
                 //------------------------------------------------------------------------------------------------------------------
 
-                var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, sensor_id) {
+                var stratamonitoringajax = function (l_Value, m_Value, strata_h_Value, url, sensor_id) {
                     console.log('flag', strataFlag);
                     StrataAjax = $.ajax({
                         type: "get",
@@ -361,7 +359,7 @@
 
                             Plotly.relayout('stratamonitoring', minuteView);
                             Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
-                            checkAndPlay(Number(value));
+                            checkAndPlay(value);
 
                         },
                         error: function () {

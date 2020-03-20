@@ -359,7 +359,7 @@ h1 .subtitle{
     .navbar-search-form{
         display: none;   
     }
-    
+
     .navbar-nav > li > .dropdown-menu{
         display: block;
         padding: 0;
@@ -417,7 +417,8 @@ h1 .subtitle{
 @media (max-width: 768px){ 
     .navbar-transparent{
         padding-top: 15px;
-        background-color: rgba(0, 0, 0, 0.45);
+        background-color: #34ACDC !important;
+        background-color: rgba(52, 172, 220, 0.98) !important;
     }
     .navbar-transparent .navbar-nav .open .dropdown-menu > li > a:hover, .navbar-transparent .navbar-nav .open .dropdown-menu > li > a:focus, .navbar-transparent .dropdown-menu > li > a:hover, .navbar-transparent .dropdown-menu > li > a:focus, [class*="navbar-ct"] .dropdown-menu > li > a:hover, [class*="navbar-ct"] .dropdown-menu > li > a:focus{
         color: #FFFFFF;
@@ -462,13 +463,19 @@ h1 .subtitle{
   opacity:0;
 }
 
-@media (max-width: 991px){
+@media (max-width: 926px){
     .img-src{
        /*
  background-size: 100%;
         background-position: top;
 */
     }
+     .navbar-transparent{
+        padding-top: 15px;
+        background-color: #34ACDC !important;
+        background-color: rgba(52, 172, 220, 0.98) !important;
+    }
+
 }
 .main{
     background-color: #FFFFFF;

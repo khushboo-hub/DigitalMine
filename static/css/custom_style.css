@@ -316,6 +316,9 @@ height:auto;
     #content{
         padding-top:220px;
     }
+    .navbar-nav{
+        float:none !important;
+    }
 
 }
 @media(min-width:1024px){
@@ -694,8 +697,6 @@ if it's not present, don't show loader */
      .navbar-nav > li > .dropdown-menu{
         left:auto;
      }
-
-
     .wrap {
         width: 1000px;
         height: 1000px;
