@@ -37,7 +37,7 @@ class NodeForm(forms.ModelForm):
         }))
     class Meta():
         model = Node
-        fields = ['mine_id', 'nodeid', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description']
+        fields = ['mine_id', 'nodeid', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description','isgoaf']
 
 class Sensor_NodeForm(forms.ModelForm):
     sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
@@ -98,6 +98,15 @@ class Sensor_NodeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Description (Ex: )'
     }))
+    YES_NO = [
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+    ]
+    isgoaf = forms.BooleanField(widget=forms.RadioSelect(attrs={
+        'class':'yesy',
+    },choices=[(True, 'Yes'),
+                                                            (False, 'No')]))
+
     class Meta():
         model = Sensor_Node
         fields = ['ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']

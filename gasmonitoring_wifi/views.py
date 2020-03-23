@@ -1,5 +1,9 @@
 import matplotlib as mpl
 
+from accounts.models import profile_extension
+from sensor.forms import NodeForm
+from sensor.models import Node
+
 mpl.use('TkAgg')
 import datetime
 import matplotlib.pyplot as plt
@@ -30,10 +34,19 @@ def add_goaf_area(request, template_name='gasmonitoring_wifi/add_goaf_area.html'
 
 @login_required
 def manage_goaf_area(request, template_name='gasmonitoring_wifi/manage_goaf_area.html'):
-    area_table = AreaModel.objects.all()  ###  select * from Area(table)
-    print(area_table)
+    # area_table = AreaModel.objects.all()  ###  select * from Area(table)
+    # print(area_table)
     data = {}
-    data['object_list'] = area_table
+
+
+    current_user = request.user
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    form = NodeForm(initial={'mine_id': profile.mine_id.id})
+    if current_user.is_superuser:
+        book = Node.objects.all()
+    else:
+        book = Node.objects.filter(mine_id=profile.mine_id.id)
+    data['object_list'] = book
     return render(request, template_name, data)
 
 

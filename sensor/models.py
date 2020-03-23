@@ -30,6 +30,7 @@ class Node(models.Model):
     photo1 = models.ImageField(upload_to='emp_img/', null=True, blank=True)
     photo2 = models.ImageField(upload_to='emp_img/', null=True, blank=True)
     description = models.TextField('Description', max_length=200)
+    isgoaf = models.BooleanField(null=False,default=False)
     # mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
 
     # CONNECTIVITY_CHOICES = (
@@ -37,6 +38,8 @@ class Node(models.Model):
     #     ('W', 'Wired')
     # )
     # connection = models.CharField(choices=CONNECTIVITY_CHOICES, max_length=128, null=True, blank=True)
+    class Meta:
+        unique_together = ('mine_id', 'nodeid')
 
     def __str__(self):
           return (self.name)

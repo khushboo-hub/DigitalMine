@@ -24,7 +24,7 @@ urlpatterns = [
 
 
   path('node_manage/<int:pk>', views.node_manage, name='node_manage'),
-  path('node_add/', views.node_add, name='node_add'),
+  path('node_add', views.node_add, name='node_add'),
   path('node_edit/', views.node_edit, name='node_edit'),
   path('node_delete/', views.node_delete, name='node_delete'),
 

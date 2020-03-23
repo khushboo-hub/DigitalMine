@@ -316,7 +316,7 @@ def node_add(request, template_name='node/node_add.html'):
 @login_required
 def node_manage(request, pk, template_name='node/node_manage.html'):
     current_user=request.user
-    profile=get_object_or_404(profile_extension,user_id=current_user.id)
+    profile = get_object_or_404(profile_extension, user_id = current_user.id)
     book = get_object_or_404(Node, pk=pk)
     if current_user.is_superuser:
         books = Node.objects.all()
@@ -327,11 +327,10 @@ def node_manage(request, pk, template_name='node/node_manage.html'):
     if form.is_valid():
         try:
             form.save()
-
-            return redirect(reverse('sensor:node_add') + '?err=err')
+            return redirect(reverse('sensor:node_add') + '?success=true')
         except Exception as e:
-            # print(e)
-            return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk})
+            return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk,'exception':e})
+
     return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk})
     # book = Node.objects.all()
     # data = {}
@@ -502,8 +501,10 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
         except:
             pass
 
-    data['mine']=mine_id
-    data['node_id']=node_id
+    data['mine'] = mine_id
+    data['mine_name'] = mine_table.name
+    data['node_id'] = node_id
+    data['node_name']= node_table.name
     data['result'] = prepared_data
     #
     #
