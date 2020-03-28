@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.core.cache import cache
 from django.shortcuts import render
 from .models import MineDetails,Node,Sensor_Node,MinerTracking,TrackingRouter,water_level_monitoring_model
 from Strata.models import Strata_location,Strata_sensor
@@ -7,6 +8,7 @@ from django.shortcuts import get_object_or_404
 import requests
 from django.utils.html import strip_tags
 from django.http import HttpResponse, JsonResponse
+
 import os
 # Create your views here.
 
@@ -23,6 +25,13 @@ def dashboard_calling(request):
     print(mine)
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    try:
+        cache.set('profile_avatar', profile.profile_avatar, 3600)
+    except:
+        cache.set('profile_avatar','employee_image/male_alt_photo.svg', 30)
+        # profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
+        pass
+
     data = {}
     mine_table = MineDetails.objects.all()
     data['mine_table'] = mine_table
@@ -34,6 +43,7 @@ def dashboard_calling(request):
     data['first_mine_name'] = mine.name
     data['selected'] = mine.id
     water_level_area = 0
+    data['profile_avatar']= cache.get('profile_avatar')
 
     try:
         water_level_area = water_level[0]

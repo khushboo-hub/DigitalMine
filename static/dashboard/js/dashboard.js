@@ -45,7 +45,7 @@ $(document).ready(function () {
             }, timeout: 3000
 
         });
-    })(profile_avatar);
+    });
 
     $('a.strata-location-dropdown').click(function () {
         let location_id = $(this).attr('data-strata-location');
@@ -61,7 +61,7 @@ $(document).ready(function () {
     $('div.water-dropdown-location').click(function () {
         let location_id = $(this).attr('data-strata-location');
         let sensor_id = this.id;
-        console.log('sensor id', sensor_id);
+        //console.log('sensor id', sensor_id);
         Plotly.purge('watermonitoring');
         $.xhrPool.abortAll();
         waterFlag = 1;
@@ -78,7 +78,7 @@ $(document).ready(function () {
         return string.substring(0, index) + replace + string.substring(index + 1);
     }
 
-    WATER();
+    //WATER();
 
     function WATER() {
         (function waterlevel() {
@@ -90,11 +90,11 @@ $(document).ready(function () {
                 },
                 success: function (data) {
                     GasMonitoring(data.result, 208, "waterLevel");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nitrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
-                    GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
+
+                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
+                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
+                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
+                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
                 },
                 error: function () {
                     console.log("something is not right.please contact admin - 1");
@@ -148,30 +148,30 @@ $(document).ready(function () {
     //PLOTLY
 
 
-    /*var l_label = "Low";
-    var strata_l_Value = "";
-    var strata_l_color = "";
+    let l_label = "Low";
+    let strata_l_Value = "";
+    let strata_l_color = "";
 
-    var m_label = "Medium";
-    var strata_m_Value = "";
-    var strata_m_color = "";
+    let m_label = "Medium";
+    let strata_m_Value = "";
+    let strata_m_color = "";
 
-    var h_label = "High";
-    var strata_h_Value = "";
-    var strata_h_endValue = "";
-    var strata_h_color = "";
-    var strata_unit_sensor = "";
-    var strata_custom_title = "";
+    let h_label = "High";
+    let strata_h_Value = "";
+    let strata_h_endValue = "";
+    let strata_h_color = "";
+    let strata_unit_sensor = "";
+    let strata_custom_title = "";
 
-    var strata_audio_type = "";
-    var strata_first_warning = "";
-    var strata_second_warning = "";
-    var strata_third_warning = "";
+    let strata_audio_type = "";
+    let strata_first_warning = "";
+    let strata_second_warning = "";
+    let strata_third_warning = "";
 
-    var strata_first_audio = "";
-    var strata_second_audio = "";
-    var strata_third_audio = "";
-    */
+    let strata_first_audio = "";
+    let strata_second_audio = "";
+    let strata_third_audio = "";
+
 
     sensor_id = $('#stratamonitoring').attr('data-strata-sensor');
 
@@ -190,25 +190,26 @@ $(document).ready(function () {
             },
             success: function (data) {
                 var strata = data.result;
-                let strata_l_Value = parseFloat(strata.level1);
-                let strata_l_color = strata.level1_color;
+                 strata_l_Value = parseFloat(strata.level1);
+                 strata_l_color = strata.level1_color;
 
-                let strata_m_Value = parseFloat(strata.level2);
-                let strata_m_color = strata.level2_color;
+                strata_m_Value = parseFloat(strata.level2);
+                strata_m_color = strata.level2_color;
 
-                let strata_h_Value = parseFloat(strata.level3);
-                let strata_h_color = strata.level3_color;
+                strata_h_Value = parseFloat(strata.level3);
+                strata_h_color = strata.level3_color;
 
-                let strata_audio_type = strata.audio_type;
-                let strata_first_warning = strata.level1_msg;
-                let strata_second_warning = strata.level2_msg;
-                let strata_third_warning = strata.level3_msg;
+                strata_audio_type = strata.audio_type;
 
-                let strata_first_audio = strata.level1_audio;
-                let strata_second_audio = strata.level2_audio;
-                let strata_third_audio = strata.level3_audio;
+                strata_first_warning = strata.level1_msg;
+                strata_second_warning = strata.level2_msg;
+                strata_third_warning = strata.level3_msg;
 
-                console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
+                strata_first_audio = strata.level1_audio;
+                strata_second_audio = strata.level2_audio;
+                strata_third_audio = strata.level3_audio;
+
+              //  console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
 
                 //INITIALIZING PLOTLY
                 var y = [];
@@ -311,7 +312,7 @@ $(document).ready(function () {
 
                 //PLOTLY INITIALZATION END
 
-                stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
+               // stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
 
             },
             error: function () {
@@ -322,10 +323,82 @@ $(document).ready(function () {
 
     $("#current_date").removeAttr('style');
 
-
+    var CHECK=0;
     //------------------------------------------------------------------------------------------------------------------
+    var sock = new WebSocket("ws://192.168.1.131:3000");  //replace this address with the one the node.js server prints out. keep port 3000
+    //var display=document.getElementById("display")
 
-    var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
+    sock.onopen = function (event) {
+        //alert("Socket connected succesfully!!!")
+        setTimeout(function () {
+            sock.send('connection succeeded');
+        }, 1000);
+        //display.innerHTML+="connection succeeded <br />";
+    };
+    sock.onmessage = function (event) {
+        var time = new Date();
+        var sensor = JSON.parse(event.data);
+        if (sensor.hasOwnProperty('id')) {
+            if (sensor.id == "one") {
+                GasMonitoring(sensor.data[0], 20, "methane");
+                GasMonitoring(sensor.data[0], 20, "hydrogen");
+                GasMonitoring(sensor.data[0], 20, "nodeprogress");
+
+                var update = {
+                    x: [[time,time], [time,time], [time,time], [time,time], [time]],
+                    y: [[5,5], [10,10], [20,20], [20 * 1.2,20*1.2], [sensor.data[0]]],
+                };
+                var olderTime = time.setMinutes(time.getMinutes() - 1);
+                var futureTime = time.setMinutes(time.getMinutes() + 1);
+                var minuteView = {
+                    legend: {
+                        xanchor: "left",//"auto" | "left" | "center" | "right"
+                        yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                        y: 1,//number between or equal to -2 and 3
+                        x: 0,//number between or equal to -2 and 3
+                        orientation: "h"
+                    },
+                    xaxis: {
+                        type: 'date',
+                        range: [olderTime, futureTime],
+                        title: 'Time',
+                        nticks: 10,
+                        domain: [0, 1],
+                    }
+                };
+                CHECK++;
+                if(sensor.data[0]<10){
+                    CHECK=0;
+                }
+                //console.log('CHECK',CHECK);
+                if(CHECK>3){
+                     checkAndPlay(Number(sensor.data[0]), 5, 10, 20, "Strata Warning", strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
+                     CHECK=0;
+                }
+
+                Plotly.relayout('stratamonitoring', minuteView);
+                Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
+
+            }
+            if (sensor.id == "two") {
+                GasMonitoring(sensor.data[0], 20, "watermonitoring");
+                GasMonitoring(sensor.data[0], 20, "methane");
+                GasMonitoring(sensor.data[0], 20, "hydrogen");
+                GasMonitoring(sensor.data[0], 20, "nodeprogress");
+
+                /*
+                Plotly.extendTraces('Graph2', {
+                    x: [[time]],
+                    y: [[sensor.data[0]]]
+                }, [0]);
+                */
+            }
+        }
+
+        //display.innerHTML+=event.data+"<br />"; //add incoming message from server to the log screen previous string + new string(message)
+    }
+
+    /*var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
         console.log('flag', strataFlag);
         StrataAjax = $.ajax({
             type: "get",
@@ -380,10 +453,10 @@ $(document).ready(function () {
                 setTimeout(stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
             }, timeout: 60000,
         });
-    };
+    };*/
 
     function checkAndPlay(sensorValue, l_value, m_value, h_value, string, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-        console.log(sensorValue);
+       // console.log(sensorValue);
 
         var loc = window.location;
         var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
@@ -413,7 +486,7 @@ $(document).ready(function () {
                 icon: 'error'
             })
             if (audio_type == "text2voice") {
-                console.log(second_warning)
+                //console.log(second_warning)
                 Speak(second_warning, 9, 0.5);
             } else {
                 path = baseUrl + second_audio;
@@ -466,7 +539,7 @@ $(document).ready(function () {
 
     function waterStart(sensor_id, url) {
 
-        console.log('water start sensor', sensor_id);
+        //console.log('water start sensor', sensor_id);
         $.ajax({
             type: "get",
             url: url,
@@ -484,7 +557,7 @@ $(document).ready(function () {
                     water_m_value = str_array[2];
                     water_h_value = str_array[3];
                     water_t_height = parseInt(str_array[4]);
-                    console.log(water_l_value, water_m_value, water_h_value, water_t_height)
+                //    console.log(water_l_value, water_m_value, water_h_value, water_t_height)
 
                     water_audio_type = str_array[5];
                     water_first_warning = str_array[6];
@@ -601,7 +674,7 @@ $(document).ready(function () {
                 //PLOTLY INITIALZATION END
 
 
-                watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
+               // watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
 
             },
             error: function () {
@@ -629,7 +702,7 @@ $(document).ready(function () {
             success: function (data) {
                 let value = water_t_height - data.result.sensor_value
                 time = new Date();
-                console.log('Generate', water_l_value, water_m_value, water_h_value);
+                //console.log('Generate', water_l_value, water_m_value, water_h_value);
                 let update = {
                     x: [[time], [time], [time], [time], [time]],
                     y: [[water_l_value], [water_m_value], [water_h_value], [water_t_height], [value]],
@@ -658,7 +731,7 @@ $(document).ready(function () {
                     waterFlag = 0;
                     return;
                 }
-                setTimeout(watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, url,audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
+                setTimeout(watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
             }, timeout: 60000,
         });
     };
@@ -677,11 +750,11 @@ $(document).ready(function () {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
-                console.log('fire', data);
+               // console.log('fire', data);
 
                 result = data.result;
 
-                console.log(result);
+                //console.log(result);
                 var x_list = [];
                 var y_list = [];
                 var text = [];
@@ -702,7 +775,7 @@ $(document).ready(function () {
 
                 var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                 var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                console.log(lowest, highest);
+                //console.log(lowest, highest);
                 var trace1 = {
                     x: [-65, 80],
                     y: [18, 18],
@@ -733,7 +806,7 @@ $(document).ready(function () {
                     },
                     type: 'scatter'
                 };
-                console.log(dates)
+               // console.log(dates)
                 date = ['1', '2', '3'];
                 var trace3 = {
                     x: x_list,

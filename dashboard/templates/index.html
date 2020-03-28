@@ -560,8 +560,8 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="mr-2 d-none d-lg-inline text-gray-600 small">Welcome! {{ user.username }}</span>
                             <img id="profile_avatar" class="img-profile rounded-circle"
-                                 data-url="{% url 'employee:profile_ajax' %}"
-                                 src="https://source.unsplash.com/QAB-WJcbgJk/60x60" alt="">
+{#                                 data-url="{% url 'employee:profile_ajax' %}"#}
+                                 src="/media/{{ profile_avatar }}" alt="">
                         </a>
                         <!-- Dropdown - User Information -->
                         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
