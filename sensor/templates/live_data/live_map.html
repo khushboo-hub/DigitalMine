@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="container">
+
         <div class="row">
 
             <section class="col-md-12">
@@ -29,142 +30,147 @@
                     </div>
                 </div>
             </section>
-
+            <div class="col-md-12" style="margin-top:30px;">
+                <li class="GoafMineAreaIcon">Goaf Area</li>
+                <li class="NormalMineAreaIcon">Normal Area</li>
+            </div>
         </div>
 
     </div>
+
     <section class="KBmap" id="KBtestmap"></section>
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#id_mine_id").addClass('form-control');
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": true,
-                "progressBar": false,
-                "positionClass": "toast-bottom-full-width",
-                "preventDuplicates": true,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "100",
-                "timeOut": "3000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut",
-            }
-
-
-            $("#id_mine_id").on("change", function () {
-                if ($(this).val() != '') {
-                    setImageData(this.value);
-                    $('#RouterCreate').prop("disabled", false)
-                } else {
-                    $('#RouterCreate').prop("disabled", true)
+                $("#id_mine_id").addClass('form-control');
+                toastr.options = {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": true,
+                    "progressBar": false,
+                    "positionClass": "toast-bottom-full-width",
+                    "preventDuplicates": true,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "100",
+                    "timeOut": "3000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut",
                 }
-                $('#KBtestmap').hide();
-            });
 
-            $('#show').click(function () {
-                //console.log('here');
-                $('#KBtestmap').show()
-            })
-            var tempData1, tempData2;
 
-            function setImageData(mine_id) {
-                url = $("#get_url").data('url');
-
-                $.ajax({
-                    type: "get",
-                    url: "{% url 'sensor:fetch_map_image' %}",
-                    data: {
-                        'id': mine_id
-                    },
-                    success: function (data) {
-                        // CreateMapModel(data.mine.image_url,data.result.name);
-                        tempData1 = data;
-                        CreateKBtestMap(data);
-                        $(document).on("click", "div.KBmap__marker", function () {
-                            console.log('here');
-                            var NodeId = this.id;
-                            var NodeName = this.dataset.markerName;
-                            var mine_id = $("#id_mine_id").val();
-                            console.log(NodeId + " " + NodeName + " " + mine_id);
-                            Show_Live_Sensor_Values(mine_id, NodeId, NodeName);
-                        });
-                    },
-                    error: function () {
-                        console.log("something is not right.please contact admin - 1");
+                $("#id_mine_id").on("change", function () {
+                    if ($(this).val() != '') {
+                        setImageData(this.value);
+                        $('#RouterCreate').prop("disabled", false)
+                    } else {
+                        $('#RouterCreate').prop("disabled", true)
                     }
+                    $('#KBtestmap').hide();
                 });
-            }
 
-            function CreateKBtestMap(data) {
-                var img = data.mine.image_url;
+                $('#show').click(function () {
+                    //console.log('here');
+                    $('#KBtestmap').show()
+                })
+                var tempData1, tempData2;
 
-                //console.log(url);
-                if (addedKBmaps.length > 0) {
-                    addedKBmaps.pop();
-                    $('.KBmap__mapContainer').remove();
-                }
+                function setImageData(mine_id) {
+                    url = $("#get_url").data('url');
 
-                //alert(img);
-
-                if (img) {
-                    createKBmap('KBtestmap', '/media/' + img);
-                    KBtestmap.importJSON(data.node);
-
-                    KBtestmap.showAllMapMarkers();
-                    for (d in data.node) {
-                        console.log(d);
-                        $('div.KBmap__marker.' + d.split(' ').join('.'))[0]['id'] = data.node[d]['id'];
-                    }
-                } else {
-                    $("#map").css("");
-                    $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-                }
-            };
-
-            var NODEAJAX;
-
-            function Show_Live_Sensor(mine_id, data) {
-                for (node in data) {
-                    Show_Live_Sensor_Values(mine_id, data[node]['id'], node);
-                }
-            };
-
-
-            function Show_Live_Sensor_Values(mine_id, node_id, node_name) {
-                (function NODEAJAX() {
                     $.ajax({
                         type: "get",
-                        url: "{% url 'sensor:node_sensor_data' %}",
+                        url: "{% url 'sensor:fetch_map_image' %}",
                         data: {
-                            'id': mine_id,
-                            'node_id': node_id,
-                            'node_name': node_name,
+                            'id': mine_id
                         },
                         success: function (data) {
-                            tempData2 = data;
-                            if (data.hasOwnProperty("error")) {
-                                toastr.error(data.error);
-                                return data;
-                            }
-                            console.log(data);
-                            Fill_Node(data);
-                            return data;
+                            // CreateMapModel(data.mine.image_url,data.result.name);
+                            tempData1 = data;
+                            CreateKBtestMap(data);
+                            $(document).on("click", "div.KBmap__marker", function () {
+                                console.log('here');
+                                var NodeId = this.id;
+                                var NodeName = this.dataset.markerName;
+                                var mine_id = $("#id_mine_id").val();
+                                console.log(NodeId + " " + NodeName + " " + mine_id);
+                                Show_Live_Sensor_Values(mine_id, NodeId, NodeName);
+                            });
                         },
                         error: function () {
                             console.log("something is not right.please contact admin - 1");
-                        },
-                        complete: function () {
-                            setTimeout(NODEAJAX, 1000);
                         }
                     });
-                })();
-            }
+                }
+
+                function CreateKBtestMap(data) {
+                    var img = data.mine.image_url;
+
+                    //console.log(url);
+                    if (addedKBmaps.length > 0) {
+                        addedKBmaps.pop();
+                        $('.KBmap__mapContainer').remove();
+                    }
+
+                    //alert(img);
+
+                    if (img) {
+                        createKBmap('KBtestmap', '/media/' + img);
+                        KBtestmap.importJSON(data.node);
+
+                        KBtestmap.showAllMapMarkers();
+                        for (d in data.node) {
+                            console.log(d);
+                            $('div.KBmap__marker.' + d.split(' ').join('.'))[0]['id'] = data.node[d]['id'];
+                        }
+                    } else {
+                        $("#map").css("");
+                        $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+                    }
+                };
+
+                var NODEAJAX;
+
+                function Show_Live_Sensor(mine_id, data) {
+                    for (node in data) {
+                        Show_Live_Sensor_Values(mine_id, data[node]['id'], node);
+                    }
+                };
+
+
+                function Show_Live_Sensor_Values(mine_id, node_id, node_name) {
+                    (function NODEAJAX() {
+                        $.ajax({
+                            type: "get",
+                            url: "{% url 'sensor:node_sensor_data' %}",
+                            data: {
+                                'id': mine_id,
+                                'node_id': node_id,
+                                'node_name': node_name,
+                            },
+                            success: function (data) {
+                                tempData2 = data;
+                                if (data.hasOwnProperty("error")) {
+                                    toastr.error(data.error);
+                                    return data;
+                                }
+                                console.log(data);
+                                Fill_Node(data);
+                                return data;
+                            },
+                            error: function () {
+                                console.log("something is not right.please contact admin - 1");
+                            },
+                            complete: function () {
+                                setTimeout(NODEAJAX, 1000);
+                            }
+                        });
+                    })();
+                }
+
                 var set = 0;
 
                 function Fill_Node(NODE) {
@@ -195,7 +201,6 @@
 
                 }
             }
-
         )
         ;
 

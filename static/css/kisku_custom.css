@@ -132,3 +132,5 @@
         .container.tim-container {
             width: 99%;
         }
+.GoafMineAreaIcon  { list-style-image:url('/static/image/node_red.svg') }
+.NormalMineAreaIcon  { list-style-image:url('/static/image/node_green.svg') }
