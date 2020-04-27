@@ -8,7 +8,8 @@
             <section class="col-md-12">
                 <h1 class="page-header text-center">Live Sensor Data</h1>
                 <p class="text-center text-muted">&nbsp&nbsp&nbspHere you can see the live status of sensors in map</p>
-
+                <div style="display: none;" id="fetch_image" data-url="{% url 'sensor:fetch_map_image' %}"></div>
+                <div style="display: none;" id="sensor_data" data-url="{% url 'sensor:node_sensor_data' %}"></div>
                 <!-- Table content -->
                 <div class="row">
                     <div class="form-group">
@@ -79,11 +80,9 @@
                 var tempData1, tempData2;
 
                 function setImageData(mine_id) {
-                    url = $("#get_url").data('url');
-
                     $.ajax({
                         type: "get",
-                        url: "{% url 'sensor:fetch_map_image' %}",
+                        url: $("#fetch_image").data('url'),
                         data: {
                             'id': mine_id
                         },
@@ -142,10 +141,11 @@
 
 
                 function Show_Live_Sensor_Values(mine_id, node_id, node_name) {
+
                     (function NODEAJAX() {
                         $.ajax({
                             type: "get",
-                            url: "{% url 'sensor:node_sensor_data' %}",
+                            url: $("#sensor_data").data('url'),
                             data: {
                                 'id': mine_id,
                                 'node_id': node_id,
@@ -165,7 +165,7 @@
                                 console.log("something is not right.please contact admin - 1");
                             },
                             complete: function () {
-                                setTimeout(NODEAJAX, 1000);
+                                setTimeout(NODEAJAX, 10);
                             }
                         });
                     })();
@@ -181,11 +181,11 @@
                             var gas = NODE[node][gases];
                             console.log('gas', gas);
                             var progressBarColor = "#49FB7A"; //green  F6FE51 //yellow  FB2E1D //red
-                            if (Number(gas.value) < 10) {
+                            if (gas.warning == 1) {
                                 progressBarColor = "#49FB7A";
-                            } else if (Number(gas.value) > 10 && Number(gas.value) < 20) {
+                            } else if (gas.warning == 2){
                                 progressBarColor = "#F6FE51";
-                            } else {
+                            } else if (gas.warning == 3){
                                 progressBarColor = "#FB2E1D";
                             }
                             contents += '<div id="' + gases + '"><strong>' + gases + ':</strong> ' + gas.value + ' ' + gas.unit + '<div class="progress mb-4"><div class="progress-bar" role="progressbar" id="nitrogen" style="background-color:' + progressBarColor + ' !important; width: ' + Number(gas.value) + '%" aria-valuenow="' + Number(gas.value) + '" aria-valuemin="0" aria-valuemax="100"></div> </div></div>';

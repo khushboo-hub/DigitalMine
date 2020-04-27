@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import ModelForm
 
-from .models import  Node, Wireless, Sensor_Node, gasModel_auto
+from .models import Node, Wireless, Sensor_Node, gasModel_auto
 from .models import MineDetails
 from .forms import NodeForm, WirelessForm, Sensor_NodeForm, gasModel_autoForm
 import requests
@@ -209,9 +209,9 @@ def sensor1_delete(request, wireless_id, pk):
 #     except:
 #         tb = traceback.format_exc()
 #         return HttpResponse(tb)
-    # print ('%s (%s)' % (e.message, type(e)))
+# print ('%s (%s)' % (e.message, type(e)))
 
-    # return HttpResponse("e")
+# return HttpResponse("e")
 
 
 # return HttpResponse( "ASDF")
@@ -289,10 +289,9 @@ def wireless_delete(request, node_id, pk):
 
 @login_required
 def node_add(request, template_name='node/node_add.html'):
-
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    form = NodeForm(initial={'mine_id': profile.mine_id.id})  
+    form = NodeForm(initial={'mine_id': profile.mine_id.id})
     if current_user.is_superuser:
         book = Node.objects.all()
     else:
@@ -315,8 +314,8 @@ def node_add(request, template_name='node/node_add.html'):
 @csrf_protect
 @login_required
 def node_manage(request, pk, template_name='node/node_manage.html'):
-    current_user=request.user
-    profile = get_object_or_404(profile_extension, user_id = current_user.id)
+    current_user = request.user
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
     if current_user.is_superuser:
         books = Node.objects.all()
@@ -329,7 +328,7 @@ def node_manage(request, pk, template_name='node/node_manage.html'):
             form.save()
             return redirect(reverse('sensor:node_add') + '?success=true')
         except Exception as e:
-            return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk,'exception':e})
+            return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk, 'exception': e})
 
     return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk})
     # book = Node.objects.all()
@@ -467,7 +466,7 @@ def load_map(request):
 def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
     # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
 
-    sensors = Sensor_Node.objects.filter(mine_id_id=mine_id,node_id_id=node_id)
+    sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
 
     # print(sensors)
     data = {}
@@ -476,7 +475,7 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     node_table = Node.objects.get(id=node_id)
     mine_table = MineDetails.objects.get(id=mine_id)
     for s in sensors:
-        print('sensors', s.id,mine_table.name,node_table.name,s.sensorname,s.ip_add,s.sensorunit,s.thresholdlimit)
+        print('sensors', s.id, mine_table.name, node_table.name, s.sensorname, s.ip_add, s.sensorunit, s.thresholdlimit)
         background_task = 0
         try:
             task = Task.objects.get(task_name='sensor.views.run_back_save',
@@ -491,12 +490,12 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
             prepared_data.append({'id': s.id,
                                   'mine_name': mine_table.name,
                                   'node_name': node_table.name,
-                                  'node_id' : node_table.id,
-                                  'sensor_name':s.sensorname,
+                                  'node_id': node_table.id,
+                                  'sensor_name': s.sensorname,
                                   'ip': s.ip_add,
-                                  'unit' : s.sensorunit,
+                                  'unit': s.sensorunit,
                                   'thresholdlimit': s.thresholdlimit,
-                                  'background' : background_task
+                                  'background': background_task
                                   })
         except:
             pass
@@ -504,7 +503,7 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     data['mine'] = mine_id
     data['mine_name'] = mine_table.name
     data['node_id'] = node_id
-    data['node_name']= node_table.name
+    data['node_name'] = node_table.name
     data['result'] = prepared_data
     #
     #
@@ -556,13 +555,13 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
 #                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
 
 
-def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
+def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
     node = Node.objects.get(id=node_id)
     node_name = node.name
     mine = MineDetails.objects.get(pk=mine_id)
     mine_name = mine.name
     form = Sensor_NodeForm(request.POST or None, request.FILES)
-    print('form errors ',form.errors)
+    print('form errors ', form.errors)
     if form.is_valid():
         SensorModel = form.save(commit=False)
         SensorModel.node_id = node
@@ -574,7 +573,7 @@ def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.h
     # print(node_name)
     return render(request, template_name,
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': mine_id,
-                   'minename': mine_name,'mine':mine_id})
+                   'minename': mine_name, 'mine': mine_id})
 
 
 def delete_sensor(request, pk, node_id):
@@ -583,7 +582,8 @@ def delete_sensor(request, pk, node_id):
     return redirect(request.META.get('HTTP_REFERER'))
 
 
-def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html'): #pk is Sensor Id of a node, node_id=> id the of wirelss node
+def edit_sensor(request, pk, node_id,
+                template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     node_mine_id = mine_table.mine_id_id
@@ -611,7 +611,7 @@ def edit_sensor(request, pk, node_id, template_name='Sensor_Node/add_sensor.html
         # object.redlevel = request.POST.get("redlevel")
         # object.description = request.POST.get("description")
         # object.save()
-        return redirect('/sensor/manage_sensor/' +str(node_mine_id) +"/"+ str(node_id))
+        return redirect('/sensor/manage_sensor/' + str(node_mine_id) + "/" + str(node_id))
     return render(request, template_name,
                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id,
                    'minename': mine_name, 'mine': node_mine_id})
@@ -878,8 +878,7 @@ def fetch_ip(request):
 
 # Recieve continuous data wirelessly
 
-def start_save_sensor(request,sensor_id):
-
+def start_save_sensor(request, sensor_id):
     task = Task.objects.filter(task_name='sensor.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]")
     if task:
         task.delete()
@@ -896,7 +895,7 @@ def run_back_save(sensor_id):
     sensor_node = Sensor_Node.objects.get(pk=sensor_id)
     inst.mine_id = sensor_node.mine_id_id
 
-    inst.node_id =sensor_node.node_id_id
+    inst.node_id = sensor_node.node_id_id
     inst.gas_name = sensor_node.sensorname
     inst.gas_value = '0.00'
     print(sensor_node.node_id)
@@ -907,7 +906,7 @@ def run_back_save(sensor_id):
         if sensor_val:
             print(sensor_val)
             inst.gas_value = str(float(sensor_val))
-            print('sensor vaule',float(sensor_val))
+            print('sensor vaule', float(sensor_val))
         else:
             print('else part')
             inst.gas_value = 'No Data'
@@ -922,10 +921,6 @@ def run_back_save(sensor_id):
     except Exception as e:
         print(e)
     print("================Gas Sensor Background task end")
-
-
-
-
 
 
 @background(schedule=5)
@@ -978,27 +973,31 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
 
     return render(request, template_name, {'form': form})
 
+
 import random
+
+
 @login_required
-def iframe_live_data(request,mine_id, node_id,sensor_id, template_name='live_data/iframe_live_data.html'):
-    data={}
-    node=get_object_or_404(Node,pk=node_id,mine_id=mine_id)
-    node_name=node.name
+def iframe_live_data(request, mine_id, node_id, sensor_id, template_name='live_data/iframe_live_data.html'):
+    data = {}
+    node = get_object_or_404(Node, pk=node_id, mine_id=mine_id)
+    node_name = node.name
     wireless_node = get_object_or_404(Sensor_Node, pk=sensor_id, mine_id=mine_id, node_id=node_id)
     sensor_name = wireless_node.sensorname
     if request.is_ajax():
         try:
-           #wireless_node=get_object_or_404(Sensor_Node,pk=sensor_id,mine_id=mine_id,node_id=node_id)
-           ipAdd=wireless_node.ip_add
-           print('Ip Adderss',ipAdd)
-           response = requests.get('http://' + ipAdd)
-           data['result']=strip_tags(response.text)
+            # wireless_node=get_object_or_404(Sensor_Node,pk=sensor_id,mine_id=mine_id,node_id=node_id)
+            ipAdd = wireless_node.ip_add
+            print('Ip Adderss', ipAdd)
+            response = requests.get('http://' + ipAdd)
+            data['result'] = strip_tags(response.text)
         except Exception as e:
             print(e)
-            data['result']='Network Error'
+            data['result'] = 'Network Error'
         return JsonResponse(data)
 
-    return render(request,template_name,{'node_name':node_name,'sensor_name':sensor_name})
+    return render(request, template_name, {'node_name': node_name, 'sensor_name': sensor_name})
+
 
 #########demo
 def background_data(request):
@@ -2251,8 +2250,8 @@ def WarningLevel(gasValue, AWarning, BWarning, CWarning):
         # print('warn2')
 
     if float(gasValue) > float(CWarning):
-        print('warn3')
-        # warning = 3
+        # print('warn3')
+        warning = 3
 
     return warning
 
@@ -2291,4 +2290,3 @@ def node_sensor_data(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-
