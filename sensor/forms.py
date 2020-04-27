@@ -102,11 +102,6 @@ class Sensor_NodeForm(forms.ModelForm):
         ('Yes', 'Yes'),
         ('No', 'No'),
     ]
-    isgoaf = forms.BooleanField(widget=forms.RadioSelect(attrs={
-        'class':'yesy',
-    },choices=[(True, 'Yes'),
-                                                            (False, 'No')]))
-
     class Meta():
         model = Sensor_Node
         fields = ['ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']

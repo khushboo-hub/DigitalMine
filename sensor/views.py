@@ -562,7 +562,7 @@ def add_sensor(request,mine_id, node_id, template_name='Sensor_Node/add_sensor.h
     mine = MineDetails.objects.get(pk=mine_id)
     mine_name = mine.name
     form = Sensor_NodeForm(request.POST or None, request.FILES)
-
+    print('form errors ',form.errors)
     if form.is_valid():
         SensorModel = form.save(commit=False)
         SensorModel.node_id = node
@@ -2223,7 +2223,10 @@ def fetch_map_image(request):
             node_data['location'] = str(n.location)
             node_data['cordX'] = str(n.x_axis)
             node_data['cordY'] = str(n.y_axis)
-            node_data['icon'] = '/static/image/node_green.svg'
+            if n.isgoaf == 0:
+                node_data['icon'] = '/static/image/node_green.svg'
+            else:
+                node_data['icon'] = '/static/image/node_red.svg'
             node_data['photo2'] = str(n.photo2)
             node_modal_data = {'title': str(n.name) + "||" + str(n.location),
                                'content': '<div id="content' + n.name + '"></div>'}

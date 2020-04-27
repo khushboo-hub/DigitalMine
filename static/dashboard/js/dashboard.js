@@ -340,9 +340,9 @@ $(document).ready(function () {
         var sensor = JSON.parse(event.data);
         if (sensor.hasOwnProperty('id')) {
             if (sensor.id == "one") {
-                GasMonitoring(sensor.data[0], 20, "methane");
-                GasMonitoring(sensor.data[0], 20, "hydrogen");
-                GasMonitoring(sensor.data[0], 20, "nodeprogress");
+             //   GasMonitoring(sensor.data[0], 20, "methane");
+               /// GasMonitoring(sensor.data[0], 20, "hydrogen");
+                //GasMonitoring(sensor.data[0], 20, "nodeprogress");
 
                 var update = {
                     x: [[time,time], [time,time], [time,time], [time,time], [time]],
