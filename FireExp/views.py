@@ -665,6 +665,7 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
 
         x.elx = rm * np.cos(np.radians(thm))
         x.ely = rm * np.sin(np.radians(thm))
+        print("GPx",x)
 
         graphpoints.append(x)
         idn = idn + 1

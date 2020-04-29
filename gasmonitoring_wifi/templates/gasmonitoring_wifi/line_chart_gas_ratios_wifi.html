@@ -1,10 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <div class="d-flex p-2">
+    <div class="container">
         <div class="row">
             <section class="col-md-12">
                 <div style="text-align: center;">
@@ -19,19 +17,16 @@
                                               enctype="multipart/form-data">{% csrf_token %}
                                             <div class="form-group col-md-12">
                                                 <div class="col-md-12">
-                                                    <div class="col-md-1">
-                                                        <label for="" class="form" id=""></label>
-                                                    </div>
                                                     <div class="col-md-2">
                                                         <label for="" class="form pull-right" id="">Choose Mine:</label>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         {{ form.mine_id }}
                                                     </div>
                                                     <div class="col-md-2" style="margin-right: 15px;">
                                                         <label for="" class="pull-right" id="">Choose Location:</label>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <select class="form-control" id="id_area_id" name="area_id">
                                                             <option>--Select Area--</option>
                                                         </select>
@@ -42,20 +37,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12" style="margin-top:30px;">
-                                                    <div class="col-md-1">
-                                                        <label for="" class="form" id=""></label>
-                                                    </div>
+
                                                     <div class="col-md-2">
                                                         <label for="" class="pull-right" id="">From Date:</label>
                                                     </div>
-                                                    <div class="col-md-2" style="margin-right: 15px;">
+                                                    <div class="col-md-3" style="margin-right: 15px;">
                                                         <input type="text" required class="form-control" id="from_date"
                                                                value='{% now "Y-m-d" %}' name="">
                                                     </div>
                                                     <div class="col-md-2">
                                                         <label for="" class="pull-right" id="">To Date:</label>
                                                     </div>
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-3">
                                                         <input type="text" required class="form-control" id="to_date"
                                                                value='{% now "Y-m-d" %}' name="">
                                                     </div>
@@ -70,6 +63,8 @@
                                                    style="width:200px" value="Line chart Ratio Graph"/>
                                             <input type="submit" id="btn_Show_ratio_report" style="width:200px"
                                                    class="btn btn-danger" value="Young's CO Ratio Graph"/>
+                                            <input type="submit" id="btn_Ellicots" style="width:200px"
+                                                   class="btn btn-success" value="Ellicots Extention"/>
                                             <a class="btn btn-success btn-sm" style="width:100px"
                                                href="{% url 'gasmonitoring_wifi:show_area' %}">Back</a>
                                         </div>
@@ -78,14 +73,17 @@
                             </div>
                         </div>
                     </div>
+                    <br>
+                     {#                <div class="col-md-12">#}
+                <div id="linechart" class="text-center">
+                    <!--LINE CHART GOES HERE-->
+                    {#                    </div>#}
+                </div>
                 </div>
 
-                <div class="col-md-10">
-                    <div id="linechart">
-                        <!--LINE CHART GOES HERE-->
-                    </div>
-                </div>
             </section>
+
+
         </div>
     </div>
 
@@ -137,6 +135,11 @@
             $("#btn_Show_ratio_report").click(function () {
                 $("#linechart").html("");
                 drawChart2();
+            });
+
+            $("#btn_Ellicots").click(function () {
+                $("#linechart").html("");
+                Ellicots();
             });
 
             function drawChart() {
@@ -274,8 +277,179 @@
                     }
                 });
             }
-        })
-        ;
+
+            function Ellicots() {
+                let area_id = $("#id_area_id").val();
+                let date_from = $("#from_date").val();
+                let date_to = $("#to_date").val();
+
+                {#let endpoint = '{% url 'gasmonitoring_wifi:fetch_young_co_ajax_wifi' %}';#}
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'gasmonitoring_wifi:explosibility' 0 %}",
+                    data: {
+                        'id': area_id,
+                        'date_from': date_from,
+                        'date_to': date_to,
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                    },
+                    success: function (data) {
+                        console.log('data',data);
+
+                        result = data.result;
+
+                        {#console.log(result);#}
+                        var x_list = [];
+                        var y_list = [];
+                        var text = [];
+                        var color = [];
+                        var dates = [];
+                        for (var i = 0; i < result.length; i++) {
+                            x_list.push(result[i].x);
+                            y_list.push(result[i].y);
+                            text.push((i + 1).toString());
+                            color.push(result[i].color);
+                            dates.push(result[i].dates);
+                        }
+                        var xhighest = Math.max.apply(Math, x_list);
+                        var xlowest = Math.min.apply(Math, x_list);
+                        var yhighest = Math.max.apply(Math, y_list);
+                        var ylowest = Math.min.apply(Math, y_list);
+
+
+                        var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                        var lowest = Math.min.apply(Math, y_list);
+                        lowest=Math.abs(lowest);
+
+                        console.log(lowest, highest);
+                        var trace1 = {
+                            {#x: [-1*((highest*lowest)/2)*.4, ((highest*lowest)/2)*0.5],#}
+                            {#y: [((highest*lowest)/2)*0.8, ((highest*lowest)/2)*0.8],#}
+                            x: [-highest, highest],
+                            y: [lowest*1.3, lowest*1.3],
+                            mode: 'text',
+                            name: 'Lines, Markers and Text',
+                            text: ['<b>CLEAN FUEL NON-EXPLOSIVE</b>', '<b>EXPLOSIVE</b>'],
+                            hoverinfo: 'skip',
+                            textposition: 'center',
+                            textfont: {
+                                {#family: 'sans serif ,bold',#}
+                                size: 13,
+                                color: '#1f77b4'
+                            },
+                            type: 'scatter'
+                        };
+                        var trace2 = {
+                            {#x: [-1*((highest*lowest)/2)*0.5, ((highest*lowest)/2)*0.5],#}
+                            {#y: [-1*((highest*lowest)/2)*0.9, -1*((highest*lowest)/2)*0.9],#}
+                            x: [-highest, highest],
+                            y: [-lowest*1.3, -lowest*1.3],
+                            mode: 'text',
+                            name: 'Lines and Text',
+                            text: ['<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>', '<b>POTENTIALLY EXPLOSIVE</b>'],
+                            hoverinfo: 'skip',
+                            textposition: 'bottom center',
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 13,
+                                color: '#ff7f0e'
+                            },
+                            type: 'scatter'
+                        };
+                        console.log(dates)
+                        date = ['1', '2', '3'];
+                        var trace3 = {
+                            x: x_list,
+                            y: y_list,
+                            xa: dates,
+                            mode: 'text+dates+markers',
+                            type: 'scatter',
+                            {#name:dates,#}
+                            text: text,
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 20,
+                                color: color,
+                                weight: '900'
+                            },
+                            marker: {size: dates,},
+                            textposition: 'bottom center',
+
+                            hoveron: 'points',
+                            hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+
+                            hoverinfo: 'x+y',
+                        };
+
+
+                        var data = [trace1, trace2, trace3];
+                        var layout = {
+                            title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
+                            titlefont: {
+                                size: 32
+                            },
+                            width: 1200,
+                            height: 800,
+
+                            xaxis: {
+                                title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
+                                tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                                tick0: 0,
+                                dtick: 10,
+                                autoscale: true,
+                                range: [-1*(highest*1.5), (highest*1.5)],
+                                {#range: [-100, 100],#}
+                                ticks: "outside",
+                                showgrid: true,
+                                zeroline: true,
+                                showline: true,
+                                mirror: 'ticks',
+                                gridcolor: '#bdbdbd',
+                                gridwidth: 0.05,
+                                zerolinecolor: '#969696',
+                                zerolinewidth: 3,
+                                linecolor: '#636363',
+                                linewidth: 6,
+                                {#side:'right'#}
+                            },
+                            yaxis: {
+                                title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
+                                tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                                tick0: 0,
+                                dtick: 2,
+                                autoscale: true,
+                                {#yanchor:'right',#}
+                                ticks: 'inside',
+                                range: [-1*(lowest*1.5), (lowest*1.5)],
+                                {#range: [-30, 30],#}
+                                showgrid: true,
+                                zeroline: true,
+                                showline: true,
+                                mirror: 'ticks',
+                                gridcolor: '#bdbdbd',
+                                gridwidth: 0.15,
+                                zerolinecolor: '#969696',
+                                zerolinewidth: 3,
+                                linecolor: '#636363',
+                                linewidth: 6,
+
+                            },
+
+                            showlegend: false
+                        };
+                        Plotly.newPlot('linechart', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                         alert("Please select Mine and location to see graph")
+                    },
+                });
+            }
+        });
 
 
     </script>

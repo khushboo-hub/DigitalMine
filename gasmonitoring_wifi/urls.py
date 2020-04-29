@@ -11,6 +11,7 @@ urlpatterns = [
     path('edit_area/<int:pk>', views.edit_area, name='edit_area'),
     path('delete_area/<int:pk>', views.delete_area, name='delete_area'),
     path('analysis_wifi/<int:pk>', views.analysis_wifi, name='analysis_wifi'),
+    path('explosibility/<int:page>',views.explosibility,name="explosibility"),
 
     path('show_area/', views.show_area, name='show_area'),
     path('fetch_area_ajax', views.fetch_area_ajax, name='fetch_area_ajax'),
