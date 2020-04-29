@@ -879,13 +879,20 @@ def fetch_ip(request):
 # Recieve continuous data wirelessly
 
 def start_save_sensor(request, sensor_id):
-    task = Task.objects.filter(task_name='sensor.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]")
-    if task:
-        task.delete()
-    else:
-        run_back_save(sensor_id, repeat=15)
-
-    return redirect(request.META.get('HTTP_REFERER'))
+    data = {}
+    print('start save sensor')
+    if request.is_ajax():
+        try:
+            task = Task.objects.filter(task_name='sensor.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]")
+            if task:
+                task.delete()
+            else:
+                run_back_save(sensor_id, repeat=5)
+            data['result'] = "success"
+        except:
+            data['error'] = "error"
+            pass
+        return JsonResponse(data)
 
 
 @background(schedule=5)

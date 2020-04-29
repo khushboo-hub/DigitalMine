@@ -735,7 +735,7 @@ def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sens
                 task.delete()
             else:
                 run_back_save(sensor_id, repeat=5)
-            sensors = Strata_sensor.objects.all()
+            # sensors = Strata_sensor.objects.all()
             data['result'] = "success"
         except:
             data['error'] = "error"

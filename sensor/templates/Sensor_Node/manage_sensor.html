@@ -52,11 +52,19 @@
                                 <td class="text-center">{{ wireless.ip }}</td>
                                 <td class="text-center">{{ wireless.unit }}</td>
                                 <td class="text-center">{{ wireless.thresholdlimit }}</td>
-                                <td class="text-center"><a
-                                        href="{% url 'sensor:start_save_sensor' wireless.id %}"
-                                        title="{% if wireless.background %}Stop {% else %}Start {% endif %}sensor data acquisition"
-                                        style="color:{% if wireless.background %}green {% endif %}"><span
-                                        class="glyphicon glyphicon-record"></span></a></td>
+{#                                <td class="text-center"><a#}
+{#                                        href="{% url 'sensor:start_save_sensor' wireless.id %}"#}
+{#                                        title="{% if wireless.background %}Stop {% else %}Start {% endif %}sensor data acquisition"#}
+{#                                        style="color:{% if wireless.background %}green {% endif %}"><span#}
+{#                                        class="glyphicon glyphicon-record"></span></a></td>#}
+                                <td class="text-center"><input {% if wireless.background %}checked {% endif %}
+                                                                       data-url="{% url 'sensor:start_save_sensor' wireless.id %}"
+                                                                       id="isAcquire{{ wireless.id }}"
+                                                                       data-val="{{ wireless.id }}" class="DataAcquisition"
+                                                                       type="checkbox"
+                                                                       data-toggle="toggle" data-on="On"
+                                                                       data-off="off" data-onstyle="success"
+                                                                       data-offstyle="danger"></td>
                                 <td class="text-center"><a
                                         href="{% url 'sensor:edit_sensor' wireless.id wireless.node_id %}"
                                         title="Edit Node."><span class="glyphicon glyphicon-pencil"></span></a>
@@ -76,12 +84,35 @@
     </div>
     </div>
     <script>
-        $(document.body).on("click", ".delete", function () {
-
+     $(document).ready(function () {
+          $(document.body).on("click", ".delete", function () {
             $("#sureDelete").attr("href", $(this).data('url'));
             $('#update_info').modal('show');
 
         });
+
+     $('.DataAcquisition').change(function () {
+                let isAcquire=this.id;
+                $.ajax({
+                    type: "post",
+                    url: $(this).data('url'),
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function (json) {
+                        {#console.log(json);#}
+                        if(json.hasOwnProperty("error")){
+                            $('#'+isAcquire).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                         $('#'+isAcquire).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+                {#console.log($(this).data('val'), $(this).prop('checked'));#}
+            });
+           });
 
     </script>
 
