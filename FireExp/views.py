@@ -504,15 +504,15 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
 
     graphpoints = []
 
-    if(page==0):
+    if(page == 0):
         FireExp = Gasdb.objects.all()
-    elif(page==1):
+    elif(page == 1):
         FireExp = Fire_exp_gases.objects.all()
 
     idn = 1
-    data={}
-    graph=[]
-    dates=[]
+    data = {}
+    graph = []
+    dates = []
     for gas in FireExp:
         dates.append(gas.date)
         x = GraphData()

@@ -775,7 +775,7 @@ $(document).ready(function () {
 
                 var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                 var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                //console.log(lowest, highest);
+                console.log('HL',lowest, highest);
                 var trace1 = {
                     x: [-65, 80],
                     y: [18, 18],
@@ -831,7 +831,7 @@ $(document).ready(function () {
                 };
 
 
-                var data = [trace1, trace2, trace3];
+                var data = [trace3];
                 var layout = {
                     title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
                     titlefont: {
@@ -843,7 +843,8 @@ $(document).ready(function () {
                         tick0: 0,
                         dtick: 10,
                         autoscale: false,
-                        range: [-100, 100],
+
+                        range: [-highest * 2, highest * 2],
                         ticks: "outside",
                         showgrid: true,
                         zeroline: true,
@@ -864,7 +865,7 @@ $(document).ready(function () {
                         dtick: 2,
                         autoscale: false,
                         ticks: 'inside',
-                        range: [-20, 20],
+                        range: [-highest * 2, highest * 2],
                         showgrid: true,
                         zeroline: true,
                         showline: true,
@@ -877,6 +878,56 @@ $(document).ready(function () {
                         linewidth: 6,
 
                     },
+                    annotations: [
+                        {
+                            x: -highest*1.2,
+                            y: highest*1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: highest*1.2,
+                            y: highest*1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: -highest*1.2,
+                            y: -highest*1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: highest*1.2,
+                            y: -highest*1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        }
+                    ],
 
                     showlegend: false
                 };
