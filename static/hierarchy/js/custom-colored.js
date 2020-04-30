@@ -228,51 +228,42 @@ var chart_configs = {
     }
 };
 
-result_config={
-    container: "#custom-colored",
+var test = [{"id": 4, "title": "Dr SK Chaulya", "parent": null, "parentName": null}, {
+    "id": 5,
+    "title": "Bimal Kumar Mandal",
+    "parent": 4,
+    "parentName": "Dr SK Chaulya"
+}, {"id": 6, "title": "Chandan Kumar", "parent": 5, "parentName": "Bimal Kumar Mandal"}, {
+    "id": 7,
+    "title": "Dharmendra Kumar",
+    "parent": 5,
+    "parentName": "Bimal Kumar Mandal"
+}, {"id": 8, "title": "Naresh Kumar", "parent": 6, "parentName": "Chandan Kumar"}, {
+    "id": 9,
+    "title": "Dewangshu Pandit",
+    "parent": 8,
+    "parentName": "Naresh Kumar"
+}]
 
-    nodeAlign: "BOTTOM",
-
-    connectors: {
-        type: "step"
-    },
-
-    node: {
-        HTMLclass: "nodeExample1"
-    }
-},
- manager={
-    text: {
-        name: "Dr SK Chaulya",
-        title: 1
-    },
-    link: {
-        href: "drsk.90@example.com"
-    }
-},
-    sub1_manager={
-        parent:manager,
-        text: {
-            name: "Bimal Kumar Mandal",
-            title: 2
-        },
-        link: {
-            href: "bimal@example.com"
+function treeify(list, idAttr, parentAttr, childrenAttr) {
+    if (!idAttr) idAttr = 'id';
+    if (!parentAttr) parentAttr = 'parent';
+    if (!childrenAttr) childrenAttr = 'children';
+    var treeList = [];
+    var lookup = {};
+    list.forEach(function (obj) {
+        lookup[obj[idAttr]] = obj;
+        obj[childrenAttr] = [];
+    });
+    list.forEach(function (obj) {
+        if (obj[parentAttr] != null) {
+            lookup[obj[parentAttr]][childrenAttr].push(obj);
+        } else {
+            treeList.push(obj);
         }
-    },
-    sub2_manager={
-        parent:sub1_manager,
-        text: {name: "Dharmendra Kumar", title: 3}, link: {href: "dheeru3091@gmail.com"}
-    },
-    sub3_manager={
-        parent:manager,
-        text: {name: "Naresh Kumar", title: 5}, link: {href: "NARESH@example.com"}
-    },
+    });
+    return treeList;
+};
 
-result = [
-    result_config,
-    manager,
-    sub1_manager,
-    sub2_manager,
-    sub3_manager
-]
+var hi=treeify(test);
+console.log(JSON.stringify(treeify(test)));

@@ -1,6 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.db import connection
 from django.shortcuts import render
+from pyasn1.compat.octets import null
+
 from .models import MineDetails, Node, Sensor_Node, MinerTracking, TrackingRouter, water_level_monitoring_model, \
     Employee
 from Strata.models import Strata_location, Strata_sensor
@@ -160,36 +163,50 @@ def hi(request):
 def export(request, mine):
     data = {}
     node = []
-    node.append({'container': "#custom-colored",
+    # node.append(
+    #     {
+    #         'container': "#custom-colored",
+    #         'nodeAlign': "BOTTOM",
+    #         'connectors': {
+    #             'type': 'step'
+    #         },
+    #         'node': {
+    #             'HTMLclass': 'nodeExample1'
+    #         }
+    # })
+    # employees = Employee.objects.filter(mine_id=mine).order_by('mining_role_id')
 
-                 'nodeAlign': "BOTTOM",
 
-                 'connectors': {
-                     'type': 'step'
-                 },
-                 'node': {
-                     'HTMLclass': 'nodeExample1'
-                 }})
+
+    hirarchy = ""
+    # for emp in employees:
+    #     print(emp[0],emp[1],emp[3])
     if not request.is_ajax():
         try:
-            employees = Employee.objects.filter(mine_id=mine)
-            for emp in employees:
-                print(emp.name)
-                if emp.immediate_staff_id == None or emp.immediate_staff_id == 0:
-                    node.append({'text':
-                        {
-                            'name': emp.name,
-                            'title': emp.mining_role_id
-                        },
-                        'link': {
-                            'href': emp.email
-                        }})
-                else:
-                    parent = Employee.objects.get(id=emp.immediate_staff_id)
-                    node.append({'parent': {'text': {'name': parent.name, 'title': parent.mining_role_id},
+            sql = "SELECT t1.id,t1.name as Name,t1.immediate_staff_id,t2.name as Parent FROM employee t1 LEFT JOIN employee t2 ON t1.immediate_staff_id = t2.id where t1.mine_id = 8"
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            employees = cursor.fetchall()
+            # employees = Employee.objects.filter(mine_id=mine)
 
-                                            'link': {'href': parent.email}},
-                                 'text': {'name': emp.name, 'title': emp.mining_role_id}, 'link': {'href': emp.email}})
+            for emp in employees:
+                # print(emp.name)
+                if emp[3] == None or emp[3] == 4:
+                    node.append(
+                        {
+                            'id': emp[0],
+                            'title': emp[1],
+                            'parent':None,
+                            'parentName': None
+                        })
+                else:
+                    # parent = Employee.objects.get(id=emp.immediate_staff_id)
+                    node.append({
+                        'id':emp[0],
+                        'title':emp[1],
+                        'parent':emp[2],
+                        'parentName':emp[3]
+                                 })
 
             data['result'] = node
         except Exception as e:
