@@ -71,7 +71,9 @@ def create_router(request):
     response_data = {}
 
     if request.is_ajax():
+
         if request.method == 'POST':
+            print('Hello Miners Tracking')
             mine = request.POST.get('mine')
             router = str(request.POST.get('router_id'))
             address = str(request.POST.get('address'))
@@ -96,7 +98,9 @@ def create_router(request):
                 response_data['success'] = "Router Created Successfully!!"
                 response_data['book']=serializers.serialize('json', TrackingRouter.objects.filter(pk=tracking_router_inst.pk), fields=('mine_id','router_id','address','location','is_block','x_axis','y_axis','is_blocked','ip_add'))
                 return JsonResponse(response_data)
-            except:
+            except Exception as e:
+                print('Miners Tracking',e)
+
                 response_data['error'] = "Router Already Available!"
                 return JsonResponse(response_data)
     else:
