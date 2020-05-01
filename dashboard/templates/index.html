@@ -190,8 +190,16 @@
             <div id="environment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Conditions:</h6>
-                    <a class="collapse-item" href="buttons.html">Gas Monitoring</a>
-                    <a class="collapse-item" href="cards.html">Temp Monitoring</a>
+                    <a class="collapse-item" href="{% url 'sensor:node_add' %}">Add & Manage Wireless Node</a>
+                    <a class="collapse-item" href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a>
+                    <a class="collapse-item" href="{%  url 'sensor:live_data_graph' %}">Live Data in Graph</a>
+                    <a class="collapse-item" href="{% url 'sensor:live_map' %}">Live Data in Map</a>
+                    <a class="collapse-item" href="{% url 'FireExp:manual_entry' %}">Fire Status & Explosibility(Manual)</a>
+                    <a class="collapse-item" href="{% url 'FireExp:automatic_entry' %}">Fire Status & Explosibility(Automatic)</a>
+                    <a class="collapse-item" href="{%  url 'gasmonitoring_wifi:show_area' %}">Fire Status & Explosibility(Wifi)</a>
+{#                    <a class="collapse-item" href="cards.html">Mine Air Analysis</a>#}
+{#                    <a class="collapse-item" href="cards.html">Mine Gas Analysis</a>#}
+{#                    <a class="collapse-item" href="cards.html">Live Temp Data</a>#}
                 </div>
             </div>
         </li>
