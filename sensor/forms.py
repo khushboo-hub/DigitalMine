@@ -1,22 +1,22 @@
 from datetime import date
 
 from django import forms
-from .models import Node,Wireless,Sensor_Node
+from .models import Node, Wireless, Sensor_Node
+
 
 class NodeForm(forms.ModelForm):
-
-    nodeid = forms.CharField( max_length=200,widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder':'Node ID (Ex: N001)'
-        }))
-    name = forms.CharField( max_length=200,widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder':'Name (Ex: Node1)'
-        }))
-    location = forms.CharField( max_length=200,widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder':'Location (Ex: Near Pillar 17)'
-        }))
+    nodeid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Node ID (Ex: N001)'
+    }))
+    name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Name (Ex: Node1)'
+    }))
+    location = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Location (Ex: Near Pillar 17)'
+    }))
     # ip_add= forms.CharField(max_length=200, widget=forms.TextInput(attrs={
     #     'class': 'form-control',
     #     'placeholder': 'IP1 (Ex: 192.168.1.1)'
@@ -31,80 +31,108 @@ class NodeForm(forms.ModelForm):
     }))
     photo1 = forms.ImageField()
     photo2 = forms.ImageField()
-    description = forms.CharField( max_length=200,widget=forms.Textarea(attrs={
-            'class': 'form-control',
-            'placeholder':'Description (Ex: )'
-        }))
-    class Meta():
-        model = Node
-        fields = ['mine_id', 'nodeid', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description','isgoaf']
-
-class Sensor_NodeForm(forms.ModelForm):
-    sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: S001)'
-    }))
-    ip_add = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'IP1 (Ex: 192.168.1.1)'
-    }))
-    sensorname = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: CH2)',
-        'style': 'text-transform:uppercase;'
-    }))
-    sensorunit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 10 ppm)'
-    }))
-    thresholdlimit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 100 ppm)'
-    }))
-    sensorunit1 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 100 ppm)'
-    }))
-    sensorunit2 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 150 ppm)'
-    }))
-    sensorunit3 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 200 ppm)'
-    }))
-    sensormsg1 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: Enter first level message)'
-    }))
-    sensormsg2 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: Enter second level message)'
-    }))
-    sensormsg3 = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Node ID (Ex: Enter third level message)'
-    }))
-    greenlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-    }))
-    yellowlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-    }))
-    redlevel = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-    }))
     description = forms.CharField(max_length=200, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'placeholder': 'Description (Ex: )'
     }))
-    YES_NO = [
-        ('Yes', 'Yes'),
-        ('No', 'No'),
-    ]
+
+    class Meta():
+        model = Node
+        fields = ['mine_id', 'nodeid', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description',
+                  'isgoaf']
+
+
+class Sensor_NodeForm(forms.ModelForm):
+    sensor_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Node ID (Ex: S001)'
+    }))
+    ip_add = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'IP1 (Ex: 192.168.1.1)'
+    }))
+    sensor_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Node ID (Ex: CH2)',
+        'style': 'text-transform:uppercase;'
+    }))
+    sensor_unit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Node ID (Ex: 10 ppm)'
+    }))
+    sensor_threshold_limit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Node ID (Ex: 100 ppm)'
+    }))
+    level_1_warning_unit = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'ex: 5 ',
+        'data-toggle': "tooltip",
+        'data-placement': "right",
+        'title': "Tips: Conversion should be 5"
+
+    }))
+    level_2_warning_unit = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'ex: 8 ',
+        'data-toggle': "tooltip",
+        'data-placement': "right",
+        'title': "Tips: Conversion should be 8"
+    }))
+    level_3_warning_unit = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'ex: 10 ',
+        'data-toggle': "tooltip",
+        'data-placement': "right",
+        'title': "Tips: Conversion should be 10"
+    }))
+    level_1_color = forms.CharField(required=False, initial='#ADFF2F',
+                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color1"}))
+    level_2_color = forms.CharField(required=False, initial='#FFA500',
+                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color2"}))
+    level_3_color = forms.CharField(required=False, initial='#FF0000',
+                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color3"}))
+    level_1_msg = forms.CharField(required=False,
+                                  initial='Strata Condition:First Stage Warning Message , Please be Careful.',
+                                  widget=forms.TextInput(attrs={'class': 'form-control', }))
+    level_2_msg = forms.CharField(required=False,
+                                  initial='Strata Condition:Second Stage Warning Message , Please be alert situation is not good.',
+                                  widget=forms.TextInput(attrs={'class': 'form-control', }))
+    level_3_msg = forms.CharField(required=False,
+                                  initial='Strata Condition:Third Stage Warning Message , Please  leave the underground',
+                                  widget=forms.TextInput(attrs={'class': 'form-control', }))
+
+    interval_time = forms.CharField(initial=30, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': '30 Sec '
+    }))
+    description = forms.CharField(required=False,
+                                  widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'if any info'}))
+
+    level_1_audio = forms.FileField(required=False)
+    level_2_audio = forms.FileField(required=False)
+    level_3_audio = forms.FileField(required=False)
+
+    CHOICES = [('text2voice', 'Text message to voice convert'),
+               ('mp3only', 'Play uploaded mp3 only')]
+    audio_play_type = forms.ChoiceField(choices=CHOICES, initial='text2voice',
+                                        widget=forms.RadioSelect(attrs={"class": "audio_play_type"}))
+
+    description = forms.CharField(max_length=200, widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Description (Ex: )'
+    }))
+
+
     class Meta():
         model = Sensor_Node
-        fields = ['ip_add', 'sensorid', 'sensorname', 'sensorunit', 'thresholdlimit', 'sensorunit1', 'sensorunit2', 'sensorunit3', 'sensormsg1', 'sensormsg2', 'sensormsg3', 'greenlevel', 'yellowlevel', 'redlevel', 'description']
+        fields = ['ip_add', 'sensor_id', 'sensor_name', 'sensor_unit', 'sensor_threshold_limit', 'level_1_warning_unit',
+                  'level_2_warning_unit',
+                  'level_3_warning_unit', 'level_1_color', 'level_2_color', 'level_3_color', 'level_1_msg', 'level_2_msg',
+                  'level_3_msg', 'interval_time', 'level_1_audio', 'level_2_audio',
+                  'level_3_audio', 'audio_play_type',
+                  'description']
+
 
 # class SensorForm(forms.ModelForm):
 #     sensorid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
@@ -161,7 +189,7 @@ class WirelessForm(forms.ModelForm):
 
     class Meta:
         model = Wireless
-        fields = ['id','ipaddress','name']
+        fields = ['id', 'ipaddress', 'name']
 
 
 class gasModel_autoForm(forms.Form):
@@ -174,4 +202,3 @@ class gasModel_autoForm(forms.Form):
     SO2 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Eg. 5'}))
     H2 = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Eg. 0.055'}))
     He = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Eg. 0.0524'}))
-

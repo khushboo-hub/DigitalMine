@@ -47,8 +47,6 @@ class Strata_sensor(models.Model):
 
     ip_address = models.CharField(max_length=100)
     interval_time = models.IntegerField(null=True,blank=True,default='30')
-
-
     audio_play_type = models.CharField(max_length=10,default='mp3only')
 
     description = models.CharField(max_length=200, null=True, blank=True)

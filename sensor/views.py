@@ -289,11 +289,30 @@ def wireless_delete(request, node_id, pk):
 
 @login_required
 def node_add(request, template_name='node/node_add.html'):
+
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
+    background = {}
+
     if current_user.is_superuser:
         book = Node.objects.all()
+        for ob in book:
+            background_task = 0
+            sensors = Sensor_Node.objects.filter(mine_id_id=ob.mine_id, node_id_id=ob.id)
+            for s in sensors:
+                try:
+                    task = Task.objects.get(task_name='sensor.views.run_back_save',
+                                            task_params="[[" + str(s.id) + "], {}]")
+                    if task:
+                        background_task = 1
+
+                except:
+                    background_task = 0
+                    break
+                    pass
+            background[str(ob.id)] = background_task
+
     else:
         book = Node.objects.filter(mine_id=profile.mine_id.id)
     if request.method == "POST":
@@ -307,8 +326,8 @@ def node_add(request, template_name='node/node_add.html'):
         if form.is_valid():
             form.save()
             return redirect(reverse('sensor:node_add') + '?' + 'result=success')
-
-    return render(request, template_name, {'form': form, 'object_list': book})
+    print('Request Method',request.method)
+    return render(request, template_name, {'form': form, 'object_list': book, 'background': background})
 
 
 @csrf_protect
@@ -468,14 +487,15 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
 
     sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
 
-    # print(sensors)
+    print('sensors', sensors)
     data = {}
     prepared_data = []
     background_task = 0
     node_table = Node.objects.get(id=node_id)
     mine_table = MineDetails.objects.get(id=mine_id)
     for s in sensors:
-        print('sensors', s.id, mine_table.name, node_table.name, s.sensorname, s.ip_add, s.sensorunit, s.thresholdlimit)
+        print('sensors', s.id, mine_table.name, node_table.name, s.sensor_name, s.ip_add, s.sensor_unit,
+              s.sensor_threshold_limit)
         background_task = 0
         try:
             task = Task.objects.get(task_name='sensor.views.run_back_save',
@@ -491,10 +511,10 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
                                   'mine_name': mine_table.name,
                                   'node_name': node_table.name,
                                   'node_id': node_table.id,
-                                  'sensor_name': s.sensorname,
+                                  'sensor_name': s.sensor_name,
                                   'ip': s.ip_add,
-                                  'unit': s.sensorunit,
-                                  'thresholdlimit': s.thresholdlimit,
+                                  'unit': s.sensor_unit,
+                                  'thresholdlimit': s.sensor_threshold_limit,
                                   'background': background_task
                                   })
         except:
@@ -592,6 +612,7 @@ def edit_sensor(request, pk, node_id,
     book = get_object_or_404(Sensor_Node, pk=pk)
     form = Sensor_NodeForm(request.POST or None, request.FILES or None, instance=book)
     # object = Sensor_Node(pk=pk)
+    print(form.errors)
 
     if form.is_valid():
         form.save()
@@ -878,12 +899,36 @@ def fetch_ip(request):
 
 # Recieve continuous data wirelessly
 
+def start_save_multiple_sensor(request, mine_id, node_id):
+    data = {}
+
+    if request.is_ajax():
+        sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
+
+        for s in sensors:
+            try:
+                task = Task.objects.get(task_name='sensor.views.run_back_save', task_params="[[" + str(s.id) + "], {}]")
+
+                if task:
+                    task.delete()
+                # else:
+                #     run_back_save(s.id, repeat=5)
+                # data['result'] = "success"
+            except Task.DoesNotExist:
+                run_back_save(s.id, repeat=5)
+                data['result'] = "success"
+                pass
+
+    return JsonResponse(data)
+
+
 def start_save_sensor(request, sensor_id):
     data = {}
     print('start save sensor')
     if request.is_ajax():
         try:
-            task = Task.objects.filter(task_name='sensor.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]")
+            task = Task.objects.filter(task_name='sensor.views.run_back_save',
+                                       task_params="[[" + str(sensor_id) + "], {}]")
             if task:
                 task.delete()
             else:
@@ -903,10 +948,10 @@ def run_back_save(sensor_id):
     inst.mine_id = sensor_node.mine_id_id
 
     inst.node_id = sensor_node.node_id_id
-    inst.gas_name = sensor_node.sensorname
+    inst.gas_name = sensor_node.sensor_name
     inst.gas_value = '0.00'
     print(sensor_node.node_id)
-    print(sensor_node.sensorname)
+    print(sensor_node.sensor_name)
     try:
         response = requests.get('http://' + str(sensor_node.ip_add))
         sensor_val = strip_tags(response.text)
@@ -990,7 +1035,7 @@ def iframe_live_data(request, mine_id, node_id, sensor_id, template_name='live_d
     node = get_object_or_404(Node, pk=node_id, mine_id=mine_id)
     node_name = node.name
     wireless_node = get_object_or_404(Sensor_Node, pk=sensor_id, mine_id=mine_id, node_id=node_id)
-    sensor_name = wireless_node.sensorname
+    sensor_name = wireless_node.sensor_name
     if request.is_ajax():
         try:
             # wireless_node=get_object_or_404(Sensor_Node,pk=sensor_id,mine_id=mine_id,node_id=node_id)
@@ -1286,29 +1331,29 @@ def fetch_sensor_values_ajax(request):
             response = requests.get('http://' + str(sensor_details.ip_add))
             # print(sensor_details.ip_add)
             sensor_val = strip_tags(response.text)
-            if (int(sensor_val) < int(sensor_details.sensorunit1)):
+            if (int(sensor_val) < int(sensor_details.level_1_warning_unit)):
                 sensor_data1.append('#1216f6')
                 sensor_data2.append('Gas condition is normal ')
-            elif ((int(sensor_val) >= int(sensor_details.sensorunit1)) & (
-                    int(sensor_val) < int(sensor_details.sensorunit2))):
-                sensor_data1.append(str(sensor_details.greenlevel))
-                sensor_data2.append(str(sensor_details.sensormsg1))
-            elif ((int(sensor_val) >= int(sensor_details.sensorunit2)) & (
-                    int(sensor_val) < int(sensor_details.sensorunit3))):
-                sensor_data1.append(str(sensor_details.yellowlevel))
-                sensor_data2.append(str(sensor_details.sensormsg2))
+            elif ((int(sensor_val) >= int(sensor_details.level_1_warning_unit)) & (
+                    int(sensor_val) < int(sensor_details.level_2_warning_unit))):
+                sensor_data1.append(str(sensor_details.level_1_color))
+                sensor_data2.append(str(sensor_details.level_1_msg))
+            elif ((int(sensor_val) >= int(sensor_details.level_2_warning_unit)) & (
+                    int(sensor_val) < int(sensor_details.level_3_warning_unit))):
+                sensor_data1.append(str(sensor_details.level_2_color))
+                sensor_data2.append(str(sensor_details.level_2_msg))
             else:
-                sensor_data1.append(str(sensor_details.redlevel))
-                sensor_data2.append(str(sensor_details.sensormsg3))
+                sensor_data1.append(str(sensor_details.level_3_color))
+                sensor_data2.append(str(sensor_details.level_3_msg))
             sensor_data.append(
-                ok_date + ',' + str(sensor_details.id) + ',' + str(sensor_details.sensorname) + ',' + str(
-                    sensor_details.ip_add) + ',' + str(sensor_details.sensorunit) + ',' + str(sensor_val))
+                ok_date + ',' + str(sensor_details.id) + ',' + str(sensor_details.sensor_name) + ',' + str(
+                    sensor_details.ip_add) + ',' + str(sensor_details.sensor_unit) + ',' + str(sensor_val))
 
 
         except Exception as x:
             sensor_data.append(ok_date + ',' + str(sensor_details.id) + ',' + str(
-                sensor_details.sensorname) + ',' + str(
-                sensor_details.ip_add) + ',' + str(sensor_details.sensorunit) + ',' + "Network Error")
+                sensor_details.sensor_name) + ',' + str(
+                sensor_details.ip_add) + ',' + str(sensor_details.sensor_unit) + ',' + "Network Error")
 
         data['result'] = sensor_data
         data['result1'] = sensor_data1
@@ -1326,8 +1371,8 @@ def fetch_sensor_ajax_sensor(request):
         sensor_id = request.GET.get('id', None)
         sensor_details = Sensor_Node.objects.get(id=sensor_id)
         # print(sensor_details)
-        sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.sensorname) + ',' + str(
-            sensor_details.sensorunit) + ',' + '#1216f6')
+        sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.sensor_name) + ',' + str(
+            sensor_details.sensor_unit) + ',' + '#1216f6')
         data['result1'] = sensor_data
         # print(data)
     else:
@@ -1406,21 +1451,21 @@ def fetch_sensor_values_ajax_CH4(request):
         sensor_data3 = []
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
-        sensor_details = Sensor_Node.objects.values_list().filter(node_id=sensor_id)
+        sensor_details = Sensor_Node.objects.filter(node_id=sensor_id)
         # print(sensor_details)
         for r in sensor_details:
-            ip_add = str(r[3])
-            sensor_name = str(r[5])
-            unit = str(r[6])
-            sensorunit1 = str(r[8])
-            sensorunit2 = str(r[9])
-            sensorunit3 = str(r[10])
-            green = str(r[14])
-            yellow = str(r[15])
-            red = str(r[16])
-            msg1 = str(r[11])
-            msg2 = str(r[12])
-            msg3 = str(r[13])
+            ip_add = str(r.ip_add)
+            sensor_name = str(r.sensor_name)
+            unit = str(r.sensor_unit)
+            sensorunit1 = str(r.level_1_warning_unit)
+            sensorunit2 = str(r.level_2_warning_unit)
+            sensorunit3 = str(r.level_3_warning_unit)
+            green = str(r.level_1_color)
+            yellow = str(r.level_2_color)
+            red = str(r.level_3_color)
+            msg1 = str(r.level_1_msg)
+            msg2 = str(r.level_1_msg)
+            msg3 = str(r.level_1_msg)
             if (sensor_name == sensor_id1):
                 try:
                     response = requests.get('http://' + ip_add)
@@ -1884,7 +1929,7 @@ def sensor_wise_node(request):
 
         sensor_id = request.GET.get('id', None)
         sensor_id1 = request.GET.get('id1', None)
-        sensor_details = Sensor_Node.objects.values_list().filter(mine_id=sensor_id1, sensorname=sensor_id)
+        sensor_details = Sensor_Node.objects.values_list().filter(mine_id=sensor_id1, sensor_name=sensor_id)
         # print(sensor_details)
         for r in sensor_details:
             ip_add = str(r[3])
@@ -2012,7 +2057,7 @@ def fetch_sensor_values_ajax_sensor_table(request):
     if request.is_ajax():
         sensor_data = []
         node_id1 = request.GET.get('id', None)
-        sensor_details = Sensor_Node.objects.values_list().filter(sensorname=node_id1)
+        sensor_details = Sensor_Node.objects.values_list().filter(sensor_name=node_id1)
         # print(sensor_details)
         sensor_data.append('Date Time')
         sensor_data.append('Mine Name')
@@ -2036,7 +2081,7 @@ def fetch_sensor_values_ajax_sensor_body(request):
         sensor_data1 = []
 
         node_id = request.GET.get('id', None)
-        sensor_details = Sensor_Node.objects.values_list().filter(sensorname=node_id)
+        sensor_details = Sensor_Node.objects.values_list().filter(sensor_name=node_id)
         # print(sensor_details)
 
         for r1 in sensor_details:
@@ -2285,8 +2330,8 @@ def node_sensor_data(request):
                 response = requests.get('http://' + sd.ip_add)
 
                 gasValue = strip_tags(response.text)
-                warning = str(WarningLevel(gasValue, sd.sensorunit1, sd.sensorunit2, sd.sensorunit3))
-                sensor_data[str(sd.sensorname)] = {'value': gasValue, 'unit': sd.sensorunit, 'warning': warning}
+                warning = str(WarningLevel(gasValue, sd.level_1_warning_unit, sd.level_1_warning_unit, sd.level_1_warning_unit))
+                sensor_data[str(sd.sensor_name)] = {'value': gasValue, 'unit': sd.sensor_unit, 'warning': warning}
                 print(sensor_data)
             except:
                 data['error'] = "Connection Error!"
@@ -2297,3 +2342,11 @@ def node_sensor_data(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+
+from django.template.defaulttags import register
+
+
+@register.filter(name='lookup')
+def get_item(dictionary, key):
+    return dictionary.get(str(key))

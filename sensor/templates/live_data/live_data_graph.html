@@ -2,9 +2,6 @@
 
 {% block content %}
 
-
-
-
     <div class="container">
         <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -391,6 +388,7 @@
                         'id': sensor_id
                     },
                     success: function (data) {
+                        console.log(data);
                         for (index = 0; index < data.result.length; index++) {
                             var str_array = data.result[index].split(',');
                         }
@@ -685,6 +683,7 @@
                         'id1': name
                     },
                     success: function (data) {
+                        console.log(data);
                         for (index = 0; index < data.result.length; index++) {
                             var str_array = data.result[index];
                         }
