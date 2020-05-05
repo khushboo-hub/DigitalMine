@@ -77,7 +77,18 @@ class Sensor_Node(models.Model):
     node_id = models.ForeignKey(Node, on_delete=models.CASCADE)
     ip_add = models.CharField('IP Addressss', max_length=200)
     sensor_id = models.CharField('Sensor Id', max_length=200)
-    sensor_name = models.CharField('Sensor Name', max_length=200)
+
+    GAS_SENSOR_CHOICES = (
+        ('CO', 'CO'),
+        ('CO2', 'CO2'),
+        ('CH4','CH4'),
+        ('O2','O2'),
+        ('H2','H2'),
+        ('N2','N2'),
+        ('C2H4','C2H4')
+    )
+
+    sensor_name = models.CharField('Sensor Name', max_length=200,choices=GAS_SENSOR_CHOICES)
     sensor_unit = models.CharField('Sensor Unit', max_length=200)
     sensor_threshold_limit = models.CharField('Threshold Limit', default='0', max_length=200)
 

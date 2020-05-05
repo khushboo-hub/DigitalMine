@@ -51,7 +51,16 @@ class Sensor_NodeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'IP1 (Ex: 192.168.1.1)'
     }))
-    sensor_name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+    GAS_SENSOR_CHOICES = (
+        ('CO', 'CO'),
+        ('CO2', 'CO2'),
+        ('CH4', 'CH4'),
+        ('O2', 'O2'),
+        ('H2', 'H2'),
+        ('N2', 'N2'),
+        ('C2H4', 'C2H4')
+    )
+    sensor_name = forms.CharField(max_length=200, widget=forms.Select(choices=GAS_SENSOR_CHOICES,attrs={
         'class': 'form-control',
         'placeholder': 'Node ID (Ex: CH2)',
         'style': 'text-transform:uppercase;'

@@ -60,6 +60,7 @@ urlpatterns = [
   path('live_data_graph', views.live_data_graph, name='live_data_graph'),
   path('iframe_live_data/<int:mine_id>/<int:node_id>/<int:sensor_id>', views.iframe_live_data, name='iframe_live_data'),
   path('fetch_sensor_ajax', views.fetch_sensor_ajax, name='fetch_sensor_ajax'),
+  path('fetch_sensors_list',views.fetch_sensors_list,name='fetch_sensors_list'),
   path('fetch_sensor_values_ajax', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax'),
   path('fetch_sensor_ajax_sensor', views.fetch_sensor_ajax_sensor, name='fetch_sensor_ajax_sensor'),
   path('fetch_sensor_values_all_ajax', views.fetch_sensor_values_all_ajax, name='fetch_sensor_values_all_ajax'),
