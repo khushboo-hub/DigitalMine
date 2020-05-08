@@ -96,11 +96,11 @@ class Sensor_NodeForm(forms.ModelForm):
         'title': "Tips: Conversion should be 10"
     }))
     level_1_color = forms.CharField(required=False, initial='#ADFF2F',
-                                    widget=forms.TextInput(attrs={'class': " jscolor  form-control", "id": "color1","value":"ADFF2F"}))
+                                    widget=forms.TextInput(attrs={'class': "jscolor  form-control", "id": "color1","value":"ADFF2F"}))
     level_2_color = forms.CharField(required=False, initial='#FFA500',
-                                    widget=forms.TextInput(attrs={'class': " jscolor form-control", "id": "color2","value":"FFA500"}))
+                                    widget=forms.TextInput(attrs={'class': "jscolor form-control", "id": "color2","value":"FFA500"}))
     level_3_color = forms.CharField(required=False, initial='#FF0000',
-                                    widget=forms.TextInput(attrs={'class': " jscolor  form-control", "id": "color3","value":"FF0000"}))
+                                    widget=forms.TextInput(attrs={'class': "jscolor  form-control", "id": "color3","value":"FF0000"}))
     level_1_msg = forms.CharField(required=False,
                                   initial='Strata Condition:First Stage Warning Message , Please be Careful.',
                                   widget=forms.TextInput(attrs={'class': 'form-control', }))

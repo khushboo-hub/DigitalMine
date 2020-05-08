@@ -112,19 +112,6 @@ def convergence_delete_location(request, pk):
 #            (5) delete_sensor
 # Purpose : CRUD functionality of sensor information in strata module
 # -----------------------------------------------------------------------------
-@login_required
-def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_location.html'):
-    if request.method == 'POST':
-        form = Strata_sensor_Form(request.POST, request.FILES)
-        # print(form)
-        if form.is_valid():
-            form.save()
-            return redirect('Strata:manage_sensor_in_location')
-        else:
-            print("form is not valid")
-    else:
-        form = Strata_sensor_Form()
-    return render(request, template_name, {'form': form})
 
 
 @login_required
@@ -166,15 +153,34 @@ def manage_sensor_in_location(request, template_name='Convergence/manage_sensor_
 
 
 @login_required
+def add_sensor_in_location(request, template_name='Convergence/add_sensor_in_location.html'):
+    if request.method == 'POST':
+        form = Strata_sensor_Form(request.POST.get('mine_name') or None, request.POST or None, request.FILES or None)
+
+        if form.is_valid():
+            form.save()
+            return redirect('Strata:manage_sensor_in_location')
+        else:
+            # form = Strata_sensor_Form(1,request.POST or None, request.FILES or None)
+            print("Form is not valid")
+    else:
+        form = Strata_sensor_Form()
+    return render(request, template_name, {'form': form, 'action': "ADD"})
+
+
+@login_required
 def edit_sensor_in_location(request, sensor_id):
     data = get_object_or_404(Strata_sensor, id=sensor_id)
-    form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
 
+    form = Strata_sensor_Form(data.mine_name_id, request.POST or None, request.FILES or None, instance=data, )
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             return redirect('Strata:manage_sensor_in_location')
-    return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
+        else:
+            print("Form is not valid")
+
+    return render(request, "Convergence/add_sensor_in_location.html", {'form': form, 'action': 'EDIT'})
 
 
 @login_required
@@ -220,6 +226,7 @@ def show_strata_location(request, template_name='Convergence/show_location.html'
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+
 @login_required
 def fetch_sensor_ajax(request):
     data = {}
@@ -233,6 +240,7 @@ def fetch_sensor_ajax(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
 
 @login_required
 def get_data_from_node_mcu(request):
@@ -262,56 +270,39 @@ def get_data_from_node_mcu(request):
     data['result'] = sensor_data
     return JsonResponse(data)
 
+
 @login_required
 def fetch_sensor_common_values_ajax(request):
     data = {}
-    sensor_data = []
+
     if request.is_ajax():
         sensor_id = request.GET.get('id', None)
-        # sensor_id = 13
         sensor_details = Strata_sensor.objects.get(id=sensor_id)
         if (sensor_details):
-            sensor_data = {'id': str(sensor_details.id),
-                           'unit': str(sensor_details.sensor_unit),
-                           'ip': str(sensor_details.ip_address),
-                           'level1': str(sensor_details.level_1_warning_unit),
-                           'level2': str(sensor_details.level_2_warning_unit),
-                           'level3': str(sensor_details.level_3_warning_unit),
-                           'level1_color': str(sensor_details.level_1_color),
-                           'level2_color': str(sensor_details.level_2_color),
-                           'level3_color': str(sensor_details.level_3_color),
-                           'level1_msg': str(sensor_details.level_1_msg),
-                           'level2_msg': str(sensor_details.level_2_msg),
-                           'level3_msg': str(sensor_details.level_3_msg),
-                           'level1_audio': str(sensor_details.level_1_audio),
-                           'level2_audio': str(sensor_details.level_2_audio),
-                           'level3_audio': str(sensor_details.level_3_audio),
-                           'audio_type': str(sensor_details.audio_play_type)
-                           }
-            # sensor_data.append(str(sensor_details.id) + '@#' +
-            #                    str(sensor_details.sensor_unit) + '@#' +
-            #                    str(sensor_details.level_1_warning_unit) + '@#' +
-            #                    str(sensor_details.level_2_warning_unit) + '@#' +
-            #                    str(sensor_details.level_3_warning_unit) + '@#' +
-            #                    str(sensor_details.level_1_color) + '@#' +
-            #                    str(sensor_details.level_2_color) + '@#' +
-            #                    str(sensor_details.level_3_color) + '@#' +
-            #                    str(sensor_details.ip_address) + '@#' +
-            #                    str(sensor_details.level_1_msg) + '@#' +
-            #                    str(sensor_details.level_2_msg) + '@#' +
-            #                    str(sensor_details.level_3_msg) + '@#' +
-            #                    str(sensor_details.level_1_audio) + '@#' +
-            #                    str(sensor_details.level_2_audio) + '@#' +
-            #                    str(sensor_details.level_3_audio) + '@#' +
-            #                    str(sensor_details.audio_play_type) + '@#'
-            #                    )
-            data['result'] = sensor_data
+            data['result'] = {'id': str(sensor_details.id),
+                              'unit': str(sensor_details.sensor_unit),
+                              'ip': str(sensor_details.ip_address),
+                              'level1': str(sensor_details.level_1_warning_unit),
+                              'level2': str(sensor_details.level_2_warning_unit),
+                              'level3': str(sensor_details.level_3_warning_unit),
+                              'level1_color': str(sensor_details.level_1_color),
+                              'level2_color': str(sensor_details.level_2_color),
+                              'level3_color': str(sensor_details.level_3_color),
+                              'level1_msg': str(sensor_details.level_1_msg),
+                              'level2_msg': str(sensor_details.level_2_msg),
+                              'level3_msg': str(sensor_details.level_3_msg),
+                              'level1_audio': str(sensor_details.level_1_audio),
+                              'level2_audio': str(sensor_details.level_2_audio),
+                              'level3_audio': str(sensor_details.level_3_audio),
+                              'audio_type': str(sensor_details.audio_play_type)
+                              }
         else:
             data['result'] = "No Data"
     else:
         data['result'] = "Not Ajax"
 
     return JsonResponse(data)
+
 
 @login_required
 def fetch_sensor_values_ajax(request):
@@ -712,6 +703,7 @@ def warning_level_information(request):  # for 1 for strata 2 for water 3 for al
         data["light_result"] = ""
     return JsonResponse(data)
 
+
 @login_required
 def push_mail(mail_subject="", mail_html_content=""):
     receiver_data = setting.objects.values_list().filter(name="receiver_email")
@@ -768,6 +760,7 @@ def date_range_tabular(request, template_name='Convergence/date_range_tabular.ht
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
+
 @login_required
 def fetch_sensor_date_range(request):
     data = {}
@@ -808,10 +801,12 @@ def fetch_sensor_date_range(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
+
 @login_required
 def show_graph_date_range(request, template_name='Convergence/date_range_graph.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
+
 
 @login_required
 def ajx_sensor_graph_date_range(request):
@@ -845,6 +840,7 @@ def ajx_sensor_graph_date_range(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
 
 @login_required
 def multi_sensor_warning(request):
@@ -895,15 +891,16 @@ def run_multi_sensor_validation():
                                     # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_2_audio))
                                     # mixer.music.play()
 
-@login_required
-def edit_sensor_in_location(request, sensor_id):
-    data = get_object_or_404(Strata_sensor, id=sensor_id)
-    form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('Strata:manage_sensor_in_location')
-    return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
+
+# @login_required
+# def edit_sensor_in_location(request, sensor_id):
+#     data = get_object_or_404(Strata_sensor, id=sensor_id)
+#     form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
+#     if request.method == 'POST':
+#         if form.is_valid():
+#             form.save()
+#             return redirect('Strata:manage_sensor_in_location')
+#     return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
 
 @login_required
 def audio_setting(request, sensor_id):
@@ -920,6 +917,7 @@ def audio_setting(request, sensor_id):
         messages.info(request, 'First start data acquisition then you can set pause duration')
         return redirect('Strata:manage_sensor_in_location')
     return render(request, "Convergence/audio_setting.html", {'form': form})
+
 
 @login_required
 def fetch_map_image(request):
@@ -941,11 +939,13 @@ def fetch_map_image(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-    
+
+
 @login_required
 def daily_report(request):
     return HttpResponse("Under Development")
-    
+
+
 @login_required
 def warning_report(request):
     return HttpResponse("Under Development")

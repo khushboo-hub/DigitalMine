@@ -327,7 +327,6 @@ def edit_sensor(request, pk, node_id,
     book = get_object_or_404(Sensor_Node, pk=pk)
     form = Sensor_NodeForm(request.POST or None, request.FILES or None, instance=book)
     # object = Sensor_Node(pk=pk)
-    print(form.errors)
 
     if form.is_valid():
         form.save()

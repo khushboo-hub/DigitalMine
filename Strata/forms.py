@@ -23,6 +23,11 @@ class Strata_location_Form(forms.ModelForm):
         fields = ['mine_name','location_name' ,'tag_no','x_axis','y_axis','description','created_date']
 
 class Strata_sensor_Form(forms.ModelForm):
+    def __init__(self, mine=None, *args, **kwargs):
+        super(Strata_sensor_Form, self).__init__(*args, **kwargs)  # populates the post
+        self.fields['location_id'].queryset = Strata_location.objects.filter(mine_name_id=mine)
+
+
     sensor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'ex: Convergence Indicator'}))
     sensor_unit = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ex:mm,Pa,mPa,kPa etc'}))
     tag_no = forms.CharField(required=False, widget=forms.TextInput(attrs={
@@ -51,9 +56,9 @@ class Strata_sensor_Form(forms.ModelForm):
         'data-placement': "right",
         'title': "Tips: Conversion should be 10"
     }))
-    level_1_color = forms.CharField(required=False, initial='#ADFF2F', widget=forms.TextInput(attrs={'class': 'form-control',"id":"color1"}))
-    level_2_color = forms.CharField(required=False, initial='#FFA500', widget=forms.TextInput(attrs={'class': 'form-control',"id":"color2" }))
-    level_3_color = forms.CharField(required=False, initial='#FF0000' , widget=forms.TextInput(attrs={'class': 'form-control',"id":"color3" }))
+    level_1_color = forms.CharField(required=False, initial='#ADFF2F', widget=forms.TextInput(attrs={'class': 'jscolor form-control',"id":"color1"}))
+    level_2_color = forms.CharField(required=False, initial='#FFA500', widget=forms.TextInput(attrs={'class': 'jscolor form-control',"id":"color2" }))
+    level_3_color = forms.CharField(required=False, initial='#FF0000' , widget=forms.TextInput(attrs={'class': 'jscolor form-control',"id":"color3" }))
     level_1_msg = forms.CharField(required=False, initial='Strata Condition:First Stage Warning Message , Please be Careful.', widget=forms.TextInput(attrs={'class': 'form-control', }))
     level_2_msg = forms.CharField(required=False, initial='Strata Condition:Second Stage Warning Message , Please be alert situation is not good.',widget=forms.TextInput(attrs={'class': 'form-control', }))
     level_3_msg = forms.CharField(required=False, initial='Strata Condition:Third Stage Warning Message , Please  leave the underground',widget=forms.TextInput(attrs={'class': 'form-control', }))
