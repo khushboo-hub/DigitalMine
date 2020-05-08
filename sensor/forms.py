@@ -47,7 +47,7 @@ class Sensor_NodeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'Node ID (Ex: S001)'
     }))
-    ip_add = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+    ip_add = forms.GenericIPAddressField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'IP (Ex: 192.168.1.1)'
     }))

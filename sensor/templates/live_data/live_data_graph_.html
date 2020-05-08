@@ -34,7 +34,7 @@
                             <div class=" col-md-12">
                                 <div class="col-md-2">
 
-                                    <label for="id__list" class="" id="node_id">Choose :</label>
+                                    <label for="id_list" class="" id="node_id">Choose :</label>
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control" id="id_list">
@@ -69,7 +69,8 @@
         $(document).ready(function () {
             $("#id_mine_id").addClass('form-control');
 
-            $("#id_mode").on("click", function () {
+            $("#id_mode").on("change", function () {
+
                 $('table').empty();
                 let mode = $("#id_mode").val();
                 if (!isEmpty(mode)) {
@@ -84,6 +85,7 @@
                                 'id': mine_id
                             },
                             success: function (data) {
+                                console.log(data);
                                 if (data.hasOwnProperty('result')) {
                                     fill_dropdown(data.result);
                                 }
@@ -101,20 +103,20 @@
             });
 
             function fill_dropdown(nodes) {
-                $("#id_node_list").empty();
+                $("#id_list").empty();
                 if (!isEmpty(nodes)) {
-                    $("#id_node_list").append($("<option />").val('').text('--Select Node--'));
+                    $("#id_list").append($("<option />").val('').text('--Select Node--'));
                     for (node in nodes) {
                         if (nodes.hasOwnProperty(node)) {
-                            $("#id_node_list").append($("<option />").val(nodes[node].id).text(nodes[node].node_name));
+                            $("#id_list").append($("<option />").val(nodes[node].id).text(nodes[node].node_name));
                         }
                     }
                 } else {
-                    $("#id_node_list").append($("<option />").val('').text('No Available Node'));
+                    $("#id_list").append($("<option />").val('').text('No Available Node'));
                 }
             }
 
-            $("#id_node_list").on("change", function () {
+            $("#id_list").on("change", function () {
                 $("#sensor_id").show();
                 $("#id_sensor_list").show();
                 let node_id = this.value;

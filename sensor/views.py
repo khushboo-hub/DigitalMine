@@ -248,16 +248,12 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
 
     sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
-
-    print('sensors', sensors)
     data = {}
     prepared_data = []
     background_task = 0
     node_table = Node.objects.get(id=node_id)
     mine_table = MineDetails.objects.get(id=mine_id)
     for s in sensors:
-        print('sensors', s.id, mine_table.name, node_table.name, s.sensor_name, s.ip_add, s.sensor_unit,
-              s.sensor_threshold_limit)
         background_task = 0
         try:
             task = Task.objects.get(task_name='sensor.views.run_back_save',
@@ -267,12 +263,12 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
         except:
             pass
 
-        # background_task.append({'id':task.id})
         try:
             prepared_data.append({'id': s.id,
                                   'mine_name': mine_table.name,
                                   'node_name': node_table.name,
                                   'node_id': node_table.id,
+                                  'sensor_id':s.sensor_id,
                                   'sensor_name': s.sensor_name,
                                   'ip': s.ip_add,
                                   'unit': s.sensor_unit,
@@ -287,6 +283,7 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     data['node_id'] = node_id
     data['node_name'] = node_table.name
     data['result'] = prepared_data
+    data['action']="MANAGE"
 
     return render(request, template_name, data)
 
@@ -296,19 +293,22 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
     node_name = node.name
     mine = MineDetails.objects.get(pk=mine_id)
     mine_name = mine.name
-    form = Sensor_NodeForm(request.POST or None, request.FILES)
-    if form.is_valid():
-        SensorModel = form.save(commit=False)
-        SensorModel.node_id = node
-        SensorModel.mine_id = mine
-        SensorModel.save()
-        return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
+    if request.method == 'POST':
+        form = Sensor_NodeForm(request.POST or None, request.FILES)
+        if form.is_valid():
+            SensorModel = form.save(commit=False)
+            SensorModel.node_id = node
+            SensorModel.mine_id = mine
+            SensorModel.save()
+            return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
+        else:
+            print("&&&&&&&&&")
+        # print(node_name)
     else:
-        print("&&&&&&&&&")
-    # print(node_name)
+        form = Sensor_NodeForm()
     return render(request, template_name,
                   {'form': form, 'node_name': node_name, 'node_id': node_id,
-                   'mine_name': mine_name, 'mine': mine_id})
+                   'mine_name': mine_name, 'mine': mine_id,'action':'ADD'})
 
 
 def delete_sensor(request, pk, node_id):
@@ -334,7 +334,7 @@ def edit_sensor(request, pk, node_id,
         return redirect('/sensor/manage_sensor/' + str(mine_id) + "/" + str(node_id))
     return render(request, template_name,
                   {'form': form, 'node_name': node_name, 'node_id': node_id,
-                   'mine_name': mine_name, 'mine': mine_id})
+                   'mine_name': mine_name, 'mine': mine_id,'action':'EDIT'})
 
 
 # def add_id(request,pk )
@@ -654,6 +654,7 @@ def run_back_save(sensor_id):
     try:
         response = requests.get('http://' + str(sensor_node.ip_add))
         sensor_val = strip_tags(response.text)
+        sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
         if sensor_val:
             print(sensor_val)
             inst.gas_value = str(float(sensor_val))
@@ -741,7 +742,9 @@ def iframe_live_data(request, mine_id, node_id, sensor_id, template_name='live_d
             ipAdd = wireless_node.ip_add
             print('Ip Adderss', ipAdd)
             response = requests.get('http://' + ipAdd)
-            data['result'] = strip_tags(response.text)
+            sensor_val=strip_tags(response.text)
+            sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
+            data['result'] = sensor_val
         except Exception as e:
             print(e)
             data['result'] = 'Network Error'
@@ -1046,6 +1049,8 @@ def fetch_sensor_values_ajax(request):
         try:
             response = requests.get('http://' + str(sensor_details.ip_add))
             sensor_val = strip_tags(response.text)
+            sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
+
             if (int(sensor_val) < int(sensor_details.level_1_warning_unit)):
                 data['result'] = {
                     'id': sensor_id,
@@ -1141,6 +1146,7 @@ def fetch_sensor_values_all_ajax(request):
             try:
                 response = requests.get('http://' + ip_add)
                 sensor_val = str(strip_tags(response.text))
+                sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
 
                 if (int(sensor_val) < int(sensorunit1)):
                     sensor_data.append({
@@ -1226,6 +1232,7 @@ def sensor_wise_node(request):
             try:
                 response = requests.get('http://' + ip_add)
                 sensor_val = strip_tags(response.text)
+                sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 if (int(sensor_val) < int(sensorunit1)):
                     sensor_data.append({
                         'id': id,
@@ -1323,6 +1330,7 @@ def sensor_wise_popup(request):
             try:
                 response = requests.get('http://' + ip_add)
                 sensor_val = strip_tags(response.text)
+                sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 sensor_data.append(str(sensor_val))
             except Exception as x:
                 sensor_data.append("Network Error")
@@ -1424,6 +1432,7 @@ def fetch_sensor_values_ajax_sensor_body(request):
             try:
                 response = requests.get('http://' + ip_add)
                 sensor_val = strip_tags(response.text)
+                sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 sensor_data.append({
                     'id': id,
                     'sensor_value': sensor_val,
@@ -1458,7 +1467,7 @@ def fetch_map_image(request):
         for n in node_detail:
             node_data = {}
             node_data['id'] = str(n.id)
-            node_data['node_id'] = str(n.nodeid)
+            node_data['node_id'] = str(n.node_id)
             node_data['name'] = str(n.name)
             node_data['location'] = str(n.location)
             node_data['cordX'] = str(n.x_axis)
@@ -1519,6 +1528,7 @@ def node_sensor_data(request):
                 response = requests.get('http://' + sd.ip_add)
 
                 gasValue = strip_tags(response.text)
+                gasValue =  gasValue if (isNum(gasValue)) else "Network Error"
                 warning = str(
                     WarningLevel(gasValue, sd.level_1_warning_unit, sd.level_1_warning_unit, sd.level_1_warning_unit))
                 sensor_data[str(sd.sensor_name)] = {'value': gasValue, 'unit': sd.sensor_unit, 'warning': warning}
@@ -1540,3 +1550,10 @@ from django.template.defaulttags import register
 @register.filter(name='lookup')
 def get_item(dictionary, key):
     return dictionary.get(str(key))
+
+def isNum(data):
+    try:
+        int(data)
+        return True
+    except ValueError:
+        return False

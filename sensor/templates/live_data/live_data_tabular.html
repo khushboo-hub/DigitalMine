@@ -4,7 +4,9 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h1 class="page-header">Sensor Live Data:</h1>
+                 <h3 class="page-header"><b>ENVIRONMENT MONITORING : LIVE DATA</b>
+                </h3>
+
                 <div class="row">
                     <div class="form-group">
 
@@ -68,6 +70,7 @@
     </div>
     <script>
         $(document).ready(function () {
+             $("#id_mine_id").addClass('form-control');
             $('#displayTable').DataTable({
                 retrieve: true,
                 paging: false,
@@ -78,7 +81,6 @@
                     'copy', 'csv', 'excel', 'pdf', 'print'
                 ]
             });
-            $("#id_mine_id").addClass('form-control');
 
             $("#id_mode").on("change", function () {
                 let mode = $("#id_mode").val();
@@ -226,17 +228,18 @@
 
             });
 
-            function fill_table_sensor_heading(result, condition) {
-                var tableHeaders = "";
-                var x;
-                for (x = 0; x < result.length; x++) {
-                    tableHeaders += "<th>" + result[x] + "</th>";
+            function fill_table_sensor_heading(header, condition) {
+                let tableHeaders = "";
+
+                for (let h in header) {
+                    if(header.hasOwnProperty(h))
+                    tableHeaders += "<th>" + header[h] + "</th>";
                 }
                 $("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
                 $('#displayTable').DataTable({
                     'rowCallback': function (row, data, index) {
 
-                        for (cond in condition) {
+                        for (let cond in condition) {
                             if (condition.hasOwnProperty(cond)) {
                                 if (parseFloat(data[condition[cond].id]) < parseFloat(condition[cond].level1)) {
                                     $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'blue');
@@ -269,16 +272,16 @@
 
             function fill_table_sensor(NodeSensor, Time, node_or_sensor_name, mine_name) {
 
-                data = [];
+                let data = [];
                 data.push(Time);
                 data.push(mine_name);
                 data.push(node_or_sensor_name);
-                for (node in NodeSensor) {
+                for (let node in NodeSensor) {
                     if (NodeSensor.hasOwnProperty(node)) {
                         data.push(NodeSensor[node].sensor_value)
                     }
                 }
-                var datatable = $('#displayTable').DataTable();
+                let datatable = $('#displayTable').DataTable();
                 datatable.row.add(data).draw().node();
             }
         });

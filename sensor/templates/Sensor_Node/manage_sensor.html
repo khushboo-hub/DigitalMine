@@ -4,24 +4,25 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h1 class="page-header">Manage wireless Sensor</h1>
+{#                <h1 class="page-header">Manage wireless Sensor</h1>#}
+                 <h3 class="page-header"><b>ENVIRONMENT MONITORING : {{ action }} SENSOR UNDER</b>
+                   (<span style="color:Tomato;">{{ mine_name }}</span> /
+                    <span style="color:Tomato;">{{ node_name }}</span>)
+                </h3>
                 <div class="row text-center">
                     <div class="col-md-12">
                         <a class="btn btn-primary" href="{% url 'sensor:add_sensor' mine node_id %}">Add Sensor</a>
                     </div>
-
-
                 </div>
-        </div>
-        <br>
-        <div class="col-md-12">
-            <div class="alert alert-primary text-center" role="alert">
-                Mine Name: {{ mine_name }}
-                <br>
-                Node Name: {{ node_name }}
-                Node Id: {{ node_id }}
-            </div>
-        </div>
+        <hr>
+{#        <div class="col-md-12">#}
+{#            <div class="alert alert-primary text-center" role="alert">#}
+{#                Mine Name: {{ mine_name }}#}
+{#                <br>#}
+{#                Node Name: {{ node_name }}#}
+{#                Node Id: {{ node_id }}#}
+{#            </div>#}
+{#        </div>#}
         <!-- Table content -->
         <div class="row">
             <div class="col-md-12">
@@ -32,7 +33,7 @@
                         <tr>
                             <th class="text-center">SL No</th>
                             <th class="text-center">Mine name</th>
-                            <th class="text-center">Node Name</th>
+                            <th class="text-center">Sensor Id</th>
                             <th class="text-center">Sensor Name</th>
                             <th class="text-center">IP Address</th>
                             <th class="text-center">Sensor unit</th>
@@ -47,7 +48,7 @@
                             <tr>
                                 <td class="text-center">{{ forloop.counter }}</td>
                                 <td class="text-center">{{ wireless.mine_name }}</td>
-                                <td class="text-center">{{ wireless.node_name }}</td>
+                                <td class="text-center">{{ wireless.sensor_id }}</td>
                                 <td class="text-center">{{ wireless.sensor_name }}</td>
                                 <td class="text-center">{{ wireless.ip }}</td>
                                 <td class="text-center">{{ wireless.unit }}</td>
@@ -112,6 +113,8 @@
                 });
                 {#console.log($(this).data('val'), $(this).prop('checked'));#}
             });
+
+
            });
 
     </script>

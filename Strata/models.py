@@ -9,7 +9,7 @@ from employee.models import MineDetails
 
 
 class Strata_location(models.Model):
-    mine_name = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
+    mine_name = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     location_name = models.CharField(max_length=200)
     tag_no = models.CharField(max_length=200, null=True, blank=True)
     x_axis = models.FloatField(null=True, blank=True)
