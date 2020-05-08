@@ -21,7 +21,7 @@ class Node(models.Model):
     id = models.AutoField(primary_key=True)
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE)
     #selectmine = models.CharField('Select Mine',default='Null', max_length=200)
-    nodeid = models.CharField('Node ID', max_length=200)
+    node_id = models.CharField('Node ID', max_length=200)
     name = models.CharField('Name', max_length=200)
     location = models.CharField('Location', default='Null', max_length=200)
     # ip_add= models.CharField('IP Address', max_length=200)
@@ -33,7 +33,7 @@ class Node(models.Model):
     isgoaf = models.BooleanField(null=False,default=False)
 
     class Meta:
-        unique_together = ('mine_id', 'nodeid')
+        unique_together = ('mine_id', 'node_id')
 
     def __str__(self):
           return (self.name)

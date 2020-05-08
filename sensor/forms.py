@@ -38,7 +38,7 @@ class NodeForm(forms.ModelForm):
 
     class Meta():
         model = Node
-        fields = ['mine_id', 'nodeid', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description',
+        fields = ['mine_id', 'node_id', 'name', 'location', 'x_axis', 'y_axis', 'photo1', 'photo2', 'description',
                   'isgoaf']
 
 
@@ -49,7 +49,7 @@ class Sensor_NodeForm(forms.ModelForm):
     }))
     ip_add = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'IP1 (Ex: 192.168.1.1)'
+        'placeholder': 'IP (Ex: 192.168.1.1)'
     }))
     GAS_SENSOR_CHOICES = (
         ('CO', 'CO'),
@@ -67,7 +67,7 @@ class Sensor_NodeForm(forms.ModelForm):
     }))
     sensor_unit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Node ID (Ex: 10 ppm)'
+        'placeholder': 'Node ID (Ex:  ppm)'
     }))
     sensor_threshold_limit = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -96,11 +96,11 @@ class Sensor_NodeForm(forms.ModelForm):
         'title': "Tips: Conversion should be 10"
     }))
     level_1_color = forms.CharField(required=False, initial='#ADFF2F',
-                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color1"}))
+                                    widget=forms.TextInput(attrs={'class': " jscolor  form-control", "id": "color1","value":"ADFF2F"}))
     level_2_color = forms.CharField(required=False, initial='#FFA500',
-                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color2"}))
+                                    widget=forms.TextInput(attrs={'class': " jscolor form-control", "id": "color2","value":"FFA500"}))
     level_3_color = forms.CharField(required=False, initial='#FF0000',
-                                    widget=forms.TextInput(attrs={'class': 'form-control', "id": "color3"}))
+                                    widget=forms.TextInput(attrs={'class': " jscolor  form-control", "id": "color3","value":"FF0000"}))
     level_1_msg = forms.CharField(required=False,
                                   initial='Strata Condition:First Stage Warning Message , Please be Careful.',
                                   widget=forms.TextInput(attrs={'class': 'form-control', }))

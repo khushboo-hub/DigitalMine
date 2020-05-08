@@ -33,23 +33,12 @@
                         <div class="row">
                             <div class=" col-md-12">
                                 <div class="col-md-2">
-                                    <label for="id_name" class="" id="name_id">Choose Sensor:</label>
-                                    <label for="id_node_list" class="" id="node_id">Choose Node:</label>
+
+                                    <label for="id__list" class="" id="node_id">Choose :</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <select class="form-control" id="id_name">
-                                        <option>--Select Sensor--</option>
-                                    </select>
-                                    <select class="form-control" id="id_node_list">
-                                        <option>--Select Node--</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2">
-                                    <label for="id_sensor_list" class="" id="sensor_id">Choose Sensor:</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control" id="id_sensor_list">
-                                        <option>--Select Node--</option>
+                                    <select class="form-control" id="id_list">
+                                        <option>----------</option>
                                     </select>
                                 </div>
                             </div>
@@ -79,27 +68,13 @@
     <script>
         $(document).ready(function () {
             $("#id_mine_id").addClass('form-control');
-            $("#node_id").hide();
-            $("#id_node_list").hide();
-            $("#sensor_id").hide();
-            $("#id_sensor_list").hide();
-            $("#id_mode_id").hide();
-            $("#id_mode").hide();
-            $("#name_id").hide();
-            $("#id_name").hide();
-            $("#id_mine_id").on("change", function () {
-                $("#id_mode_id").show();
-                $("#id_mode").show();
-            });
+
             $("#id_mode").on("click", function () {
                 $('table').empty();
                 let mode = $("#id_mode").val();
                 if (!isEmpty(mode)) {
                     if (mode == "Node Wise" || mode == 0) {
-                        $("#name_id").hide();
-                        $("#id_name").hide();
-                        $("#node_id").show();
-                        $("#id_node_list").show();
+
                         let mine_id = $("#id_mine_id").val();
 
                         $.ajax({
@@ -119,10 +94,7 @@
                             }
                         });
                     } else if (mode == "Sensor Wise" || mode == 1) {
-                        $("#node_id").hide();
-                        $("#id_node_list").hide();
-                        $("#sensor_id").hide();
-                        $("#id_sensor_list").hide();
+
                         function_fill_dropdown_sensor_all();
                     }
                 }
@@ -181,8 +153,7 @@
 
 
             function function_fill_dropdown_sensor_all() {
-                $("#name_id").show();
-                $("#id_name").show();
+
                 let mine_id = $('#id_mine_id').val();
                 if (!isEmpty(mine_id)) {
                     $.ajax({

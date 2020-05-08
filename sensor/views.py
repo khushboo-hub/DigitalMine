@@ -297,7 +297,6 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
     mine = MineDetails.objects.get(pk=mine_id)
     mine_name = mine.name
     form = Sensor_NodeForm(request.POST or None, request.FILES)
-    print('form errors ', form.errors)
     if form.is_valid():
         SensorModel = form.save(commit=False)
         SensorModel.node_id = node
@@ -308,8 +307,8 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
         print("&&&&&&&&&")
     # print(node_name)
     return render(request, template_name,
-                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': mine_id,
-                   'minename': mine_name, 'mine': mine_id})
+                  {'form': form, 'node_name': node_name, 'node_id': node_id,
+                   'mine_name': mine_name, 'mine': mine_id})
 
 
 def delete_sensor(request, pk, node_id):
@@ -322,9 +321,9 @@ def edit_sensor(request, pk, node_id,
                 template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
-    node_mine_id = mine_table.mine_id_id
-    mine_table1 = MineDetails.objects.get(id=node_mine_id)
-    mine_name = mine_table1.name
+    mine_id = mine_table.mine_id_id
+    mine_table = MineDetails.objects.get(id=mine_id)
+    mine_name = mine_table.name
     book = get_object_or_404(Sensor_Node, pk=pk)
     form = Sensor_NodeForm(request.POST or None, request.FILES or None, instance=book)
     # object = Sensor_Node(pk=pk)
@@ -333,10 +332,10 @@ def edit_sensor(request, pk, node_id,
     if form.is_valid():
         form.save()
 
-        return redirect('/sensor/manage_sensor/' + str(node_mine_id) + "/" + str(node_id))
+        return redirect('/sensor/manage_sensor/' + str(mine_id) + "/" + str(node_id))
     return render(request, template_name,
-                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id,
-                   'minename': mine_name, 'mine': node_mine_id})
+                  {'form': form, 'node_name': node_name, 'node_id': node_id,
+                   'mine_name': mine_name, 'mine': mine_id})
 
 
 # def add_id(request,pk )
