@@ -15,14 +15,6 @@
                     </div>
                 </div>
         <hr>
-{#        <div class="col-md-12">#}
-{#            <div class="alert alert-primary text-center" role="alert">#}
-{#                Mine Name: {{ mine_name }}#}
-{#                <br>#}
-{#                Node Name: {{ node_name }}#}
-{#                Node Id: {{ node_id }}#}
-{#            </div>#}
-{#        </div>#}
         <!-- Table content -->
         <div class="row">
             <div class="col-md-12">
@@ -66,9 +58,12 @@
                                                                        data-toggle="toggle" data-on="On"
                                                                        data-off="off" data-onstyle="success"
                                                                        data-offstyle="danger"></td>
-                                <td class="text-center"><a
-                                        href="{% url 'sensor:edit_sensor' wireless.id wireless.node_id %}"
-                                        title="Edit Node."><span class="glyphicon glyphicon-pencil"></span></a>
+                                <td class="text-center">
+                                    <a href="{% url 'sensor:edit_sensor' wireless.id wireless.node_id %}"
+                                        title="Edit Node.">
+                                        <span class="glyphicon glyphicon-pencil"></span>
+                                    </a>
+
                                 </td>
                                 <td class="text-center"><a href="#" class="delete"
                                                            data-url="{% url 'sensor:delete_sensor' wireless.id wireless.node_id %}"
@@ -94,14 +89,15 @@
 
      $('.DataAcquisition').change(function () {
                 let isAcquire=this.id;
+                let action=$('#'+isAcquire).prop("checked");
                 $.ajax({
                     type: "post",
                     url: $(this).data('url'),
                     data: {
                         csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'action':action
                     },
                     success: function (json) {
-                        {#console.log(json);#}
                         if(json.hasOwnProperty("error")){
                             $('#'+isAcquire).bootstrapToggle('off');
                         }

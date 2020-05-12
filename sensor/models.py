@@ -2,15 +2,15 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from employee.models import MineDetails
-
 from django.utils import timezone
 from datetime import datetime
 
 class gasModel_auto(models.Model):
     mine_id = models.IntegerField()
     node_id = models.IntegerField()
-    gas_name= models.CharField(max_length=10, default='Null')
-    gas_value = models.CharField(max_length=50, default='Null')
+    sensor_name = models.CharField(max_length=10, default='Null')
+    sensor_id = models.IntegerField()
+    sensor_value = models.CharField(max_length=50, default='Null')
     date_time = models.DateTimeField(default=timezone.now)
 
     class Meta:

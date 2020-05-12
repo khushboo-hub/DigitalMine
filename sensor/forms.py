@@ -102,13 +102,13 @@ class Sensor_NodeForm(forms.ModelForm):
     level_3_color = forms.CharField(required=False, initial='#FF0000',
                                     widget=forms.TextInput(attrs={'class': "jscolor  form-control", "id": "color3","value":"FF0000"}))
     level_1_msg = forms.CharField(required=False,
-                                  initial='Strata Condition:First Stage Warning Message , Please be Careful.',
+                                  initial='Environment Condition:First Stage Warning Message , Please be Careful.',
                                   widget=forms.TextInput(attrs={'class': 'form-control', }))
     level_2_msg = forms.CharField(required=False,
-                                  initial='Strata Condition:Second Stage Warning Message , Please be alert situation is not good.',
+                                  initial='Environment Condition:Second Stage Warning Message , Please be alert situation is not good.',
                                   widget=forms.TextInput(attrs={'class': 'form-control', }))
     level_3_msg = forms.CharField(required=False,
-                                  initial='Strata Condition:Third Stage Warning Message , Please  leave the underground',
+                                  initial='Environment Condition:Third Stage Warning Message , Please  leave the underground',
                                   widget=forms.TextInput(attrs={'class': 'form-control', }))
 
     interval_time = forms.CharField(initial=30, widget=forms.TextInput(attrs={

@@ -1,157 +1,162 @@
 {% extends "base.html" %}
 {% block content %}
-{% load staticfiles %}
+    {% load staticfiles %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h3 class="page-header">Employee Attendance System</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="page-header"><b>Employee Attendance System</b></h3>
                 <form method="post" enctype="multipart/form-data">{% csrf_token %}
                     <div class="col-md-4">
-                        <label> Select Mine </label><span id="mine_id_span">{{form.mine}}</span><br>
+                        <label> Select Mine </label><span id="mine_id_span">{{ form.mine }}</span><br>
                     </div>
                     <div class="col-md-4">
-                        <label> Choose Shift </label> <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option value="0">  --------- </option></select></span><br>
+                        <label> Choose Shift </label> <span id="shift_id_span"><select name="shift_id" id="shift_id"
+                                                                                       class="form-control"><option
+                            value="0">  --------- </option></select></span><br>
                     </div>
                     <div class="col-md-4">
-                         <label>Date</label>
-                         <div class='input-group date' id='date_time_picker'>
-                                                   {{form.date_parent}}
+                        <label>Date</label>
+                        <div class='input-group date' id='date_time_picker'>
+                            {{ form.date_parent }}
 
-                                            <span class="input-group-addon">
+                            <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
-                         </div>
-                       <!---<input type="text" id="date_parent" placeholder=" -&#45;&#45; Select Date -&#45;&#45;" class="form-control"/>----><br><br>
+                        </div>
+                        <!---<input type="text" id="date_parent" placeholder=" -&#45;&#45; Select Date -&#45;&#45;" class="form-control"/>---->
+                        <br><br>
                     </div>
                 </form>
             </div>
             <div class="col-md-12">
                 <div class="col-md-12">
-                    <form method="post" action="{% url 'attendance:add_att' %}" enctype="multipart/form-data">{% csrf_token %}
+                    <form method="post" action="{% url 'attendance:add_att' %}"
+                          enctype="multipart/form-data">{% csrf_token %}
                         <div class="table-responsive">
-                        <table class="table table-bordered" id="content">
-                        <thead>
-                         <tr>
-                            <th>SL No.</th>
-                            <th>Mine</th>
-                            <th>Shift</th>
-                            <th>Employee Name</th>
-                            <th>Date</th>
-                            <th>Present / Absent</th>
-                            <th>Leave Type</th>
-                            <th>No. of Leaves</th>
-                        </tr>
-                        </thead>
-                        <tbody id="table_att">
-                            <!-----DATA IS HERE---->
-                        </tbody>
-                        </table>
+                            <table class="table table-bordered" id="content">
+                                <thead>
+                                <tr>
+                                    <th>SL No.</th>
+                                    <th>Mine</th>
+                                    <th>Shift</th>
+                                    <th>Employee Name</th>
+                                    <th>Date</th>
+                                    <th>Present / Absent</th>
+                                    <th>Leave Type</th>
+                                    <th>No. of Leaves</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table_att">
+                                <!-----DATA IS HERE---->
+                                </tbody>
+                            </table>
                         </div>
-                        <hr>
+
                         <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Records"/>
-                        &nbsp;&nbsp;&nbsp;<a href="{% url 'attendance:attendance_manage' %}" class="btn btn-primary" role="button">Show Records</a>
-                        <hr>
+                        &nbsp;&nbsp;&nbsp;<a href="{% url 'attendance:attendance_manage' %}" class="btn btn-primary"
+                                             role="button">Show Records</a>
+
                     </form>
                 </div>
             </div>
+        </div>
     </div>
-    </div>
-<script>
-    $(document).ready(function(){
-        $('#date_time_picker').datetimepicker({
-                     format: 'YYYY-MM-DD'
+    <script>
+        $(document).ready(function () {
+            $('#date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('#id_mine').addClass('form-control');
+
+            //FETCH MINE DETAILS
+            $("#id_mine").change(function () {
+                let mine_id = $(this).val();
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'attendance:fetch_shift' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        if (data.hasOwnProperty('result')) {
+                            let Shift = data.result;
+                            fill_dropdown_shift(Shift);
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+
+            });
+
+            //POPULATE SHIFT DROP DOWN
+            function fill_dropdown_shift(Shift) {
+                $("#shift_id").empty();
+                $("#shift_id").append($("<option />").val('').text('---------'));
+                for (let Sh in Shift) {
+                    if (Shift.hasOwnProperty(Sh)) {
+                        $("#shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+                    }
+                }
+            }
+
+            //POPULATE TABLE ON SHIFT SELECT - JQUERY
+            $("#shift_id").change(function () {
+                let shift_id = $("#shift_id").val();
+
+                //alert(shift_id);
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'attendance:fetch_employee_list' %}",
+                    data: {
+                        'id': shift_id
+                    },
+                    beforeSend: function () {
+                        console.log('disabled');
+                    },
+                    success: function (data) {
+                        if(data.hasOwnProperty('result')) {
+                            fill_details_table(data.result);
+                            $('.leave').prop('disabled', true).se;
+                            $('.leave_no').prop('disabled', true);
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+
+            });
+
+            function fill_details_table(result) {
+                for (let R in result) {
+                    if (result.hasOwnProperty(R)) {
+                        $("#table_att").append("<tr><td>" + R + "</td><td><input type='hidden' name='mine_id' value=" + result[R].mine_id + ">" + result[R].mine_name + "</td><td><input type='hidden' name='shift_id' value=" + result[R].shift_id + ">" + result[R].shift_name + "</td><td><input type='hidden' name='emp_id' value=" + result[R].emp_id + "> " + result[R].emp_name + "</td><td><input name='ab_pr_date' type='text' placeholder='dd-mm-yy' class='form-control date_fill' required></td><td><select  name='ab_pr' required class='form-control ab_pr'><option class='form-control' value='Present'>Present</option><option value='Absent'>Absent</option></select></td><td><select name='leave_type' id='leave_type' required class='form-control leave'><option  value='None' selected>None</option><option  value='CL'>CL</option><option value='EL'>EL</option><option value='HPL'>HPL</option><option value='SL'>SL</option></select></td><td><input name='leave_no' class='form-control leave_no' required type='number' value='0'></td></tr>");
+                    }
+                }
+            }
+
+            $(document.body).on('blur', '#id_date_parent', function () {
+                $(".date_fill").val($(this).val());
+            });
+              $(document.body).on('change', '.ab_pr', function () {
+            if ($(this).val() == "Present") {
+                $(this).parent('td').next('td').find('.leave').prop('disabled', true);
+                $(this).parent('td').next('td').next('td').find('.leave_no').val('0').prop('readonly', true);
+            } else {
+                $(this).parent('td').next('td').find('.leave').prop('disabled', false);
+                $(this).parent('td').next('td').next('td').find('.leave_no').prop('disabled', false);
+            }
         });
-        $('#id_mine').addClass('form-control');
-        $("#id_date_parent").change(function(){
         });
-    });
-    $(document.body).on('blur','#id_date_parent',function(){
-        $(".date_fill").val($(this).val());
-     });
 
-    //FETCH MINE DETAILS
-    $("#id_mine").change(function(){
-        mine_id=$(this).val();
-        $.ajax({
-            type:"get",
-            url: "{% url 'attendance:fetch_shift' %}",
-            data: {
-             'id': mine_id
-            },
-            success: function(data) {
-                //console.log(data.result);
-                //alert(data.result);
-                fill_dropdown_shift(data.result);
-                return data;
-            },
-            error: function(){
-                //console.log("Error!");
-            }
-          });
 
-    });
-var X;
-    //POPULATE SHIFT DROP DOWN
-    function fill_dropdown_shift(result){
-        $("#shift_id").html("<option value='0'>--Choose Shift--</option>");
-        for (index = 0; index < result.length; index++) {
-            //alert(result[index]);
-            var str_array = result[index].split(',');
-            $("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "("+str_array[3]+" - "+str_array[4]+")"));
-        }
-    }
 
-    //POPULATE TABLE ON SHIFT SELECT - JQUERY
-    $("#shift_id").change(function(){
-        shift_id=$("#shift_id").val();
 
-        //alert(shift_id);
-        $.ajax({
-            type:"get",
-            url: "{% url 'attendance:fetch_employee_list' %}",
-            data: {
-             'id': shift_id
-            },
-            success: function(data) {
-                console.log(data.result);
-                //alert(data.result);
-                fill_details_table(data.result);
-                return data;
-            },
-            error: function(){
-                //console.log("Error!");
-            }
-          });
 
-    });
-
-    function fill_details_table(result){
-        $("#details_table").html("<div></div>");
-        sl=1;
-        for (index = 0; index < result.length; index++) {
-            //alert(result[index]);
-            var str_array = result[index].split(',');
-            $("#table_att").append("<tr><td>"+sl+"</td><td><input type='hidden' name='mine_id' value="+str_array[2]+">"+str_array[3]+"</td><td><input type='hidden' name='shift_id' value="+str_array[2]+">"+str_array[7]+"</td><td><input type='hidden' name='emp_id' value="+str_array[1]+"> "+str_array[4]+"</td><td><input name='ab_pr_date' type='text' placeholder='dd-mm-yy' class='form-control date_fill' required></td><td><select  name='ab_pr' required class='form-control ab_pr'><option class='form-control' value='Present'>Present</option><option value='Absent'>Absent</option></select></td><td><select name='leave_type' id='leave_type' required class='form-control leave'><option  value='None'>None</option><option  value='CL'>CL</option><option value='EL'>EL</option><option value='HPL'>HPL</option><option value='SL'>SL</option></select></td><td><input name='leave_no' class='form-control leave_no' required type='number' value='0'></td></tr>");
-            //alert(str_array[0] + "," +str_array[1] + "," +str_array[2] + "," +str_array[3] + "," +str_array[4] + "," +str_array[5]);
-            sl++;
-            $('.ab_pr').parent('td').next('td').find('.leave').attr('readonly', true);
-            $('.ab_pr').parent('td').next('td').next('td').find('.leave_no').attr('readonly', true);
-        }
-    }
-
-    $("#mine_id_span, #shift_id_span").click(function() {
-        $( "#table_att" ).empty();
-        })
-
-    $(document.body).on('change','.ab_pr',function(){
-         if($(this).val() == "Present"){
-            $(this).parent('td').next('td').find('.leave').val('None').attr('readonly', true);
-            $(this).parent('td').next('td').next('td').find('.leave_no').val('0').attr('readonly', true);
-            }else{
-             $(this).parent('td').next('td').find('.leave').removeAttr('readonly', false);
-             $(this).parent('td').next('td').next('td').find('.leave_no').removeAttr('readonly', false);
-            }
-    });
-</script>
+    </script>
 {% endblock %}

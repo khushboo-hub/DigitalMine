@@ -174,7 +174,7 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ book.mine_id.name }}</td>
-                                        <td>{{ book.nodeid }}</td>
+                                        <td>{{ book.node_id }}</td>
                                         <td>{{ book.name }}</td>
                                         <td>{{ book.location }}</td>
                                         <td>{{ book.x_axis }},{{ book.y_axis }}</td>
@@ -207,7 +207,14 @@
                                                 class="manageSensor"
                                                 data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
                                                 title="Manage Sensor"><span
-                                                class="glyphicon glyphicon-plus"></span></a></td>
+                                                class="glyphicon glyphicon-plus"></span></a>
+                                            <br>
+                                            <br>
+                                            <a href="{% url 'sensor:ellicots' book.id %}"
+                                               onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'fghfds', 'width=1600, height=1000','title=Hello'); return false;"
+                                               title="Generate Graph."><span
+                                                    class="glyphicon glyphicon-picture"></span></a>
+                                        </td>
 
                                         <td class="text-center"><a href="{% url 'sensor:node_manage' book.id %}"
                                                                    class="editRouter"
@@ -516,12 +523,15 @@
 
             $('.DataAcquisition').change(function () {
                 let isAcquire = this.id;
-                console.log('CHanged');
+                let action = $('#' + isAcquire).prop("checked");
+
+                console.log('Changed', action);
                 $.ajax({
                     type: "post",
                     url: $(this).data('url'),
                     data: {
                         csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'action': action
                     },
                     success: function (json) {
                         console.log(json);

@@ -17,6 +17,7 @@ urlpatterns = [
   path('node_add', views.node_add, name='node_add'),
   path('node_edit/', views.node_edit, name='node_edit'),
   path('node_delete/', views.node_delete, name='node_delete'),
+  path('ellicots/<int:pk>',views.ellicots,name='ellicots'),
 
   path('fetch_node_ajax', views.fetch_node_ajax, name='fetch_node_ajax'),
 
@@ -25,6 +26,7 @@ urlpatterns = [
   path('fetch_ip', views.fetch_ip, name='fetch_ip'),
 
   path('manage_sensor/<int:mine_id>/<int:node_id>', views.manage_sensor, name='manage_sensor'),
+
   path('add_sensor/<int:mine_id>/<int:node_id>', views.add_sensor, name='add_sensor'),
   path('delete_sensor/<int:pk>/<int:node_id>', views.delete_sensor, name='delete_sensor'),
   path('edit_sensor/<int:pk>/<int:node_id>', views.edit_sensor, name='edit_sensor'),
@@ -44,6 +46,7 @@ urlpatterns = [
   path('fetch_sensor_values_all_ajax', views.fetch_sensor_values_all_ajax, name='fetch_sensor_values_all_ajax'),
 
   path('sensor_wise_node', views.sensor_wise_node, name='sensor_wise_node'),
+  path('sensor_wise_node_header', views.sensor_wise_node_header, name='sensor_wise_node_header'),
   path('live_map', views.live_map, name='live_map'),
   path('fetch_map_ajax', views.fetch_map_ajax, name='fetch_map_ajax'),
   path('sensor_wise_popup', views.sensor_wise_popup, name='sensor_wise_popup'),

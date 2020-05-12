@@ -41,6 +41,15 @@
                                         <option>----------</option>
                                     </select>
                                 </div>
+                                <div class="col-md-2">
+
+                                    <label for="id_sensor_list" class="" id="sensor_id">Choose :</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="id_sensor_list">
+                                        <option>----------</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -68,6 +77,8 @@
     <script>
         $(document).ready(function () {
             $("#id_mine_id").addClass('form-control');
+            $('#id_sensor_list').hide();
+            $('#sensor_id').hide();
 
             $("#id_mode").on("change", function () {
 
@@ -96,7 +107,8 @@
                             }
                         });
                     } else if (mode == "Sensor Wise" || mode == 1) {
-
+                        $('#id_sensor_list').hide();
+                        $('#sensor_id').hide();
                         function_fill_dropdown_sensor_all();
                     }
                 }
@@ -106,7 +118,7 @@
                 $("#id_list").empty();
                 if (!isEmpty(nodes)) {
                     $("#id_list").append($("<option />").val('').text('--Select Node--'));
-                    for (node in nodes) {
+                    for (let node in nodes) {
                         if (nodes.hasOwnProperty(node)) {
                             $("#id_list").append($("<option />").val(nodes[node].id).text(nodes[node].node_name));
                         }
@@ -117,25 +129,33 @@
             }
 
             $("#id_list").on("change", function () {
-                $("#sensor_id").show();
-                $("#id_sensor_list").show();
+
+                let mode = $("#id_mode").val();
                 let node_id = this.value;
-                $.ajax({
-                    type: "get",
-                    url: "{% url 'sensor:fetch_sensor_ajax' %}",
-                    data: {
-                        'id': node_id
-                    },
-                    success: function (data) {
-                        if (data.hasOwnProperty('result')) {
-                            fill_dropdown_sensor(data.result);
-                        }
-                        return data;
-                    },
-                    error: function () {
-                        console.log("Something Went Wrong!");
+                if (!isEmpty(mode)) {
+                    if (mode == "Node Wise" || mode == 0) {
+                        $("#sensor_id").show();
+                        $("#id_sensor_list").show();
                     }
-                });
+
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:fetch_sensor_ajax' %}",
+                        data: {
+                            'id': node_id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            if (data.hasOwnProperty('result')) {
+                                fill_dropdown_sensor(data.result);
+                            }
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                }
             });
 
             function fill_dropdown_sensor(Sensor) {
@@ -165,21 +185,21 @@
                             'id': mine_id
                         },
                         beforeSend: function () {
-                            $("#id_name").empty();
+                            $("#id_list").empty();
 
                         },
                         success: function (data) {
                             let Sensors = data.result;
                             if (data.hasOwnProperty('result')) {
                                 if (isEmpty(Sensors)) {
-                                    $("#id_name").append($("<option />").val('').text('No Available Sensor'));
+                                    $("#id_list").append($("<option />").val('').text('No Available Sensor'));
                                 } else {
-                                    $("#id_name").append($("<option />").val('').text('Select Sensor'));
+                                    $("#id_list").append($("<option />").val('').text('Select Sensor'));
                                 }
                                 for (s in Sensors) {
                                     if (Sensors.hasOwnProperty(s)) {
 
-                                        $("#id_name").append($("<option />").val(Sensors[s].sensor_name).text(Sensors[s].sensor_name));
+                                        $("#id_list").append($("<option />").val(Sensors[s].sensor_name).text(Sensors[s].sensor_name));
                                     }
                                 }
                             }
@@ -199,7 +219,6 @@
                         let sensor_id = $("#id_sensor_list").val();
                         let node_id = $("#id_node_list").val();
                         if (sensor_id == '0') {
-                            console.log('IF paRT');
                             $.ajax({
                                 type: "get",
                                 url: "{% url 'sensor:fetch_sensor_values_all_ajax' %}",
@@ -222,7 +241,6 @@
 
 
                         } else {
-                            console.log('Else Part', sensor_id);
                             $.ajax({
                                 type: "get",
                                 url: "{% url 'sensor:fetch_sensor_ajax_sensor' %}",
@@ -246,8 +264,7 @@
                             });
                         }
                     } else if (mode == "Sensor Wise" || mode == 1) {
-                        console.log('Sensor Wise Else')
-                        let sensor_name = $("#id_name").val();
+                        let sensor_name = $("#id_list").val();
                         let mine_id = $("#id_mine_id").val();
                         fill_graph_sensor_node(sensor_name, mine_id);
                     }
@@ -467,7 +484,7 @@
 
                                             type: 'scatter'
 
-                                        }
+                                        };
                                         var update1 = {
                                             x: [[time]],
                                             y: [[getData()]]
@@ -512,7 +529,7 @@
             function fill_graph_sensor_node(sensor_name, mine_id) {
                 $.ajax({
                     type: "get",
-                    url: "{% url 'sensor:sensor_wise_node' %}",
+                    url: "{% url 'sensor:sensor_wise_node_header' %}",
                     data: {
                         'id': sensor_name,
                         'mine': mine_id
