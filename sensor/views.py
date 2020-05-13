@@ -1622,171 +1622,188 @@ from django.db.models import Avg
 from django.db.models.functions import NullIf
 from django.db.models import Value
 
-
-def ellicots(request, pk, template_name='gasmonitoring_wifi/manage_goaf_area.html'):
-    data_list = gasModel_auto.objects.values('sensor_id').annotate(avg=Avg(NullIf('sensor_value', Value(0))))
+def ellicots(request,pk,template_name='sensor/test.html'):
     data={}
-    class GraphData:
-        o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-        explos = 5
-        idtest = 0
+    data['node_id']=pk
+    return render(request,template_name,data)
 
-    graphpoints = []
-    graph = []
-    dates = []
-    dates.append(datetime.now())
+def ellicots_ajax(request,template_name='sensor/test.html'):
+    data={}
+    if request.is_ajax():
+        node_id=request.GET.get('id',None)
+        date_from=request.GET.get('date_from',None)
+        date_to=request.GET.get('date_to',None)
+        data_list = gasModel_auto.objects.filter(date_time__range=(
+            "2020-05-12 00:00:00", "2020-05-12 23:59:59"
+        )).values('sensor_id').annotate(avg=Avg(NullIf('sensor_value', Value(0))))
+        print('data_list', data_list)
+        for d in data_list:
+            print('Data', d)
+        data = {}
 
-    x = GraphData()
-    x.o2 = 3.2734952481520594
-    x.co = 10.03167898627244
-    x.ch4 = 9.820485744456176
-    x.co2 = 14.783526927138332
-    x.h2 = 23.231256599788807
-    x.n2 = 19.1129883843717
-    x.c2h4 = 19.746568109820487
+        class GraphData:
+            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
+            explos = 5
+            idtest = 0
 
-    ##explosibility calculation again
-    idn = 1
-    x.explos = 5
-    pt = x.ch4 + x.co + x.h2
+        graphpoints = []
+        graph = []
+        dates = []
+        dates.append(datetime.now())
 
-    ch4low = 5
-    colow = 12.5
-    h2low = 4
-    ch4high = 14
-    cohigh = 74.2
-    h2high = 74.2
-    ch4nose = 5.9
-    conose = 13.8
-    h2nose = 4.3
-    ch4np = 6.07
-    conp = 4.13
-    h2np = 16.59
+        x = GraphData()
+        x.o2 = 3.2734952481520594
+        x.co = 10.03167898627244
+        x.ch4 = 9.820485744456176
+        x.co2 = 14.783526927138332
+        x.h2 = 23.231256599788807
+        x.n2 = 19.1129883843717
+        x.c2h4 = 19.746568109820487
 
-    Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-    Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-    Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-    Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
-    print('low high', Llow, Lhigh, Lnose, Nex)
-    Oxnose = 0.2093 * (100 - Nex - Lnose)
+        ##explosibility calculation again
+        idn = 1
+        x.explos = 5
+        pt = x.ch4 + x.co + x.h2
 
-    ##total combustible at extinctive point
-    Le = 20.93 * Lnose / (20.93 - Oxnose)
-    ##oxygen at lower limit
-    Ob = -20.93 * Llow / 100 + 20.93
-    ##oxygen at upper limit
-    Oc = -20.93 * Lhigh / 100 + 20.93
+        ch4low = 5
+        colow = 12.5
+        h2low = 4
+        ch4high = 14
+        cohigh = 74.2
+        h2high = 74.2
+        ch4nose = 5.9
+        conose = 13.8
+        h2nose = 4.3
+        ch4np = 6.07
+        conp = 4.13
+        h2np = 16.59
 
-    if ((x.o2 >= 0) and (pt >= 0)):
-        if (100 * x.o2 + 20.93 * pt >= 2093):
-            x.explos = 4
-        if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-            x.explos = 0
-        if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-            x.explos = 2
-        if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                (Lnose - Llow) * x.o2 + (
-                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                (Lnose - Lhigh) * x.o2 + (
-                Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-            x.explos = 3
-        if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                (Lnose - Llow) * x.o2 + (
-                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                (Lnose - Lhigh) * x.o2 + (
-                Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-            x.explos = 1
+        Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
+        Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
+        Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
+        Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
+        print('low high', Llow, Lhigh, Lnose, Nex)
+        Oxnose = 0.2093 * (100 - Nex - Lnose)
 
-    print('EXPLOS', x.explos)
-    ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
+        ##total combustible at extinctive point
+        Le = 20.93 * Lnose / (20.93 - Oxnose)
+        ##oxygen at lower limit
+        Ob = -20.93 * Llow / 100 + 20.93
+        ##oxygen at upper limit
+        Oc = -20.93 * Lhigh / 100 + 20.93
 
-    ##calculating Ellicott's Extension point
+        if ((x.o2 >= 0) and (pt >= 0)):
+            if (100 * x.o2 + 20.93 * pt >= 2093):
+                x.explos = 4
+            if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
+                x.explos = 0
+            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                    (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                x.explos = 2
+            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                    (Lnose - Llow) * x.o2 + (
+                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                    (Lnose - Lhigh) * x.o2 + (
+                    Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                x.explos = 3
+            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                    (Lnose - Llow) * x.o2 + (
+                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                    (Lnose - Lhigh) * x.o2 + (
+                    Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                x.explos = 1
 
-    ##calculating new x,y coordinates after origin shift
-    xx = pt - Lnose
-    yx = x.o2 - Oxnose
+        print('EXPLOS', x.explos)
+        ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
 
-    xp = Llow - Lnose
-    yp = Ob - Oxnose
+        ##calculating Ellicott's Extension point
 
-    xq = Lhigh - Lnose
-    yq = Oc - Oxnose
+        ##calculating new x,y coordinates after origin shift
+        xx = pt - Lnose
+        yx = x.o2 - Oxnose
 
-    xs = Le - Lnose
-    ys = -Oxnose
+        xp = Llow - Lnose
+        yp = Ob - Oxnose
 
-    # calculating polar coordinates
-    def properarctan(valuex, valuey):
-        if valuex >= 0:
-            if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                return (360 + np.degrees(np.arctan(valuey / valuex)))
+        xq = Lhigh - Lnose
+        yq = Oc - Oxnose
+
+        xs = Le - Lnose
+        ys = -Oxnose
+
+        # calculating polar coordinates
+        def properarctan(valuex, valuey):
+            if valuex >= 0:
+                if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                    return (360 + np.degrees(np.arctan(valuey / valuex)))
+                else:
+                    return np.degrees(np.arctan(valuey / valuex))
             else:
-                return np.degrees(np.arctan(valuey / valuex))
+                return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+
+        rx = np.sqrt(xx * xx + yx * yx)
+        thx = properarctan(xx, yx)
+
+        rp = np.sqrt(xp * xp + yp * yp)
+        thp = properarctan(xp, yp)
+
+        rq = np.sqrt(xq * xq + yq * yq)
+        thq = properarctan(xq, yq)
+
+        rs = np.sqrt(xs * xs + ys * ys)
+        ths = properarctan(xs, ys)
+        ##calculating r,theta values based on explosibiility
+        if x.explos == 3:
+            rm = rx
+            thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
+        elif (x.explos == 1 or x.explos == 2):
+            rm = rx
+            thm = 270 + (90 * ((thx - ths) / (
+                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+        elif x.explos == 0:
+            rm = rx
+            thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
         else:
-            return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+            print('Else part')
+            rm = 0
+            thm = 0
+        x.elx = rm * np.cos(np.radians(thm))
+        x.ely = rm * np.sin(np.radians(thm))
+        print('GP', x.elx, x.ely, rm, thm)
+        graphpoints.append(x)
 
-    rx = np.sqrt(xx * xx + yx * yx)
-    thx = properarctan(xx, yx)
+        idn = 0
 
-    rp = np.sqrt(xp * xp + yp * yp)
-    thp = properarctan(xp, yp)
+        def markercrtr(numb):
+            createdstring = '$' + str(numb + 1) + '$'
+            return createdstring
 
-    rq = np.sqrt(xq * xq + yq * yq)
-    thq = properarctan(xq, yq)
+        def markerclr(numb):
+            tot = len(graphpoints)
+            colorstring = '#77b5fe'
+            if (numb < tot / 5):
+                colorstring = '#8a2be2'
+            elif (numb < 2 * tot / 5):
+                colorstring = '#8db600'
+            elif (numb < 3 * tot / 5):
+                colorstring = '#ffff00'
+            elif (numb < 4 * tot / 5):
+                colorstring = '#eaa221'
+            else:
+                colorstring = '#ffc0cb'
+            return colorstring
 
-    rs = np.sqrt(xs * xs + ys * ys)
-    ths = properarctan(xs, ys)
-    ##calculating r,theta values based on explosibiility
-    if x.explos == 3:
-        rm = rx
-        thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-    elif (x.explos == 1 or x.explos == 2):
-        rm = rx
-        thm = 270 + (90 * ((thx - ths) / (
-                thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-    elif x.explos == 0:
-        rm = rx
-        thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
+        graph.append({
+            'x': x.elx,
+            'y': x.ely,
+            'color': markerclr(0),
+            'dates': str(datetime.now())
+        })
+        data['result'] = graph
     else:
-        print('Else part')
-        rm = 0
-        thm = 0
-    x.elx = rm * np.cos(np.radians(thm))
-    x.ely = rm * np.sin(np.radians(thm))
-    print('GP', x.elx, x.ely, rm, thm)
-    graphpoints.append(x)
-
-    idn = 0
-
-    def markercrtr(numb):
-        createdstring = '$' + str(numb + 1) + '$'
-        return createdstring
-
-    def markerclr(numb):
-        tot = len(graphpoints)
-        colorstring = '#77b5fe'
-        if (numb < tot / 5):
-            colorstring = '#8a2be2'
-        elif (numb < 2 * tot / 5):
-            colorstring = '#8db600'
-        elif (numb < 3 * tot / 5):
-            colorstring = '#ffff00'
-        elif (numb < 4 * tot / 5):
-            colorstring = '#eaa221'
-        else:
-            colorstring = '#ffc0cb'
-        return colorstring
-
-    graph.append({
-        'x': x.elx,
-        'y': x.ely,
-        'color': markerclr(0),
-        'dates': str(datetime.now())
-    })
-    data['result'] = graph
+        data['result']="Not Ajax"
     return JsonResponse(data)
-
+    # return render(request,template_name,{'data':data})
 
 
 from django.template.defaulttags import register

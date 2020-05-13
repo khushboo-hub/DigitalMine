@@ -1,0 +1,323 @@
+<html>
+<head>
+    <title>Test</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
+</head>
+<body>
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" value="{{ node_id }}" id="node_id" data-url="{% url 'sensor:ellicots_ajax' %}">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="page-header text-center"><b>Ellicots Extension Graph</b></h3>
+                {% csrf_token %}
+                <div class="col-md-2">
+                    {#                    <label> Select Mine </label><span id="mine_id_span">{{ form.mine }}</span><br>#}
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group date" id="date_from_time_picker">
+                        <input type="text" name="date_of_opening" class="form-control" placeholder="From Date"
+                               id="id_date_fr" required="" autocomplete="off">
+
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="input-group date" id="date_to_time_picker">
+                        <input type="text" name="date_of_opening" class="form-control" placeholder="To Date"
+                               id="id_date_to" required="" autocomplete="off">
+
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+
+    </form>
+    <div class="row">
+            <div class="text-center">
+                <button  id="btn_show" class="btn btn-primary">Show Graph</button>
+            </div>
+        </div>
+    {#    <h1>Hello</h1>#}
+    {#    {{ data }}#}
+    <div id="linechart" class="text-center">
+    </div>
+
+
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'datetime/js/moment.js' %}"></script>
+    <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
+    <script src="{% static 'datetime/js/collapse.js' %}"></script>
+    <script src="{% static 'datetime/js/transition.min.js' %}"></script>
+    <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'js/plotly-latest.min.js' %}"></script>
+    <script src="{% static 'js/customJS.js' %}"></script>
+    <script>
+        let date_from = $('#date_from_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        let date_to = $('#date_to_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        EEllicots();
+
+        function EEllicots() {
+            let area_id = $("#id_area_id").val();
+            let date_from = $("#from_date").val();
+            let date_to = $("#to_date").val();
+            date = new Date();
+            date = ['1', '2', '3'];
+            var trace3 = {
+                x: [],
+                y: [],
+                xa: [],
+                mode: 'text+dates+markers',
+                type: 'scatter',
+                name: [],
+                text: [],
+                textfont: {
+                    {#family: 'sans serif',#}
+                    size: 20,
+                    color: [],
+                    weight: '900'
+                },
+                marker: {size: date.toString(),},
+                textposition: 'bottom center',
+
+                hoveron: 'points',
+
+                {#hovertemplate: "<b>%{name}<b><extra></extra>",#}
+                hovertext: [],
+
+                {#hoverinfo: 'x+y',#}
+            };
+
+
+            var data = [trace3];
+            var layout = {
+                title: 'Ellicott\'s Explosibility Graph',
+                titlefont: {
+                    size: 32
+                },
+                width: 1200,
+                height: 800,
+
+                xaxis: {
+                    title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
+                    tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                    tick0: 0,
+                    dtick: 10,
+                    autoscale: true,
+                    range: [-1 * (10 * 1.5), (10 * 1.5)],
+                    {#range: [-100, 100],#}
+                    ticks: "outside",
+                    showgrid: true,
+                    zeroline: true,
+                    showline: true,
+                    mirror: 'ticks',
+                    gridcolor: '#bdbdbd',
+                    gridwidth: 0.05,
+                    zerolinecolor: '#969696',
+                    zerolinewidth: 3,
+                    linecolor: '#636363',
+                    linewidth: 6,
+                    {#side:'right'#}
+                },
+                yaxis: {
+                    title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
+                    tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                    tick0: 0,
+                    dtick: 2,
+                    autoscale: true,
+                    {#yanchor:'right',#}
+                    ticks: 'inside',
+                    range: [-1 * (2 * 1.5), (2 * 1.5)],
+                    {#range: [-30, 30],#}
+                    showgrid: true,
+                    zeroline: true,
+                    showline: true,
+                    mirror: 'ticks',
+                    gridcolor: '#bdbdbd',
+                    gridwidth: 0.15,
+                    zerolinecolor: '#969696',
+                    zerolinewidth: 3,
+                    linecolor: '#636363',
+                    linewidth: 6,
+
+                },
+                annotations: [
+                    {
+                        x: -10,
+                        y: 2,
+                        xref: 'x',
+                        yref: 'y',
+                        text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                        bgcolor: "#ff7f0e",
+                        showarrow: false,
+                        arrowhead: 7,
+                        ax: 0,
+                        ay: -40
+                    },
+                    {
+                        x: 10,
+                        y: 2,
+                        xref: 'x',
+                        yref: 'y',
+                        text: '<b>EXPLOSIVE</b>',
+                        bgcolor: "#ff7f0e",
+                        showarrow: false,
+                        arrowhead: 7,
+                        ax: 0,
+                        ay: -40
+                    },
+                    {
+                        x: -10,
+                        y: -2,
+                        xref: 'x',
+                        yref: 'y',
+                        text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                        bgcolor: "#ff7f0e",
+                        showarrow: false,
+                        arrowhead: 7,
+                        ax: 0,
+                        ay: -40
+                    },
+                    {
+                        x: 10,
+                        y: -2,
+                        xref: 'x',
+                        yref: 'y',
+                        text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                        bgcolor: "#ff7f0e",
+                        showarrow: false,
+                        arrowhead: 7,
+                        ax: 0,
+                        ay: -40
+                    }
+                ],
+
+                showlegend: false
+            };
+            Plotly.newPlot('linechart', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+            var x_list = [];
+            var y_list = [];
+            var text = [];
+            var color = [];
+            var dates = [];
+
+
+            $('#btn_show').click(function () {
+                console.log('clicked');
+                let endpoint = $('#node_id').data('url');
+                let id = $('#node_id').val();
+                let from = $('#id_date_fr').val();
+                let to = $('#id_date_to').val();
+                console.log(endpoint,id,from,to);
+                if (!isEmpty(from) && !isEmpty(to)){
+                    console.log('clicked in');
+                    GRAPH(endpoint, id, from, to)
+                    }
+            });
+
+            function GRAPH(url, id, from, to) {
+                var i = 4;
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': id,
+                        'date_from': from,
+                        'date_to': to,
+                    },
+                    success: function (data) {
+                        console.log('data', data);
+
+                        result = data.result;
+                        result = result[0];
+                        x_list.push(result.x);
+                        y_list.push(result.y);
+                        text.push(x_list.length.toString());
+                        color.push(result.color);
+                        dates.push(result.dates);
+
+                        var xhighest = Math.max.apply(Math, x_list);
+                        var xlowest = Math.min.apply(Math, x_list);
+                        var yhighest = Math.max.apply(Math, y_list);
+                        var ylowest = Math.min.apply(Math, y_list);
+
+
+                        var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                        var lowest = Math.min.apply(Math, y_list);
+                        lowest = Math.abs(lowest);
+
+                        console.log(lowest, highest, result.x, result.y);
+                        {#Plotly.deleteTraces('linechart', [0]);#}
+                        date = new Date();
+                        console.log('DATE', date.toString());
+                        var update = {
+                            x: [[result.x]],
+                            y: [[result.y]],
+                            xa: [["2020-04-29"]],
+                            text: [[x_list.length.toString()]],
+                            hovertext: [[date.toString()]],
+
+                        }
+                        relayout = {
+                            xaxis: {
+                                range: [-highest * 1.3, highest * 1.3]
+                            }, yaxis: {
+                                range: [-lowest * 1.3, lowest * 1.3]
+                            },
+                            annotations: [
+                                {
+                                    x: -highest,
+                                    y: highest,
+                                    text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                                    bgcolor: "#ff7f0e",
+                                    showarrow: false,
+                                },
+                                {
+                                    x: highest,
+                                    y: highest,
+                                    text: '<b>EXPLOSIVE</b>',
+                                    bgcolor: "#ff7f0e",
+                                    showarrow: false,
+                                },
+                                {
+                                    x: -highest,
+                                    y: -highest,
+                                    text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                                    bgcolor: "#ff7f0e",
+                                    showarrow: false,
+                                },
+                                {
+                                    x: highest,
+                                    y: -highest,
+                                    text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                                    bgcolor: "#ff7f0e",
+                                    showarrow: false,
+                                }
+                            ]
+                        }
+
+                        Plotly.relayout('linechart', relayout);
+                        Plotly.extendTraces('linechart', update, [0], [10]);
+
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                        {#alert("Please select Mine and location to see graph")#}
+                    },
+                });
+            }
+        }
+    </script>
+</body>
+</html>

@@ -18,6 +18,7 @@ urlpatterns = [
   path('node_edit/', views.node_edit, name='node_edit'),
   path('node_delete/', views.node_delete, name='node_delete'),
   path('ellicots/<int:pk>',views.ellicots,name='ellicots'),
+  path('ellicots_ajax',views.ellicots_ajax,name='ellicots_ajax'),
 
   path('fetch_node_ajax', views.fetch_node_ajax, name='fetch_node_ajax'),
 
