@@ -13,9 +13,9 @@ urlpatterns = [
   path('wireless_edit/<int:pk>/<int:node_id>', views.wireless_edit, name='wireless_edit'),
   path('wireless_delete/<int:pk>/<int:node_id>', views.wireless_delete, name='wireless_delete'),
 
-  path('node_manage/<int:pk>', views.node_manage, name='node_manage'),
+  path('node_manage/', views.node_manage, name='node_manage'),
   path('node_add', views.node_add, name='node_add'),
-  path('node_edit/', views.node_edit, name='node_edit'),
+  path('node_edit/<int:pk>', views.node_edit, name='node_edit'),
   path('node_delete/', views.node_delete, name='node_delete'),
   path('ellicots/<int:pk>',views.ellicots,name='ellicots'),
   path('ellicots_ajax',views.ellicots_ajax,name='ellicots_ajax'),

@@ -5,7 +5,7 @@ from .models import Node, Wireless, Sensor_Node
 
 
 class NodeForm(forms.ModelForm):
-    nodeid = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+    node_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Node ID (Ex: N001)'
     }))

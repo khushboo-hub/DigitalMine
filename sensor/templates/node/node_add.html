@@ -2,31 +2,40 @@
 
 {% block content %}
     {% load staticfiles %}
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-    <!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <div class="container">
         <div class="row">
-
             <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             </div>
             <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             </div>
-
             <section class="col-md-12">
-                <h1 class="page-header">Add Node
-                    <small>&nbsp&nbsp&nbspHere you can create ,view and delete nodes</small>
-                </h1>
-                {% if 'success' in request.get_full_path %}
+                <h2 class="page-header text-center"><b>{{ action }} Wireless Node</b>
+                    <small>&nbspHere you can create ,view and delete nodes</small>
+                </h2>
+                {% ifequal action 'EDIT' %}
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Node</a>
+                        </div>
+                    </div>
+                    <br>
+                {% endifequal %}
+                {% ifequal action 'ADD' %}
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <a class="btn btn-primary" href="{% url 'sensor:node_manage' %}">Manage Node</a>
+                        </div>
+                    </div>
+                    <br>
+                {% endifequal %}
+                {% if msg %}
                     <div class="alert alert-success alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>Success! </strong> Node successfully updated!
+                        <strong>Success! </strong> Node successfully {{ alert }}!
                     </div>
                 {% endif %}
-
 
                 <!-- Table content -->
                 <div class="row" style="background-color: powderblue;">
@@ -41,6 +50,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.mine_id }}
+                                        <span style="color:red">{{ form.mine_id.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -48,7 +58,8 @@
                                         <label>Node ID </label></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{ form.nodeid }}
+                                        {{ form.node_id }}
+                                        <span style="color:red">{{ form.node_id.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -59,6 +70,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.name }}
+                                        <span style="color:red">{{ form.name.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -67,6 +79,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.location }}
+                                        <span style="color:red">{{ form.location.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -77,6 +90,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.x_axis }}
+                                        <span style="color:red">{{ form.x_axis.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -85,6 +99,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.y_axis }}
+                                        <span style="color:red">{{ form.y_axis.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -95,6 +110,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.photo1 }}
+                                        <span style="color:red">{{ form.photo1.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -103,6 +119,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.photo2 }}
+                                        <span style="color:red">{{ form.photo2.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -123,117 +140,25 @@
                                     </div>
                                     <div class="col-md-10">
                                         {{ form.description }}
+                                        <span style="color:red">{{ form.description.errors|striptags }}</span>
                                     </div>
                                 </div>
 
                             </div>
-                            <center>
+                            <div style="text-align: center;">
                                 <button id="RouterNode"
                                         onclick="document.querySelector('.glyphicon').classList.toggle('icon-rotate')"
                                         type="submit" class="btn btn-primary" value="Create Node"/>
                                 <i class="glyphicon glyphicon-signal"></i> Create Node
-                            </center>
+                            </div>
 
                         </form>
                     </div>
                 </div>
 
 
-                <br>
-                <hr>
-
-                <center><h2>All Created Wireless Nodes</h2></center>
-                <div class="row">
-
-                    <div class="col-md-12">
-                        <div class="table-responsive ">
-                            <table class="table hover  table-bordered " id="myTable">
-                                <thead>
-                                <tr>
-                                    <th>SL No</th>
-                                    <th>Mine Name</th>
-                                    <th>Node ID</th>
-                                    <th>Node Name</th>
-                                    <th>Node Location</th>
-                                    <th>X,Y (Axis)</th>
-                                    <th>Description</th>
-                                    <th>Is it Goaf?</th>
-                                    <th>Image1</th>
-                                    <th>Image2</th>
-                                    <th>Data Aquition</th>
-                                    <th>Manage Sensor</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
-
-                                </tr>
-                                </thead>
-                                <tbody id="RouterList">
-                                {% for book in object_list %}
-
-
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ book.mine_id.name }}</td>
-                                        <td>{{ book.node_id }}</td>
-                                        <td>{{ book.name }}</td>
-                                        <td>{{ book.location }}</td>
-                                        <td>{{ book.x_axis }},{{ book.y_axis }}</td>
-                                        <td class="more">{{ book.description }}</td>
-                                        <td>
-                                            {% if book.isgoaf == True %}
-                                                <span class="label label-success">Yes</span>
-                                            {% else %}
-                                                <span class="label label-danger">No</span>
-                                            {% endif %}
-                                        </td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo1 }}"
-                                                 height="50" width="50"/></td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo2 }}"
-                                                 height="50" width="50"/></td>
-
-                                        <td class="text-center"><input
-                                                {% if background|lookup:book.id %}checked {% endif %}
-                                                {% if not book.isgoaf %}disabled {% endif %}
-                                                data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
-                                                id="isAcquire{{ book.id }}"
-                                                data-val="{{ book.id }}" class="DataAcquisition"
-                                                type="checkbox"
-                                                data-toggle="toggle" data-on="On"
-                                                data-off="off" data-onstyle="success"
-                                                data-offstyle="danger"></td>
-
-                                        <td class="text-center"><a
-                                                href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
-                                                class="manageSensor"
-                                                data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
-                                                title="Manage Sensor"><span
-                                                class="glyphicon glyphicon-plus"></span></a>
-                                            <br>
-                                            <br>
-                                            <a href="{% url 'sensor:ellicots' book.id %}"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Hello', 'width=1600, height=1000','title=Hello'); return false;"
-                                               title="Generate Graph."><span
-                                                    class="glyphicon glyphicon-picture"></span></a>
-                                        </td>
-
-                                        <td class="text-center"><a href="{% url 'sensor:node_manage' book.id %}"
-                                                                   class="editRouter"
-                                                                   data-url="{% url 'sensor:node_manage' book.id %}"
-                                                                   title="Edit Router."><span
-                                                class="glyphicon glyphicon-pencil"></span></a></td>
-                                        <td class="text-center"><a href="#" class="delete"
-                                                                   data-url="{% url 'sensor:node_delete' %}"
-                                                                   id="{{ book.id }}"
-                                                                   title="Delete Router."><span
-                                                class="glyphicon glyphicon-trash"></span></a></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
             </section>
+
         </div>
     </div>
     <section class="KBmap" id="KBtestmap"/>
@@ -241,7 +166,6 @@
         function goaf() {
             return $('#isGoaf').prop('checked');
         }
-
 
         $(document).ready(function () {
 
@@ -370,7 +294,7 @@
                         console.log(PosX + " " + PosY);
 
                         var random = Math.floor((Math.random() * 10) + 1);
-                        var node_id = $('#id_nodeid').val();
+                        var node_id = $('#id_node_id').val();
                         var node_mine_name = $('#id_mine_id').children("option:selected").text();
                         var markerName = "Test"
                         var NodeName = node_id + "||" + node_mine_name + "||";
@@ -553,9 +477,9 @@
 
     </script>
     <style>
-        .container {
-            width: 1251px;
-        }
+        {#.container {#}
+        {#    width: 1251px;#}
+        {#}#}
 
         .red-tooltip + .tooltip > .tooltip-inner {
             background: none;
