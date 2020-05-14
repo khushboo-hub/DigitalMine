@@ -3,119 +3,139 @@
 {% block content %}
     {% load staticfiles %}
     <div class="container">
-            <section class="col-md-12">
-                <h3 class="page-header text-center"><b>Manage Wireless Node</b>
-                    <small>&nbspHere you can update ,view and delete nodes</small>
-                </h3>
-                <div class="row text-center">
-                    <div class="col-md-12">
-                        <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>
-                    </div>
+        <section class="col-md-12">
+            <h3 class="page-header text-center"><b>Manage Wireless Node</b>
+                <small>&nbspHere you can update ,view and delete nodes</small>
+            </h3>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>
                 </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive ">
-                            <table class="table hover  table-bordered " id="myTable">
-                                <thead>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive ">
+                        <table class="table hover  table-bordered " id="myTable">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Mine Name</th>
+                                <th>Node ID</th>
+                                <th>Node Name</th>
+                                <th>Node Location</th>
+                                <th>X,Y (Axis)</th>
+                                <th>Description</th>
+                                <th>Is it Goaf?</th>
+                                <th>Image1</th>
+                                <th>Image2</th>
+                                <th>Data Aquition</th>
+                                <th>Manage Sensor</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="RouterList">
+                            {% for book in object_list %}
+
+
                                 <tr>
-                                    <th>SL No</th>
-                                    <th>Mine Name</th>
-                                    <th>Node ID</th>
-                                    <th>Node Name</th>
-                                    <th>Node Location</th>
-                                    <th>X,Y (Axis)</th>
-                                    <th>Description</th>
-                                    <th>Is it Goaf?</th>
-                                    <th>Image1</th>
-                                    <th>Image2</th>
-                                    <th>Data Aquition</th>
-                                    <th>Manage Sensor</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.mine_id.name }}</td>
+                                    <td>{{ book.node_id }}</td>
+                                    <td>{{ book.name }}</td>
+                                    <td>{{ book.location }}</td>
+                                    <td>{{ book.x_axis }},{{ book.y_axis }}</td>
+                                    <td class="more">{{ book.description }}</td>
+                                    <td>
+                                        {% if book.isgoaf == True %}
+                                            <span class="label label-success">Yes</span>
+                                        {% else %}
+                                            <span class="label label-danger">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><img class="image image-responsive" src="/media/{{ book.photo1 }}"
+                                             height="50" width="50"/></td>
+                                    <td><img class="image image-responsive" src="/media/{{ book.photo2 }}"
+                                             height="50" width="50"/></td>
 
+                                    <td class="text-center"><input
+                                            {% if background|lookup:book.id %}checked {% endif %}
+                                            {% if not book.isgoaf %}disabled {% endif %}
+                                            data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
+                                            id="isAcquire{{ book.id }}"
+                                            data-val="{{ book.id }}" class="DataAcquisition"
+                                            type="checkbox"
+                                            data-toggle="toggle" data-on="On"
+                                            data-off="off" data-onstyle="success"
+                                            data-offstyle="danger"></td>
+
+                                    <td class="text-center"><a
+                                            href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
+                                            class="manageSensor"
+                                            data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
+                                            title="Manage Sensor"><span
+                                            class="glyphicon glyphicon-plus"></span></a>
+                                        <br>
+                                        <br>
+                                        <a href="{% url 'sensor:ellicots' book.id %}"
+                                           onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                           title="Generate Ellicots Graph."><span
+                                                class="glyphicon glyphicon-picture"></span></a>
+                                        <br>
+                                        <br>
+                                        <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
+                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
+                                           title="Show Node Location"><span
+                                                class="glyphicon glyphicon-picture"></span></a>
+
+                                    </td>
+
+                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
+                                                               class="editRouter"
+                                                               data-url="{% url 'sensor:node_edit' book.id %}"
+                                                               title="Edit Router."><span
+                                            class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td class="text-center"><a href="#" class="delete"
+                                                               data-url="{% url 'sensor:node_delete' %}"
+                                                               id="{{ book.id }}"
+                                                               title="Delete Router."><span
+                                            class="glyphicon glyphicon-trash"></span></a></td>
                                 </tr>
-                                </thead>
-                                <tbody id="RouterList">
-                                {% for book in object_list %}
-
-
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ book.mine_id.name }}</td>
-                                        <td>{{ book.node_id }}</td>
-                                        <td>{{ book.name }}</td>
-                                        <td>{{ book.location }}</td>
-                                        <td>{{ book.x_axis }},{{ book.y_axis }}</td>
-                                        <td class="more">{{ book.description }}</td>
-                                        <td>
-                                            {% if book.isgoaf == True %}
-                                                <span class="label label-success">Yes</span>
-                                            {% else %}
-                                                <span class="label label-danger">No</span>
-                                            {% endif %}
-                                        </td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo1 }}"
-                                                 height="50" width="50"/></td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo2 }}"
-                                                 height="50" width="50"/></td>
-
-                                        <td class="text-center"><input
-                                                {% if background|lookup:book.id %}checked {% endif %}
-                                                {% if not book.isgoaf %}disabled {% endif %}
-                                                data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
-                                                id="isAcquire{{ book.id }}"
-                                                data-val="{{ book.id }}" class="DataAcquisition"
-                                                type="checkbox"
-                                                data-toggle="toggle" data-on="On"
-                                                data-off="off" data-onstyle="success"
-                                                data-offstyle="danger"></td>
-
-                                        <td class="text-center"><a
-                                                href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
-                                                class="manageSensor"
-                                                data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
-                                                title="Manage Sensor"><span
-                                                class="glyphicon glyphicon-plus"></span></a>
-                                            <br>
-                                            <br>
-                                            <a href="{% url 'sensor:ellicots' book.id %}"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
-                                               title="Generate Ellicots Graph."><span
-                                                    class="glyphicon glyphicon-picture"></span></a>
-                                            <br>
-                                            <br>
-                                            <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
-                                               onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
-                                               title="Show Node Location"><span
-                                                    class="glyphicon glyphicon-picture"></span></a>
-
-                                        </td>
-
-                                        <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
-                                                                   class="editRouter"
-                                                                   data-url="{% url 'sensor:node_edit' book.id %}"
-                                                                   title="Edit Router."><span
-                                                class="glyphicon glyphicon-pencil"></span></a></td>
-                                        <td class="text-center"><a href="#" class="delete"
-                                                                   data-url="{% url 'sensor:node_delete' %}"
-                                                                   id="{{ book.id }}"
-                                                                   title="Delete Router."><span
-                                                class="glyphicon glyphicon-trash"></span></a></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+    </div>
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
+                    {#'copy', 'csv', 'excel',#}
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 7, 8]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 7, 8]
+                        }
+                    },
+                ],
+                columnDefs: [
+                    {
+                        targets: 8,
+                        render: function (data) {
+                            return data
+                        }
+                    }
                 ]
             });
 

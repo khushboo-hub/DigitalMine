@@ -118,7 +118,7 @@
                         console.log('disabled');
                     },
                     success: function (data) {
-                        if(data.hasOwnProperty('result')) {
+                        if (data.hasOwnProperty('result')) {
                             fill_details_table(data.result);
                             $('.leave').prop('disabled', true).se;
                             $('.leave_no').prop('disabled', true);
@@ -135,7 +135,8 @@
             function fill_details_table(result) {
                 for (let R in result) {
                     if (result.hasOwnProperty(R)) {
-                        $("#table_att").append("<tr><td>" + R + "</td><td><input type='hidden' name='mine_id' value=" + result[R].mine_id + ">" + result[R].mine_name + "</td><td><input type='hidden' name='shift_id' value=" + result[R].shift_id + ">" + result[R].shift_name + "</td><td><input type='hidden' name='emp_id' value=" + result[R].emp_id + "> " + result[R].emp_name + "</td><td><input name='ab_pr_date' type='text' placeholder='dd-mm-yy' class='form-control date_fill' required></td><td><select  name='ab_pr' required class='form-control ab_pr'><option class='form-control' value='Present'>Present</option><option value='Absent'>Absent</option></select></td><td><select name='leave_type' id='leave_type' required class='form-control leave'><option  value='None' selected>None</option><option  value='CL'>CL</option><option value='EL'>EL</option><option value='HPL'>HPL</option><option value='SL'>SL</option></select></td><td><input name='leave_no' class='form-control leave_no' required type='number' value='0'></td></tr>");
+
+                        $("#table_att").append("<tr><td>" + R + "</td><td><input type='hidden' name='mine_id' value=" + result[R].mine_id + ">" + result[R].mine_name + "</td><td><input type='hidden' name='shift_id' value=" + result[R].shift_id + ">" + result[R].shift_name + "</td><td><input type='hidden' name='emp_id' value=" + result[R].emp_id + "> " + result[R].emp_name + "</td><td><input name='ab_pr_date' type='text' placeholder='dd-mm-yy' class='form-control date_fill' required></td><td><select  name='ab_pr' required class='form-control ab_pr'><option class='form-control' value='Present'>Present</option><option value='Absent'>Absent</option></select></td><td><input type='hidden' name='leave_type' value='None'><select name='leave' id='leave_type' required class='form-control leave'><option  value='None' selected>None</option><option  value='CL'>CL</option><option value='EL'>EL</option><option value='HPL'>HPL</option><option value='SL'>SL</option></select></td><td><input type='hidden' name='leave_no' value=0><input name='leave_number' class='form-control leave_no' required type='number' value='0'></td></tr>");
                     }
                 }
             }
@@ -143,19 +144,24 @@
             $(document.body).on('blur', '#id_date_parent', function () {
                 $(".date_fill").val($(this).val());
             });
-              $(document.body).on('change', '.ab_pr', function () {
-            if ($(this).val() == "Present") {
-                $(this).parent('td').next('td').find('.leave').prop('disabled', true);
-                $(this).parent('td').next('td').next('td').find('.leave_no').val('0').prop('readonly', true);
-            } else {
-                $(this).parent('td').next('td').find('.leave').prop('disabled', false);
-                $(this).parent('td').next('td').next('td').find('.leave_no').prop('disabled', false);
-            }
+            $(document.body).on('change', '.ab_pr', function () {
+                if ($(this).val() == "Present") {
+                    $(this).parent('td').next('td').find('.leave').prop('disabled', true);
+                    $(this).parent('td').next('td').next('td').find('.leave_no').val('0').prop('readonly', true);
+                } else {
+                    $(this).parent('td').next('td').find('.leave').prop('disabled', false);
+                    $(this).parent('td').next('td').next('td').find('.leave_no').prop('disabled', false);
+                }
+            });
+            $(document.body).on('change', '.leave', function () {
+                console.log($(this).val());
+               $(this).siblings().val($(this).val());
+            });
+             $(document.body).on('change', '.leave_no', function () {
+                console.log($(this).val());
+               $(this).siblings().val($(this).val());
+            });
         });
-        });
-
-
-
 
 
     </script>

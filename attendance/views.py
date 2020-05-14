@@ -22,7 +22,7 @@ def add_att(request):
     ab_pr_date_id_list = request.POST.getlist('ab_pr_date')
     ab_pr_id_list = request.POST.getlist('ab_pr')
     leave_type_id_list = request.POST.getlist('leave_type')
-    print('type',leave_type_id_list)
+    # print('type',leave_type_id_list)
     leave_no_id_list = request.POST.getlist('leave_no')
     for key_value in range(t_length):
         inst = EmployeeAttendance()
