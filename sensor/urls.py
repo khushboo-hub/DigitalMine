@@ -20,6 +20,8 @@ urlpatterns = [
   path('ellicots/<int:pk>',views.ellicots,name='ellicots'),
   path('ellicots_ajax',views.ellicots_ajax,name='ellicots_ajax'),
 
+  path('locate_node/<int:mine_id>/<int:node_id>',views.locate_node,name='locate_node'),
+
   path('fetch_node_ajax', views.fetch_node_ajax, name='fetch_node_ajax'),
 
   path('fetch_wireless', views.fetch_wireless, name='fetch_wireless'),

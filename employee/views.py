@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 ###################
 import serial
+from background_task import background
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -31,6 +32,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
+from employee.models import Employee
 import re
 from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
@@ -62,9 +64,14 @@ def employee_add(request, template_name='employee/employee_add.html'):
         form = EmployeeForm(1)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST or None, request.FILES)
+        form = EmployeeForm(request.POST.get('mine'),request.POST or None, request.FILES or None)
         if form.is_valid():
-            form.save()
+            employee=form.save()
+            # fs=profile_extension()
+            # fs.mine_id=employee.mine
+            # fs.user_id=employee.id
+            # fs.profile_avatar=employee.photo
+            # fs.save()
         return redirect('employee:employee_manage')
 
     return render(request, template_name, {'form': form})
@@ -160,16 +167,13 @@ def more_details_ajax(request):
     return JsonResponse(data)
 
 
-from accounts.models import profile_extension
-from employee.models import Employee
+
 
 
 @login_required
 def generate_login_details_ajax(request):
     data = {}
     if request.is_ajax():
-        # miner_id = request.POST.get('miner_id')
-        # email=request.POST.get('email')
         try:
             email = request.POST.get('email')
             password = request.POST.get('pass')
@@ -179,45 +183,63 @@ def generate_login_details_ajax(request):
             print('pass', password)
             print('email', email)
             data['result'] = email
-            user = User.objects.create_user(username=username,
-                                            email=email,
-                                            password=password)
+            try:
+                user = User.objects.create_user(username=username,
+                                                email=email,
+                                                password=password)
 
-            user.is_active = False
-            user.save()
-            employee = get_object_or_404(Employee, email=email)
-            fs = profile_extension()
-            fs.user_id = user
-            fs.mine_id = employee.mine
-            fs.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your Miner account.'
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            to_email = email
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
-            data['confirm_registration'] = 'Please confirm your email address to complete the registration'
-            data['username'] = username
-            data['password'] = password
-            data['success'] = "Account Creation Successfully! User need to Confirm email to login!"
-            return JsonResponse(data)
-        except IntegrityError as e:
-            data['ie'] = "Account with this username and email address already exists!"
+
+                current_site = get_current_site(request)
+                sendverifyemail(current_site.domain,user.username,email,urlsafe_base64_encode(force_bytes(user.pk)),account_activation_token.make_token(user))
+                user.is_active = False
+                user.save()
+                employee = get_object_or_404(Employee, email=email)
+                fs = profile_extension()
+                fs.user_id = user
+                fs.mine_id = employee.mine
+                fs.profile_avatar=employee.photo
+                fs.save()
+
+                data['confirm_registration'] = 'Please confirm your email address to complete the registration'
+                data['username'] = username
+                data['password'] = password
+                data['success'] = "Account Creation Successfully! User need to Confirm email to login!"
+                return JsonResponse(data)
+
+            except IntegrityError as e:
+                data['ie'] = "Account with this username and email address already exists!"
+                return JsonResponse(data)
         except Exception as e:
             print('error', e)
             data['ie'] = "Something went wrong.Try again later"
             user.delete()
             fs.delete()
-
-    data['error'] = "Something Went Wrong!"
+            return JsonResponse(data)
+    else:
+        data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+
+@background(schedule=1)
+def sendverifyemail(domain,user,email,uid,token):
+    print('Email Background',domain,user,email,uid,token)
+    mail_subject = 'Activate your Miner account.'
+    message = render_to_string('acc_active_email.html', {
+        'user': user,
+        'domain': domain,
+        'uid': uid,
+        'token': token,
+    })
+    to_email = email
+    email = EmailMessage(
+        mail_subject, message, to=[to_email]
+    )
+    try:
+        email.send()
+        return True
+    except Exception as e:
+        print('error',e)
+        sendverifyemail(domain, user, email, uid, token)
 
 
 @login_required

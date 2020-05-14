@@ -3,11 +3,15 @@
 {% block content %}
     {% load staticfiles %}
     <div class="container">
-        <div class="row">
             <section class="col-md-12">
                 <h3 class="page-header text-center"><b>Manage Wireless Node</b>
                     <small>&nbspHere you can update ,view and delete nodes</small>
                 </h3>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive ">
@@ -75,9 +79,16 @@
                                             <br>
                                             <br>
                                             <a href="{% url 'sensor:ellicots' book.id %}"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Hello', 'width=1600, height=1000','title=Hello'); return false;"
-                                               title="Generate Graph."><span
+                                               onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                               title="Generate Ellicots Graph."><span
                                                     class="glyphicon glyphicon-picture"></span></a>
+                                            <br>
+                                            <br>
+                                            <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
+                                               onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
+                                               title="Show Node Location"><span
+                                                    class="glyphicon glyphicon-picture"></span></a>
+
                                         </td>
 
                                         <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
@@ -99,7 +110,6 @@
                 </div>
             </section>
         </div>
-    </div>
     <script>
         $(document).ready(function () {
             $('#myTable').DataTable({
@@ -127,48 +137,46 @@
                 "hideMethod": "fadeOut",
             };
             (function Delete_Node() {
-            $(document.body).on("click", ".delete", function () {
-                $('#update_info').modal('show');
-                var node_id = $(this).attr('id');
-                var url = $(this).data('url');
-                console.log(node_id)
-                var Curr = $(this).parents('tr');
-                var datatable = $('#myTable').DataTable();
-                $('#update_info').on('click', '#delete', function (e) {
-                    $('#update_info').unbind('click');
-                    $('#update_info').modal('hide');
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        data: {
-                            csrfmiddlewaretoken: "{{ csrf_token }}",
-                            'id': node_id,
-                        },
-                        success: function (json) {
-                            if (json.hasOwnProperty("success")) {
-                                datatable.row(Curr).remove().draw();
-                                toastr.success(json.success);
-                            } else {
-                                toastr.error(json.error);
+                $(document.body).on("click", ".delete", function () {
+                    $('#update_info').modal('show');
+                    var node_id = $(this).attr('id');
+                    var url = $(this).data('url');
+                    console.log(node_id)
+                    var Curr = $(this).parents('tr');
+                    var datatable = $('#myTable').DataTable();
+                    $('#update_info').on('click', '#delete', function (e) {
+                        $('#update_info').unbind('click');
+                        $('#update_info').modal('hide');
+                        $.ajax({
+                            type: "post",
+                            url: url,
+                            data: {
+                                csrfmiddlewaretoken: "{{ csrf_token }}",
+                                'id': node_id,
+                            },
+                            success: function (json) {
+                                if (json.hasOwnProperty("success")) {
+                                    datatable.row(Curr).remove().draw();
+                                    toastr.success(json.success);
+                                } else {
+                                    toastr.error(json.error);
+                                }
+                            },
+                            error: function () {
+                                console.log("something is not right.please contact admin - 1");
                             }
-                        },
-                        error: function () {
-                            console.log("something is not right.please contact admin - 1");
-                        }
+                        });
                     });
                 });
-            });
-        })();
+            })();
 
         });
-
-
-
     </script>
     <style>
-    .container {
+        .container {
             width: 1251px;
         }
+
         .red-tooltip + .tooltip > .tooltip-inner {
             background: none;
         }

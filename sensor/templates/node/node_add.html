@@ -4,32 +4,27 @@
     {% load staticfiles %}
     <div class="container">
         <div class="row">
-            <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            </div>
-            <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            </div>
             <section class="col-md-12">
                 <h2 class="page-header text-center"><b>{{ action }} Wireless Node</b>
                     <small>&nbspHere you can create ,view and delete nodes</small>
                 </h2>
-                {% ifequal action 'EDIT' %}
+                {% ifequal action 'Edit' %}
                     <div class="row text-center">
                         <div class="col-md-12">
-                            <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Node</a>
+                            <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>
                         </div>
                     </div>
                     <br>
                 {% endifequal %}
-                {% ifequal action 'ADD' %}
+                {% ifequal action 'Add' %}
                     <div class="row text-center">
                         <div class="col-md-12">
-                            <a class="btn btn-primary" href="{% url 'sensor:node_manage' %}">Manage Node</a>
+                            <a class="btn btn-primary" href="{% url 'sensor:node_manage' %}">Manage Wireless Node</a>
                         </div>
                     </div>
                     <br>
                 {% endifequal %}
+            {{ msg }}
                 {% if msg %}
                     <div class="alert alert-success alert-dismissible">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -145,7 +140,7 @@
                                 </div>
 
                             </div>
-                            <div style="text-align: center;">
+                            <div class="text-center">
                                 <button id="RouterNode"
                                         onclick="document.querySelector('.glyphicon').classList.toggle('icon-rotate')"
                                         type="submit" class="btn btn-primary" value="Create Node"/>
@@ -364,15 +359,9 @@
                             success: function (json) {
                                 console.log(json);
                                 if (json.hasOwnProperty("success")) {
-                                    // $("#success-alert").removeClass("hide");
-                                    // $("#success-alert").text(json.success);
-                                    //$("#success-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
                                     datatable.row(Curr).remove().draw();
                                     toastr.success(json.success);
                                 } else {
-                                    //$("#failure-alert").removeClass("hide");
-                                    //$("#failure-alert").text(json.error);
-                                    //$("#failure-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
                                     toastr.error(json.error);
                                 }
                             },
@@ -414,6 +403,7 @@
                     createKBmap('KBtestmap', '/media/' + img);
                     var icon = "/static/image/router.svg";
                     KBtestmap.addMarker(icon, $('#id_x_axis').val(), $('#id_y_axis').val(), 'Test');
+                    KBtestmap.mapMarkers["Test"].addModal("Start Node", "Node Content");
 
                     KBtestmap.showAllMapMarkers();
                 } else {

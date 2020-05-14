@@ -128,39 +128,13 @@ def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
-    background = {}
-    msg = 0
-    if current_user.is_superuser:
-        book = Node.objects.all()
-    else:
-        book = Node.objects.filter(mine_id=profile.mine_id.id)
-    for ob in book:
-        background_task = 0
-        sensors = Sensor_Node.objects.filter(mine_id_id=ob.mine_id, node_id_id=ob.id)
-        for s in sensors:
-            try:
-                task = Task.objects.get(task_name='sensor.views.run_back_save',
-                                        task_params="[[" + str(s.id) + "], {}]")
-                if task:
-                    background_task = 1
-
-            except:
-                background_task = 0
-                break
-                pass
-        background[str(ob.id)] = background_task
-
     if request.method == "POST":
-        msg=0
         form = NodeForm(request.POST or None, request.FILES)
 
         if form.is_valid():
             form.save()
-            msg = 1
-            # return redirect(reverse('sensor:node_add') + '?' + 'result=success')
-    return render(request, template_name,
-                  {'form': form, 'object_list': book, 'background': background, 'action': "ADD", 'msg': msg,
-                   "alert": "added"})
+            return redirect(reverse('sensor:node_add'))
+    return render(request, template_name,{'form': form, 'action': "Add","alert": "added"})
 
 
 @csrf_protect
@@ -170,49 +144,18 @@ def node_edit(request, pk, template_name='node/node_add.html'):
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
     form = NodeForm(request.POST or None, request.FILES or None, instance=book)
-    background = {}
-    msg = 0
-    if current_user.is_superuser:
-        books = Node.objects.all()
-    else:
-        books = Node.objects.filter(mine_id=profile.mine_id.id)
-    for ob in books:
-        background_task = 0
-        sensors = Sensor_Node.objects.filter(mine_id_id=ob.mine_id, node_id_id=ob.id)
-        for s in sensors:
-            try:
-                task = Task.objects.get(task_name='sensor.views.run_back_save',
-                                        task_params="[[" + str(s.id) + "], {}]")
-                if task:
-                    background_task = 1
-
-            except:
-                background_task = 0
-                break
-                pass
-        background[str(ob.id)] = background_task
-
     if request.method == "POST":
         if form.is_valid():
-            # try:
             form.save()
-            msg = 1
-            if current_user.is_superuser:
-                books = Node.objects.all()
-            else:
-                books = Node.objects.filter(mine_id=profile.mine_id.id)
-            # return redirect(reverse('sensor:node_add') + '?success=true')
-            # except Exception as e:
-            #     return render(request, template_name, {'form': form, 'object_list': books, 'pk': pk, 'exception': e})
+            return redirect(reverse('sensor:node_manage'))
 
     return render(request, template_name,
-                  {'form': form, 'object_list': books, 'pk': pk, 'background': background, 'action': "EDIT", 'msg': msg,
-                   'alert': "updated"})
+                  {'form': form,  'action': "Edit",'alert': "updated"})
 
 
 @csrf_protect
 @login_required
-def node_manage(request,template_name='node/node_manage.html'):
+def node_manage(request, template_name='node/node_manage.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     background = {}
@@ -236,7 +179,7 @@ def node_manage(request,template_name='node/node_manage.html'):
                 pass
         background[str(ob.id)] = background_task
     return render(request, template_name,
-                  {'object_list': books,'background': background, 'action': "EDIT"})
+                  {'object_list': books, 'background': background, 'action': "EDIT"})
 
 
 @login_required
@@ -1656,6 +1599,20 @@ from django.db.models import Value
 def ellicots(request, pk, template_name='sensor/test.html'):
     data = {}
     data['node_id'] = pk
+    return render(request, template_name, data)
+
+@login_required
+def locate_node(request, mine_id,node_id,template_name='sensor/test1.html'):
+    data = {}
+
+    data['mine_id'] = mine_id
+    try:
+        node=get_object_or_404(Node,mine_id=mine_id,pk=node_id)
+        data['x'] = node.x_axis
+        data['y'] = node.y_axis
+    except:
+        data['error']=1
+        pass
     return render(request, template_name, data)
 
 
