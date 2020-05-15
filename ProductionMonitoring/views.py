@@ -18,6 +18,10 @@ from django.contrib import messages
 
 
 @login_required
+def tracking(request,template_name='vehicle_manage.html'):
+    return render(request,template_name)
+
+@login_required
 def vehicle_manage(request, template_name='vehicle_manage.html'):
     book = Production_Vehicle.objects.all()
     data = {}

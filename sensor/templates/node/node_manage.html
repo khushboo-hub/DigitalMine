@@ -115,7 +115,7 @@
             $('#myTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    {#'copy', 'csv', 'excel',#}
+                    'copy', 'csv', 'excel',
                     {
                         extend: 'print',
                         exportOptions: {
@@ -129,14 +129,6 @@
                         }
                     },
                 ],
-                columnDefs: [
-                    {
-                        targets: 8,
-                        render: function (data) {
-                            return data
-                        }
-                    }
-                ]
             });
 
             toastr.options = {

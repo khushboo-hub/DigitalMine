@@ -61,6 +61,7 @@ urlpatterns = [
     path('live_video_ip', views.live_video_ip, name='live_video_ip'),
     path('live_video_webcam', views.live_video_webcam, name='live_video_webcam'),
     path('live_video_ip_151', views.live_video_ip_151, name='live_video_ip_151'),
+    path('tracking',views.tracking,name='tracking'),
 ]
 
 

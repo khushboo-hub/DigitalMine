@@ -279,9 +279,9 @@ def all_mine_page(request, template_name='MinersTracking/all_mine_page.html'):
 @login_required
 def live_tracking_in_map(request, mine_id, template_name='MinersTracking/live_tracking_in_map.html'):
     data = {}
-    mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
-    data['mine_data'] = mine_data
-    routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
+    mine_data = MineDetails.objects.filter(id=mine_id)[0]
+    data['mine'] = mine_data
+    routers = TrackingRouter.objects.filter(mine_id_id=mine_id)
     data['routers'] = routers
     miners = Employee.objects.filter(mine_id=mine_id)
     print(miners)
@@ -613,5 +613,5 @@ def get_all_miners_data(request):
 
     else:
         data['result'] = "Not Ajax"
-    print(data)
+    # print(data)
     return JsonResponse(data)

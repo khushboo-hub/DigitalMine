@@ -2,7 +2,7 @@
 {% block content %}
 <div class="container-fluid ">
     <div class="row">
-        
+
         <div class="col-md-2">
             <h3 style="">Active Miners Explorer</h3>
             <div class="row list-group" >
@@ -26,8 +26,8 @@
 
                 {% for r in routers %}
                 <ul>
-                    <li class="RouterIcon"> <a data-toggle="collapse" data-parent="#accordion1" href="#secondLink{{r.2}}">{{r.2}}</a>
-                        <ul class="RouterExplorer" id="secondLink{{r.2}}">
+                    <li class="RouterIcon"> <a data-toggle="collapse" data-parent="#accordion1" href="#secondLink{{r.router_id}}">{{r.router_id}}</a>
+                        <ul class="RouterExplorer" id="secondLink{{r.router_id}}">
                             <li class="loader"></li>
                         </ul>
                     </li>
@@ -70,8 +70,8 @@
 <script>
 var el;
 $( document ).ready(function() {
-    CreateKBtestMap('{{mine_data.6}}');
-    FillRouters('{{mine_data.0}}');
+    CreateKBtestMap('{{mine.imege_url}}');
+    FillRouters('{{mine.id}}');
     Get_All_Miners_Data();
    /* toastr.options = {
                     "closeButton": false,
@@ -88,7 +88,7 @@ $( document ).ready(function() {
                     "showEasing": "swing",
                     "hideEasing": "linear",
                     "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",  
+                    "hideMethod": "fadeOut",
                     }
     */
     FULLSCREEN();
@@ -113,12 +113,11 @@ function FillRouters(mine_id){
                     },
             error: function(){
                     console.log("Something Went Wrong :(");
-                 }
+                 }, timeout: 3000
             });
 }
 function setImageData(mine_id){
-    url=$("#get_url").data('url');
-
+    let url=$("#get_url").data('url');
         $.ajax({
             type:"get",
             url: "{% url 'Strata:fetch_map_image' %}",
@@ -126,12 +125,8 @@ function setImageData(mine_id){
                      'id': mine_id
                    },
             success: function(data) {
-                // CreateMapModel(data.result.image_url,data.result.name);
-                tempData=data;
                   CreateKBtestMap(data.result.image_url);
 
-                //console.log(data.result.name);
-                //console.log(data.result.image_url);
                     },
             error: function(){
                     console.log("something is not right.please contact admin - 1");
@@ -147,15 +142,8 @@ function setImageData(mine_id){
             addedKBmaps.pop();
             $('.KBmap__mapContainer').remove();
          }
-
-        //alert(img);
-
         if(img){
         createKBmap('KBtestmap', '/media/'+img);
-
-				// KBtestmap.importJSON(jsonData);
-				// KBtestmap.showAllMapMarkers();
-
 				}
         else{
             $("#map").css("");
@@ -195,7 +183,7 @@ var flag1=0;
 var el;
 function Get_All_Miners_Data(){
 
-    mine_id='{{mine_data.0}}';
+    mine_id='{{mine.id}}';
     var flag=0;
     var HashDataPrev="";
     var HashDataCurr="";
@@ -241,7 +229,7 @@ function Get_All_Miners_Data(){
                     KB_flag=1;
 
                     KBtestmap.importJSON(data);
-                    
+
                     WARNINGMINER(data);
 				return data;
               }
@@ -260,7 +248,7 @@ function WARNINGMINER(data){
                        // var rand=ra
                        var miner_name=data[miner_id].modal.title;
                        var router_id=data[miner_id].router_id;
-                       
+
                       X=  toastr.info(miner_name);
                       //  $('p#Location').html(data[miner_id].router_id);
                        // $('#emergency_info').modal('toggle');
