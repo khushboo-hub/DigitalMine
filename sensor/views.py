@@ -1611,6 +1611,10 @@ def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
         node = get_object_or_404(Node, mine_id=mine_id, pk=node_id)
         data['x'] = node.x_axis
         data['y'] = node.y_axis
+        data['node_name']=node.name
+        data['content']=node.description
+        data['location'] = node.location
+
     except:
         data['error'] = 1
         pass

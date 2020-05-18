@@ -125,10 +125,6 @@ body {
   }
 }
 
-.KBmap__mapHolder{
-    width: 100%;
-    position:relative;
-}
     </style>
 </head>
 <body>
@@ -136,6 +132,11 @@ body {
     <input hidden value="{{ mine_id }}" id="mine_id" data-url="{% url 'Strata:fetch_map_image' %}">
     <input hidden value="{{ x }}" id="x_axis">
     <input hidden value="{{ y }}" id="y_axis">
+    <input hidden value="{{ node_name }}" id="node">
+    <input hidden value="{{ content }}" id="content">
+    <input hidden value="{{ location }}" id="location">
+
+
     {% if not error %}
       <section class="KBmap" id="KBtestmap"/>
         {% else %}
@@ -163,46 +164,47 @@ body {
 <script src="{% static 'js/KBmapmarkers.js' %}"></script>
 <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
 <script>
-    setImageData($("#mine_id").val());
-    function setImageData(mine_id) {
-                url = $("#mine_id").data('url');
+    $(document).ready(function () {
+        setImageData($("#mine_id").val());
 
-                $.ajax({
-                    type: "get",
-                    url: url,
-                    data: {
-                        'id': mine_id
-                    },
-                    success: function (data) {
-                        tempData = data;
-                        CreateKBtestMap(data.result.image_url);
-                    },
-                    error: function () {
-                        console.log("something is not right.please contact admin - 1");
-                    }
-                });
+        function setImageData(mine_id) {
+            url = $("#mine_id").data('url');
+
+            $.ajax({
+                type: "get",
+                url: url,
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    tempData = data;
+                    CreateKBtestMap(data.result.image_url);
+                },
+                error: function () {
+                    console.log("something is not right.please contact admin - 1");
+                }
+            });
+        }
+        function CreateKBtestMap(data) {
+            var img = data;
+            if (addedKBmaps.length > 0) {
+                addedKBmaps.pop();
+                $('.KBmap__mapContainer').remove();
             }
 
-            function CreateKBtestMap(data) {
-                var img = data;
-                if (addedKBmaps.length > 0) {
-                    addedKBmaps.pop();
-                    $('.KBmap__mapContainer').remove();
-                }
+            if (img) {
+                createKBmap('KBtestmap', '/media/' + img);
+                var icon = "/static/image/router.svg";
+                KBtestmap.addMarker(icon, $('#x_axis').val(), $('#y_axis').val(), 'Test');
+                KBtestmap.mapMarkers["Test"].addModal('<b>' + $('#node').val() + '</b>', '<b>Location:</b> ' + $('#location').val() + '<br>' + $('#content').val());
 
-                if (img) {
-                    createKBmap('KBtestmap', '/media/' + img);
-                    var icon = "/static/image/router.svg";
-                    KBtestmap.addMarker(icon, $('#x_axis').val(), $('#y_axis').val(), 'Test');
-                    KBtestmap.mapMarkers["Test"].addModal("Test", "Content");
-
-                    KBtestmap.showAllMapMarkers();
-                } else {
-                    $("#map").css("");
-                    $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-                }
-
-            };
+                KBtestmap.showAllMapMarkers();
+            } else {
+                $("#map").css("");
+                $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+            }
+        }
+    });
 </script>
 </body>
 </html>
