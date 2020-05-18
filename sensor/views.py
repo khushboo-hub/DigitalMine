@@ -1640,6 +1640,9 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
             date_from, date_to
         ), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),
                                                                           avg=Avg(NullIf('sensor_value', Value(0))))
+
+        # SELECT AVG(sensor_value), sensor_name, sensor_id, date_time FROM `gasmodel_auto` GROUP BY sensor_name, DATE(date_time), sensor_id
+
         DateWiseData={}
         for d in data_list:
             DateWiseData[d['day']]=[]
@@ -1647,18 +1650,12 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
             list={'name':d['sensor_name'],'avg':d['avg']}
             DateWiseData[d['day']].append(list)
 
-        i = 0
+        i = 1
         gases = {}
-        gases['CO'] = 0
-        gases['CO2'] = 0
-        gases['CH4'] = 0
-        gases['O2'] = 0
-        gases['H2'] = 0
-        gases['N2'] = 0
-        gases['C2H4'] = 0
 
         for DateWise in DateWiseData:
-            print(DateWise)
+            gases['CO'] = gases['CO2'] = gases['CH4'] = gases['O2'] = gases['H2'] = gases['N2'] = gases['C2H4'] = 0
+            # print(DateWise)
             for gas in DateWiseData[DateWise]:
                 gases[gas['name']]=gas['avg']
 
@@ -1846,7 +1843,8 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
                 return createdstring
 
             def markerclr(numb):
-                tot = 5  # len(graphpoints) #10
+                print('numb',numb)
+                tot = 10  # len(graphpoints) #10
                 colorstring = '#77b5fe'
                 if (numb < tot / 5):  # 2
                     colorstring = '#8a2be2'
