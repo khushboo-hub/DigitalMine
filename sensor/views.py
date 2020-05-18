@@ -134,7 +134,7 @@ def node_add(request, template_name='node/node_add.html'):
         if form.is_valid():
             form.save()
             return redirect(reverse('sensor:node_add'))
-    return render(request, template_name,{'form': form, 'action': "Add","alert": "added"})
+    return render(request, template_name, {'form': form, 'action': "Add", "alert": "added"})
 
 
 @csrf_protect
@@ -150,7 +150,7 @@ def node_edit(request, pk, template_name='node/node_add.html'):
             return redirect(reverse('sensor:node_manage'))
 
     return render(request, template_name,
-                  {'form': form,  'action': "Edit",'alert': "updated"})
+                  {'form': form, 'action': "Edit", 'alert': "updated"})
 
 
 @csrf_protect
@@ -1591,7 +1591,7 @@ import matplotlib.pyplot as plt
 import io
 import numpy as np
 from django.db.models import Avg
-from django.db.models.functions import NullIf
+from django.db.models.functions import NullIf, TruncDay
 from django.db.models import Value
 
 
@@ -1601,17 +1601,18 @@ def ellicots(request, pk, template_name='sensor/test.html'):
     data['node_id'] = pk
     return render(request, template_name, data)
 
+
 @login_required
-def locate_node(request, mine_id,node_id,template_name='sensor/test1.html'):
+def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
     data = {}
 
     data['mine_id'] = mine_id
     try:
-        node=get_object_or_404(Node,mine_id=mine_id,pk=node_id)
+        node = get_object_or_404(Node, mine_id=mine_id, pk=node_id)
         data['x'] = node.x_axis
         data['y'] = node.y_axis
     except:
-        data['error']=1
+        data['error'] = 1
         pass
     return render(request, template_name, data)
 
@@ -1630,252 +1631,251 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
         date_to = request.GET.get('date_to', None)
         date_to += " 00:00:00"
         date_to = datetime.strptime(date_to, "%Y-%m-%d %H:%M:%S").date()
-        # print(date_from, date_to)
-        day = timedelta(days=1)
-        hour = timedelta(hours=24)
         graph = []
-        i = 0;
-        while date_from <= date_to:
-            print(date_from, date_from + hour)
+        class GraphData:
+            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
+            explos = 5
+            idtest = 0
+        data_list = gasModel_auto.objects.filter(date_time__range=(
+            date_from, date_to
+        ), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),
+                                                                          avg=Avg(NullIf('sensor_value', Value(0))))
+        DateWiseData={}
+        for d in data_list:
+            DateWiseData[d['day']]=[]
+        for d in data_list:
+            list={'name':d['sensor_name'],'avg':d['avg']}
+            DateWiseData[d['day']].append(list)
 
-            data_list = gasModel_auto.objects.filter(date_time__range=(
-                date_from, date_from + hour
-            ), node_id=node_id).values('sensor_id', 'sensor_name').annotate(avg=Avg(NullIf('sensor_value', Value(0))))
-            if data_list:
-                gases = {}
+        i = 0
+        gases = {}
+        gases['CO'] = 0
+        gases['CO2'] = 0
+        gases['CH4'] = 0
+        gases['O2'] = 0
+        gases['H2'] = 0
+        gases['N2'] = 0
+        gases['C2H4'] = 0
+
+        for DateWise in DateWiseData:
+            print(DateWise)
+            for gas in DateWiseData[DateWise]:
+                gases[gas['name']]=gas['avg']
+
+            Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
+                'C2H4']
+            try:
+                gases['CO'] = (gases['CO'] / Total) * 100
+            except:
                 gases['CO'] = 0
+            try:
+                gases['CO2'] = (gases['CO2'] / Total) * 100
+            except:
                 gases['CO2'] = 0
+            try:
+                gases['CH4'] = (gases['CH4'] / Total) * 100
+            except:
                 gases['CH4'] = 0
+            try:
+                gases['O2'] = (gases['O2'] / Total) * 100
+            except:
                 gases['O2'] = 0
+            try:
+                gases['H2'] = (gases['H2'] / Total) * 100
+            except:
                 gases['H2'] = 0
+            try:
+                gases['N2'] = (gases['N2'] / Total) * 100
+            except:
                 gases['N2'] = 0
+            try:
+                gases['C2H4'] = (gases['C2H4'] / Total) * 100
+            except:
                 gases['C2H4'] = 0
 
-                for d in data_list:
-                    gases[d['sensor_name']] = d['avg']
-                    print('Data', d)
-                data = {}
-                print(gases)
-                # Percentage Values of gases
+            #####################################
 
-                Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
-                    'C2H4']
-                try:
-                    gases['CO'] = (gases['CO'] / Total) * 100
-                except:
-                    gases['CO'] = 0
-                try:
-                    gases['CO2'] = (gases['CO2'] / Total) * 100
-                except:
-                    gases['CO2'] = 0
-                try:
-                    gases['CH4'] = (gases['CH4'] / Total) * 100
-                except:
-                    gases['CH4'] = 0
-                try:
-                    gases['O2'] = (gases['O2'] / Total) * 100
-                except:
-                    gases['O2'] = 0
-                try:
-                    gases['H2'] = (gases['H2'] / Total) * 100
-                except:
-                    gases['H2'] = 0
-                try:
-                    gases['N2'] = (gases['N2'] / Total) * 100
-                except:
-                    gases['N2'] = 0
-                try:
-                    gases['C2H4'] = (gases['C2H4'] / Total) * 100
-                except:
-                    gases['C2H4'] = 0
 
-                #####################################
 
-                class GraphData:
-                    o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-                    explos = 5
-                    idtest = 0
+            graphpoints = []
 
-                graphpoints = []
+            dates = []
+            dates.append(datetime.now())
 
-                dates = []
-                dates.append(datetime.now())
+            x = GraphData()
+            x.o2 = gases['O2']  # 3.2734952481520594
+            x.co = gases['CO']  # 10.03167898627244
+            x.ch4 = gases['CH4']  # 9.820485744456176
+            x.co2 = gases['CO2']  # 14.783526927138332
+            x.h2 = gases['N2']  # 23.231256599788807
+            x.n2 = gases['N2']  # 19.1129883843717
+            x.c2h4 = gases['C2H4']  # 19.746568109820487
 
-                x = GraphData()
-                x.o2 = gases['O2']  # 3.2734952481520594
-                x.co = gases['CO']  # 10.03167898627244
-                x.ch4 = gases['CH4']  # 9.820485744456176
-                x.co2 = gases['CO2']  # 14.783526927138332
-                x.h2 = gases['N2']  # 23.231256599788807
-                x.n2 = gases['N2']  # 19.1129883843717
-                x.c2h4 = gases['C2H4']  # 19.746568109820487
+            x.explos = 5
+            pt = x.ch4 + x.co + x.h2
 
-                ##explosibility calculation again
-                idn = 1
-                x.explos = 5
-                pt = x.ch4 + x.co + x.h2
+            ch4low = 5
+            colow = 12.5
+            h2low = 4
+            ch4high = 14
+            cohigh = 74.2
+            h2high = 74.2
+            ch4nose = 5.9
+            conose = 13.8
+            h2nose = 4.3
+            ch4np = 6.07
+            conp = 4.13
+            h2np = 16.59
 
-                ch4low = 5
-                colow = 12.5
-                h2low = 4
-                ch4high = 14
-                cohigh = 74.2
-                h2high = 74.2
-                ch4nose = 5.9
-                conose = 13.8
-                h2nose = 4.3
-                ch4np = 6.07
-                conp = 4.13
-                h2np = 16.59
+            try:
+                Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
+            except ZeroDivisionError:
+                Llow = 1
+                pass
+            try:
+                Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
+            except ZeroDivisionError:
+                Lhigh = 1
+                pass
+            try:
+                Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
+            except ZeroDivisionError:
+                Lnose = 1
+                pass
+            try:
+                Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
+            except ZeroDivisionError:
+                Nex = 1
+                pass
+            # print('low high', Llow, Lhigh, Lnose, Nex)
+            Oxnose = 0.2093 * (100 - Nex - Lnose)
 
-                try:
-                    Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-                except ZeroDivisionError:
-                    Llow = 1
-                    pass
-                try:
-                    Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-                except ZeroDivisionError:
-                    Lhigh = 1
-                    pass
-                try:
-                    Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-                except ZeroDivisionError:
-                    Lnose = 1
-                    pass
-                try:
-                    Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
-                except ZeroDivisionError:
-                    Nex = 1
-                    pass
-                # print('low high', Llow, Lhigh, Lnose, Nex)
-                Oxnose = 0.2093 * (100 - Nex - Lnose)
+            ##total combustible at extinctive point
+            Le = 20.93 * Lnose / (20.93 - Oxnose)
+            ##oxygen at lower limit
+            Ob = -20.93 * Llow / 100 + 20.93
+            ##oxygen at upper limit
+            Oc = -20.93 * Lhigh / 100 + 20.93
 
-                ##total combustible at extinctive point
-                Le = 20.93 * Lnose / (20.93 - Oxnose)
-                ##oxygen at lower limit
-                Ob = -20.93 * Llow / 100 + 20.93
-                ##oxygen at upper limit
-                Oc = -20.93 * Lhigh / 100 + 20.93
+            if ((x.o2 >= 0) and (pt >= 0)):
+                if (100 * x.o2 + 20.93 * pt >= 2093):
+                    x.explos = 4
+                if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
+                    x.explos = 0
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                    x.explos = 2
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 3
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 1
 
-                if ((x.o2 >= 0) and (pt >= 0)):
-                    if (100 * x.o2 + 20.93 * pt >= 2093):
-                        x.explos = 4
-                    if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-                        x.explos = 0
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                        x.explos = 2
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * x.o2 + (
-                            Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        x.explos = 3
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * x.o2 + (
-                            Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        x.explos = 1
+            # print('EXPLOS', x.explos)
+            # 0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
 
-                # print('EXPLOS', x.explos)
-                # 0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
+            ##calculating Ellicott's Extension point
 
-                ##calculating Ellicott's Extension point
+            ##calculating new x,y coordinates after origin shift
+            xx = pt - Lnose
+            yx = x.o2 - Oxnose
 
-                ##calculating new x,y coordinates after origin shift
-                xx = pt - Lnose
-                yx = x.o2 - Oxnose
+            xp = Llow - Lnose
+            yp = Ob - Oxnose
 
-                xp = Llow - Lnose
-                yp = Ob - Oxnose
+            xq = Lhigh - Lnose
+            yq = Oc - Oxnose
 
-                xq = Lhigh - Lnose
-                yq = Oc - Oxnose
+            xs = Le - Lnose
+            ys = -Oxnose
 
-                xs = Le - Lnose
-                ys = -Oxnose
-
-                # calculating polar coordinates
-                def properarctan(valuex, valuey):
-                    print('x y', valuex, valuey)
-                    if valuex >= 0:
-                        if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                            return (360 + np.degrees(np.arctan(valuey / valuex)))
-                        else:
-                            return np.degrees(np.arctan(valuey / valuex))
+            # calculating polar coordinates
+            def properarctan(valuex, valuey):
+                print('x y', valuex, valuey)
+                if valuex >= 0:
+                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                        return (360 + np.degrees(np.arctan(valuey / valuex)))
                     else:
-                        return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
-
-                rx = np.sqrt(xx * xx + yx * yx)
-                thx = properarctan(xx, yx)
-
-                rp = np.sqrt(xp * xp + yp * yp)
-                thp = properarctan(xp, yp)
-
-                rq = np.sqrt(xq * xq + yq * yq)
-                thq = properarctan(xq, yq)
-
-                rs = np.sqrt(xs * xs + ys * ys)
-                ths = properarctan(xs, ys)
-                ##calculating r,theta values based on explosibiility
-                if x.explos == 3:
-                    rm = rx
-                    thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-                elif (x.explos == 1 or x.explos == 2):
-                    rm = rx
-                    thm = 270 + (90 * ((thx - ths) / (
-                            thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-                elif x.explos == 0:
-                    rm = rx
-                    thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
+                        return np.degrees(np.arctan(valuey / valuex))
                 else:
-                    # print('Else part')
-                    rm = 0
-                    thm = 0
-                x.elx = rm * np.cos(np.radians(thm))
-                x.ely = rm * np.sin(np.radians(thm))
-                # print('GP', x.elx, x.ely, rm, thm)
-                graphpoints.append(x)
+                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
 
-                idn = 0
+            rx = np.sqrt(xx * xx + yx * yx)
+            thx = properarctan(xx, yx)
 
-                def markercrtr(numb):
-                    createdstring = '$' + str(numb + 1) + '$'
-                    return createdstring
+            rp = np.sqrt(xp * xp + yp * yp)
+            thp = properarctan(xp, yp)
 
-                def markerclr(numb):
-                    tot = 5  # len(graphpoints) #10
-                    colorstring = '#77b5fe'
-                    if (numb < tot / 5):  # 2
-                        colorstring = '#8a2be2'
-                    elif (numb < 2 * tot / 5):  # 4
-                        colorstring = '#8db600'
-                    elif (numb < 3 * tot / 5):  # 6
-                        colorstring = '#ffff00'
-                    elif (numb < 4 * tot / 5):  # 8
-                        colorstring = '#eaa221'
-                    else:
-                        colorstring = '#ffc0cb'
-                    return colorstring
+            rq = np.sqrt(xq * xq + yq * yq)
+            thq = properarctan(xq, yq)
 
-                graph.append({
-                    'x': x.elx,
-                    'y': x.ely,
-                    'color': markerclr(i),
-                    'dates': str(date_from)
-                })
+            rs = np.sqrt(xs * xs + ys * ys)
+            ths = properarctan(xs, ys)
+            ##calculating r,theta values based on explosibiility
+            if x.explos == 3:
+                rm = rx
+                thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
+            elif (x.explos == 1 or x.explos == 2):
+                rm = rx
+                thm = 270 + (90 * ((thx - ths) / (
+                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+            elif x.explos == 0:
+                rm = rx
+                thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
+            else:
+                # print('Else part')
+                rm = 0
+                thm = 0
+            x.elx = rm * np.cos(np.radians(thm))
+            x.ely = rm * np.sin(np.radians(thm))
+            # print('GP', x.elx, x.ely, rm, thm)
+            graphpoints.append(x)
 
-            date_from += day
+            idn = 0
+
+            def markercrtr(numb):
+                createdstring = '$' + str(numb + 1) + '$'
+                return createdstring
+
+            def markerclr(numb):
+                tot = 5  # len(graphpoints) #10
+                colorstring = '#77b5fe'
+                if (numb < tot / 5):  # 2
+                    colorstring = '#8a2be2'
+                elif (numb < 2 * tot / 5):  # 4
+                    colorstring = '#8db600'
+                elif (numb < 3 * tot / 5):  # 6
+                    colorstring = '#ffff00'
+                elif (numb < 4 * tot / 5):  # 8
+                    colorstring = '#eaa221'
+                else:
+                    colorstring = '#ffc0cb'
+                return colorstring
+
+            graph.append({
+                'x': x.elx,
+                'y': x.ely,
+                'color': markerclr(i),
+                'dates': str(DateWise)
+            })
+
+
+        # date_from += day
             i += 1
         data['result'] = graph
 
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-    # return render(request,template_name,{'data':data})
+# return render(request,template_name,{'data':data})
 
 
 from django.template.defaulttags import register

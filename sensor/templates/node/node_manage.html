@@ -61,7 +61,7 @@
 
                                     <td class="text-center"><input
                                             {% if background|lookup:book.id %}checked {% endif %}
-                                            {% if not book.isgoaf %}disabled {% endif %}
+{#                                            {% if not book.isgoaf %}disabled {% endif %}#}
                                             data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
                                             id="isAcquire{{ book.id }}"
                                             data-val="{{ book.id }}" class="DataAcquisition"
@@ -78,16 +78,19 @@
                                             class="glyphicon glyphicon-plus"></span></a>
                                         <br>
                                         <br>
+                                        {% if book.isgoaf %}
                                         <a href="{% url 'sensor:ellicots' book.id %}"
                                            onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
                                            title="Generate Ellicots Graph."><span
                                                 class="glyphicon glyphicon-picture"></span></a>
                                         <br>
                                         <br>
+                                        {% endif %}
                                         <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
                                            onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
                                            title="Show Node Location"><span
-                                                class="glyphicon glyphicon-picture"></span></a>
+                                                class="glyphicon glyphicon-map-marker"></span></a>
+
 
                                     </td>
 
@@ -181,6 +184,32 @@
                     });
                 });
             })();
+
+            $('.DataAcquisition').change(function () {
+                let isAcquire = this.id;
+                let action = $('#' + isAcquire).prop("checked");
+
+                console.log('Changed', action);
+                $.ajax({
+                    type: "post",
+                    url: $(this).data('url'),
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'action': action
+                    },
+                    success: function (json) {
+                        console.log(json);
+                        if (json.hasOwnProperty("error")) {
+                            $('#' + isAcquire).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                        $('#' + isAcquire).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+                {#console.log($(this).data('val'), $(this).prop('checked'));#}
+            });
 
         });
     </script>
