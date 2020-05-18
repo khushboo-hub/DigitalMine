@@ -1,315 +1,359 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container-fluid ">
-    <div class="row">
+    <div class="container-fluid ">
+        <div class="row">
 
-        <div class="col-md-2">
-            <h3 style="">Active Miners Explorer</h3>
-            <div class="row list-group" >
-                <div class="form-group col-md-12">
+            <div class="col-md-2">
+                <h3 style="">Active Miners Explorer</h3>
+                <div class="row list-group">
+                    <div class="form-group col-md-12">
 
-                    <div class="col-md-13" id="active_miners">
+                        <div class="col-md-13" id="active_miners">
 
-                        {% for m in miners %}
-                        <ul>
-                            <li class="MinerIcon">{{m.name}}</li>
+                            {% for m in miners %}
+                                <ul>
+                                    <li class="{{ m.css }}" id="{{ m.id }}">{{ m.name }}<span
+                                            class="logged-out">●</span></li>
+                                </ul>
+                            {% endfor %}
 
-                        </ul>
-                        {% endfor %}
-
+                        </div>
                     </div>
                 </div>
-            </div>
-            <h3>Router Explorer</h3>
-            <div class="row list-group" style="height:50%;overflow-y:scroll;">
-                <div class="col-md-12">
+                <h3>Router Explorer</h3>
+                <div class="row list-group" style="height:50%;overflow-y:scroll;">
+                    <div class="col-md-12">
 
-                {% for r in routers %}
-                <ul>
-                    <li class="RouterIcon"> <a data-toggle="collapse" data-parent="#accordion1" href="#secondLink{{r.router_id}}">{{r.router_id}}</a>
-                        <ul class="RouterExplorer" id="secondLink{{r.router_id}}">
-                            <li class="loader"></li>
-                        </ul>
-                    </li>
-                </ul>
-                {% endfor %}
+                        {% for r in routers %}
+                            <ul>
+                                <li class="RouterIcon"><a data-toggle="collapse" data-parent="#accordion1"
+                                                          href="#secondLink{{ r.router_id }}">{{ r.router_id }}</a>
+                                    <ul class="RouterExplorer" id="secondLink{{ r.router_id }}">
+                                        <li class="loader"></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top:30px;">
+
+                    <li class="MinerWorkerIcon">Worker</li>
+                    <li class="MinerOfficerIcon">Officer</li>
                 </div>
             </div>
-            <div class="col-md-12" style="margin-top:30px;">
-
-                                     <li class="MinerWorkerIcon">Worker</li>
-                                     <li class="MinerOfficerIcon">Officer</li>
-                                </div>
-        </div>
-        <section class="KBmap" id="KBtestmap"></section>
-
-    </div>
-</div>
-<!--Emergency Modal-->
-<div class="modal fade" style="position:absolute" id="emergency_info" role="dialog">
-    <div class="modal-dialog modal-confirm ">
-        <div class="modal-content">
-            <div class="modal-header">
-				<div class="icon-box">
-					<i class="material-icons">&#xE5CD;</i>
-				</div>
-				<h4 class="modal-title">Danger!</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-            <div class="modal-body">
-				<p>Help the Miner</p>
-                <p id="MinerName"></p>
-                <p id="Location"></p>
-
-			</div>
+            <section class="KBmap" id="KBtestmap"></section>
 
         </div>
     </div>
-</div>
-<!--Emergency Modal End-->
-<script>
-var el;
-$( document ).ready(function() {
-    CreateKBtestMap('{{mine.imege_url}}');
-    FillRouters('{{mine.id}}');
-    Get_All_Miners_Data();
-   /* toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",
-                    }
-    */
-    FULLSCREEN();
-    setTimeout(function(){
-        ZoomButtonsInitialization();
-    }, 2000);
+    <!--Emergency Modal-->
+    <div class="modal fade" style="position:absolute" id="emergency_info" role="dialog">
+        <div class="modal-dialog modal-confirm ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="icon-box">
+                        <i class="material-icons">&#xE5CD;</i>
+                    </div>
+                    <h4 class="modal-title">Danger!</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Help the Miner</p>
+                    <p id="MinerName"></p>
+                    <p id="Location"></p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Emergency Modal End-->
+    <script>
+        var el;
+        $(document).ready(function () {
+            CreateKBtestMap('{{mine.imege_url}}');
+            FillRouters('{{mine.id}}');
+            Get_All_Miners_Data();
+            /* toastr.options = {
+                             "closeButton": false,
+                             "debug": false,
+                             "newestOnTop": true,
+                             "progressBar": false,
+                             "positionClass": "toast-top-right",
+                             "preventDuplicates": true,
+                             "onclick": null,
+                             "showDuration": "300",
+                             "hideDuration": "1000",
+                             "timeOut": "5000",
+                             "extendedTimeOut": "1000",
+                             "showEasing": "swing",
+                             "hideEasing": "linear",
+                             "showMethod": "fadeIn",
+                             "hideMethod": "fadeOut",
+                             }
+             */
+            FULLSCREEN();
+            setTimeout(function () {
+                ZoomButtonsInitialization();
+            }, 2000);
 
 
-});
+        });
 
-function FillRouters(mine_id){
-    $.ajax({
-            type:"get",
-            url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
+        function FillRouters(mine_id) {
+            $.ajax({
+                type: "get",
+                url: "{% url 'MinersTracking:fetch_miner_ajax' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
 
-                fill_map_with_routers(data.mine,data.routers);
-                return data;
-                    },
-            error: function(){
+                    fill_map_with_routers(data.mine, data.routers);
+                    return data;
+                },
+                error: function () {
                     console.log("Something Went Wrong :(");
-                 }, timeout: 3000
+                }, timeout: 3000
             });
-}
-function setImageData(mine_id){
-    let url=$("#get_url").data('url');
-        $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_map_image' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                  CreateKBtestMap(data.result.image_url);
+        }
 
-                    },
-            error: function(){
+        function setImageData(mine_id) {
+            let url = $("#get_url").data('url');
+            $.ajax({
+                type: "get",
+                url: "{% url 'Strata:fetch_map_image' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    CreateKBtestMap(data.result.image_url);
+
+                },
+                error: function () {
                     console.log("something is not right.please contact admin - 1");
-                 }
-            });
-}
-
-
-	function CreateKBtestMap(data){
-            var img=data;
-            //console.log(url);
-         if(addedKBmaps.length>0){
-            addedKBmaps.pop();
-            $('.KBmap__mapContainer').remove();
-         }
-        if(img){
-        createKBmap('KBtestmap', '/media/'+img);
-				}
-        else{
-            $("#map").css("");
-            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-        }
-    };
-function fill_dropdown(result){
-
-    $("#id_miner_id").html("<option>--Select Miner--</option>");
-    for (x in result) {
-    $("#id_miner_id").append($("<option></option>")
-                    .attr("value",result[x].rfid)
-                    .text(result[x].name));
-    }
-}
-function fill_map_with_routers(mine,routers){
-        var img=mine.image_url;
-        //console.log(url);
-        if(addedKBmaps.length>0){
-            addedKBmaps.pop();
-            $('.KBmap__mapContainer').remove();
-        }
-        if(img){
-            createKBmap('KBtestmap', '/media/'+img);
-			KBtestmap.importJSON(routers);
-			KBtestmap.showAllMapMarkers();
-	    }
-        else{
-            $("#map").css("");
-            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-        }
-}
-var KB_flag=0;
-var tempData;
-var dataTemp;
-var flag1=0;
-var el;
-function Get_All_Miners_Data(){
-
-    mine_id='{{mine.id}}';
-    var flag=0;
-    var HashDataPrev="";
-    var HashDataCurr="";
-
-    setInterval(function(){
-        //call ajax
-         $.ajax({
-            data:{'id':mine_id},
-            url: "/MinersTracking/get_all_miners_data",
-            success: function(data) {
-
-                tempData=data;
-                HashDataPrev="";
-                HashDataPrev=HashDataCurr;
-
-                HashDataCurr="";
-                for(h in data){HashDataCurr+=data[h].router_id;}
-
-                if(HashDataPrev==HashDataCurr){
-
-                    if(flag1<=1){
-                        for(x in tempData){
-                            console.log(tempData);
-                        // For the Active Miner Explorer
-                        $('div#active_miners').append('<ul><li class="'+tempData[x].iconClass+'">'+tempData[x].miner_name+'</li></ul>');
-
-                        //For the Router Explorer
-                        $('#secondLink'+tempData[x].router_id).append('<a class="jygdf" href="../single_miner_page?mine_id='+mine_id+'&&miner_id='+x+'" target="__blank"><li class="'+tempData[x].iconClass+'" id="'+x+'">'+tempData[x].miner_name+'</li></a>')}}
-                    }
-                    else{
-                        $('.RouterExplorer').empty();
-                        $('div#active_miners').empty();
-                        flag1=0;
-                    }
-                    flag1++;
-                    tempData=data;
-                    for(miner_id in data){
-                        $('.KBmap__marker.'+miner_id).remove();
-                        if(KB_flag!=0)KBtestmap.mapMarkers[miner_id].removeMarker();
-
-
-                    }
-                    KB_flag=1;
-
-                    KBtestmap.importJSON(data);
-
-                    WARNINGMINER(data);
-				return data;
-              }
-            });
-        //end call ajax
-
-    }, 3000);//time in milliseconds
-}
-var X;
-//var elem = document.getElementById("KBtestmap");
-function WARNINGMINER(data){
-       for(miner_id in data){
-                //    console.log(miner_id);
-                    if(data[miner_id].emergency=='1'){
-                      //  $('p#MinerName').html(data[miner_id].modal.title);
-                       // var rand=ra
-                       var miner_name=data[miner_id].modal.title;
-                       var router_id=data[miner_id].router_id;
-
-                      X=  toastr.info(miner_name);
-                      //  $('p#Location').html(data[miner_id].router_id);
-                       // $('#emergency_info').modal('toggle');
-                        Speak("Please Help the "+data[miner_id].modal.title,9,11);
-
-                    }
-                    else{
-                    }
-                    KBtestmap.mapMarkers[miner_id].cordX=data[miner_id].cordX;
-                    KBtestmap.mapMarkers[miner_id].cordY=data[miner_id].cordY;
-
-                    KBtestmap.mapMarkers[miner_id].show();
                 }
-}
-
-</script>
-<style>
-  .pin{
-position:absolute;
-height:25px;
-width:25px;
-background:green;
-}
-#map_div{
-<!--background-position: center;-->
-<!--background-size: contain;-->
-background-repeat: no-repeat;
-}
-
-.list-group{
-    max-height: 300px;
-
-    margin-bottom: 10px;
-    overflow:scroll;
-    -webkit-overflow-scrolling: touch;
-}
+            });
+        }
 
 
-.services li:before {
-content:'';
-display:inline-block;
-height:1em;
-width:1em;
-background-image:url('/static/image/router.svg');
-background-size:contain;
-background-repeat:no-repeat;
-padding-left: 2em;
-}
+        function CreateKBtestMap(data) {
+            var img = data;
+            //console.log(url);
+            if (addedKBmaps.length > 0) {
+                addedKBmaps.pop();
+                $('.KBmap__mapContainer').remove();
+            }
+            if (img) {
+                createKBmap('KBtestmap', '/media/' + img);
+            } else {
+                $("#map").css("");
+                $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+            }
+        };
 
-.RouterIcon {list-style-image:url('/static/image/router.svg') }
-.MinerIcon  { list-style-image:url('/static/image/miner.svg') }
-.MinerIconMini  { list-style-image:url('/static/image/miner_mini.svg') }
+        function fill_dropdown(result) {
 
-ul, ol {
-  list-style: none;
-}
-#accordion1 li.panel{
-    margin-bottom: 0px;
-}
-.MinerWorkerIcon  { list-style-image:url('/static/image/miner_worker.svg') }
-.MinerOfficerIcon  { list-style-image:url('/static/image/miner_officer.svg') }
-</style>
+            $("#id_miner_id").html("<option>--Select Miner--</option>");
+            for (x in result) {
+                $("#id_miner_id").append($("<option></option>")
+                    .attr("value", result[x].rfid)
+                    .text(result[x].name));
+            }
+        }
+
+        function fill_map_with_routers(mine, routers) {
+            var img = mine.image_url;
+            //console.log(url);
+            if (addedKBmaps.length > 0) {
+                addedKBmaps.pop();
+                $('.KBmap__mapContainer').remove();
+            }
+            if (img) {
+                createKBmap('KBtestmap', '/media/' + img);
+                KBtestmap.importJSON(routers);
+                KBtestmap.showAllMapMarkers();
+            } else {
+                $("#map").css("");
+                $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+            }
+        }
+
+        var KB_flag = 0;
+        var tempData;
+        var dataTemp;
+        var flag1 = 0;
+        var el;
+
+        function Get_All_Miners_Data() {
+
+            mine_id = '{{mine.id}}';
+            var flag = 0;
+            var HashDataPrev = "";
+            var HashDataCurr = "";
+
+            setInterval(function () {
+                //call ajax
+                $.ajax({
+                    data: {'id': mine_id},
+                    url: "/MinersTracking/get_all_miners_data",
+                    success: function (data) {
+                        tempData = data;
+                        HashDataPrev = "";
+                        HashDataPrev = HashDataCurr;
+
+                        HashDataCurr = "";
+                        for (h in data) {
+                            HashDataCurr += data[h].router_id;
+                        }
+
+                        if (HashDataPrev == HashDataCurr) {
+                            {#console.log('If Part');#}
+
+                            if (flag1 <= 1) {
+                                $('.MinerOfficerIcon').children().removeClass('logged-in').addClass('logged-out');
+                                $('.MinerWorkerIcon').children().removeClass('logged-in').addClass('logged-out')
+                                for (let x in tempData) {
+                                    $('#' + tempData[x].id).children().removeClass('logged-out').addClass('logged-in')
+
+                                    // For the Active Miner Explorer
+
+                                    {#$('div#active_miners').append('<ul><li class="' + tempData[x].iconClass + '">' + tempData[x].miner_name + '<span class="logged-in">●</span></li></ul>');#}
+
+                                    //For the Router Explorer
+
+                                    $('#secondLink' + tempData[x].router_id).append('<a class="jygdf" href="../single_miner_page?mine_id=' + mine_id + '&&miner_id=' + x + '" target="__blank"><li class="' + tempData[x].iconClass + '" id="' + x + '">' + tempData[x].miner_name + '</li></a>')
+                                }
+                            }
+                        } else {
+                            console.log('Else Part')
+                            $('.RouterExplorer').empty();
+                            {#$('div#active_miners').empty();#}
+
+                            flag1 = 0;
+                        }
+                        flag1++;
+                        tempData = data;
+                        for (miner_id in data) {
+                            if (data.hasOwnProperty(miner_id)) {
+                                if ($('.KBmap__marker.' + miner_id).remove())
+                                    if (KB_flag != 0) {
+                                        if (KBtestmap.mapMarkers.hasOwnProperty(miner_id)) {
+                                            KBtestmap.mapMarkers[miner_id].removeMarker();
+                                        }
+                                    }
+
+                            }
+                        }
+                        KB_flag = 1;
+
+                        KBtestmap.importJSON(data);
+
+                        WARNINGMINER(data);
+                        return data;
+                    }
+                });
+                //end call ajax
+
+            }, 3000);//time in milliseconds
+        }
+
+        var X;
+
+        //var elem = document.getElementById("KBtestmap");
+        function WARNINGMINER(data) {
+            for (miner_id in data) {
+                //    console.log(miner_id);
+                if (data[miner_id].emergency == '1') {
+                    //  $('p#MinerName').html(data[miner_id].modal.title);
+                    // var rand=ra
+                    var miner_name = data[miner_id].modal.title;
+                    var router_id = data[miner_id].router_id;
+
+                    X = toastr.info(miner_name);
+                    //  $('p#Location').html(data[miner_id].router_id);
+                    // $('#emergency_info').modal('toggle');
+                    Speak("Please Help the " + data[miner_id].modal.title, 9, 11);
+
+                } else {
+                }
+                KBtestmap.mapMarkers[miner_id].cordX = data[miner_id].cordX;
+                KBtestmap.mapMarkers[miner_id].cordY = data[miner_id].cordY;
+
+                KBtestmap.mapMarkers[miner_id].show();
+            }
+        }
+
+    </script>
+    <style>
+        .pin {
+            position: absolute;
+            height: 25px;
+            width: 25px;
+            background: green;
+        }
+
+        #map_div {
+        <!-- background-position: center;
+        --> <!-- background-size: contain;
+        --> background-repeat: no-repeat;
+        }
+
+        .list-group {
+            max-height: 300px;
+
+            margin-bottom: 10px;
+            overflow: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+
+        .services li:before {
+            content: '';
+            display: inline-block;
+            height: 1em;
+            width: 1em;
+            background-image: url('/static/image/router.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            padding-left: 2em;
+        }
+
+        .RouterIcon {
+            list-style-image: url('/static/image/router.svg')
+        }
+
+        .MinerIcon {
+            list-style-image: url('/static/image/miner.svg')
+        }
+
+        .MinerIconMini {
+            list-style-image: url('/static/image/miner_mini.svg')
+        }
+
+        ul, ol {
+            list-style: none;
+        }
+
+        #accordion1 li.panel {
+            margin-bottom: 0px;
+        }
+
+        .MinerWorkerIcon {
+            list-style-image: url('/static/image/miner_worker.svg')
+        }
+
+        .MinerOfficerIcon {
+            list-style-image: url('/static/image/miner_officer.svg')
+        }
+
+        .logged-in {
+            color: green;
+        }
+
+        .logged-out {
+            color: red;
+        }
+    </style>
 {% endblock %}
 

@@ -276,16 +276,33 @@ def all_mine_page(request, template_name='MinersTracking/all_mine_page.html'):
     return render(request, template_name, {'object_list': book})
 
 
+import hashlib
+
 @login_required
 def live_tracking_in_map(request, mine_id, template_name='MinersTracking/live_tracking_in_map.html'):
+    # print('Here')
     data = {}
     mine_data = MineDetails.objects.filter(id=mine_id)[0]
     data['mine'] = mine_data
     routers = TrackingRouter.objects.filter(mine_id_id=mine_id)
     data['routers'] = routers
     miners = Employee.objects.filter(mine_id=mine_id)
-    print(miners)
-    data['miners'] = miners
+    miner=[]
+    for m in miners:
+        try:
+            mining_role_details = MiningRole.objects.get(id=m.mining_role_id)
+            mining_role = mining_role_details.type
+        except:
+            mining_role='officer'
+            pass
+        if mining_role == 'worker':
+            css = 'MinerWorkerIcon'
+        elif mining_role == 'officer':
+            css = 'MinerOfficerIcon'
+        hash_object = hashlib.sha512(str(m.id).encode())
+        miner.append({'id':hash_object.hexdigest(),'name':m.name,'css':css})
+
+    data['miners'] = miner
 
     return render(request, template_name, data)
 
@@ -599,6 +616,8 @@ def get_all_miners_data(request):
                         icon='/static/image/miner_officer.svg'
 
                     single_miner_data['icon'] = icon
+                    hash_object = hashlib.sha512(str(m.id).encode())
+                    single_miner_data['id']=hash_object.hexdigest()
                     single_miner_data['iconClass']=iconClass
                     single_miner_data['router_id']=str(router_details.router_id)
                     current_time=datetime.datetime.now()
