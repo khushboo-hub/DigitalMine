@@ -71,7 +71,7 @@
                                             data-offstyle="danger"></td>
 
                                     <td class="text-center"><a
-                                            href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
+                                            href="{% url 'sensor:manage_sensor' book.mine_id.id|encrypt book.id|encrypt %}"
                                             class="manageSensor"
                                             data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
                                             title="Manage Sensor"><span
@@ -94,7 +94,7 @@
 
                                     </td>
 
-                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
+                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id|encrypt %}"
                                                                class="editRouter"
                                                                data-url="{% url 'sensor:node_edit' book.id %}"
                                                                title="Edit Router."><span

@@ -28,10 +28,10 @@ def home(request):
         pass
     # sms.SEND(8083475746, "Hello World")
     current_user = request.user
-    book = get_object_or_404(User, pk=current_user.id)
+    # book = get_object_or_404(User, pk=current_user.id)
     profile = {}
     try:
-        profile = profile_extension.objects.get(user_id=book)
+        profile = profile_extension.objects.get(user_id=current_user.id)
         cache.set('profile_avatar', profile.profile_avatar, 3600)
 
     except:
