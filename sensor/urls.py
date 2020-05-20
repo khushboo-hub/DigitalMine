@@ -17,10 +17,10 @@ urlpatterns = [
   path('node_add', views.node_add, name='node_add'),
   path('node_edit/<str:pk>', views.node_edit, name='node_edit'),
   path('node_delete/', views.node_delete, name='node_delete'),
-  path('ellicots/<int:pk>',views.ellicots,name='ellicots'),
+  path('ellicots/<str:pk>',views.ellicots,name='ellicots'),
   path('ellicots_ajax',views.ellicots_ajax,name='ellicots_ajax'),
 
-  path('locate_node/<int:mine_id>/<int:node_id>',views.locate_node,name='locate_node'),
+  path('locate_node/<str:mine_id>/<str:node_id>',views.locate_node,name='locate_node'),
 
   path('fetch_node_ajax', views.fetch_node_ajax, name='fetch_node_ajax'),
 
@@ -31,8 +31,8 @@ urlpatterns = [
   path('manage_sensor/<str:mine_id>/<str:node_id>', views.manage_sensor, name='manage_sensor'),
 
   path('add_sensor/<int:mine_id>/<int:node_id>', views.add_sensor, name='add_sensor'),
-  path('delete_sensor/<int:pk>/<int:node_id>', views.delete_sensor, name='delete_sensor'),
-  path('edit_sensor/<int:pk>/<int:node_id>', views.edit_sensor, name='edit_sensor'),
+  path('delete_sensor/<str:pk>', views.delete_sensor, name='delete_sensor'),
+  path('edit_sensor/<str:pk>/<str:node_id>', views.edit_sensor, name='edit_sensor'),
   # path('background_view/<int:pk>', views.background_view, name='background_view'),
   path('live_data_tabular', views.live_data_tabular, name='live_data_tabular'),
   # path('background_data', views.background_data, name='background_data'),

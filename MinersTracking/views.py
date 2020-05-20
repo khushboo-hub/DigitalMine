@@ -65,6 +65,12 @@ def update_router(request, pk, template_name='MinersTracking/update_router.html'
     return render(request, template_name, {'form': form, 'object_list': books,'pk':pk})
 
 
+def test(request,template_name="MinersTracking/test.html"):
+    data={}
+    Mines=get_object_or_404(MineDetails,id=1)
+    data['image']=Mines.mine_map_image
+    return render(request,template_name,data)
+
 @csrf_protect
 @login_required
 def create_router(request):
@@ -406,51 +412,51 @@ def fetch_miner_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        miner_details = Employee.objects.values_list().filter(mine_id=mine_id)
-        router_details = TrackingRouter.objects.values_list().filter(mine_id=mine_id)
-        mine_details = MineDetails.objects.values_list().filter(id=mine_id)
+        miner_details = Employee.objects.filter(mine_id=mine_id)
+        router_details = TrackingRouter.objects.filter(mine_id=mine_id)
+        mine_details = MineDetails.objects.filter(id=mine_id)
 
         miner_data = {}
         mine_data = {}
-        for r in miner_details:
+        for m in miner_details:
             miner_data_temp = {}
-            miner_data["Miner" + str(r[0])] = {}
+            miner_data["Miner" + str(m.id)] = {}
             ###0-id,2-name,15-rfid
-            miner_data_temp['name'] = str(r[2])
-            miner_data_temp['rfid'] = str(r[15])
-            miner_data["Miner" + str(r[0])] = miner_data_temp
+            miner_data_temp['name'] = str(m.name)
+            miner_data_temp['rfid'] = str(m.rfid)
+            miner_data["Miner" + str(m.id)] = miner_data_temp
             # miner_data.append(str(r[0])+','+str(r[2])+','+str(r[15]))
 
         router_datas = {}
-        for xx in router_details:
+        for r in router_details:
             router_data = {}
-            str_new = "mapMarker" + str(xx[0])
+            str_new = "mapMarker" + str(r.id)
             router_datas[str_new] = {}
-            router_data['cordX'] = str(xx[6])
-            router_data['cordY'] = str(xx[7])
+            router_data['cordX'] = str(r.x_axis)
+            router_data['cordY'] = str(r.y_axis)
             icon='/static/image/router.svg'
-            if xx[5] == 'Yes':
+            if r.is_block == 'Yes':
                 icon='/static/image/blockedrouter.svg'
-            elif xx[5] == 'No':
+            elif r.is_block == 'No':
                 icon='/static/image/router.svg'
             router_data['icon'] = icon
-            router_model_data = {'title': str(xx[2]), 'content': str(xx[4])}
+            router_model_data = {'title': str(r.router_id), 'content': "<b>Address: </b>"+str(r.address)+"<br><b>Location: </b>"+str(r.location)}
             router_data['modal'] = router_model_data
             router_datas[str_new] = router_data
             ###0-id,2-router_routerrend(str(xx[0])+','+str(xx[2])+','+str(xx[3])+','+str(xx[4])+','+str(xx[5])+','+str(xx[8])+','+str(xx[6])+','+str(xx[7]))
 
         for mm in mine_details:
             ###1-mine_name,6-map
-            mine_data['name'] = str(mm[1])
-            mine_data['image_url'] = str(mm[6])
+            mine_data['name'] = str(mm.name)
+            mine_data['image_url'] = str(mm.mine_map_image)
             # mine_data.append(str(mm[1])+','+str(mm[6]))
-        for r in router_details:
-            router_name=str(r[2])
-            miners_in_router={}
-            #print(router_name)
-
-            #for mmr in miners_in_router:
-                # print(mmr)
+        # for r in router_details:
+        #     router_name=str(r[2])
+        #     miners_in_router={}
+        #     #print(router_name)
+        #
+        #     #for mmr in miners_in_router:
+        #         # print(mmr)
 
         data['result'] = miner_data
         data['routers'] = router_datas

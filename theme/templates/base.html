@@ -3,17 +3,17 @@
 <head>
     {% load static %}
 
-    < <title>Digital Mine (IoT) | CSIR-CIMFR</title>
+     <title>Digital Mine (IoT) | CSIR-CIMFR</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+     <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
-    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">
+
+{#    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">#}
 
 
 
@@ -341,7 +341,7 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-                                <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
+                                <li><a href="{% url 'sensor:node_add'  %}">Add Wireless Node<sub></sub></a></li>
                                 <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a></li>
 
                                 <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>

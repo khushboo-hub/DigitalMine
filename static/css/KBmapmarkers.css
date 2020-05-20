@@ -68,13 +68,56 @@
       -webkit-animation-iteration-count: infinite;
               animation-iteration-count: infinite; }
 
+.flipInY {
+    -webkit-backface-visibility: visible!important;
+    backface-visibility: visible!important;
+    -webkit-animation-name: flipInY;
+    animation-name: flipInY;
+}
+
+.animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+@keyframes flipInY{
+  0% {
+      -webkit-transform: perspective(400px) rotateY(90deg);
+      transform: perspective(400px) rotateY(90deg);
+      opacity: 0;
+  }
+  0%, 40% {
+      -webkit-animation-timing-function: ease-in;
+      animation-timing-function: ease-in;
+  }
+  40% {
+      -webkit-transform: perspective(400px) rotateY(-20deg);
+      transform: perspective(400px) rotateY(-20deg);
+  }
+  60% {
+      -webkit-transform: perspective(400px) rotateY(10deg);
+      transform: perspective(400px) rotateY(10deg);
+      opacity: 1;
+  }
+  80% {
+      -webkit-transform: perspective(400px) rotateY(-5deg);
+      transform: perspective(400px) rotateY(-5deg);
+  }
+  100% {
+      -webkit-transform: perspective(400px);
+      transform: perspective(400px);
+  }
+}
+
 .KBmap__markerContent {
   width: 300px;
-  background-color: #9ea18e;
+  background-color: #00bcd4c4;
   display: inline-block;
-  border-radius: 15px;
-  padding: 25px;
+  border-radius: 10px;
+  padding: 20px;
   padding-bottom: 05px;
+
   -webkit-box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.15);
           box-shadow: 0px 0px 15px 3px rgba(0, 0, 0, 0.15);
   position: absolute;
@@ -84,7 +127,7 @@
   box-sizing: border-box;         /* Opera/IE 8+ */
   z-index: 1; }
   .KBmap__markerContent .KBmap__markerTitle {
-        margin-top: 0px;
+    margin-top: 0px;
     margin-bottom: .5em; }
 
 .KBmap__markerContentItem {

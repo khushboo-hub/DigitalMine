@@ -10,6 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import ModelForm
 
+from apps import settings
 from gasmonitoring_wifi.models import Fire_exp_gasesWifi
 from .models import Node, Wireless, Sensor_Node, gasModel_auto
 from .models import MineDetails
@@ -284,7 +285,8 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
                    'mine_name': mine_name, 'mine': mine_id, 'action': 'ADD'})
 
 
-def delete_sensor(request, pk, node_id):
+def delete_sensor(request, pk):
+    pk=decrypt(pk)
     book = get_object_or_404(Sensor_Node, pk=pk)
     book.delete()
     return redirect(request.META.get('HTTP_REFERER'))
@@ -292,6 +294,8 @@ def delete_sensor(request, pk, node_id):
 
 def edit_sensor(request, pk, node_id,
                 template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
+    pk=decrypt(pk)
+    node_id=decrypt(node_id)
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     mine_id = mine_table.mine_id_id
@@ -304,7 +308,7 @@ def edit_sensor(request, pk, node_id,
     if form.is_valid():
         form.save()
 
-        return redirect('/sensor/manage_sensor/' + str(mine_id) + "/" + str(node_id))
+        return redirect('/sensor/manage_sensor/' + encrypt(mine_id) + "/" + encrypt(node_id))
     return render(request, template_name,
                   {'form': form, 'node_name': node_name, 'node_id': node_id,
                    'mine_name': mine_name, 'mine': mine_id, 'action': 'EDIT'})
@@ -1602,12 +1606,15 @@ from django.db.models import Value
 @login_required
 def ellicots(request, pk, template_name='sensor/test.html'):
     data = {}
+    pk=decrypt(pk)
     data['node_id'] = pk
     return render(request, template_name, data)
 
 
 @login_required
 def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
+    mine_id=decrypt(mine_id)
+    node_id=decrypt(node_id)
     data = {}
 
     data['mine_id'] = mine_id
@@ -1633,6 +1640,7 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
     data = {}
     if request.is_ajax():
         node_id = request.GET.get('id', None)
+        node_id=decrypt(node_id)
         date_from = request.GET.get('date_from', None)
         date_from += " 00:00:00"
         date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
@@ -1897,6 +1905,9 @@ def get_item(dictionary, key):
 def encrypt(key):
     return encrypt(key)
 
+@register.filter(name='decrypt')
+def decrypt(key):
+    return decrypt(key)
 
 def isNum(data):
     try:
@@ -1909,14 +1920,14 @@ def isNum(data):
 from cryptography.fernet import Fernet
 import base64
 
-ENCRYPT_KEY = b'zuXLx4c01oe15FstyxBPqyjgC0RKbzMEPZKA--bUHyI='
+
 
 def encrypt(txt):
     try:
         # convert integer etc to string first
         txt = str(txt)
         # get the key from settings
-        cipher_suite = Fernet(ENCRYPT_KEY)  # key should be byte
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)  # key should be byte
         # #input should be byte, so convert the text to byte
         encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
         # encode to urlsafe base64 format
@@ -1932,10 +1943,34 @@ def decrypt(txt):
     try:
         # base64 decode
         txt = base64.urlsafe_b64decode(txt)
-        cipher_suite = Fernet(ENCRYPT_KEY)
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)
         decoded_text = cipher_suite.decrypt(txt).decode("ascii")
         return decoded_text
     except Exception as e:
         # log the error
         print(e)
         return None
+
+from django.core.signing import Signer
+
+@register.filter(name="signed")
+def signed(txt,id):
+    id=id%26
+    temp_text=""
+    for t in txt:
+        ch = bytes(t, 'utf-8')
+        s = bytes([ch[0] + int(id)])
+        s=str(s)
+        temp_text+=s[2]
+    return temp_text
+
+@register.filter(name="unsigned")
+def unsigned(txt,id):
+    id=id%26
+    temp_text=""
+    for t in txt:
+        ch = bytes(t, 'utf-8')
+        s = bytes([ch[0] - int(id)])
+        s=str(s)
+        temp_text+=s[2]
+    return temp_text

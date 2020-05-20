@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '0ux_%=7!81&z=^uj5iw@tue#7zkfn9lk)=*d147(g+$5t$l9nz'
+ENCRYPT_KEY = b'zuXLx4c01oe15FstyxBPqyjgC0RKbzMEPZKA--bUHyI='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -238,7 +239,7 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 def show_toolbar(request):
-    return True
+    return False
 
 DEBUG_TOOLBAR_CONFIG={
     'INTERCEPT_REDIRECTS':False,
