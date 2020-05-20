@@ -21,11 +21,13 @@ STATE = (
 )
 
 class MiningRoleForm(forms.ModelForm):
-    def __init__(self, mine_id, *args, **kwargs):
+    def __init__(self, mine_id,parent=None, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
-        self.fields['parent_role'] = forms.ModelChoiceField(
-            queryset=MiningRole.objects.filter(mine_id=mine_id)
-        )  #Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
+        if not parent:
+            self.fields['parent_role'] = forms.ModelChoiceField(
+                queryset=MiningRole.objects.filter(mine_id=mine_id)
+            )  #
+
     name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Mining Role Name (ex: GM,Manager,Foreman,Level Incharge)'
@@ -40,10 +42,10 @@ class MiningRoleForm(forms.ModelForm):
     )
     type = forms.ChoiceField(required=False, choices=MINING_TYPE1, widget=forms.RadioSelect())
 
-    parent_role = forms.CharField(required=False,
-                                  widget=forms.Select(choices=MiningRole.objects.all().values_list('id', 'name'),
-                                                      attrs={'class': 'form-control',
-                                                             }))
+    # parent_role = forms.CharField(required=False,
+    #                               widget=forms.Select(choices=MiningRole.objects.all().values_list('id', 'name'),
+    #                                                   attrs={'class': 'form-control',
+    #                                                          }))
     class Meta():
         model = MiningRole
         widgets = {

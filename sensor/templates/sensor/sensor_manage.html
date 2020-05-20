@@ -2,21 +2,6 @@
 
 {% block content %}
 
-<!--<h2>Manage Employee</h2>-->
-
-<!--<ul>-->
-    <!--{% for book in object_list %}-->
-    <!--<li>{{ book.fname }}  ({{ book.age }} )-->
-    <!--<a href="{% url 'employee:employee_edit' book.id %}">edit</a>-->
-    <!--<a href="{% url 'employee:employee_delete' book.id %}">delete</a>-->
-    <!--</li>-->
-    <!--{% endfor %}-->
-<!--</ul>-->
-
-<!--<a href="{% url 'employee:employee_add' %}">New</a>-->
-
-
-
 <div class="container">
     <div class="row">
 <section class="col-md-12">
@@ -49,6 +34,7 @@
                             <th class="text-center" colspan="2">Action</th>
                         </tr>
                     </thead>
+
                     <tbody>
                             {% for book in object_list %}
                         <tr>

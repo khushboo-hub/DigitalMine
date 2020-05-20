@@ -12,4 +12,5 @@ urlpatterns = [
     path('delete_constant/<int:id>', views.delete_constant,name='delete_constant'),
     path('globalWarningFunction', views.globalWarningFunction,name='globalWarningFunction'),
     path('change_language/<str:lang>',views.change_language,name="change_language"),
+    path('check',views.checkNotification,name='checkNotification'),
 ]

@@ -1,4 +1,4 @@
-<!doctype html>
+{#<!doctype html>#}
 <html lang="en">
 <head>
     {% load static %}
@@ -112,27 +112,6 @@
             font-family: "Times New Roman", Times, serif;
             src: url('/static/fonts/thewitcher-4.ttf') format('truetype')
         }
-
-        .KBmap__markerTitle {
-            font-family: witcher;
-            color: #56270c;
-        }
-
-        .KBmap__mapContainer {
-            height: 100vh;
-            max-height: 100vh;
-        }
-
-        .KBmap__mapHolder {
-            height: 100%;
-            box-shadow: 10px 10px 5px #aaaaaa;
-        }
-
-        .KBmap__mapHolder img {
-            width: auto;
-            height: 100%;
-        }
-
         h1 {
             text-align: center;
             margin-top: 150px;
@@ -294,7 +273,7 @@
                             </a>
                             <ul class="dropdown-menu  navbar-color">
 
-                                <li><a href="{% url 'MinersTracking:init' %}">Router Config.</a></li>
+                                <li><a href="{% url 'MinersTracking:init' %}">Router Configuration</a></li>
 
                                 <li><a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Tracking in
                                     Tabular</a></li>
@@ -314,7 +293,8 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-                                <li><a href="{% url 'sensor:node_add' %}">Add & Manage Wireless Node<sub></sub></a></li>
+                                <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
+                                 <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a></li>
 
                                 <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
                                 <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
@@ -691,21 +671,21 @@
     </div> <!-- end menu-dropdown -->
 </div>
 
-<div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8" id="is_visiable" style="display:none">
-        <div class="alert alert-danger fade in alert-dismissible">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
-            <strong>Warning !!!</strong>
-            <hr/>
-            <div id="fill_here"></div>
-        </div>
-    </div>
-    <div class="col-md-2"></div>
-</div>
-<div class="row" style="display:none;">
-    <iframe id="myframe"></iframe>
-</div>
+{#<div class="row">#}
+{#    <div class="col-md-2"></div>#}
+{#    <div class="col-md-8" id="is_visiable" style="display:none">#}
+{#        <div class="alert alert-danger fade in alert-dismissible">#}
+{#            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>#}
+{#            <strong>Warning !!!</strong>#}
+{#            <hr/>#}
+{#            <div id="fill_here"></div>#}
+{#        </div>#}
+{#    </div>#}
+{#    <div class="col-md-2"></div>#}
+{#</div>#}
+{#<div class="row" style="display:none;">#}
+{#    <iframe id="myframe"></iframe>#}
+{#</div>#}
 <div class="main">
     <div id="content">
         {% block content %}

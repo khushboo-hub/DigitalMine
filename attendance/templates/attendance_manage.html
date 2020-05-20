@@ -1,149 +1,161 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header text-center">Miners' Attendence Records</h1>
-            <p class="text-center text-muted">&nbsp&nbsp&nbspHere you can see the miners' attendance records in tabular
-                format</p>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header text-center">Miners' Attendence Records</h1>
+                <p class="text-center text-muted">&nbsp&nbsp&nbspHere you can see the miners' attendance records in
+                    tabular
+                    format</p>
 
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <div class="form-group col-md-12">
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-2">
+                                        <label for="" class="" id="">1. Choose Mine:</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        {{ form.mine }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row" id="dataAndTime">
+                                <div class="col-md-2"></div>
+                                <div class="col-md-3" style="">
+
+                                    <label>Date &amp; Time (From) (Approx.)</label>
+
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker6'>
+                                            <input type='text' class="form-control"/>
+                                            <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2" style=""></div>
+                                <div class="col-md-3" style="">
+
+                                    <label>Date &amp; Time (To) (Approx.)</label>
+
+                                    <div class="form-group">
+                                        <div class='input-group date' id='datetimepicker7'>
+                                            <input type='text' class="form-control"/>
+                                            <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             <div class="col-md-12">
-                                <div class="col-md-2">
-                                    <label for="" class="" id="">1. Choose Mine:</label>
-                                </div>
-                                <div class="col-md-9">
-                                    {{form.mine}}
+                                <div class="text-center">
+                                    <button type="button" id="show" class="btn btn-success" value="Show">Show</button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="miners_attendance_table">
+                        <thead>
+                        <tr>
+                            <th>SL No.</th>
+                            <th>Mine</th>
+                            <th>Shift</th>
+                            <th>Employee Name</th>
+                            <th>Date</th>
+                            <th>Present / Absent</th>
+                            <th>Leave Type</th>
+                            <th>No. of Leaves</th>
+                        </tr>
+                        </thead>
+                        <tbody id="miner_attendance_body">
 
-                        <br>
-                        <div class="row" id="dataAndTime">
-                        <div class="col-md-2"></div>
-                            <div class="col-md-3" style="">
-
-                                <label>Date &amp; Time (From) (Approx.)</label>
-
-                                <div class="form-group">
-                                    <div class='input-group date' id='datetimepicker6'>
-                                        <input type='text' class="form-control"/>
-                                        <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2" style=""></div>
-                            <div class="col-md-3" style="">
-
-                                <label>Date &amp; Time (To) (Approx.)</label>
-
-                                <div class="form-group">
-                                    <div class='input-group date' id='datetimepicker7'>
-                                        <input type='text' class="form-control"/>
-                                        <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-md-12"><div class="text-center">
-                            <button type="button" id="show" class="btn btn-success" value="Show">Show</button>
-                        </div></div>
-                    </form>
+                        </tbody>
+                    </table>
+                    <div>
+                        <span id="no_data" class="blinking text-center"></span>
+                        <!--<span class="blinking text-center"><h2><b>Live Data Updating</b></h2></span>-->
+                    </div>
                 </div>
-            </div><!--end Table content -->
-            <br>
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover" id="miners_attendance_table">
-                    <thead>
-                    <tr>
-                         <th>SL No.</th>
-                        <th>Mine</th>
-                        <th>Shift</th>
-                        <th>Employee Name</th>
-                        <th>Date</th>
-                        <th>Present / Absent</th>
-                        <th>Leave Type</th>
-                        <th>No. of Leaves</th>
-                    </tr>
-                    </thead>
-                    <tbody id="miner_attendance_body">
-
-                    </tbody>
-                </table>
-                <div>
-                    <span id="no_data" class="blinking text-center"></span>
-                    <!--<span class="blinking text-center"><h2><b>Live Data Updating</b></h2></span>-->
-                </div>
-            </div>
 
 
-        </section>
+            </section>
+
+        </div>
+        <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
 
     </div>
-    <div id="chartContainer" style="height: 370px; width: 100%;"></div>
 
 
-</div>
+    <style>
+        .blinking {
+            animation: blinkingText 1.0s infinite;
+        }
+
+        @keyframes blinkingText {
+            0% {
+                color: #24D52C;
+            }
+            49% {
+                color: transparent;
+            }
+            50% {
+                color: transparent;
+            }
+            99% {
+                color: transparent;
+            }
+            100% {
+                color: #F10F27;
+            }
+        }
 
 
-<style>
-.blinking{
-    animation:blinkingText 1.0s infinite;
-}
-@keyframes blinkingText{
-    0%{     color: #24D52C;    }
-    49%{    color: transparent; }
-    50%{    color: transparent; }
-    99%{    color:transparent;  }
-    100%{   color: #F10F27;    }
-}
+    </style>
+    <script>
+        $(document).ready(function () {
 
+            $("select#id_mine").addClass('form-control');
+            $('select#id_mine').append('<option selected value="None">All</option>')
 
-
-
-
-</style>
-<script>
-var TabularData;
-$(document).ready(function(){
-
-        $("select#id_mine").addClass('form-control');
-        $('select#id_mine').append('<option selected value="None">All</option>')
-<!--        $('#show').addClass('disabled')-->
-
-        $("#id_mine_id").on("change",function(){
-            //$('#show').unbind('click');
+            $("#id_mine_id").on("change", function () {
                 $('#show').html("Show");
                 $(".Loadingcontainer").addClass("hide");
                 clearInterval(TabularData);
-            if($(this).val()==''){$('#show').addClass('disabled');}else{$('#show').removeClass('disabled');}
-        });
-         $(function () {
-        //Date And Time Picker Initialization
-                var date_from=$('#datetimepicker6').datetimepicker({
-                     format: 'YYYY-MM-DD'
+                if (isEmpty($(this).val())) {
+                    $('#show').addClass('disabled');
+                } else {
+                    $('#show').removeClass('disabled');
+                }
+            });
+            $(function () {
+                //Date And Time Picker Initialization
+                let date_from = $('#datetimepicker6').datetimepicker({
+                    format: 'YYYY-MM-DD'
                 });
-                date_from.children()[0].id="id_date_fr";
-                date_from.children()[0].required="true";
+                date_from.children()[0].id = "id_date_fr";
+                date_from.children()[0].required = "true";
 
-                var date_to= $('#datetimepicker7').datetimepicker({
+                let date_to = $('#datetimepicker7').datetimepicker({
                     format: 'YYYY-MM-DD',
                     useCurrent: false //Important! See issue #1075
                 });
 
-                date_to.children()[0].id="id_date_to";
-                date_to.children()[0].required="true";
+                date_to.children()[0].id = "id_date_to";
+                date_to.children()[0].required = "true";
 
                 $("#datetimepicker6").on("dp.change", function (e) {
                     $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
@@ -151,57 +163,56 @@ $(document).ready(function(){
                 $("#datetimepicker7").on("dp.change", function (e) {
                     $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
                 });
-        });
+            });
 
-        //Date and Time Picker Initialization End
-});
-var Curr_Time,Last_Time;
-$("#show").click(function(event){
-    $('#miners_attendance_table').DataTable().destroy();
-     Last_Time=new Date();
-     mine_id=$("#id_mine").val();
-     if(mine_id==''){
-        return false;
-     }
-    date_from=$('#id_date_fr').val();
-    date_to=$('#id_date_to').val();
+            //Date and Time Picker Initialization End
 
-    today=new Date();
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-    var hh=String(today.getHours()).padStart(2, '0');;
-    var min=String(today.getMinutes()).padStart(2, '0');;
-    var sec=String(today.getSeconds()).padStart(2, '0');
+            let Curr_Time, Last_Time;
+            $("#show").click(function (event) {
+                $('#miners_attendance_table').DataTable().destroy();
+                Last_Time = new Date();
+                let mine_id = $("#id_mine").val();
+                if (isEmpty(mine_id)) {
+                    return false;
+                }
+                let date_from = $('#id_date_fr').val();
+                let date_to = $('#id_date_to').val();
 
+                let today = new Date();
+                let dd = String(today.getDate()).padStart(2, '0');
+                let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+                let yyyy = today.getFullYear();
+                let hh = String(today.getHours()).padStart(2, '0');
+                let min = String(today.getMinutes()).padStart(2, '0');
+                let sec = String(today.getSeconds()).padStart(2, '0');
 
-    if(isEmpty(date_from)){
-            date_from="1999-01-01";
-    }
-    if(isEmpty(date_to)){
-        date_to="2999-01-01";
-    }
+                if (isEmpty(date_from)) {
+                    date_from = "1999-01-01";
+                }
+                if (isEmpty(date_to)) {
+                    date_to = "2999-01-01";
+                }
 
+                $.ajax({
+                    url: "/attendance/ajax_show_attendence",
+                    data: {
+                        'mine_id': mine_id,
+                        'date_from': date_from,
+                        'date_to': date_to
+                    },
+                    beforeSend: function () {
+                        $("#miner_attendance_body").empty();
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if (isEmpty(data.result)) {
+                            toastr.info('No data Found');
+                            return data;
+                        }
+                        fill_table_miner(data.result)
 
-        <!--$("#miner_body").html("");-->
-         $.ajax({
-            url: "/attendance/ajax_show_attendence",
-            data: {  'mine_id':mine_id,
-                     'date_from':date_from,
-                     'date_to':date_to
-                   },
-            success: function(data) {
-                    console.log(data)
-                    $("#miner_attendance_body").empty();
-                 if(isEmpty(data.result)){
-                    toastr.info('No data Found');
-                    return data;
-                 }
-                    fill_table_miner(data.result)
-
-                    $('#miners_attendance_table').DataTable({
-                            "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+                        $('#miners_attendance_table').DataTable({
+                            "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
                             retrieve: true,
                             paging: true,
                             searching: true,
@@ -210,11 +221,11 @@ $("#show").click(function(event){
                             buttons: [
                                 'copy', 'csv', 'excel', 'pdf', 'print'
                             ]
-                    });
-                    $('#miners_attendance_table_length select').addClass('form-control');
-                    $('#miners_attendance_table_filter input').addClass('form-control');
+                        });
+                        $('#miners_attendance_table_length select').addClass('form-control');
+                        $('#miners_attendance_table_filter input').addClass('form-control');
 
-                    var chart = new CanvasJS.Chart("chartContainer", {
+                        var chart = new CanvasJS.Chart("chartContainer", {
                             animationEnabled: true,
                             title: {
                                 text: "Miners' Attendance Graphical Representation"
@@ -225,34 +236,38 @@ $("#show").click(function(event){
                                 yValueFormatString: "##0.00\"%\"",
                                 indexLabel: "{label} {y}",
                                 dataPoints: [
-                                    {y: (data.present/data.total)*100,z:10, label: "Present"},
-                                    {y: (data.absent/data.total)*100,z:10, label: "Absent"},
+                                    {y: (data.present / data.total) * 100, z: 10, label: "Present"},
+                                    {y: (data.absent / data.total) * 100, z: 10, label: "Absent"},
                                 ]
                             }]
                         });
                         chart.render();
-                 return data;
+                        return data;
                     }
+                });
+
+
+                function fill_table_miner(result) {
+                    console.log(result);
+                    var response_data, emergency, item, emergency_class;
+
+                    for (r in result) {
+                        if (result.hasOwnProperty(r)) {
+                            emergency = (result[r].ab_pr == 'Absent') ? "Absent" : "Present";
+                            emergency_class = (result[r].ab_pr == 'Absent') ? "label-danger" : "label-success";
+                            item = $("<tr><td>" + result[r].id + "</td><td>" + result[r].mine_name + "</td><td>" + result[r].shift_name + "</td><td>" + result[r].emp_name + "</td><td>" + result[r].date + "</td><td><span class='label " + emergency_class + "'>" + emergency + "</span></td><td>" + result[r].leave_type + "</td><td>" + result[r].leave_no + "</td></tr>")
+                                .hide()
+                                .fadeIn(1000);
+                            $("#miner_attendance_body").append(item);
+                        }
+                    }
+                }
+
             });
+        });
 
-
-function fill_table_miner(result){
-    console.log(result);
-    var response_data,emergency,item,emergency_class;
-
-     for(r in result){
-        emergency=(result[r].ab_pr=='Absent')?"Absent":"Present";
-        emergency_class=(result[r].ab_pr=='Absent')?"label-danger":"label-success";
-       item=$("<tr><td>"+result[r].id+"</td><td>"+result[r].mine_name+"</td><td>"+result[r].shift_name+"</td><td>"+result[r].emp_name+"</td><td>"+result[r].date+"</td><td><span class='label "+emergency_class+"'>"+emergency+"</span></td><td>"+result[r].leave_type+"</td><td>"+result[r].leave_no+"</td></tr>")
-        .hide()
-        .fadeIn(1000);
-        $("#miner_attendance_body").append(item);
-    }}
-
-});
-var XX;
-</script>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    </script>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
 {% endblock %}
 

@@ -7,9 +7,16 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h2 class="page-header"><b>STRATA SETTING : ADD SENSOR</b>
+
+                <h2 class="page-header"><b>STRATA SETTING : {{ action }} SENSOR</b>
                     <small>&nbsp&nbsp&nbspHere you can add different sensors under any Location</small>
                 </h2>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
+                    </div>
+                </div>
+                <hr>
                 <!-- Table content -->
                 <div class="row">
                     <div class="form-group">
@@ -17,39 +24,49 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Choose Mine:<font color="red">*</font> </label>
+                                        <label for="" class="" id="">Choose Mine:<span style="color: red; ">*</span>
+                                        </label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.mine_name }}
+                                        <span style="color:red">{{ form.mine_name.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Choose Location:<font color="red">*</font></label>
+                                        <label for="" class="" id="fetch_location"
+                                               data-url="{% url 'Strata:fetch_location_ajax' %}">Choose Location:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        <select class="form-control" id="id_location_id"
-                                                data-url="{% url 'Strata:fetch_location_ajax' %}" name="location_id">
-                                            <option>--Select Location--</option>
-                                        </select>
+                                        {#                                        <select class="form-control" id="id_location_id"#}
+                                        {#                                                data-url="{% url 'Strata:fetch_location_ajax' %}" name="location_id">#}
+                                        {#                                            <option>--Select Location--</option>#}
+                                        {{ form.location_id }}
+                                        <span style="color:red">{{ form.location_id.errors|striptags }}</span>
+                                        {#                                        </select>#}
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor Name:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor Name:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.sensor_name }}
+                                        <span style="color:red">{{ form.sensor_name.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor Unit:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.sensor_unit }}
+                                        <span style="color:red">{{ form.sensor_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -60,17 +77,19 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.tag_no }}
+                                        <span style="color:red">{{ form.tag_no.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-1 Warning Unit:<font
-                                                color="red">*</font></label>
+                                        <label for="" class="" id="">Level-1 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_1_warning_unit }}
+                                        <span style="color:red">{{ form.level_1_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -79,21 +98,19 @@
                                     </div>
                                     <div class="col-md-5">
                                         {{ form.level_1_color }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor1(this)'} form-control"
-                                               value="ADFF2F">
+                                        <span style="color:red">{{ form.level_1_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-2 Warning Unit:<font
-                                                color="red">*</font></label>
+                                        <label for="" class="" id="">Level-2 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_2_warning_unit }}
+                                        <span style="color:red">{{ form.level_2_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -102,21 +119,19 @@
                                     </div>
                                     <div class="col-md-5">
                                         {{ form.level_2_color }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor2(this)'} form-control"
-                                               value="FFA500">
+                                        <span style="color:red">{{ form.level_2_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-3 Warning Unit:<font
-                                                color="red">*</font></label>
+                                        <label for="" class="" id="">Level-3 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_3_warning_unit }}
+                                        <span style="color:red">{{ form.level_3_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -125,10 +140,7 @@
                                     </div>
                                     <div class="col-md-5">
                                         {{ form.level_3_color }}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor3(this)'} form-control"
-                                               value="FF0000">
+                                        <span style="color:red">{{ form.level_3_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -139,6 +151,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_1_msg }}
+                                        <span style="color:red">{{ form.level_1_msg.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -149,6 +162,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_2_msg }}
+                                        <span style="color:red">{{ form.level_2_msg.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -159,6 +173,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.level_3_msg }}
+                                        <span style="color:red">{{ form.level_3_msg.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -169,6 +184,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.audio_play_type }}
+                                        <span style="color:red">{{ form.audio_play_type.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -181,6 +197,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.level_1_audio }}
+                                            <span style="color:red">{{ form.level_1_audio.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -191,6 +208,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.level_2_audio }}
+                                            <span style="color:red">{{ form.level_2_audio.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -201,6 +219,7 @@
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.level_3_audio }}
+                                            <span style="color:red">{{ form.level_3_audio.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -209,21 +228,24 @@
                             <div class="form-group col-md-12">
                                 <div class="col-md-12">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">IP Address:<font color="red">*</font></label>
+                                        <label for="" class="" id="">IP Address:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.ip_address }}
+                                        <span style="color:red">{{ form.ip_address.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-12">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Time Interval(in Sec):<font
-                                                color="red">*</font></label>
+                                        <label for="" class="" id="">Time Interval(in Sec):<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.interval_time }}
+                                        <span style="color:red">{{ form.interval_time.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -234,6 +256,7 @@
                                     </div>
                                     <div class="col-md-8">
                                         {{ form.description }}
+                                        <span style="color:red">{{ form.description.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -254,57 +277,51 @@
     <script>
         $(document).ready(function () {
             $("#id_mine_name").addClass('form-control');
+            $("#id_location_id").addClass('form-control');
 
             $("#id_mine_name").on("change", function () {
                 let mine_id = this.value;
-                let url = $("#id_location_id").data('url');
-                $.ajax({
-                    type: "get",
-                    url: url,
-                    data: {
-                        'id': mine_id
-                    },
-                    success: function (data) {
-                        fill_dropdown(data.result);
+                if (!isEmpty(mine_id)) {
+                    let url = $("#fetch_location").data('url');
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: {
+                            'id': mine_id
+                        },
+                        success: function (data) {
+                            fill_dropdown(data.result);
 
-                        return data;
-                    },
-                    error: function () {
-                        console.log("error he ji");
-                    }
+                            return data;
+                        },
+                        error: function () {
+                            console.log("error he ji");
+                        }
+                    });
+                }
                 });
-            });
 
-            function fill_dropdown(result) {
-                $("#id_location_id").html("<option>--Select Location--</option>");
-                for (var strata in result) {
-                    if (result.hasOwnProperty(strata)) {
-                        $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
-                    }
+
+        function fill_dropdown(result) {
+            $("#id_location_id").empty();
+            $("#id_location_id").append($("<option />").val('').text('--Select Location--'));
+            for (var strata in result) {
+                if (result.hasOwnProperty(strata)) {
+                    $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
                 }
             }
+        }
 
-            function setTextColor1(picker) {
-                $("#color1").val('#' + picker.toString());
+        $("input[name$='audio_play_type']").change(function () {
+            let is_value = $(this).val();
+            if (is_value == "text2voice") {
+                $("#audio_container").hide();
+            } else {
+                $("#audio_container").show();
             }
-
-            function setTextColor2(picker) {
-                $("#color2").val('#' + picker.toString());
-            }
-
-            function setTextColor3(picker) {
-                $("#color3").val('#' + picker.toString());
-            }
-
-            $("input[name$='audio_play_type']").change(function () {
-                let is_value = $(this).val();
-                if (is_value == "text2voice") {
-                    $("#audio_container").hide();
-                } else {
-                    $("#audio_container").show();
-                }
-            });
         });
+        })
+        ;
     </script>
 {% endblock %}
 

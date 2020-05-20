@@ -20,7 +20,7 @@
     $(document).ready(function(){
         $.ajax({
                 type: "get",
-                url: "{% url 'FireExp:explosibility' 0 %}",
+                url: "{% url 'FireExp:explosibility' 1 %}",
 
                 beforeSend: function (jqXHR) {
                     $.xhrPool.push(jqXHR);

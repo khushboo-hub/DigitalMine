@@ -2,52 +2,52 @@
 
 {% block content %}
 
-{% load staticfiles %}
-<script src="{% static 'js/jscolor.js' %}"></script>
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Add/Edit Sensor Under ( <span style="color:Tomato;">{{minename}}</span> / <span style="color:Tomato;">{{nodename}}</span>  )</h1>
-            <div class="row text-center">
-                <div class="col-md-12">
-                    <a class="btn btn-primary" href="{% url 'sensor:manage_sensor' mine nodeid %}">Manage Sensor</a>
+    {% load staticfiles %}
+    <script src="{% static 'js/jscolor.js' %}"></script>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header"><b>ENVIRONMENT MONITORING : {{ action }} SENSOR UNDER</b>
+                   (<span style="color:Tomato;">{{ mine_name }}</span> /
+                    <span style="color:Tomato;">{{ node_name }}</span>)
+                </h3>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="{% url 'sensor:manage_sensor' mine node_id %}">Manage
+                            Sensor</a>
+                    </div>
                 </div>
-            </div>
-            <hr>
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <div class="input-group">
-                         <input type="hidden" id="nodemineid" type="text" class="form-control" value="{{nodemineid}}" >
-                        </div>
-                        <div class="input-group">
-                         <input type="hidden" id="nodeid" type="text" class="form-control" value="{{nodeid}}" >
-                        </div>
-                                <!--<div class="col-md-6">-->
-                                    <!--<div class="col-md-4">-->
-                                        <!--<label for="" class="" id="">IP Address:<font color="red">*</font></label>-->
-                                    <!--</div>-->
-                                    <!--<div class="col-md-8">-->
-                                        <!--{{form.ip_add}}-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
+                <hr>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="input-group">
+                                <input type="hidden" id="mine_id" type="text" class="form-control"
+                                       value="{{ mine }}">
+                            </div>
+
+                            <div class="input-group">
+                                <input type="hidden" id="node_id" type="text" class="form-control"
+                                       value="{{ node_id }}">
+                            </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor ID:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor ID:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensorid}}
+                                        {{ form.sensor_id }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Sensor Name:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Sensor Name:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{ form.sensorname }}
+                                        {{ form.sensor_name }}
                                     </div>
                                 </div>
                             </div>
@@ -57,25 +57,27 @@
                                         <label for="" class="" id="">Sensor Unit:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensorunit}}
+                                        {{ form.sensor_unit }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Theshold Vlaue:</label>
+                                        <label for="" class="" id="">Threshold Value:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.thresholdlimit}}
+                                        {{ form.sensor_threshold_limit }}
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-1 Warning Unit:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Level-1 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensorunit1}}
+                                        {{ form.level_1_warning_unit }}
+                                        <span style="color:red">{{ form.level_1_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -83,20 +85,20 @@
                                         <label for="" class="" id="">Level-1 Color:</label>
                                     </div>
                                     <div class="col-md-5">
-                                        {{form.greenlevel}}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor1(this)'} form-control" value="ADFF2F">
+                                        {{ form.level_1_color }}
+                                        <span style="color:red">{{ form.level_1_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-2 Warning Unit:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Level-2 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensorunit2}}
+                                        {{ form.level_2_warning_unit }}
+                                        <span style="color:red">{{ form.level_2_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -104,20 +106,20 @@
                                         <label for="" class="" id="">Level-2 Color:</label>
                                     </div>
                                     <div class="col-md-5">
-                                        {{form.yellowlevel}}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor2(this)'} form-control" value="FFA500">
+                                        {{ form.level_2_color }}
+                                        <span style="color:red">{{ form.level_2_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Level-3 Warning Unit:<font color="red">*</font></label>
+                                        <label for="" class="" id="">Level-3 Warning Unit:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensorunit3}}
+                                        {{ form.level_3_warning_unit }}
+                                        <span style="color:red">{{ form.level_3_warning_unit.errors|striptags }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -125,20 +127,22 @@
                                         <label for="" class="" id="">Level-3 Color:</label>
                                     </div>
                                     <div class="col-md-5">
-                                        {{form.redlevel}}
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input class="jscolor {onFineChange:' setTextColor3(this)'} form-control" value="FF0000">
+                                        {{ form.level_3_color }}
+                                        <span style="color:red">{{ form.level_3_color.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
-                <div class="form-group col-md-12">
+                            <div class="form-group col-md-12">
                                 <div class="col-md-12">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">IP Address:<font color="red">*</font></label>
+                                        <label for="" class="" id="">IP Address:<span
+                                                style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.ip_add}}
+                                        {{ form.ip_add }}
+                                        <span style="color:red">{{ form.ip_add.errors|striptags }}</span>
+
+                                        <span class="help-block" id="ip_add_warning"></span>
                                     </div>
                                 </div>
                             </div>
@@ -148,19 +152,21 @@
                                         <label for="" class="" id="">Level-1 Message:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensormsg1}}
+                                        {{ form.level_1_msg }}
+                                        <span style="color:red">{{ form.level_1_msg.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group col-md-12">
-                                    <div class="col-md-12">
-                                        <div class="col-md-4">
-                                            <label for="" class="" id="">Level-2 Message:</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{form.sensormsg2}}
-                                        </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Message:</label>
                                     </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_2_msg }}
+                                        <span style="color:red">{{ form.level_2_msg.errors|striptags }}</span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group col-md-12">
                                 <div class="col-md-12">
@@ -168,7 +174,68 @@
                                         <label for="" class="" id="">Level-3 Message:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.sensormsg3}}
+                                        {{ form.level_3_msg }}
+                                        <span style="color:red">{{ form.level_3_msg.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Audio Play Type:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.audio_play_type }}
+                                        <span style="color:red">{{ form.audio_play_type.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- -------------------------Audio upload ----------------------------------------------------- -->
+                            <div id="audio_container" style="display:None">
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-1 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_1_audio }}
+                                            <span style="color:red">{{ form.level_1_audio.errors|striptags }}</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-2 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_2_audio }}
+                                            <span style="color:red">{{ form.level_2_audio.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-3 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_3_audio }}
+                                            <span style="color:red">{{ form.level_3_audio.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Time Interval(in Sec):<span
+                                                style="color: red; ">*</span></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.interval_time }}
+                                        <span style="color:red">{{ form.interval_time.errors|striptags }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -178,73 +245,48 @@
                                         <label for="" class="" id="">Description:</label>
                                     </div>
                                     <div class="col-md-8">
-                                        {{form.description}}
+                                        {{ form.description }}
+                                        <span style="color:red">{{ form.description.errors|striptags }}</span>
+
                                     </div>
                                 </div>
                             </div>
 
 
-                        <div class="text-center">
-                            <input type="submit" class="btn btn-primary" value="Submit"/>
-                        </div>
-                    </form>
-                </div>
-            </div><!--end Table content -->
-        </section>
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit"/>
+                            </div>
+
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
     </div>
-</div>
-<style>
+    <style>
 
-</style>
-<script>
-$(document).ready(function(){
-        $("#id_mine_name").addClass('form-control');
-        $("#id_mine").addClass('form-control');
-        $("#id_name").addClass('form-control');
+    </style>
+    <script>
+        $(document).ready(function () {
 
-});
-//
-// $("#id_mine_name").on("change",function(){
-//     mine_id=this.value;
-//     $.ajax({
-//             type:"get",
-//
-//             url: "{% url 'Strata:fetch_location_ajax' %}",
-//             data: {
-//                      'id': mine_id
-//                    },
-//             success: function(data) {
-//                 //console.log(data.result);
-//                 //alert(data.result[0]);
-//                 fill_dropdown(data.result);
-//
-//                 return data;
-//                     },
-//             error: function(){
-//                     console.log("error he ji");
-//                  }
-//             });
-// });
-// function fill_dropdown(result){
-//     $("#id_location_id").html("<option>--Select Location--</option>");
-//     for (index = 0; index < result.length; index++) {
-//     //alert(result[index]);
-//     var str_array = result[index].split(',');
-//     //alert("id="+str_array[0]+":name="+str_array[1]);
-//     $("#id_location_id").append($("<option />").val(str_array[0]).text(str_array[1]));
-//     }
-// }
+            $("#audio_container").show();
 
-function setTextColor1(picker) {
-		$("#id_greenlevel").val( '#' + picker.toString());
-	}
-function setTextColor2(picker) {
-		$("#id_yellowlevel").val( '#' + picker.toString());
-	}
-function setTextColor3(picker) {
-		$("#id_redlevel").val( '#' + picker.toString());
-	}
-</script>
+
+            if ($('#id_audio_play_type_0').is(':checked')) {
+                $("#audio_container").hide();
+            }
+            $("input[name$='audio_play_type']").change(function () {
+
+                var is_value = $(this).val();
+                if (is_value == "text2voice") {
+                    $("#audio_container").hide();
+                } else {
+                    $("#audio_container").show();
+                }
+
+            });
+        });
+    </script>
 
 {% endblock %}
 

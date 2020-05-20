@@ -2,263 +2,136 @@
 
 {% block content %}
     {% load staticfiles %}
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-    <!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <div class="container">
-        <div class="row">
-
-            <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            </div>
-            <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
-                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-            </div>
-
-            <section class="col-md-12">
-                <h1 class="page-header">Update Node
-                    <small>&nbsp&nbsp&nbspHere you can update ,view and delete nodes</small>
-                </h1>
-                {% if form.errors %}
-                    {% for field in form %}
-                        {% for error in field.errors %}
-                            <div class="alert alert-danger alert-dismissible">
-                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                <strong>Warning! </strong>{{ error|escape }}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                    {% for error in form.non_field_errors %}
-                        <div class="alert alert-danger alert-dismissible">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Warning! </strong>{{ error|escape }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                <!--                <small>&nbsp&nbsp&nbspHere you can update, view, delete nodes</small>-->
-
-
-                <!-- Table content -->
-                <div class="row" style="background-color: powderblue;">
-                    <div class="form-group"></div>
-                    <div class="form-group">
-                        <form class="form-horizontal" method="post" id="NodeForm" enctype="multipart/form-data">
-
-                            {% csrf_token %}
-                            <div class="form-group col-md-12">
-                                <input id="router_id" type="hidden" value="{{ pk }}">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Select Mine</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.mine_id }}
-                                        <span style="color:red">{{ form.mine_id.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Node ID </label></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.nodeid }}
-                                        <span style="color:red">{{ form.nodeid.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                            </div>
-{#                            <div class="form-group has-warning">#}
-{#                                <label class="control-label" for="inputWarning">Input with warning</label>#}
-{#                                <input type="text" class="form-control" id="inputWarning">#}
-{#                                <span class="help-block">Something may have gone wrong</span>#}
-{#                            </div>#}
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Node Name</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.name }}
-                                        <span style="color:red">{{ form.name.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Node Location </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.location }}
-                                        <span style="color:red">{{ form.location.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>X-Axis</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.x_axis }}
-                                        <span style="color:red">{{ form.x_axis.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Y-Axis </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{ form.y_axis }}
-                                        <span style="color:red">{{ form.y_axis.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Image 1</label>
-                                    </div>
-                                    <div class="col-md-8" id="CurrentPhotoCheck1">
-                                        {{ form.photo1 }}
-                                        <span style="color:red">{{ form.photo1.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Image 2</label>
-                                    </div>
-                                    <div class="col-md-8" id="CurrentPhotoCheck2">
-                                        {{ form.photo2 }}
-                                        <span style="color:red">{{ form.photo2.errors|striptags }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-
-                                <div class="text-center">
-                                    Is it a Goaf Area?
-                                    <input id="isGoaf" {% if form.isgoaf.value == True %} checked {% endif %}
-                                           name="isgoaf" type="checkbox" data-toggle="toggle" data-on="Yes"
-                                           data-off="No" data-onstyle="success" data-offstyle="danger">
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <div class="col-md-12">
-                                    <div class="col-md-2">
-                                        <label>Description</label>
-                                    </div>
-                                    <div class="col-md-10">
-                                        {{ form.description }}
-                                        <span style="color:red">{{ form.description.errors|striptags }}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <center>
-                                <button id="CreateNode"
-                                        onclick="document.querySelector('.glyphicon').classList.toggle('icon-rotate')"
-                                        type="submit" class="btn btn-primary" value="Update Node"/>
-                                <i class="glyphicon glyphicon-signal"></i> Update Node
-                            </center>
-
-                        </form>
-                    </div>
+        <section class="col-md-12">
+            <h3 class="page-header text-center"><b>Manage Wireless Node</b>
+                <small>&nbspHere you can update ,view and delete nodes</small>
+            </h3>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>
                 </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive ">
+                        <table class="table hover  table-bordered " id="myTable">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Mine Name</th>
+                                <th>Node ID</th>
+                                <th>Node Name</th>
+                                <th>Node Location</th>
+                                <th>X,Y (Axis)</th>
+                                <th>Description</th>
+                                <th>Is it Goaf?</th>
+                                <th>Image1</th>
+                                <th>Image2</th>
+                                <th>Data Aquition</th>
+                                <th>Manage Sensor</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
 
-                <br>
-                <hr>
-                <center><h2>All Created Routers</h2></center>
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table hover " id="myTable">
-                                <thead>
+                            </tr>
+                            </thead>
+                            <tbody id="RouterList">
+                            {% for book in object_list %}
+
+
                                 <tr>
-                                    <th>SL No</th>
-                                    <th>Mine Name</th>
-                                    <th>Node ID</th>
-                                    <th>Node Name</th>
-                                    <th>Node Location</th>
-                                    <th>X,Y (Axis)</th>
-                                    <th>Description</th>
-                                    <th>Is it Goaf?</th>
-                                    <th>Image1</th>
-                                    <th>Image2</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.mine_id.name }}</td>
+                                    <td>{{ book.node_id }}</td>
+                                    <td>{{ book.name }}</td>
+                                    <td>{{ book.location }}</td>
+                                    <td>{{ book.x_axis }},{{ book.y_axis }}</td>
+                                    <td class="more">{{ book.description }}</td>
+                                    <td>
+                                        {% if book.isgoaf == True %}
+                                            <span class="label label-success">Yes</span>
+                                        {% else %}
+                                            <span class="label label-danger">No</span>
+                                        {% endif %}
+                                    </td>
+                                    <td><img class="image image-responsive" src="/media/{{ book.photo1 }}"
+                                             height="50" width="50"/></td>
+                                    <td><img class="image image-responsive" src="/media/{{ book.photo2 }}"
+                                             height="50" width="50"/></td>
 
+                                    <td class="text-center"><input
+                                            {% if background|lookup:book.id %}checked {% endif %}
+{#                                            {% if not book.isgoaf %}disabled {% endif %}#}
+                                            data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
+                                            id="isAcquire{{ book.id }}"
+                                            data-val="{{ book.id }}" class="DataAcquisition"
+                                            type="checkbox"
+                                            data-toggle="toggle" data-on="On"
+                                            data-off="off" data-onstyle="success"
+                                            data-offstyle="danger"></td>
+
+                                    <td class="text-center"><a
+                                            href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
+                                            class="manageSensor"
+                                            data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
+                                            title="Manage Sensor"><span
+                                            class="glyphicon glyphicon-plus"></span></a>
+                                        <br>
+                                        <br>
+                                        {% if book.isgoaf %}
+                                        <a href="{% url 'sensor:ellicots' book.id %}"
+                                           onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                           title="Generate Ellicots Graph."><span
+                                                class="glyphicon glyphicon-picture"></span></a>
+                                        <br>
+                                        <br>
+                                        {% endif %}
+                                        <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
+                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
+                                           title="Show Node Location"><span
+                                                class="glyphicon glyphicon-map-marker"></span></a>
+
+
+                                    </td>
+
+                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
+                                                               class="editRouter"
+                                                               data-url="{% url 'sensor:node_edit' book.id %}"
+                                                               title="Edit Router."><span
+                                            class="glyphicon glyphicon-pencil"></span></a></td>
+                                    <td class="text-center"><a href="#" class="delete"
+                                                               data-url="{% url 'sensor:node_delete' %}"
+                                                               id="{{ book.id }}"
+                                                               title="Delete Router."><span
+                                            class="glyphicon glyphicon-trash"></span></a></td>
                                 </tr>
-                                </thead>
-                                <tbody id="RouterList">
-                                {% for book in object_list %}
-                                    <tr>
-                                        <td>{{ forloop.counter }}</td>
-                                        <td>{{ book.mine_id.name }}</td>
-                                        <td>{{ book.nodeid }}</td>
-                                        <td>{{ book.name }}</td>
-                                        <td>{{ book.location }}</td>
-                                        <td>{{ book.x_axis }},{{ book.y_axis }}</td>
-                                        <td class="more">{{ book.description }}</td>
-                                        <td>
-                                            {% if book.isgoaf == True %}
-                                                <span class="label label-success">Yes</span>
-                                            {% else %}
-                                                <span class="label label-danger">No</span>
-                                            {% endif %}
-                                        </td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo1 }}"
-                                                 height="100"
-                                                 width="100"/></td>
-                                        <td><img class="image image-responsive" src="/media/{{ book.photo2 }}"
-                                                 height="100"
-                                                 width="100"/></td>
-                                        <td class="text-center"><a href="{% url 'sensor:node_manage' book.id %}"
-                                                                   class="editRouter"
-                                                                   data-url="{% url 'sensor:node_manage' book.id %}"
-                                                                   title="Edit Router."><span
-                                                class="glyphicon glyphicon-pencil"></span></a></td>
-                                        <td class="text-center"><a href="#" class="delete"
-                                                                   data-url="{% url 'sensor:node_delete' %}"
-                                                                   id="{{ book.id }}"
-                                                                   title="Delete Router."><span
-                                                class="glyphicon glyphicon-trash"></span></a></td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </div>
-    <section class="KBmap" id="KBtestmap"/>
     <script>
         $(document).ready(function () {
-             window.setTimeout(function() {
-                $(".alert").fadeTo(500, 0).slideUp(500, function () {
-                $(this).remove();
-                });
-            },3000);
-
-            $('title').append(' | Update Router');
-
-            setImageData($('#id_mine_id').val());
-
-            <!--            $('#id_mine_id').prop("disabled", true)&ndash;&gt;-->
-
-            $('#KBtestmap').hide();
-
-
-            $("#id_mine_id").addClass('form-control');
-
             $('#myTable').DataTable({
                 dom: 'Bfrtip',
                 buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
+                    'copy', 'csv', 'excel',
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 7, 8]
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4, 5, 7, 8]
+                        }
+                    },
+                ],
             });
 
             toastr.options = {
@@ -277,278 +150,74 @@
                 "hideEasing": "linear",
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut",
-            }
-
-
-            $("#id_x_axis").click(function () {
-                if ($('#id_mine_id').val() != "") {
-                    PointInitialization();
-                    var elem = document.getElementById("KBtestmap");
-                    openFullscreen(elem);
-                    FULLSCREEN();
-                }
-                ZoomButtonsInitialization();
-            });
-
-            $("#id_y_axis").click(function () {
-                if ($('#id_mine_id').val() != "") {
-                    PointInitialization();
-                    var elem = document.getElementById("KBtestmap");
-                    openFullscreen(elem);
-                }
-            });
-            Delete_Node();
-
-        });
-
-
-        function setImageData(mine_id) {
-            url = $("#get_url").data('url');
-
-            $.ajax({
-                type: "get",
-                url: "{% url 'Strata:fetch_map_image' %}",
-                data: {
-                    'id': mine_id
-                },
-                success: function (data) {
-                    tempData = data;
-                    CreateKBtestMap(data.result.image_url);
-                },
-                error: function () {
-                    console.log("something is not right.please contact admin - 1");
-                }
-            });
-        }
-
-
-        function CreateKBtestMap(data) {
-            var img = data;
-            if (addedKBmaps.length > 0) {
-                addedKBmaps.pop();
-                $('.KBmap__mapContainer').remove();
-            }
-
-            if (img) {
-                createKBmap('KBtestmap', '/media/' + img);
-                var icon = "/static/image/router.svg";
-                KBtestmap.addMarker(icon, $('#id_x_axis').val(), $('#id_y_axis').val(), 'Test');
-                <!--KBtestmap.importJSON(jsonData);-->
-                KBtestmap.showAllMapMarkers();
-            } else {
-                $("#map").css("");
-                $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-            }
-
-        };
-        var added = 0;
-
-        function PointInitialization() {
-            $(".KBmap__mapHolder").click(function (e) {
-
-                if (added == 0) {
-                    var temp = mousePositionElement(e);
-                    console.log(temp);
-                    var icon = "/static/image/router.svg";
-                    var offset = $(this).offset();
-                    var offsetWidth = $('#KBtestmap')[0].offsetWidth;
-                    var ScrollWidth = $('#KBtestmap')[0].scrollWidth;
-                    var offsetHeight = $('#KBtestmap')[0].offsetHeight;
-                    var ScrollHeight = $('#KBtestmap')[0].scrollHeight;
-                    var offsetY = ((offsetHeight - ScrollHeight) / offsetHeight) * 100;
-                    var offsetX = ((offsetWidth - ScrollWidth) / offsetWidth) * 100;
-
-                    console.log(offsetX + " " + offsetY);
-
-                    var PosX = temp.x + offsetY;
-                    var PosY = temp.y - ((document.documentElement.scrollTop)) / 7.8 + offsetX;
-
-                    console.log(PosX + " " + PosY);
-
-                    var random = Math.floor((Math.random() * 10) + 1);
-                    var node_id = $('#id_nodeid').val();
-                    var node_mine_name = $('#id_mine_id').children("option:selected").text();
-                    var markerName = "Test"
-                    var NodeName = node_id + "||" + node_mine_name + "||";
-                    var ipAddress = $('#id_ip_add').val();
-                    var routerLocation = $('#id_location').val();
-                    var routerAddress = $('#id_address').val();
-
-                    var NodeContent = "<small>";
-
-                    NodeContent += "<strong >" + "Name : ";
-                    NodeContent += "<span class='badge'>";
-                    NodeContent += $('#id_name').val();
-                    NodeContent += "</span>";
-                    NodeContent += "</strong></br>";
-
-
-                    NodeContent += "<strong >" + "Location : ";
-                    NodeContent += "<span class='badge'>";
-                    NodeContent += routerLocation;
-                    NodeContent += "</span>";
-                    NodeContent += "</strong></br>";
-
-
-                    NodeContent += "<strong >" + "Description : ";
-                    NodeContent += "<span class='badge'>";
-                    NodeContent += $('#id_description').val();
-                    NodeContent += "</span>";
-                    NodeContent += "</strong></br>";
-                    NodeContent += "</small>";
-
-                    var KBkeys = KBtestmap.mapMarkers;
-
-                    if ("Test" in KBkeys) KBkeys.Test.removeMarker();
-
-                    KBtestmap.addMarker(icon, PosX, PosY, markerName);
-                    KBtestmap.mapMarkers[markerName].addModal(NodeName, NodeContent);
-
-                    $('#id_x_axis').val(PosX);
-                    $('#id_y_axis').val(PosY);
-                    $('.KBmap__marker').not(':last').remove();
-
-                    KBtestmap.showAllMapMarkers();
-
-                }
-            });
-        }
-
-        var ZoomLevel;
-
-        function ZoomButtonsInitialization() {
-            var $section = $('#KBtestmap');
-            var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
-                increment: 0.01,
-                minScale: 1,
-                maxScale: 10,
-                startTransform: 'scale(1.0)',
-                disablePan: false,
-                contain: 'invert',
-            });
-
-            $panzoom.parent().on('mousewheel.focal', function (e) {
-                e.preventDefault();
-                ZoomLevel = e;
-                var delta = e.delta || e.originalEvent.wheelDelta;
-
-                var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-                $panzoom.panzoom('zoom', zoomOut, {
-                    animate: false,
-                    focal: e
-                });
-            });
-        }
-
-        function Delete_Node() {
-            $(document.body).on("click", ".delete", function () {
-                $('#update_info').modal('show');
-                var node_id = $(this).attr('id');
-                var url = $(this).data('url');
-                console.log(node_id)
-                var Curr = $(this).parents('tr');
-                var datatable = $('#myTable').DataTable();
-                $('#update_info').on('click', '#delete', function (e) {
-                    $('#update_info').unbind('click');
-                    $('#update_info').modal('hide');
-                    $.ajax({
-                        type: "post",
-                        url: url,
-                        data: {
-                            csrfmiddlewaretoken: "{{ csrf_token }}",
-                            'id': node_id,
-                        },
-                        success: function (json) {
-                            console.log(json);
-                            if (json.hasOwnProperty("success")) {
-                                // $("#success-alert").removeClass("hide");
-                                // $("#success-alert").text(json.success);
-                                //$("#success-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-                                datatable.row(Curr).remove().draw();
-                                toastr.success(json.success);
-                            } else {
-                                //$("#failure-alert").removeClass("hide");
-                                //$("#failure-alert").text(json.error);
-                                //$("#failure-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-                                toastr.error(json.error);
+            };
+            (function Delete_Node() {
+                $(document.body).on("click", ".delete", function () {
+                    $('#update_info').modal('show');
+                    var node_id = $(this).attr('id');
+                    var url = $(this).data('url');
+                    console.log(node_id)
+                    var Curr = $(this).parents('tr');
+                    var datatable = $('#myTable').DataTable();
+                    $('#update_info').on('click', '#delete', function (e) {
+                        $('#update_info').unbind('click');
+                        $('#update_info').modal('hide');
+                        $.ajax({
+                            type: "post",
+                            url: url,
+                            data: {
+                                csrfmiddlewaretoken: "{{ csrf_token }}",
+                                'id': node_id,
+                            },
+                            success: function (json) {
+                                if (json.hasOwnProperty("success")) {
+                                    datatable.row(Curr).remove().draw();
+                                    toastr.success(json.success);
+                                } else {
+                                    toastr.error(json.error);
+                                }
+                            },
+                            error: function () {
+                                console.log("something is not right.please contact admin - 1");
                             }
-                        },
-                        error: function () {
-                            console.log("something is not right.please contact admin - 1");
-                        }
+                        });
                     });
                 });
-            });
-        }
+            })();
 
-        $(document).keyup(function (e) {
-            // if (e.keyCode === 13) $('.save').click();     // enter
-            if (e.keyCode === 27 || e.keyCode === 13) { //esc
-                $(function () {
-                    $('#AddRouter').modal('toggle');
+            $('.DataAcquisition').change(function () {
+                let isAcquire = this.id;
+                let action = $('#' + isAcquire).prop("checked");
+
+                console.log('Changed', action);
+                $.ajax({
+                    type: "post",
+                    url: $(this).data('url'),
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        'action': action
+                    },
+                    success: function (json) {
+                        console.log(json);
+                        if (json.hasOwnProperty("error")) {
+                            $('#' + isAcquire).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                        $('#' + isAcquire).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
                 });
-            }
+                {#console.log($(this).data('val'), $(this).prop('checked'));#}
+            });
+
         });
-
-
-        document.addEventListener("fullscreenchange", function (event) {
-            if (checkFullScreenStatus()) {
-                $('#KBtestmap').show();
-                $("body").css({"overflow": "hidden"});
-            } else {
-                $('#KBtestmap').hide();
-                $("body").css({"overflow": "visible"});
-            }
-        });
-
-        var X;
-
-        $('#CreateNode').on('click', function (event) {
-            $('#NodeForm').submit();
-            event.preventDefault();
-            console.log("form submitted!")  // sanity check
-            //update_router();
-        });
-
-        function PointInitialization_init(x, y) {
-            if (added == 0) {
-
-                var icon = "/static/image/router.svg";
-
-                var PosX = x;
-                var PosY = y - ((document.documentElement.scrollTop)) / 7.8;
-                KBtestmap.addMarker(icon, PosX, PosY, markerName);
-            }
-        }
-
-
-        $("#CurrentPhotoCheck1").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover1')
-        $('<img id="CurrentPhotoCheckOnHover1" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover1').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover1');
-
-        $("#CurrentPhotoCheck2").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover2')
-        $('<img id="CurrentPhotoCheckOnHover2" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover2').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover2');
-
-        $('img#CurrentPhotoCheckOnHover1').attr('data-toggle', 'tooltip');
-        $('img#CurrentPhotoCheckOnHover2').attr('data-toggle', 'tooltip');
-
-        $('img#CurrentPhotoCheckOnHover1').attr('class', 'red-tooltip');
-        $('img#CurrentPhotoCheckOnHover2').attr('class', 'red-tooltip');
-
-        $('img#CurrentPhotoCheckOnHover2').attr('title', "<img width='250px' src='" + $('#CurrentPhotoCheckOnHover2').attr("href") + "' />");
-        $('img#CurrentPhotoCheckOnHover1').attr('title', "<img width='250px' src='" + $('#CurrentPhotoCheckOnHover1').attr("href") + "' />");
-
-        $("a#CurrentPhotoCheckOnHover1").remove();
-        $("a#CurrentPhotoCheckOnHover2").remove();
-
-        $('img[data-toggle="tooltip"]').tooltip({
-            animated: 'fade',
-            placement: 'bottom',
-            html: true
-        });
-
-
     </script>
     <style>
+        .container {
+            width: 1251px;
+        }
+
         .red-tooltip + .tooltip > .tooltip-inner {
             background: none;
         }

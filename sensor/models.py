@@ -2,15 +2,15 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from employee.models import MineDetails
-
 from django.utils import timezone
-
+from datetime import datetime
 
 class gasModel_auto(models.Model):
     mine_id = models.IntegerField()
     node_id = models.IntegerField()
-    gas_name= models.CharField(max_length=10, default='Null')
-    gas_value = models.CharField(max_length=50, default='Null')
+    sensor_name = models.CharField(max_length=10, default='Null')
+    sensor_id = models.IntegerField()
+    sensor_value = models.CharField(max_length=50, default='Null')
     date_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
@@ -21,7 +21,7 @@ class Node(models.Model):
     id = models.AutoField(primary_key=True)
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE)
     #selectmine = models.CharField('Select Mine',default='Null', max_length=200)
-    nodeid = models.CharField('Node ID', max_length=200)
+    node_id = models.CharField('Node ID', max_length=200)
     name = models.CharField('Name', max_length=200)
     location = models.CharField('Location', default='Null', max_length=200)
     # ip_add= models.CharField('IP Address', max_length=200)
@@ -31,15 +31,9 @@ class Node(models.Model):
     photo2 = models.ImageField(upload_to='emp_img/', null=True, blank=True)
     description = models.TextField('Description', max_length=200)
     isgoaf = models.BooleanField(null=False,default=False)
-    # mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
 
-    # CONNECTIVITY_CHOICES = (
-    #     ('WL', 'Wireless'),
-    #     ('W', 'Wired')
-    # )
-    # connection = models.CharField(choices=CONNECTIVITY_CHOICES, max_length=128, null=True, blank=True)
     class Meta:
-        unique_together = ('mine_id', 'nodeid')
+        unique_together = ('mine_id', 'node_id')
 
     def __str__(self):
           return (self.name)
@@ -71,29 +65,52 @@ class Sensor(models.Model):
         return reverse('sensor:sensor_edit', kwargs={'pk': self.pk})
 
 class Sensor_Node(models.Model):
-    id = models.AutoField(primary_key=True)
     # mine_id = models.IntegerField(null=True, blank=True)
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE)
     # node_id = models.IntegerField(null=True, blank=True)
     node_id = models.ForeignKey(Node, on_delete=models.CASCADE)
     ip_add = models.CharField('IP Addressss', max_length=200)
-    sensorid = models.CharField('Sensor Id', max_length=200)
-    sensorname = models.CharField('Sensor Name', max_length=200)
-    sensorunit = models.CharField('Sensor Unit', max_length=200)
-    thresholdlimit = models.CharField('Threshold Limit', default='0', max_length=200)
-    sensorunit1 = models.CharField('Sensor Unit1', max_length=200)
-    sensorunit2 = models.CharField('Sensor Unit2', max_length=200)
-    sensorunit3 = models.CharField('Sensor Unit3', max_length=200)
-    sensormsg1 = models.CharField('sensor Msg1', max_length=200)
-    sensormsg2 = models.CharField('sensor Msg1', max_length=200)
-    sensormsg3 = models.CharField('sensor Msg1', max_length=200)
-    greenlevel = models.CharField('Green Level Limit', default='0', max_length=200)
-    yellowlevel = models.CharField('Yellow Level Limit', default='0', max_length=200)
-    redlevel = models.CharField('Red Level Limit', default='0', max_length=200)
+    sensor_id = models.CharField('Sensor Id', max_length=200)
+
+    GAS_SENSOR_CHOICES = (
+        ('CO', 'CO'),
+        ('CO2', 'CO2'),
+        ('CH4','CH4'),
+        ('O2','O2'),
+        ('H2','H2'),
+        ('N2','N2'),
+        ('C2H4','C2H4')
+    )
+
+    sensor_name = models.CharField('Sensor Name', max_length=200,choices=GAS_SENSOR_CHOICES)
+    sensor_unit = models.CharField('Sensor Unit', max_length=200)
+    sensor_threshold_limit = models.CharField('Threshold Limit', default='0', max_length=200)
+
+    level_1_warning_unit = models.IntegerField('Sensor Level 1',default=0)
+    level_2_warning_unit = models.IntegerField('Sensor Level 2',default=0)
+    level_3_warning_unit = models.IntegerField('Sensor Level 3',default=0)
+    level_1_color = models.CharField('Green Level Limit',max_length=50, null=True, blank=True, default='#ADFF2F')  ## Default Green Color
+    level_2_color = models.CharField('Yellow Level Limit',max_length=50, null=True, blank=True, default='#FFA500')  ## Default Orange Color
+    level_3_color = models.CharField('Red Level Limit',max_length=50, null=True, blank=True, default='#FF0000')  ## Default Red Color
+    level_1_msg = models.CharField(max_length=200, null=True, blank=True,
+                                   default='Environment Sensor Condition:First Stage Warning Message , Please be Careful.')
+    level_2_msg = models.CharField(max_length=200, null=True, blank=True,
+                                   default='Environment Sensor Condition:Second Stage Warning Message , Please be alert situation is not good.')
+    level_3_msg = models.CharField(max_length=200, null=True, blank=True,
+                                   default='Environment Sensor Condition:Third Stage Warning Message , Please  leave the underground')
+
+    level_1_audio = models.FileField(upload_to='environment_sensor_warning_audio/', null=True, blank=True)
+    level_2_audio = models.FileField(upload_to='environment_sensor_warning_audio/', null=True, blank=True)
+    level_3_audio = models.FileField(upload_to='environment_sensor_warning_audio/', null=True, blank=True)
+    interval_time = models.IntegerField(null=True, blank=True, default='30')
+    audio_play_type = models.CharField(max_length=10, default='mp3only')
+
     description = models.TextField('Description', max_length=200)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
     class Meta:
-        db_table="sensor_sensor_node"
-        unique_together = ('mine_id','node_id','sensorid')
+        db_table = "sensor_sensor_node"
+        unique_together = ('mine_id','node_id','sensor_id')
 
 
 class Wireless(models.Model):

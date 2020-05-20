@@ -312,23 +312,34 @@ span.glyphicon.glyphicon-pencil:hover{
 img.markerIcon{
 height:auto;
 }
+@media(min-width: 375px) {
+    #content {
+        padding-top: 50px;
+    }
+    .custom-breadcrumb {
+            list-style: none;
+            overflow: hidden;
+
+        }
+}
+
 @media(min-width: 768px){
     #content{
-        padding-top:220px;
+        padding-top:180px;
     }
     .navbar-nav{
         float:none !important;
     }
 
 }
-@media(min-width:1024px){
+@media(min-width:969px){
     #content{
-        padding-top:150px;
+        padding-top:100px;
     }
 }
-@media(min-width:1700px){
+@media(min-width:1825px){
     #content{
-        padding-top:0px;
+        padding-top:10px;
     }
 }
 @media screen {
@@ -739,7 +750,7 @@ if it's not present, don't show loader */
 	}
 	.KBmap__mapHolder img{
 		width: auto;
-	    height: 100%;
+	    height: auto;
 	}
 h1 { text-align: center; margin-top: 150px; }
 
@@ -758,5 +769,87 @@ h1 { text-align: center; margin-top: 150px; }
         td:nth-last-child(2) {
             text-align:center;
         }
-        @media(min-width: 768px)
-@mdiapadding-top: 220px;
+
+
+       .breadcrumb-arrow {
+    height: 36px;
+    padding: 0;
+    line-height: 36px;
+    list-style: none;
+    background-color: #e6e9ed
+}
+.breadcrumb-arrow li:first-child a {
+    border-radius: 4px 0 0 4px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px
+}
+.breadcrumb-arrow li, .breadcrumb-arrow li a, .breadcrumb-arrow li span {
+    display: inline-block;
+    vertical-align: top
+}
+.breadcrumb-arrow li:not(:first-child) {
+    margin-left: -5px
+}
+.breadcrumb-arrow li+li:before {
+    padding: 0;
+    content: ""
+}
+.breadcrumb-arrow li span {
+    padding: 0 10px
+}
+.breadcrumb-arrow li a, .breadcrumb-arrow li:not(:first-child) span {
+    height: 36px;
+    padding: 0 10px 0 25px;
+    line-height: 36px
+}
+.breadcrumb-arrow li:first-child a {
+    padding: 0 10px
+}
+.breadcrumb-arrow li a {
+    position: relative;
+    color: #fff;
+    text-decoration: none;
+    background-color: #3bafda;
+    border: 1px solid #3bafda
+}
+.breadcrumb-arrow li:first-child a {
+    padding-left: 10px
+}
+.breadcrumb-arrow li a:after, .breadcrumb-arrow li a:before {
+    position: absolute;
+    top: -1px;
+    width: 0;
+    height: 0;
+    content: '';
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent
+}
+.breadcrumb-arrow li a:before {
+    right: -10px;
+    z-index: 3;
+    border-left-color: #3bafda;
+    border-left-style: solid;
+    border-left-width: 11px
+}
+.breadcrumb-arrow li a:after {
+    right: -11px;
+    z-index: 2;
+    border-left: 11px solid #2494be
+}
+.breadcrumb-arrow li a:focus, .breadcrumb-arrow li a:hover {
+    background-color: #4fc1e9;
+    border: 1px solid #4fc1e9
+}
+.breadcrumb-arrow li a:focus:before, .breadcrumb-arrow li a:hover:before {
+    border-left-color: #4fc1e9
+}
+.breadcrumb-arrow li a:active {
+    background-color: #2494be;
+    border: 1px solid #2494be
+}
+.breadcrumb-arrow li a:active:after, .breadcrumb-arrow li a:active:before {
+    border-left-color: #2494be
+}
+.breadcrumb-arrow li span {
+    color: #434a54
+}

@@ -1,5 +1,6 @@
 from email.mime.image import MIMEImage
 
+from background_task import background
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate
@@ -67,26 +68,35 @@ def signup(request):
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
-            mail_subject = 'Activate your Miner account.'
-
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
+            sendverifyemail(current_site.domain, user.username, user.email, urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user))
             data['confirm_registration'] = 'Please confirm your email address to complete the registration'
             return render(request, 'acc_or_not.html', {'data': data})
     else:
         # mine = MineDetails.objects.all()
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
+
+
+@background(schedule=1)
+def sendverifyemail(domain,user,email,uid,token):
+    print('Email Background',domain,user,email,uid,token)
+    mail_subject = 'Activate your Miner account.'
+    message = render_to_string('acc_active_email.html', {
+        'user': user,
+        'domain': domain,
+        'uid': uid,
+        'token': token,
+    })
+    to_email = email
+    email = EmailMessage(
+        mail_subject, message, to=[to_email]
+    )
+    try:
+        email.send()
+        return True
+    except Exception as e:
+        print('error',e)
+        sendverifyemail(domain, user, email, uid, token)
 
 def email_embed_image(email, img_content_id, img_data):
     """

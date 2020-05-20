@@ -9,6 +9,8 @@ urlpatterns = [
     path('', views.dashboard_calling, name='dashboard_calling'),
     path('fetchwl',views.fetchwl,name="fetchwl"),
     path('fetchsl',views.fetchsl,name="fetchsl"),
+    path('hi',views.hi,name="hi"),
+    path('export/<int:mine>',views.export,name="export"),
     path('404',TemplateView.as_view(template_name='404.html'),name="404"),
     path('buttons',TemplateView.as_view(template_name='buttons.html'),name="buttons"),
     path('cards',TemplateView.as_view(template_name='cards.html'),name="cards"),

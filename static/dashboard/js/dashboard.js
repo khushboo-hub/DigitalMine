@@ -12,6 +12,7 @@ $(document).ready(function () {
     let water_url = $('#watermonitoring').attr('data-url');
     let water_values_url = $('#watermonitoring').attr('data-values-url');
     let fire_exp_url = $('#fireExp').attr('data-url');
+    let notification_url = $('#alertsDropdown').attr('data-url');
     var StrataAjax;
     var strataFlag = 0;
     var waterFlag = 0;
@@ -190,8 +191,8 @@ $(document).ready(function () {
             },
             success: function (data) {
                 var strata = data.result;
-                 strata_l_Value = parseFloat(strata.level1);
-                 strata_l_color = strata.level1_color;
+                strata_l_Value = parseFloat(strata.level1);
+                strata_l_color = strata.level1_color;
 
                 strata_m_Value = parseFloat(strata.level2);
                 strata_m_color = strata.level2_color;
@@ -209,7 +210,7 @@ $(document).ready(function () {
                 strata_second_audio = strata.level2_audio;
                 strata_third_audio = strata.level3_audio;
 
-              //  console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
+                //  console.log('strata l m h', strata_l_Value, strata_m_Value, strata_h_Value);
 
                 //INITIALIZING PLOTLY
                 var y = [];
@@ -312,7 +313,7 @@ $(document).ready(function () {
 
                 //PLOTLY INITIALZATION END
 
-               // stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
+                // stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
 
             },
             error: function () {
@@ -323,7 +324,7 @@ $(document).ready(function () {
 
     $("#current_date").removeAttr('style');
 
-    var CHECK=0;
+    var CHECK = 0;
     //------------------------------------------------------------------------------------------------------------------
     var sock = new WebSocket("ws://192.168.1.131:3000");  //replace this address with the one the node.js server prints out. keep port 3000
     //var display=document.getElementById("display")
@@ -340,13 +341,13 @@ $(document).ready(function () {
         var sensor = JSON.parse(event.data);
         if (sensor.hasOwnProperty('id')) {
             if (sensor.id == "one") {
-                GasMonitoring(sensor.data[0], 20, "methane");
-                GasMonitoring(sensor.data[0], 20, "hydrogen");
-                GasMonitoring(sensor.data[0], 20, "nodeprogress");
+                //   GasMonitoring(sensor.data[0], 20, "methane");
+                /// GasMonitoring(sensor.data[0], 20, "hydrogen");
+                //GasMonitoring(sensor.data[0], 20, "nodeprogress");
 
                 var update = {
-                    x: [[time,time], [time,time], [time,time], [time,time], [time]],
-                    y: [[5,5], [10,10], [20,20], [20 * 1.2,20*1.2], [sensor.data[0]]],
+                    x: [[time, time], [time, time], [time, time], [time, time], [time]],
+                    y: [[5, 5], [10, 10], [20, 20], [20 * 1.2, 20 * 1.2], [sensor.data[0]]],
                 };
                 var olderTime = time.setMinutes(time.getMinutes() - 1);
                 var futureTime = time.setMinutes(time.getMinutes() + 1);
@@ -367,13 +368,13 @@ $(document).ready(function () {
                     }
                 };
                 CHECK++;
-                if(sensor.data[0]<10){
-                    CHECK=0;
+                if (sensor.data[0] < 10) {
+                    CHECK = 0;
                 }
                 //console.log('CHECK',CHECK);
-                if(CHECK>3){
-                     checkAndPlay(Number(sensor.data[0]), 5, 10, 20, "Strata Warning", strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
-                     CHECK=0;
+                if (CHECK > 3) {
+                    checkAndPlay(Number(sensor.data[0]), 5, 10, 20, "Strata Warning", strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
+                    CHECK = 0;
                 }
 
                 Plotly.relayout('stratamonitoring', minuteView);
@@ -456,7 +457,7 @@ $(document).ready(function () {
     };*/
 
     function checkAndPlay(sensorValue, l_value, m_value, h_value, string, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-       // console.log(sensorValue);
+        // console.log(sensorValue);
 
         var loc = window.location;
         var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
@@ -557,7 +558,7 @@ $(document).ready(function () {
                     water_m_value = str_array[2];
                     water_h_value = str_array[3];
                     water_t_height = parseInt(str_array[4]);
-                //    console.log(water_l_value, water_m_value, water_h_value, water_t_height)
+                    //    console.log(water_l_value, water_m_value, water_h_value, water_t_height)
 
                     water_audio_type = str_array[5];
                     water_first_warning = str_array[6];
@@ -674,7 +675,7 @@ $(document).ready(function () {
                 //PLOTLY INITIALZATION END
 
 
-               // watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
+                // watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
 
             },
             error: function () {
@@ -750,7 +751,7 @@ $(document).ready(function () {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
-               // console.log('fire', data);
+                // console.log('fire', data);
 
                 result = data.result;
 
@@ -775,7 +776,7 @@ $(document).ready(function () {
 
                 var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                 var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                //console.log(lowest, highest);
+                console.log('HL', lowest, highest);
                 var trace1 = {
                     x: [-65, 80],
                     y: [18, 18],
@@ -806,7 +807,7 @@ $(document).ready(function () {
                     },
                     type: 'scatter'
                 };
-               // console.log(dates)
+                // console.log(dates)
                 date = ['1', '2', '3'];
                 var trace3 = {
                     x: x_list,
@@ -831,7 +832,7 @@ $(document).ready(function () {
                 };
 
 
-                var data = [trace1, trace2, trace3];
+                var data = [trace3];
                 var layout = {
                     title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
                     titlefont: {
@@ -843,7 +844,8 @@ $(document).ready(function () {
                         tick0: 0,
                         dtick: 10,
                         autoscale: false,
-                        range: [-100, 100],
+
+                        range: [-highest * 2, highest * 2],
                         ticks: "outside",
                         showgrid: true,
                         zeroline: true,
@@ -864,7 +866,7 @@ $(document).ready(function () {
                         dtick: 2,
                         autoscale: false,
                         ticks: 'inside',
-                        range: [-20, 20],
+                        range: [-highest * 2, highest * 2],
                         showgrid: true,
                         zeroline: true,
                         showline: true,
@@ -877,6 +879,56 @@ $(document).ready(function () {
                         linewidth: 6,
 
                     },
+                    annotations: [
+                        {
+                            x: -highest * 1.2,
+                            y: highest * 1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: highest * 1.2,
+                            y: highest * 1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: -highest * 1.2,
+                            y: -highest * 1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        },
+                        {
+                            x: highest * 1.2,
+                            y: -highest * 1.8,
+                            xref: 'x',
+                            yref: 'y',
+                            text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                            bgcolor: "#ff7f0e",
+                            showarrow: false,
+                            arrowhead: 7,
+                            ax: 0,
+                            ay: -40
+                        }
+                    ],
 
                     showlegend: false
                 };
@@ -892,5 +944,76 @@ $(document).ready(function () {
 
 
     //FIRE EXP
+    var HashDataPrev = "";
+    var HashDataCurr = "";
+    (function notification() {
 
-});
+        $.ajax({
+            type: "get",
+            url:notification_url ,
+            success: function (data) {
+                HashDataPrev = "";
+                HashDataPrev = HashDataCurr;
+
+                HashDataCurr = "";
+
+                data = data.result;
+                X = data;
+                // console.log('notification', data);
+                for (notify in data) {
+                    HashDataCurr += data[notify].id;
+                }
+                if (HashDataPrev != HashDataCurr) {
+                    $('#notifications').empty();
+                     $('#notifications').append('<h6 class="dropdown-header">Alerts Center </h6>');
+                    if (!isEmpty(data) && HashDataPrev != HashDataCurr) {
+
+                        for (notify in data) {
+
+
+                            messageText = (data[notify].isread == 1) ? '<span class="font-weight-bold">' + data[notify].message + '</span>' : data[notify].message;
+                            if (data[notify].type == 1) {
+                                htmlOP = '<a class="dropdown-item d-flex align-items-center" href="#">\n' +
+                                    '                                <div class="mr-3">\n' +
+                                    '                                    <div class="icon-circle bg-primary">\n' +
+                                    '                                        <i class="fas fa-donate text-white"></i>\n' +
+                                    '                                    </div>\n' +
+                                    '                                </div>\n' +
+                                    '                                <div>\n' +
+                                    '                                    <div class="small text-gray-500">' + data[notify].time + '</div>\n' +
+                                    messageText +
+                                    '                                </div>\n' +
+                                    '                            </a>'
+                            } else if (data[notify].type == 2) {
+
+                                htmlOP = '<a class="dropdown-item d-flex align-items-center" href="#">\n' +
+                                    '                                <div class="mr-3">\n' +
+                                    '                                    <div class="icon-circle bg-success">\n' +
+                                    '                                        <i class="fas fa-donate text-white"></i>\n' +
+                                    '                                    </div>\n' +
+                                    '                                </div>\n' +
+                                    '                                <div>\n' +
+                                    '                                    <div class="small text-gray-500">' + data[notify].time + '</div>\n' +
+                                    messageText +
+                                    '                                </div>\n' +
+                                    '                            </a>'
+                            }
+                            $('#notifications').append(htmlOP);
+                        }
+
+                    }
+                    $('#notifications').append('<a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>');
+                }
+
+            },
+            complete: function () {
+                    setTimeout(notification, 3000);
+                }
+        })
+        ;
+    })
+    (notification_url);
+
+})
+;
+var X;

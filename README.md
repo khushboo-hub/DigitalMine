@@ -44,7 +44,7 @@ Before running the application we need to create the needed DB tables:
     
 or
 
-`We can just import the file ''myiot.sql''  into phpmyadmin`
+`We can just import the file ''iot_structure.sql'' or ''iot_structure_and_data'' into phpmyadmin for the structure of the project and the structure and data respectively `
 
 
 
