@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+<style>
+table.blueTable {
+  border: 6px solid #1C6EA4;
+  background-color: #EEEEEE;
+  width: 100%;
+  text-align: center;
+  border-collapse: collapse;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 3px;
+}
+table.blueTable tbody td {
+  font-size: 13px;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #1C6EA4;
+  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  border-bottom: 2px solid #444444;
+}
+table.blueTable thead th {
+  font-size: 15px;
+  font-weight: bold;
+  color: #FFFFFF;
+  border-left: 2px solid #D0E4F5;
+}
+
+</style>
+     {% csrf_token %}
+    <div class="container main_page">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header"><b>SHOW STRATA AVERAGE REPORT
+                </b></h2>
+                <div class="row">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Mine:</label>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.mine_name }}
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Location:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_location_id"
+                                data-url="{% url 'Strata:fetch_location_ajax' %}">
+                            <option value="">--Select Value--</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Sensor:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_sensor_list"
+                                data-url="{% url 'Strata:fetch_sensor_ajax' %}">
+                            <option value="">--Select Value--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">From Date Time:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="from_date" value="{% now "Y-m-d  08:00:00" %}">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">To Date Time:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="to_date" value="{% now "Y-m-d  H:00:00))" %}">
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3">
+                         <input type="submit" id="btn_show" data-url="{% url 'Strata:fetch_sensor_average_date_range' %}"
+                               class="btn btn-primary" value="Show"/>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-10" style="margin-top:15px;" id="fill_tbl">
+
+            </div>
+            <div class="col-md-2 main_page" style="display: none;">
+                <legend>Color Code:</legend>
+                <h3><b><span style='color:red; margin-top: 15px;'>Highest Value</span></b></h3>
+                <h3><b><span style='color:green; margin-top: 15px;'>Average Value</span></b></h3>
+                <h3><b><span style='color:blue; margin-top: 15px;'>Lowest Value</span></b></h3>
+                 <input type="button" class="btn-info" value="Print Report" id="print_tbl" />
+                 </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var X;
+        $(document).ready(function () {
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:00:00'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:00:00'
+            });
+
+            $("#id_mine_name").addClass('form-control');
+
+
+            let strata_location_url = $('#id_location_id').attr('data-url');
+            let strata_sensor_url = $('#id_sensor_list').attr('data-url');
+
+            $("#id_mine_name").on("change", function () {
+                let mine_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: strata_location_url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result,"id_location_id");
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown(result,id) {
+                $("#"+id).html("<option value=''>--Select Value--</option>");
+                for (var resultValue in result) {
+                    if (result.hasOwnProperty(resultValue)) {
+                        $("#"+id).append($("<option />").val(result[resultValue].id).text(result[resultValue].name));
+                    }
+                }
+            }
+
+            $("#id_location_id").on("change", function () {
+                let location_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: strata_sensor_url,
+                    data: {
+                        'id': location_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result,"id_sensor_list");
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            $("#btn_show").click(function () {
+                let sensor_id = $("#id_sensor_list").val();
+                let url = $(this).data('url');
+                //console.log(url);
+                if (sensor_id) {
+                    let date_from = $("#from_date").val();
+                    let date_to = $("#to_date").val();
+                    if(isEmpty(date_from)){
+                        date_from='1899-01-01 00:00:00';
+                    }
+                    if(isEmpty(date_to)){
+                        date_to='2999-01-01 00:00:00';
+                    }
+                    if(isEmpty(sensor_id)){
+                        alert('Please choose sensor');
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {
+                            'id': sensor_id,
+                            'datetime_from': date_from,
+                            'datetime_to': date_to,
+                            'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val()
+                        },
+                        beforeSend: function () {
+                            $("#btn_show").val("Please wait...");
+                            $("#btn_show").prop('disabled', true);
+                        },
+                        success: function (data) {
+                            //console.log(data);
+                            fill_table_sensor(data);
+                        },
+                        error: function(xhr, status, error) {
+                          console.log(xhr);
+                        }
+                    });
+
+                } else {
+                    alert("Please choose sensor");
+                }
+                 $("#btn_show").val("Show");
+                $("#btn_show").prop('disabled', false);
+            });
+
+            function fill_table_sensor(result) {
+
+                var start_date = new Date((result[0].date_from));
+                var end_date = new Date(result[2].date_to);
+                var start_time = result[1].time_from;
+                var end_time = result[3].time_to;
+                var results = result[4].results;
+
+
+                show_tbl(start_date,end_date,start_time,end_time,results);
+                $(".main_page").removeAttr("style");
+            }
+        });
+        function show_tbl(start_date,end_date,start_time,end_time,result) {
+                $("#fill_tbl").html("");
+                 var $table = $('<table class="blueTable">');
+                 var start_time_head = parseInt(start_time);
+                 var start_time_footer = parseInt(start_time);
+                 var custom_thead = "<tr><th style='text-align:center'>Date</th>";
+
+                 while (start_time_head < parseInt(end_time)) {
+
+                    custom_thead = custom_thead +'<th>'+start_time_head+":00:00"+'-'+(start_time_head+1)+":00:00" +'</th>';
+                    start_time_head = start_time_head+1;
+
+                 }
+                 custom_thead = custom_thead +'<th>Total</th></tr>';
+                 $table.append(custom_thead);
+
+                //tbody
+                 var $tbody = $table.append('<tbody />').children('tbody');
+                 var custom_tbody = "";
+                 var start_time = parseInt(start_time);
+                 var start_time_actual = start_time;
+
+                 var overall_part = 0;
+                 var overall_every = 0;
+                 var oveall_highest = 0;
+                 var oveall_lowest = 0;
+
+                 while (start_date <= end_date) {
+                     var date_wise_highest = 0;
+                     var date_wise_average = 0;
+                     var date_wise_lowest = 0;
+                     var date_wise_part = 0;
+                     var date_wise_every = 0;
+
+                    custom_tbody = custom_tbody+'<tr>';
+                    custom_tbody = custom_tbody+'<td>'+ moment(start_date).format('DD-MM-YYYY')+'</td>';
+                    start_time = start_time_actual;
+                    while (start_time < parseInt(end_time)) {
+                        var value ="";
+                        for (i = 0;  i < result.length; i++) {
+
+                            if((result[i][4] == moment(start_date).format('YYYY-MM-DD')) &&(result[i][5] == start_time) ){
+                                if(date_wise_highest < result[i][2]){
+                                    date_wise_highest = result[i][2];
+                                }
+                                if(date_wise_lowest == 0){
+                                    date_wise_lowest = result[i][3];
+                                }else if(date_wise_lowest > result[i][3]){
+                                    date_wise_lowest = result[i][3];
+                                }
+                                //--------------------------------------------------------------------------------------
+                                if(oveall_highest < result[i][2]){
+                                    oveall_highest = result[i][2];
+                                }
+                                if(oveall_lowest == 0){
+                                    oveall_lowest = result[i][3];
+                                }else if(oveall_lowest > result[i][3]){
+                                    oveall_lowest = result[i][3];
+                                }
+
+                                date_wise_part = date_wise_part + (result[i][0] * result[i][1]);
+                                overall_part = overall_part + (result[i][0] * result[i][1]);
+                                date_wise_every = date_wise_every + result[i][0];
+                                overall_every = overall_every + result[i][0];
+
+                                value = "<span style='color:red;'>"+result[i][2]+"</span><br><span style='color:green;'>"+result[i][1]+"</span><br><span style='color:blue;'>"+result[i][3]+"</span><br>";
+                            }
+                         }
+
+                         custom_tbody = custom_tbody+ '<td>'+value+'</td>';
+                         start_time = start_time+1;
+
+                    }
+                    date_wise_average =  parseFloat(date_wise_part/date_wise_every) ? parseFloat(date_wise_part/date_wise_every).toFixed(2) : 0;;
+
+                    custom_tbody = custom_tbody+'<td><span style="color:red;">'+ date_wise_highest+'</span><br><span style="color:green;">'+date_wise_average+'</span><br><span style="color:blue;">'+date_wise_lowest+'</span></td></tr>';
+                    start_date.setDate(start_date.getDate() + 1);
+                 }
+                $table.append(custom_tbody);
+                 //footer
+                 var custom_tfooter = "<tr><td style='text-align:center'>Total</td>";
+
+                 while (start_time_footer < parseInt(end_time)) {
+
+                    custom_tfooter = custom_tfooter +'<td></td>';
+                    start_time_footer = start_time_footer+1;
+                 }
+
+                 var overall_avg = (overall_part/overall_every).toFixed(2);
+                 custom_tfooter = custom_tfooter +'<td><span style="color:red;">'+ oveall_highest+'</span><br><span style="color:green;">'+overall_avg+'</span><br><span style="color:blue;">'+oveall_lowest+'</span></td></tr>';
+                 $table.append(custom_tfooter);
+                 $table.appendTo('#fill_tbl');
+
+        }
+         $('#print_tbl').on('click', function(){
+            $(".main_page").hide();
+            window.print();
+            $(".main_page").show();
+         });
+    </script>
+{% endblock %}

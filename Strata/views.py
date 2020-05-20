@@ -6,27 +6,21 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
-from django.core.serializers import json
 from django.db import connection
 from django.db.models import Max
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, render_to_response
 from django.utils.html import strip_tags
-from gtts import gTTS
-from matplotlib._cm_listed import data
-from past.builtins import apply
-from pyparsing import Group
-from apps.settings import MEDIA_ROOT
 from setting.models import setting
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model
 from .forms import Strata_location_Form, Strata_sensor_Form, Live_data_tabular, Strata_sensor_flag_Form
 from .models import Strata_location, MineDetails, Strata_sensor, Strata_sensor_data, Strata_sensor_flag
 from background_task import background
-# from pygame import mixer  # Load the required library
 from django.shortcuts import render, redirect
 from background_task.models import Task
-from background_task.models_completed import CompletedTask
-from django.utils import timezone
+from django.db.models import Avg,Min
+
+
 
 # from annoying.functions import get_object_or_None
 
@@ -425,7 +419,7 @@ def fetch_sensor_details(request):
 
 # =======================================================================================================================
 @login_required
-def show_sensor_graph(request, template_name='Convergence/live_data_graph.html'):
+def show_sensor_graph(request, template_name='live_graph_strata.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
@@ -445,167 +439,6 @@ def iframe_show_sensor_graph(request, mine_id, location_id, sensors_id,
 
     return render(request, template_name, {'availability': availability, 'sensor_id': sensor_id})
 
-
-@background(schedule=5)
-def run_back_save(sensor_id):
-    print("===============Strata message start=========================")
-    global hcount
-    global mcount
-    global lcount
-    inst = Strata_sensor_data()
-    inst.sensor_id = sensor_id
-    inst.sensor_value = '0.00'
-    sensor_details = Strata_sensor.objects.get(id=sensor_id)
-
-    try:
-        response = requests.get('http://' + str(sensor_details.ip_address))
-        sensor_val = strip_tags(response.text)
-        if (sensor_val):
-            inst.sensor_value = str(float(sensor_val))
-        else:
-            inst.sensor_value = 'No Data'
-    except Exception as x:
-        inst.sensor_value = 'Network Error'
-    inst.save()
-
-    print(inst.sensor_value)
-    # print("***** Data Saved *****")
-    db_time = ""
-    if (inst.sensor_value != "Network Error"):
-        mail_html_content = ""
-        flag_inst = Strata_sensor_flag()
-        if (sensor_details.level_3_warning_unit < float(inst.sensor_value)):
-            current_status = Strata_sensor_flag.objects.filter(sensor_id=sensor_id)
-
-            if (current_status):
-                for shareHigh in current_status:
-                    db_time = shareHigh.pause_waring_duration_end_datetime
-
-                    if (shareHigh.type == "High"):
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = shareHigh.limit + 1
-                        obj.type = "High"
-                        obj.save()
-                    else:
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = 1
-                        obj.type = "High"
-                        obj.save()
-
-                # -----------------------High warning code start------------------------------ if datetime.now() >= row[12]:
-
-                if datetime.now() >= db_time:
-                    if (obj.limit > 2):
-                        mail_subject = "STRATA WARNING MESSAGES - High"
-                        mail_html_content = "Sensor :" + sensor_details.sensor_name + " reach high warning level. current value is " + str(
-                            inst.sensor_value)
-                        push_mail(mail_subject, mail_html_content)
-                        # mixer.init()
-                        if (sensor_details.audio_play_type == "mp3only"):
-                            # mixer.music.load(MEDIA_ROOT+"/"+str(sensor_details.level_3_audio))
-                            print('hello')
-                        else:
-                            msg = sensor_details.level_3_msg
-                            tts = gTTS(text=msg, lang='en')
-                            tts.save(f"media/strata_warning_audio/highTextWarning{hcount % 2}.mp3")
-                            #  mixer.music.load(MEDIA_ROOT + f"/strata_warning_audio/highTextWarning{hcount%2}.mp3")
-                            # mixer.music.play()
-                        hcount += 1
-                # -----------------------High warning code end------------------------------
-            else:
-                flag_inst.sensor_id = sensor_id
-                flag_inst.limit = 1
-                flag_inst.type = "High"
-                flag_inst.save()
-        elif ((sensor_details.level_2_warning_unit < float(inst.sensor_value)) and (
-                float(inst.sensor_value) < sensor_details.level_3_warning_unit)):
-            current_status = Strata_sensor_flag.objects.filter(sensor_id=sensor_id)
-            if (current_status):
-                for shareMedium in current_status:
-                    db_time = shareMedium.pause_waring_duration_end_datetime
-                    if (shareMedium.type == "Medium"):
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = shareMedium.limit + 1
-                        obj.type = "Medium"
-                        obj.save()
-                    else:  # either not in database or change type
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = 1
-                        obj.type = "Medium"
-                        obj.save()
-
-                # -----------------------Medium warning code start------------------------------
-                if datetime.now() >= db_time:
-                    if (obj.limit > 2):
-                        mail_subject = "STRATA WARNING MESSAGES - Medium"
-                        mail_html_content = "Sensor :" + sensor_details.sensor_name + " reach medium warning level. current value is " + inst.sensor_value
-                        push_mail(mail_subject, mail_html_content)
-                        # mixer.init()
-                        if (sensor_details.audio_play_type == "mp3only"):
-                            mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_2_audio))
-                        else:
-                            msg = sensor_details.level_2_msg
-                            tts = gTTS(text=msg, lang='en')
-                            tts.save(f"media/strata_warning_audio/mediumTextWarning{mcount % 2}.mp3")
-                            # mixer.music.load(MEDIA_ROOT + f"/strata_warning_audio/mediumTextWarning{mcount%2}.mp3")
-                            # mixer.music.play()
-                        mcount += 1
-                        # print(mail_subject)
-                # -----------------------Medium warning code end------------------------------
-            else:
-                flag_inst.sensor_id = sensor_id
-                flag_inst.limit = 1
-                flag_inst.type = "Medium"
-                flag_inst.save()
-
-        elif ((sensor_details.level_1_warning_unit < float(inst.sensor_value)) and (
-                float(inst.sensor_value) < sensor_details.level_2_warning_unit)):
-            current_status = Strata_sensor_flag.objects.filter(sensor_id=sensor_id)
-            if (current_status):
-                for shareLow in current_status:
-                    db_time = shareLow.pause_waring_duration_end_datetime
-                    if (shareLow.type == "Low"):
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = shareLow.limit + 1
-                        obj.type = "Low"
-                        obj.save()
-
-                    else:  # either not in database or change type
-                        obj = Strata_sensor_flag.objects.get(sensor_id=sensor_id)
-                        obj.sensor_id = sensor_id
-                        obj.limit = 1
-                        obj.type = "Low"
-                        obj.save()
-
-                # -----------------------Low warning code start------------------------------
-                if datetime.now() >= db_time:
-                    if (obj.limit > 2):
-                        mail_subject = "STRATA WARNING MESSAGES - Low"
-                        mail_html_content = "Sensor :" + sensor_details.sensor_name + " reach low warning level. current value is " + inst.sensor_value
-                        push_mail(mail_subject, mail_html_content)
-                        # mixer.init()
-                        if (sensor_details.audio_play_type == "mp3only"):
-                            print('hwllo')
-                        else:
-                            msg = sensor_details.level_1_msg
-                            tts = gTTS(text=msg, lang='en')
-                            tts.save(f"media/strata_warning_audio/lowTextWarning{lcount % 2}.mp3")
-                        #  mixer.music.load(MEDIA_ROOT + f"/strata_warning_audio/lowTextWarning{lcount%2}.mp3")
-                        # mixer.music.play()
-                        lcount += 1
-                # -----------------------Low warning code end------------------------------
-            else:
-                flag_inst.sensor_id = sensor_id
-                flag_inst.limit = 1
-                flag_inst.type = "Low"
-                flag_inst.save()
-            print("Low LEVEL")
-    print("===============Strata message end=========================")
 
 
 # =======================================================================================================================
@@ -775,13 +608,6 @@ def fetch_sensor_date_range(request):
         sensor_id = request.GET.get('id', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
-        # print("B Form Date:" + date_from + "B To Date:" + date_to)
-
-        # data['result']=date_from
-        # from_d = datetime.strptime('2018-12-26 00:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-        # from_t = datetime.strptime('2018-12-26 23:59:59.000000', '%Y-%m-%d %H:%M:%S.%f')
-        # from_d = datetime.strptime(date_from+' 00:00:00.000000', '%Y-%m-%d %H:%M:%S.%f')
-        # from_t = datetime.strptime(date_to+' 23:59:59.000000', '%Y-%m-%d %H:%M:%S.%f')
 
         from_d = datetime.strptime(date_from + '.000000', '%Y-%m-%d %H:%M:%S.%f')
         from_t = datetime.strptime(date_to + '.000000', '%Y-%m-%d %H:%M:%S.%f')
@@ -793,9 +619,11 @@ def fetch_sensor_date_range(request):
         mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
         sensor_table_details = Strata_sensor_data.objects.filter(sensor_id=sensor_id).filter(
             created_date__range=(from_d, from_t)).order_by('-id')
+
+        #print(sensor_table_details.query)
         prepared_data = []
         for s in sensor_table_details:
-            prepared_data.append({'date': str(s.created_date),
+            prepared_data.append({'date': str((s.created_date).strftime("%Y-%m-%d %H:%M:%S")),
                                   'mine': str(mine_details.name),
                                   'location': str(location_details.location_name),
                                   'sensor': str(sensor_details.sensor_name),
@@ -847,55 +675,6 @@ def ajx_sensor_graph_date_range(request):
     return JsonResponse(data)
 
 @login_required
-def multi_sensor_warning(request):
-    run_multi_sensor_validation(repeat=10)
-    return HttpResponse("Multi sensor validation testing start")
-
-
-@background(schedule=10)
-def run_multi_sensor_validation():
-    location_data = Strata_location.objects.all()
-    if (location_data):
-        for location in location_data:
-            sensor_details = Strata_sensor.objects.filter(location_id=location.id)
-            if (sensor_details):
-                total_sensor = sensor_details.count()
-                wherein_data = ""
-                for sensor in sensor_details:
-                    if (wherein_data):
-                        wherein_data = wherein_data + "," + str(sensor.id)
-                    else:
-                        wherein_data = str(sensor.id)
-                with connection.cursor() as cursor:
-                    sql_query = 'select a.type as type,count(a.type) as total from strata_sensor_flag as a where a.sensor_id in (' + wherein_data + ') group by a.type'
-                    cursor.execute(sql_query)
-                    row = cursor.fetchall()
-                    if (row):
-                        for base in row:
-                            if (base[1] > (total_sensor / 2)):
-                                if (str(base[0]) == "High"):
-                                    mail_subject = "STRATA WARNING MESSAGES - High"
-                                    mail_html_content = "Location" + location.name + "has cross high warning level"
-                                    push_mail(mail_subject, mail_html_content)
-                                    # mixer.init()
-                                # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_3_audio))
-                                # mixer.music.play()
-                                if (base[0] == "Low"):
-                                    mail_subject = "STRATA WARNING MESSAGES - Low"
-                                    mail_html_content = "Location" + location.name + "has cross low warning level"
-                                    push_mail(mail_subject, mail_html_content)
-                                    # mixer.init()
-                                    # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_1_audio))
-                                    # mixer.music.play()
-                                if (str(base[0]) == "Medium"):
-                                    mail_subject = "STRATA WARNING MESSAGES - Medium"
-                                    mail_html_content = "Location" + location.name + "has cross medium warning level"
-                                    push_mail(mail_subject, mail_html_content)
-                                    # mixer.init()
-                                    # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_2_audio))
-                                    # mixer.music.play()
-
-@login_required
 def edit_sensor_in_location(request, sensor_id):
     data = get_object_or_404(Strata_sensor, id=sensor_id)
     form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
@@ -943,9 +722,128 @@ def fetch_map_image(request):
     return JsonResponse(data)
     
 @login_required
-def daily_report(request):
-    return HttpResponse("Under Development")
+def strata_average_report(request,template_name='strata_average_report.html'):
+    form = Live_data_tabular()
+    return render(request, template_name, {'form': form})
     
 @login_required
-def warning_report(request):
-    return HttpResponse("Under Development")
+def warning_report(request, template_name='warning_date_range_tabular.html'):
+    form = Live_data_tabular()
+    return render(request, template_name, {'form': form})
+
+@login_required
+def warning_fetch_sensor_date_range(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        warning_value = request.GET.get('warning_value', None)
+
+        from_d = datetime.strptime(date_from + '.000000', '%Y-%m-%d %H:%M:%S.%f')
+        from_t = datetime.strptime(date_to + '.000000', '%Y-%m-%d %H:%M:%S.%f')
+        from_d = from_d.replace(microsecond=000000)
+        from_t = from_t.replace(microsecond=999999)
+
+        sensor_details = Strata_sensor.objects.get(id=sensor_id)
+        
+        if(int(warning_value) == 3):
+            range_from = sensor_details.level_3_warning_unit
+            range_to = sensor_details.level_3_warning_unit + 9999
+        elif(int(warning_value) == 2):
+            range_from = sensor_details.level_2_warning_unit
+            range_to = sensor_details.level_3_warning_unit
+        else:
+            range_from = sensor_details.level_1_warning_unit
+            range_to = sensor_details.level_2_warning_unit
+        
+        location_details = Strata_location.objects.get(id=sensor_details.location_id_id)
+        mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
+        sensor_table_details = Strata_sensor_data.objects.filter(sensor_id=sensor_id).filter(
+            sensor_value__range=(range_from, range_to)).filter(
+            created_date__range=(from_d, from_t)).order_by('-id')
+        #print(sensor_table_details.query)
+        prepared_data = []
+        for s in sensor_table_details:
+            prepared_data.append({'date': str((s.created_date).strftime("%Y-%m-%d %H:%M:%S")),
+                                  'mine': str(mine_details.name),
+                                  'location': str(location_details.location_name),
+                                  'sensor': str(sensor_details.sensor_name),
+                                  'sensor_value': str(s.sensor_value),
+                                  'unit': str(sensor_details.sensor_unit),
+                                  'tag': str(sensor_details.tag_no)})
+
+        data['result'] = prepared_data
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+def fetch_sensor_average_date_range(request):
+    sensor_id = request.POST.get('id', None)
+    datetime_from = request.POST.get('datetime_from', None)
+    datetime_to = request.POST.get('datetime_to', None)
+
+    #data_list = gasModel_auto.objects.filter(date_time__range=(date_from, date_to), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),avg=Avg(NullIf('sensor_value', Value(0))))
+
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(id) as number_of_record ,AVG(CONVERT(sensor_value,UNSIGNED INTEGER)) as average, Max(CONVERT(sensor_value,UNSIGNED INTEGER)) as max_value,Min(CONVERT(sensor_value,UNSIGNED INTEGER)) as min_value, DATE(created_date) as date,HOUR(created_date) as hour FROM strata_sensor_data where sensor_id ='"+sensor_id+"' and created_date BETWEEN '"+datetime_from+"' and '"+datetime_to+"' and sensor_value*0 != sensor_value GROUP BY DATE(created_date ), HOUR( created_date ) order by created_date, hour  desc")
+        row = cursor.fetchall()
+        #print("SELECT COUNT(id) as number_of_record ,AVG(CONVERT(sensor_value,UNSIGNED INTEGER)) as average, Max(CONVERT(sensor_value,UNSIGNED INTEGER)) as max_value,Min(CONVERT(sensor_value,UNSIGNED INTEGER)) as min_value, DATE(created_date) as date,HOUR(created_date) as hour FROM strata_sensor_data where sensor_id ='"+sensor_id+"' and created_date BETWEEN '"+datetime_from+"' and '"+datetime_to+"' and sensor_value*0 != sensor_value GROUP BY DATE(created_date ), HOUR( created_date ) order by created_date, hour  desc")
+
+    datetime_from = datetime_from.split(" ")
+
+    date_from = datetime_from[0];
+    time_from = datetime_from[1];
+
+    datetime_to = datetime_to.split(" ")
+
+    date_to = datetime_to[0];
+    time_to = datetime_to[1];
+    data = []
+    # while((date_from) <= (date_to)):
+    #     pre_date = date_from
+    #     temp_data = []
+    #     while ((time_from) < (time_to)):
+    #         pre_time = time_from
+    #         time_from = (datetime.strptime(time_from, "%H:%M:%S") + timedelta(hours=1)).strftime("%H:%M:%S")
+    #
+    #
+    #         return_data = Strata_sensor_data.objects.filter(
+    #             sensor_id=sensor_id).filter(
+    #             created_date__range=(date_from+" "+pre_time, date_from+" "+time_from)).aggregate(Avg('sensor_value'), Max('sensor_value'), Min('sensor_value'))
+    #
+    #
+    #         temp_data.append({"time_from" :pre_time,"time_to": time_from,"result": return_data})
+    #         date_from = (datetime.strptime(date_from, "%Y-%m-%d") + timedelta(hours=24)).strftime("%Y-%m-%d")
+    #         #print(return_data)
+    #     data.append({"data": pre_date,"result": temp_data})
+
+
+    data.append({"date_from" :date_from})
+    data.append({"time_from": time_from})
+    data.append({"date_to": date_to})
+    data.append({"time_to": time_to})
+    data.append({"results": row})
+    #print(data)
+    return JsonResponse(data, safe=False)
+#==============================back ground task only====================================================================
+@background(schedule=5)
+def run_back_save(sensor_id):
+
+    inst = Strata_sensor_data()
+    inst.sensor_id = sensor_id
+    inst.sensor_value = '0.00'
+    sensor_details = Strata_sensor.objects.get(id=sensor_id)
+
+    try:
+        response = requests.get('http://' + str(sensor_details.ip_address))
+        sensor_val = strip_tags(response.text)
+        if (sensor_val):
+            inst.sensor_value = str(float(sensor_val))
+        else:
+            inst.sensor_value = 'No Data'
+    except Exception as x:
+        inst.sensor_value = 'Network Error'
+    inst.save()
+    print("* strata saved value is "+inst.sensor_value)
+

@@ -35,13 +35,13 @@
                         <label for="" class="" id="">From Date:</label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="from_date" name="">
+                        <input type="text" class="form-control" id="from_date" value="{% now "Y-m-d  08:00:00" %}">
                     </div>
                     <div class="col-md-1">
                         <label for="" class="" id="">To Date:</label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="to_date" name="">
+                        <input type="text" class="form-control" id="to_date" value="{% now "Y-m-d  H:i:s" %}">
                     </div>
                     <div class="col-md-4">
                         <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
@@ -61,10 +61,10 @@
         $(document).ready(function () {
 
             $('#from_date').datetimepicker({
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
             $('#to_date').datetimepicker({
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
             let strata_location_url = $('#id_location_id').attr('data-url');
             let strata_sensor_url = $('#id_sensor_list').attr('data-url');
@@ -139,6 +139,10 @@
                     let datefrom = $("#from_date").val();
                     let dateto = $("#to_date").val();
                     strataStart(sensor_id, strata_url, datefrom, dateto);
+                }else{
+                    alert("Please choose sensor");
+                    $("#btn_show").val("Show");
+                    $("#btn_show").prop('disabled', false);
                 }
             });
 
@@ -155,28 +159,15 @@
                     },
                     success: function (data) {
                         var strata = data.result;
-                        $("#ip_hidden").val(strata.ip);
+
                         let strata_l_Value = parseFloat(strata.level1);
-                        let strata_l_color = strata.level1_color;
-
                         let strata_m_Value = parseFloat(strata.level2);
-                        let strata_m_color = strata.level2_color;
-
                         let strata_h_Value = parseFloat(strata.level3);
-                        let strata_h_color = strata.level3_color;
-
-                        let strata_audio_type = strata.audio_type;
-                        let strata_first_warning = strata.level1_msg;
-                        let strata_second_warning = strata.level2_msg;
-                        let strata_third_warning = strata.level3_msg;
-
-                        let strata_first_audio = strata.level1_audio;
-                        let strata_second_audio = strata.level2_audio;
-                        let strata_third_audio = strata.level3_audio;
-                        //INITIALIZING PLOTLY
 
                         stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, sensor_id, datefrom, dateto);
 
+                        $("#btn_show").val("Show");
+                        $("#btn_show").prop('disabled', false);
                     },
                     error: function () {
                         console.log("Something Went Wrong!");

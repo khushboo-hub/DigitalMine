@@ -32,14 +32,14 @@ urlpatterns = [
     path('show_graph_date_range', views.show_graph_date_range, name='show_graph_date_range'),
     path('ajx_sensor_graph_date_range', views.ajx_sensor_graph_date_range, name='ajx_sensor_graph_date_range'),
     path('warning_level_information', views.warning_level_information, name='warning_level_information'),
-    path('multi_sensor_warning', views.multi_sensor_warning, name='multi_sensor_warning'),
 
     path('fetch_sensor_common_values_ajax', views.fetch_sensor_common_values_ajax, name='fetch_sensor_common_values_ajax'),
     path('edit_sensor_in_location/<int:sensor_id>', views.edit_sensor_in_location,name='edit_sensor_in_location'),
     path('audio_setting/<int:sensor_id>', views.audio_setting,name='audio_setting'),
     path('fetch_map_image', views.fetch_map_image, name='fetch_map_image'),
-    path('daily_report', views.daily_report, name='daily_report'),
+    path('strata_average_report', views.strata_average_report, name='strata_average_report'),
     path('warning_report', views.warning_report, name='warning_report'),
-    # path('show_strata_location',views.show_strata_location,name='show_strata_location'),
+    path('warning_fetch_sensor_date_range', views.warning_fetch_sensor_date_range, name='warning_fetch_sensor_date_range'),
+    path('fetch_sensor_average_date_range',views.fetch_sensor_average_date_range,name='fetch_sensor_average_date_range'),
 
 ]

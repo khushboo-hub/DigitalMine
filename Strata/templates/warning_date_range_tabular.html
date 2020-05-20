@@ -8,8 +8,7 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h2 class="page-header"><b>SHOW STRATA DATA BETWEEN TWO DATES
-                    <small> Here we can view strata data</small>
+                <h2 class="page-header"><b>SHOW WARNING DATA BETWEEN TWO DATE-TIME
                 </b></h2>
                 <div class="row">
                     <div class="col-md-1">
@@ -39,21 +38,34 @@
                 </div>
                 <div class="row" style="margin-top:30px;">
                     <div class="col-md-1">
-                        <label for="" class="" id="">From Date:</label>
+                        <label for="" class="" id="">From Date Time:</label>
                     </div>
                     <div class="col-md-3">
                         <input type="text" class="form-control" id="from_date" value="{% now "Y-m-d  08:00:00" %}">
                     </div>
                     <div class="col-md-1">
-                        <label for="" class="" id="">To Date:</label>
+                        <label for="" class="" id="">To Date Time:</label>
                     </div>
                     <div class="col-md-3">
                         <input type="text" class="form-control" id="to_date" value="{% now "Y-m-d  H:i:s" %}">
                     </div>
-                    <div class="col-md-4">
-                        <input type="submit" id="btn_show" data-url="{% url 'Strata:fetch_sensor_date_range' %}"
-                               class="btn btn-primary" value="Show"/>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Warning Type:</label>
                     </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_warning_list">
+                            <option value="">--Select Sensor--</option>
+                            <option value="1">First Level Warning</option>
+                            <option value="2">Second Level Warning</option>
+                            <option value="3">Third Level Warning</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <center>
+                        <input type="submit" id="btn_show" data-url="{% url 'Strata:warning_fetch_sensor_date_range' %}"
+                               class="btn btn-primary" value="Show"/>
+                    </center>
                 </div>
                 <div class="col-md-12">
                     <div class="text-center">
@@ -85,8 +97,10 @@
     </div>
 
     <script>
+        var X;
         $(document).ready(function () {
             d_table();
+            console.log('Table');
             $('#from_date').datetimepicker({
                 format: 'YYYY-MM-DD HH:mm:ss'
             });
@@ -109,8 +123,8 @@
                         'id': mine_id
                     },
                     success: function (data) {
-                        //console.log(data);
-                        fill_dropdown(data.result,"id_location_id");
+                        console.log(data);
+                        fill_dropdown(data.result);
                         return data;
                     },
                     error: function () {
@@ -119,11 +133,11 @@
                 });
             });
 
-            function fill_dropdown(result,id) {
-                $("#"+id).html("<option value=''>--- Choose Value ---</option>");
+            function fill_dropdown(result) {
+                $("#id_location_id").html("<option value=''>--Select Location--</option>");
                 for (var strata in result) {
                     if (result.hasOwnProperty(strata)) {
-                        $("#"+id).append($("<option />").val(result[strata].id).text(result[strata].name));
+                        $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
                     }
                 }
             }
@@ -137,7 +151,7 @@
                         'id': location_id
                     },
                     success: function (data) {
-                        fill_dropdown(data.result,"id_sensor_list");
+                        fill_dropdown_sensor(data.result);
                         return data;
                     },
                     error: function () {
@@ -146,14 +160,25 @@
                 });
             });
 
+            function fill_dropdown_sensor(result) {
+                $("#id_sensor_list").html("<option value=''>--Select Location--</option>");
+                for (var sensor in result) {
+                    if (result.hasOwnProperty(sensor)) {
+                        $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                    }
+                }
+
+            }
 
             $("#btn_show").click(function () {
 
                 datatable = $('#sensor_content').DataTable();
                 datatable.clear().draw();
+
                 let sensor_id = $("#id_sensor_list").val();
+                let warning_value = $("#id_warning_list").val();
                 let url = $(this).data('url');
-                if (sensor_id) {
+                if ((sensor_id) && (warning_value)) {
                     let date_from = $("#from_date").val();
                     let date_to = $("#to_date").val();
                     if(isEmpty(date_from)){
@@ -174,6 +199,7 @@
                             'id': sensor_id,
                             'date_from': date_from,
                             'date_to': date_to,
+                            'warning_value': warning_value,
                         },
                         beforeSend: function () {
                             $("#btn_show").val("Please wait...");
@@ -188,26 +214,26 @@
                         }
                     });
                 } else {
-                    alert("Please choose sensor");
+                    alert("Please choose sensor and Warning Type");
                 }
 
             });
 
             function fill_table_sensor(result,datatable) {
+
                 for (strata in result) {
                     if (result.hasOwnProperty(strata)) {
-                         datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
+                        datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
                     }
                 }
-
+                
                 $("#btn_show").val("Show");
                 $("#btn_show").prop('disabled', false);
             }
 
             function d_table() {
                 $('#sensor_content').DataTable({
-                    paging: true,
-                    pagingType: "full_numbers",
+                    paging: false,
                     searching: true,
                     "ordering": false,
                     dom: 'Bfrtip',

@@ -20,4 +20,8 @@ urlpatterns = [
     path('fetch_water_level_ajax', views.fetch_water_level_ajax, name='fetch_water_level_ajax'),
     path('start_save_water_data/<int:sensor_id>', views.start_save_water_data, name='start_save_water_data'),
     path('graph_water_data_bet_two_datetime', views.graph_water_data_bet_two_datetime, name='graph_water_data_bet_two_datetime'),
+
+    path('warning_water_data_bet_two_datetime', views.warning_water_data_bet_two_datetime, name='warning_water_data_bet_two_datetime'),
+    path('warning_fetch_water_data_bet_two_datetime', views.warning_fetch_water_data_bet_two_datetime, name='warning_fetch_water_data_bet_two_datetime'),
+    
 ]
