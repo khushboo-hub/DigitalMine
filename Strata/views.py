@@ -671,7 +671,6 @@ def ajx_sensor_graph_date_range(request):
 
 
 @login_required
-<<<<<<< HEAD
 def edit_sensor_in_location(request, sensor_id):
     data = get_object_or_404(Strata_sensor, id=sensor_id)
     form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
@@ -680,7 +679,7 @@ def edit_sensor_in_location(request, sensor_id):
             form.save()
             return redirect('Strata:manage_sensor_in_location')
     return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
-=======
+
 def multi_sensor_warning(request):
     run_multi_sensor_validation(repeat=10)
     return HttpResponse("Multi sensor validation testing start")
@@ -739,7 +738,6 @@ def run_multi_sensor_validation():
 #             form.save()
 #             return redirect('Strata:manage_sensor_in_location')
 #     return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
->>>>>>> 3be844333838263eec67584e49166cb1e6398b7b
 
 @login_required
 def audio_setting(request, sensor_id):
@@ -781,17 +779,16 @@ def fetch_map_image(request):
 
 
 @login_required
-<<<<<<< HEAD
+
 def strata_average_report(request,template_name='strata_average_report.html'):
     form = Live_data_tabular()
     return render(request, template_name, {'form': form})
     
-=======
 def daily_report(request):
     return HttpResponse("Under Development")
 
 
->>>>>>> 3be844333838263eec67584e49166cb1e6398b7b
+
 @login_required
 def warning_report(request, template_name='warning_date_range_tabular.html'):
     form = Live_data_tabular()

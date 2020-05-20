@@ -127,7 +127,9 @@ from background_task.models import Task
 @login_required
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
+    print('profile', current_user.id)
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
+
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
@@ -274,7 +276,7 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
             SensorModel.node_id = node
             SensorModel.mine_id = mine
             SensorModel.save()
-            return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
+            return redirect('/sensor/manage_sensor/' + encrypt(mine_id) + '/' + encrypt(node_id))
         else:
             print("&&&&&&&&&")
         # print(node_name)
