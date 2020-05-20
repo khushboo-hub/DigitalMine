@@ -223,7 +223,7 @@
 <div class="container">
     <section class="col-md-12">
         <form method="post" enctype="multipart/form-data">
-            <input type="hidden" value="{{ node_id }}" id="node_id" data-url="{% url 'sensor:ellicots_ajax' %}">
+            <input type="hidden" value="{{ node_id|encrypt }}" id="node_id" data-url="{% url 'sensor:ellicots_ajax' %}">
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="page-header text-center"><b>Ellicots Extension Graph</b></h3>
@@ -304,7 +304,7 @@
                         type: "get",
                         url: url,
                         data: {
-                            'id': id,
+                            {{ 'id' }}: id,
                             'date_from': from,
                             'date_to': to,
                         },

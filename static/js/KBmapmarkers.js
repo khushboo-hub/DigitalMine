@@ -111,7 +111,7 @@ function MapMarker(name, icon, cordX, cordY, map){
 	};
 
 	this.generateMarker = function(){
-		output = '<div class="KBmap__marker '+this.name+' " data-marker-name="'+this.name+'" style="left: '+this.cordX+'%; top: '+this.cordY+'%"><img class="markerIcon" src="'+this.icon+'" alt="'+this.location+'"></div>';
+		output = '<div class="KBmap__marker '+this.name+'" data-marker-name="'+this.name+'" style="left: '+this.cordX+'%; top: '+this.cordY+'%"><img class="markerIcon" src="'+this.icon+'" alt="'+this.location+'"></div>';
 
 		return output;
 	};
@@ -145,7 +145,7 @@ function MarkerModal(modalTitle, content, linkedMapMarker){
 	self = this;
 
 	this.generateModal = function(){
-		output = '<div  class="KBmap__markerContent"><div class="KBmap__markerClose"><i class="fa fa-times" aria-hidden="true"></i></div><h6 class="KBmap__markerTitle">' + this.title + '</h6>';
+		output = '<div  class="KBmap__markerContent animated flipInY"><div class="KBmap__markerClose"><i class="fa fa-times" aria-hidden="true"></i></div><h6 class="KBmap__markerTitle">' + this.title + '</h6>';
 
 		output += '<div class="KBmap__markerContentItem">' + this.content + '</div>';
 		output += '</div>';
@@ -349,7 +349,7 @@ jQuery( document ).ready(function() {
 
 	// on map marker click trigger event markerClick (adding new event)
 	jQuery('body').on('mouseover', '.KBmap__marker img', function(){
-
+		console.log('mouseover kbmapmarker.js');
 		var clickedMarkerName = jQuery(this).parent().attr('data-marker-name');
 		var clickedMarkerMapName = jQuery(this).parent().parent().parent().parent().attr('id');
 

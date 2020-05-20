@@ -71,7 +71,7 @@
                                             data-offstyle="danger"></td>
 
                                     <td class="text-center"><a
-                                            href="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}"
+                                            href="{% url 'sensor:manage_sensor' book.mine_id.id|encrypt book.id|encrypt %}"
                                             class="manageSensor"
                                             data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
                                             title="Manage Sensor"><span
@@ -79,24 +79,24 @@
                                         <br>
                                         <br>
                                         {% if book.isgoaf %}
-                                        <a href="{% url 'sensor:ellicots' book.id %}"
-                                           onclick="window.open('{% url 'sensor:ellicots' book.id %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                        <a href="{% url 'sensor:ellicots' book.id|encrypt %}"
+                                           onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
                                            title="Generate Ellicots Graph."><span
                                                 class="glyphicon glyphicon-picture"></span></a>
                                         <br>
                                         <br>
                                         {% endif %}
-                                        <a href="{% url 'sensor:locate_node' book.mine_id.id book.id %}"
-                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id book.id %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
+                                        <a href="{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}"
+                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
                                            title="Show Node Location"><span
                                                 class="glyphicon glyphicon-map-marker"></span></a>
 
 
                                     </td>
 
-                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id %}"
+                                    <td class="text-center"><a href="{% url 'sensor:node_edit' book.id|encrypt %}"
                                                                class="editRouter"
-                                                               data-url="{% url 'sensor:node_edit' book.id %}"
+                                                               data-url="{% url 'sensor:node_edit' book.id|encrypt %}"
                                                                title="Edit Router."><span
                                             class="glyphicon glyphicon-pencil"></span></a></td>
                                     <td class="text-center"><a href="#" class="delete"
