@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header"><b>LIVE TEMPERATURE DATA</b><small> </small></h1>
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <br>
+                        <div class="row">
+                            <div class="col-md-2">
+                                 <label>Temperature Sensor IP:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="" value="192.168.1.11" id="id_sensor_list">
+                            </div>
+                             <div class="col-md-2">
+                                 <label for="" class="" id="">Time Interval <small>  (in Seconds)</small>:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" name="" value="10" id="id_interval">
+                            </div>
+                        </div>
+                    </form>
+                    <br/>
+                    <div class="row">
+                         <div class="text-center">
+                            <input type="submit" id="btn_show" class="btn btn-primary" value="Show"/>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-12" style="margin-top:15px;">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="sensor_content">
+                                <thead>
+                                    <tr>
+                                        <th>Date Time</th>
+                                        <th>Sensor Name</th>
+                                        <th>WBT Value</th>
+                                        <th>DBT Value</th>
+                                        <th>Relative Humidity</th>
+                                        <th>Dew Point Temp</th>
+                                        <th>Moisture Content</th>
+                                        <th>Sigma Heat</th>
+                                        <th>Enthalpy</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sensor_content_body">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id='stratamonitoring'>
+
+                    <!-- Plotly chart will be drawn inside this DIV --></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+ <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+ <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+ <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+ <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+ <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+
+<script>
+    
+    
+
+//======================================================================================================================
+
+//====================================================================================================================
+
+
+    var interval_time=0;
+    $("#btn_show").click(function(){
+         var warning_validation = 2;
+        $("#btn_show").val("Please wait...");
+        $("#btn_show").prop('disabled', true);
+        interval_time=($("#id_interval").val()* 1000);
+        sensor_id=$("#id_sensor_list").val();
+        
+           
+            $("#sensor_content_body").empty();//empty the table on each click
+
+            setInterval(function(){
+                    $.ajax({
+                    type:"get",
+                    url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
+                    data: {
+                             'id': sensor_id
+                           },
+                    success: function(data) {
+                        // console.log(data.result);
+                        $('tr').css({ 'background-color' : '#FFFFFF'});
+                        fill_table_sensor(data.result);
+
+                        return data;
+                            },
+                    error: function(){
+                            console.log("error he ji");
+                         }
+                    });
+            }, interval_time);//time in milliseconds
+     
+
+    });
+    function fill_table_sensor(result){
+
+        if ( $.fn.DataTable.isDataTable('#sensor_content') ) {
+          $('#sensor_content').DataTable().destroy();
+        }
+
+        
+        for (index = 0; index < result.length; index++) {
+            var str_array = result[index].split(',');
+            console.log(str_array);
+            // $("#ip_hidden").val(str_array[1]);
+            
+            $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[0]+"</td><td>LM-35 (Temp Sensor)</td><td>"+str_array[1]+" &#8451;</td><td>"+str_array[2]+" &#8451;</td><td>"+str_array[3]+"<br>"+str_array[8]+"</td><td>"+str_array[4]+"<br>"+str_array[9]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td></tr>"));
+           
+        
+
+        d_table();
+        $("#btn_show").val("Show");
+        $("#btn_show").prop('disabled', false);
+
+        //  FOR LIVE GRAPH
+         //INITIALIZING PLOTLY
+         let y = [];
+                            let time = new Date();
+
+                            
+                            let Strata = {
+                                x: [time],
+                                y: y,
+                                type: 'scatter',
+                                fillcolor: 'rgba(3,169,244,0.5)',
+                                mode: 'markers+lines',
+                                marker: {
+                                    color: 'rgba(3,169,244,1)',
+                                    size: 12
+                                },
+
+                                hoveron: 'points',
+                                hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
+                                hoverinfo: 'text',
+                                title: 'Time',
+                                name: 'Strata',
+                            };
+
+                            let strata_layout = {
+                                xaxis: {
+                                    nticks: 10,
+                                    domain: [0, 1],
+                                    title: "Time",
+                                },
+                                yaxis: {
+                                    domain: [0, 1],
+                                    title: "Strata Level (in mm)",
+                                    range: [0, 40 * 1.2]
+                                },
+                                
+                                showlegend: true,
+                                legend: {
+                                    xanchor: "left",//"auto" | "left" | "center" | "right"
+                                    yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                                    y: 1,//number between or equal to -2 and 3
+                                    x: 0,//number between or equal to -2 and 3
+                                    orientation: "h"
+                                }
+                            };
+
+                            
+                            var config = {responsive: true};
+                            Plotly.react('stratamonitoring', strata_layout, config);
+
+                            //PLOTLY INITIALZATION END
+
+                            stratamonitoringajax(10, 30, 50);
+
+
+
+
+                            function stratamonitoringajax (strata_l_Value, strata_m_Value, strata_h_Value) {
+  
+                   
+                      
+                            console.log('new l m h', strata_l_Value, strata_m_Value, strata_h_Value);
+                            let value = str_array[2];//WBT value
+                            time = new Date();
+                            var update = {
+                                x: [[time], [time], [time], [time], [time]],
+                                y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value]],
+                            };
+                            var olderTime = time.setMinutes(time.getMinutes() - 1);
+                            var futureTime = time.setMinutes(time.getMinutes() + 1);
+                            var minuteView = {
+                                legend: {
+                                    xanchor: "left",//"auto" | "left" | "center" | "right"
+                                    yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                                    y: 1,//number between or equal to -2 and 3
+                                    x: 0,//number between or equal to -2 and 3
+                                    orientation: "h"
+                                },
+                                xaxis: {
+                                    type: 'date',
+                                    range: [olderTime, futureTime],
+                                    title: 'Time',
+                                    nticks: 10,
+                                    domain: [0, 1],
+                                }
+                            };
+
+                            Plotly.relayout('stratamonitoring', minuteView);
+                            Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
+                            
+
+                        
+                }
+        }
+
+
+                            // END FOR LIVE GRAPH
+    }
+    $("#btn_print").click(function(){
+        window.print();
+    });
+
+    function d_table(){
+         $('#sensor_content').DataTable({
+                paging: false,
+                searching: true,
+                "ordering": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+         });
+    }
+
+    $(document).ready(function() {
+         
+        d_table();
+    } );
+
+
+</script>
+{% endblock %}

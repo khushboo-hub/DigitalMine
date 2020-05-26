@@ -190,6 +190,7 @@ def delete_sensor(request, pk):
 # Function : fetch_location_ajax
 # Purpose : choose location based on mine selection on add/edit sensor page.
 # ----------------------------------------------------------------------------
+@login_required
 def fetch_location_ajax(request):
     data = {}
     if request.is_ajax():
@@ -219,7 +220,7 @@ def show_strata_location(request, template_name='Convergence/show_location.html'
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
-
+@login_required
 def fetch_sensor_ajax(request):
     data = {}
     if request.is_ajax():
@@ -233,7 +234,7 @@ def fetch_sensor_ajax(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-
+@login_required
 def get_data_from_node_mcu(request):
     data = {}
     sensor_data = []
@@ -261,7 +262,7 @@ def get_data_from_node_mcu(request):
     data['result'] = sensor_data
     return JsonResponse(data)
 
-
+@login_required
 def fetch_sensor_common_values_ajax(request):
     data = {}
     sensor_data = []
@@ -312,7 +313,7 @@ def fetch_sensor_common_values_ajax(request):
 
     return JsonResponse(data)
 
-
+@login_required
 def fetch_sensor_values_ajax(request):
     data = {}
     sensor_data = []
@@ -388,6 +389,7 @@ def fetch_sensor_values_ajax(request):
 
 
 # =======================================================================================================================
+@login_required
 def fetch_sensor_details(request):
     data = {}
     sensor_data = []
@@ -610,6 +612,7 @@ def run_back_save(sensor_id):
 # Function name : warning_level_information
 # Purpose : Display alert message. this function call from ajax(base.py)
 # =======================================================================================================================
+@login_required
 def warning_level_information(request):  # for 1 for strata 2 for water 3 for all+++++++++++++++++++++++ from front enf
 
     return_string = ""
@@ -709,7 +712,7 @@ def warning_level_information(request):  # for 1 for strata 2 for water 3 for al
         data["light_result"] = ""
     return JsonResponse(data)
 
-
+@login_required
 def push_mail(mail_subject="", mail_html_content=""):
     receiver_data = setting.objects.values_list().filter(name="receiver_email")
     for share in receiver_data:
@@ -720,6 +723,7 @@ def push_mail(mail_subject="", mail_html_content=""):
             res = email.send()
 
 
+@login_required
 def start_save_sensor(request, sensor_id, template_name='Convergence/manage_sensor_in_location.html'):
     data = {}
     if request.is_ajax():
@@ -764,7 +768,7 @@ def date_range_tabular(request, template_name='Convergence/date_range_tabular.ht
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
-
+@login_required
 def fetch_sensor_date_range(request):
     data = {}
     if request.is_ajax():
@@ -791,7 +795,7 @@ def fetch_sensor_date_range(request):
             created_date__range=(from_d, from_t)).order_by('-id')
         prepared_data = []
         for s in sensor_table_details:
-            prepared_data.append({'date': str(s.created_date),
+            prepared_data.append({'date': str((s.created_date).strftime("%Y-%m-%d %H:%M:%S")),
                                   'mine': str(mine_details.name),
                                   'location': str(location_details.location_name),
                                   'sensor': str(sensor_details.sensor_name),
@@ -804,12 +808,12 @@ def fetch_sensor_date_range(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-
+@login_required
 def show_graph_date_range(request, template_name='Convergence/date_range_graph.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
-
+@login_required
 def ajx_sensor_graph_date_range(request):
     data = {}
     if request.is_ajax():
@@ -842,7 +846,7 @@ def ajx_sensor_graph_date_range(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-
+@login_required
 def multi_sensor_warning(request):
     run_multi_sensor_validation(repeat=10)
     return HttpResponse("Multi sensor validation testing start")
@@ -891,7 +895,7 @@ def run_multi_sensor_validation():
                                     # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_2_audio))
                                     # mixer.music.play()
 
-
+@login_required
 def edit_sensor_in_location(request, sensor_id):
     data = get_object_or_404(Strata_sensor, id=sensor_id)
     form = Strata_sensor_Form(request.POST or None, request.FILES or None, instance=data)
@@ -901,7 +905,7 @@ def edit_sensor_in_location(request, sensor_id):
             return redirect('Strata:manage_sensor_in_location')
     return render(request, "Convergence/edit_sensor_in_location.html", {'form': form})
 
-
+@login_required
 def audio_setting(request, sensor_id):
     sensor_details = Strata_sensor_flag.objects.filter(sensor_id=sensor_id)
     if sensor_details:
@@ -917,7 +921,7 @@ def audio_setting(request, sensor_id):
         return redirect('Strata:manage_sensor_in_location')
     return render(request, "Convergence/audio_setting.html", {'form': form})
 
-
+@login_required
 def fetch_map_image(request):
     data = {}
     if request.is_ajax():
@@ -937,9 +941,59 @@ def fetch_map_image(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-
+    
+@login_required
 def daily_report(request):
     return HttpResponse("Under Development")
+    
+@login_required
+def warning_report(request, template_name='warning_date_range_tabular.html'):
+    form = Live_data_tabular()
+    return render(request, template_name, {'form': form})
 
-def warning_report(request):
-    return HttpResponse("Under Development")
+@login_required
+def warning_fetch_sensor_date_range(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        warning_value = request.GET.get('warning_value', None)
+
+        from_d = datetime.strptime(date_from + '.000000', '%Y-%m-%d %H:%M:%S.%f')
+        from_t = datetime.strptime(date_to + '.000000', '%Y-%m-%d %H:%M:%S.%f')
+        from_d = from_d.replace(microsecond=000000)
+        from_t = from_t.replace(microsecond=999999)
+
+        sensor_details = Strata_sensor.objects.get(id=sensor_id)
+        
+        if(int(warning_value) == 3):
+            range_from = sensor_details.level_3_warning_unit
+            range_to = sensor_details.level_3_warning_unit + 9999
+        elif(int(warning_value) == 2):
+            range_from = sensor_details.level_2_warning_unit
+            range_to = sensor_details.level_3_warning_unit
+        else:
+            range_from = sensor_details.level_1_warning_unit
+            range_to = sensor_details.level_2_warning_unit
+        
+        location_details = Strata_location.objects.get(id=sensor_details.location_id_id)
+        mine_details = MineDetails.objects.get(id=sensor_details.mine_name_id)
+        sensor_table_details = Strata_sensor_data.objects.filter(sensor_id=sensor_id).filter(
+            sensor_value__range=(range_from, range_to)).filter(
+            created_date__range=(from_d, from_t)).order_by('-id')
+        #print(sensor_table_details.query)
+        prepared_data = []
+        for s in sensor_table_details:
+            prepared_data.append({'date': str((s.created_date).strftime("%Y-%m-%d %H:%M:%S")),
+                                  'mine': str(mine_details.name),
+                                  'location': str(location_details.location_name),
+                                  'sensor': str(sensor_details.sensor_name),
+                                  'sensor_value': str(s.sensor_value),
+                                  'unit': str(sensor_details.sensor_unit),
+                                  'tag': str(sensor_details.tag_no)})
+
+        data['result'] = prepared_data
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)

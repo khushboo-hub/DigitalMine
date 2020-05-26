@@ -40,6 +40,7 @@ urlpatterns = [
     path('fetch_map_image', views.fetch_map_image, name='fetch_map_image'),
     path('daily_report', views.daily_report, name='daily_report'),
     path('warning_report', views.warning_report, name='warning_report'),
+    path('warning_fetch_sensor_date_range', views.warning_fetch_sensor_date_range, name='warning_fetch_sensor_date_range'),
     # path('show_strata_location',views.show_strata_location,name='show_strata_location'),
 
 ]

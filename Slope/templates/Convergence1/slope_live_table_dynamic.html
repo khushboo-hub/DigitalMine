@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header" style="text-align: left;"><b>SLOPE LIVE TABLE(from MQTT Server)</b>
+                    <small> Here we can view live slope data(all sensor name and unit are dynamic ie user configuared it under a zone.)</small>
+                </h2>
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Mine:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.mine_name }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Location:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select required class="form-control" id="id_location_id"
+                                            data-url="{% url 'Slope:fetch_location_ajax' %}">
+                                        <option value="">--Select Location--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                
+                                <div class="col-md-4">
+                                    <label for="" class="" id="">Time Interval
+                                        <small> (in Seconds)</small>
+                                        :</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="" value="10" readonly id="id_interval">
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="text-center" style="margin-top: 10px;">
+                                <input id="btn_show" class="btn btn-primary" value="Show"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-md-3">
+                                <label for="" class="" id="">Wireless data is comming from JSON/MQTT URL:</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control"  id="ip_hidden" data-url="{% url 'Slope:slope_location_jsonurl' %}">
+                            </div>
+                            <div class="col-md-2" >
+                                <input id="open_url" class="btn btn-primary" value="Open"/>
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top:15px;">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="sensor_content"
+                                       data-url="">
+                                    <thead>
+                                    <tr>
+                                        <th >Date Time</th>
+                                        <th id="th1">Inclinometer(in Degree)</th>
+                                        <th id="th2">Rain Guage (in mm/h)</th>
+                                        <th id="th3">Pizometer( in KSC)</th>
+                                        <th id="th4">Crack-o-meter (in mm)</th>
+                                        <th id="th5">Tiltmeter (in Degree)</th>
+                                        
+                                    </tr>
+                                    </thead>
+                                    <tbody id="sensor_content_body"
+                                           data-url="{% url 'Slope:fetch_datafrom_jsonurl_dynamic' %}">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+                let location_id;
+                $("#id_mine_name").addClass('form-control');
+
+                let slope_location_url = $('#id_location_id').data('url');
+                let slope_location_jsonurl = $('#ip_hidden').data('url');
+                let slope_sensor_details_url = $('#sensor_content').data('url');
+                let slope_sensor_values_url = $('#sensor_content_body').data('url');
+
+                $("#ip_hidden").val("");
+                $("#id_mine_name").on("change", function () {
+                    let mine_id = this.value;
+                    $.ajax({
+                        type: "get",
+                        url: slope_location_url,
+                        data: {
+                            'id': mine_id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            fill_dropdown(data.result);
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                });
+
+                function fill_dropdown(result) {
+                    $("#id_location_id").html("<option value=''>--Select Location--</option>");
+                    for (var slope in result) {
+                        if (result.hasOwnProperty(slope)) {
+                            $("#id_location_id").append($("<option />").val(result[slope].id).text(result[slope].name));
+                        }
+                    }
+                }
+
+                $("#id_location_id").on("change", function () {
+                     location_id = this.value;
+                    $.ajax({
+                        type: "get",
+                        url: slope_location_jsonurl,
+                        data: {
+                            'id': location_id
+                        },
+                        success: function (data) {
+                            fill_dropdown_sensor(data.result);
+
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                });
+
+                function fill_dropdown_sensor(result) {
+                    // alert(result);
+                    $("#ip_hidden").val("");
+                    for (var sensor in result) {
+                        if (result.hasOwnProperty(sensor)) {
+                            $("#ip_hidden").val((result[sensor].jsonurl));
+                        }
+                    }
+
+                }
+                $("#open_url").click(function () {
+                        uu=$("#ip_hidden").val();
+                        window.open(uu);
+                });
+               
+                let interval_time = 0;
+                $("#btn_show").click(function () {
+                    
+                    interval_time = ($("#id_interval").val() * 1000);
+                    let sensor_id = $("#ip_hidden").val();//senser id here json_url
+
+                    if (sensor_id) {
+                        if (isEmpty(sensor_id)) {
+                            alert('Please choose Location url');
+                            return false;
+                        }
+
+                        $("#btn_show").val("Please wait...");
+                        $("#btn_show").prop('disabled', true);
+                        $("#sensor_content_body").empty();//empty the table on each click
+
+                        setInterval(function () {
+                            $.ajax({
+                                type: "get",
+                                url: slope_sensor_values_url,
+                                data: {
+                                    'id': sensor_id,
+                                    'location_id':location_id,
+                                },
+                                success: function (data) {
+                                    fill_table_sensor(data.result);
+                                    return data;
+                                },
+                                error: function () {
+                                    console.log("Something Went Wrong!");
+                                }
+                            });
+                        }, interval_time);//time in milliseconds
+
+                    } else {
+                        alert("Please choose sensor");
+                    }
+                });
+
+                function fill_table_sensor(result) {
+                    $("#th1").html(result.inclinometer);
+                    $("#th2").html(result.rainguage);
+                    $("#th3").html(result.pizometer);
+                    $("#th4").html(result.crackometer);
+                    $("#th5").html(result.tiltmeter);
+                    let Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
+                    let datatable = $('#sensor_content').DataTable();
+                    let row = datatable.row.add([result.date, result.inclinometer_val, result.rainguage_val, result.pizometer_val, result.crackometer_val, result.tiltmeter_val]).draw().node();
+
+                    
+
+                    $("#btn_show").val("Show");
+                    $("#btn_show").prop('disabled', false);
+                }
+
+                $("#btn_print").click(function () {
+                    window.print();
+                });
+
+                
+            }
+        );
+    </script>
+{% endblock %}

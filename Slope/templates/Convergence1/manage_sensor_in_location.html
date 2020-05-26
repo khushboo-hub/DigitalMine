@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if messages %}
+        <center>
+            <b class="text-danger">
+                {% for message in messages %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+
+            </b>
+        </center>
+    {% endif %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header" style="text-align: left;"><b>Slope/Landslide: Manage Sensor Config</b>
+                    <small> Here you can manage sensor</small>
+                </h2>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="{% url 'Slope:add_sensor_in_location' %}">Add Sensor</a>
+                    </div>
+                </div>
+                <br>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="content">
+                                <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Mine Name</th>
+                                    <th>Location Name</th>
+                                    <th>Sensor Name</th>
+                                    <th>Sensor Unit</th>
+                                    <th>Tag-No</th>
+                                    <th>IP Address</th>
+                                    <th class="text-center">Sensor data acquisition</th>
+                                    <th class="text-center">Audio setting</th>
+                                    <th class="text-center">Edit</th>
+                                    <th class="text-center">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for slope in result %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ slope.mine }}</td>
+                                        <td>{{ slope.location }}</td>
+                                        <td>{{ slope.sensor }}</td>
+                                        <td>{{ slope.unit }}</td>
+                                        <td>{{ slope.tag }}</td>
+                                        <td>{{ slope.ip }}</td>
+                                        <td class="text-center"><input {% if slope.background %}checked {% endif %}
+                                                                       data-url="{% url 'Slope:start_save_sensor' slope.id %}"
+                                                                       id="isGoaf{{ slope.id }}"
+                                                                       data-val="{{ slope.id }}" class="isGoaf"
+                                                                       type="checkbox"
+                                                                       data-toggle="toggle" data-on="On"
+                                                                       data-off="off" data-onstyle="success"
+                                                                       data-offstyle="danger"></td>
+                                        {#                                        <td class="text-center"><a href="{% url 'Slope:start_save_sensor' slope.id %}"#}
+                                        {#                                                                   title="{% if slope.background %}Stop {% else %}Start {% endif %}sensor data acquisition"#}
+                                        {#                                                                   style="color:{% if slope.background %}green {% endif %}"><span#}
+                                        {#                                                class="glyphicon glyphicon-record"></span></a></td>#}
+                                        <td class="text-center"><a href="{% url 'Slope:audio_setting' slope.id %}"
+                                                                   title="Stop audio warning notification."><span
+                                                class="glyphicon glyphicon-stop"></span></a></td>
+                                        <td class="text-center"><a
+                                                href="{% url 'Slope:edit_sensor_in_location' slope.id %}"
+                                                title="Edit"><span class="glyphicon glyphicon-edit"></span></a></td>
+                                        <td class="text-center"><a href="#" class="delete"
+                                                                   data-url="{% url 'Slope:delete_sensor' slope.id %}"
+                                                                   title="Delete Location."><span
+                                                class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(document.body).on("click", ".delete", function () {
+                $("#sureDelete").attr("href", $(this).data('url'));
+                $('#update_info').modal('show');
+            });
+
+            $('.isGoaf').change(function () {
+                let goafId=this.id;0
+                $.ajax({
+                    type: "post",
+                    url: $(this).data('url'),
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                    },
+                    success: function (json) {
+                        console.log(json);
+                        if(json.hasOwnProperty("error")){
+                            $('#'+goafId).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                         $('#'+goafId).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+                console.log($(this).data('val'), $(this).prop('checked'));
+            });
+        });
+    </script>
+{% endblock %}

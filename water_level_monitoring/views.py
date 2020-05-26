@@ -334,3 +334,56 @@ def fetch_water_data_bet_two_datetime(request):
 def graph_water_data_bet_two_datetime(request):
     form = add_water_sensor_form()
     return render(request, "graph_water_data_bet_two_datetime.html", {"form": form})
+
+def warning_water_data_bet_two_datetime(request):
+    form = add_water_sensor_form()
+    return render(request, "warning_water_data_bet_two_datetime.html", {"form": form})
+
+def warning_fetch_water_data_bet_two_datetime(request):
+    prepared_data = []
+    data = {}
+    if request.is_ajax():
+        location = request.GET.get('id', None)
+        date_from = request.GET.get('date_from', None)
+        date_to = request.GET.get('date_to', None)
+        warning_value = request.GET.get('warning_value', None)
+        
+        a = date_from + '.000000'
+        b = date_to + '.000000'
+        from_d = datetime.datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
+        from_t = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
+        from_d = from_d.replace(microsecond=000000)
+        from_t = from_t.replace(microsecond=999999)
+
+        water_level_data_details = water_level_monitoring_model.objects.get(id=location)
+        mine_details = MineDetails.objects.get(id=water_level_data_details.mine_id_id)
+        # print("============================================================================================================")
+        # print(water_level_data_details)
+        # print("============================================================================================================")
+        # print(mine_details)
+
+        if(int(warning_value) == 3):
+            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_1)
+            range_to = int(water_level_data_details.distance_bet_roof_and_water)
+        elif(int(warning_value) == 2):
+            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_2)
+            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_1)
+        else:
+            range_from = 0 
+            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_3)
+        
+
+        water_data_details = water_level_monitoring_data_acquisition_model.objects.values_list().filter(
+            sensor_id=location).filter(sensor_value__range=(range_from, range_to)).filter(created_date__range=(from_d, from_t)).order_by('-id')
+        # print(water_data_details.query)
+        #
+        for r in water_data_details:
+            # print(r[3])
+            # c_date = datetime.datetime.strptime(str(r[3], '%Y-%m-%d %H:%M:%S'))
+            prepared_data.append(
+                str(r[3]) + ',' + mine_details.name + ',' + water_level_data_details.area_name + ',' + str(r[2]))
+
+        data['result'] = prepared_data
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)

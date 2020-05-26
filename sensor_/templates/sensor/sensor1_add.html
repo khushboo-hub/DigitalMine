@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+ <!--<body id="bg" style="background-image: url('{% static "image/sensor11.jpg"%}')";> -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Sensor under:{{wirelessname}}</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:sensor1_manage' wirelessid %}">Manage Sensor</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form method="post" enctype="multipart/form-data">
+                     {% csrf_token %}
+
+                        <!--<div class="form-group">-->
+                            <!--<table  class="table table-responsive table-bordered">-->
+                            <!--&lt;!&ndash;{{ form.as_table }}&ndash;&gt;-->
+                            <!--&lt;!&ndash;<label class="" >Name</label>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="Enter your name" name="fname">&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{form.as_table}}&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ form }}&ndash;&gt;-->
+                                <!--</table>-->
+                            <!--<input type="submit" class="btn btn-primary" value="Submit"/>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Sensor ID</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.sensorid}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                          <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Sensor Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.sensorname}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Min Range</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.minrange}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Max Range</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.maxrange}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Sensor Unit</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.sensorunit}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Threshold Limit</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.thresholdlimit}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Green Level Limit</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.greenlevel}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Yellow Level Limit</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.yellowlevel}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Red Level Limit</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.redlevel}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Photo</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.photo }}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+
+{% endblock %}

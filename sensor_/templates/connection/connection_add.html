@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Make Connection</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:node_manage' %}">Manage Node</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form method="post" id="fupload" action="{% url 'sensor:save_connection'%}" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Select Mine</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-control">
+                                    {{form.mine_id}}
+                                </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Select Node</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="id_node_id" name="node_id" class="form-control">
+                                        <option value="0">
+                                            --Select Node--
+                                        </option>
+                                    </select>
+                                </div>
+                                    </div>
+                            </div>
+                        <hr>
+                        <div class="form-group" id="">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Select Connection</label>
+                                    </div>
+                                <input type="radio" id="r1" name="type" value="wired"> Arduino<br>
+                                <input type="radio" id="r2" name="type" value="wireless" checked> Wireless<br>
+                                </div>
+                        </div>
+                        <div id="wired_div" style="display:none;">
+                        <hr>
+                          <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Select Arduino</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="id_arduino_id" name="arduino_id" class="form-control">
+                                        <option value="0">
+                                            --Select Arduino--
+                                        </option>
+                                    </select>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Port No</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="id_port_no_id" name="port_no_id" class="form-control">
+                                        <option value="0">
+                                            --Select Port--
+                                        </option>
+                                    </select>
+                                    </div>
+                            </div>
+                        </div>
+                        <hr/>
+                            </div>
+                        <div id="wireless_div">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Select Wireless</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="id_wireless_id" name="wireless_id" class="form-control">
+                                        <option value="0">
+                                            --Select Wireless--
+                                        </option>
+                                    </select>
+                                    </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>IP Address</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <select id="id_ipaddress_id" name="ipaddress_id" class="form-control">
+                                        <option value="0">
+                                            --Select IP--
+                                        </option>
+                                    </select>
+                                    </div>
+                            </div>
+                        </div>
+                            </div>
+                        <div class="form-group">
+                        <input type="submit" id="upload-files-btn" class="btn btn-primary" value="Make Connection"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+<script>
+
+
+//FETCH FROM RADIO BUTTON
+
+       $('input:radio[name="type"]').change(
+    function(){
+        if ($(this).is(':checked') && $(this).val() == 'wired') {
+            // append goes here
+            //alert("ard");
+            node_id=$("#id_node_id").val();
+            //alert(node_id);
+            $.ajax({
+            type:"get",
+            url: "{% url 'sensor:fetch_arduino'%}",
+            data: {
+             'id': node_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+               // alert(data.result);
+                fill_dropdown_arduino(data.result);
+                return data;
+            },
+            error: function(){
+                //console.log("Error!");
+            }
+          });
+
+    //POPULATE Arduino DROP DOWN
+    function fill_dropdown_arduino(result){
+        $("#id_arduino_id").html("<option value='0'>--Choose Arduino--</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_arduino_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
+            $("#wired_div").css("display", "block");
+            $("#wireless_div").css("display", "none");
+        }
+        else{
+            //alert("wifi");
+            $.ajax({
+            type:"get",
+            url: "{% url 'sensor:fetch_wireless'%}",
+            data: {
+             'id': node_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+                //alert(data.result);
+                fill_dropdown_wireless(data.result);
+                return data;
+            },
+            error: function(){
+                //console.log("Error!");
+            }
+          });
+
+     //POPULATE WIRELESS DROP DOWN
+    function fill_dropdown_wireless(result){
+        $("#id_wireless_id").html("<option value='0'>--Choose Wireless--</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_wireless_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+             $("#wired_div").css("display", "none");
+            $("#wireless_div").css("display", "block");
+        }
+    });
+
+
+    //FETCH MINE DETAILS
+    $("#id_mine_id").change(function(){
+        mine_id=$(this).val();
+        $.ajax({
+            type:"get",
+            url: "{% url 'sensor:fetch_node'%}",
+            data: {
+             'id': mine_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+                //alert(data.result);
+                fill_dropdown_node(data.result);
+                return data;
+            },
+            error: function(){
+                //console.log("Error!");
+            }
+          });
+
+    });
+
+     //POPULATE NODE DROP DOWN
+    function fill_dropdown_node(result){
+        $("#id_node_id").html("<option value='0'>--Choose Node--</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_node_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
+
+
+
+// FETCH PORT INFO FROM ARDUINO
+
+    $("#id_arduino_id").change(function(){
+        arduino_id=$(this).val();
+        $.ajax({
+            type:"get",
+            url: "{% url 'sensor:fetch_port'%}",
+            data: {
+             'id': arduino_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+                //alert(data.result);
+                fill_dropdown_port(data.result);
+                return data;
+            },
+            error: function(){
+                console.log("Error!");
+            }
+          });
+
+    });
+
+     //POPULATE PORT DROP DOWN
+    function fill_dropdown_port(result){
+        $("#id_port_no_id").html("<option value='0' >--Choose Port --</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_port_no_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
+
+// FETCH IP ADDRESS
+    $("#id_wireless_id").change(function(){
+        wireless_id=$(this).val();
+        $.ajax({
+            type:"get",
+            url: "{% url 'sensor:fetch_ip'%}",
+            data: {
+             'id': wireless_id
+            },
+            success: function(data) {
+                //console.log(data.result);
+                //alert(data.result);
+                fill_dropdown_ip(data.result);
+                return data;
+            },
+            error: function(){
+                //console.log("Error!");
+            }
+          });
+
+    });
+
+     //POPULATE WIRELESS DROP DOWN
+    function fill_dropdown_ip(result){
+        $("#id_ipaddress_id").html("<option value='0'>--Choose IP --</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_ipaddress_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
+</script>
+{% endblock %}

@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% block content %}
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header"><b>SHOW WARNING DATA BETWEEN TWO DATE-TIME
+                </b></h2>
+                <div class="row">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Mine:</label>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.mine_name }}
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Location:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_location_id"
+                                data-url="{% url 'Strata:fetch_location_ajax' %}">
+                            <option value="">--Select Location--</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Sensor:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_sensor_list"
+                                data-url="{% url 'Strata:fetch_sensor_ajax' %}">
+                            <option value="">--Select Sensor--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">From Date Time:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="from_date" name="">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">To Date Time:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="to_date" name="">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Warning Type:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_warning_list">
+                            <option value="">--Select Sensor--</option>
+                            <option value="1">First Level Warning</option>
+                            <option value="2">Second Level Warning</option>
+                            <option value="3">Third Level Warning</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <center>
+                        <input type="submit" id="btn_show" data-url="{% url 'Strata:warning_fetch_sensor_date_range' %}"
+                               class="btn btn-primary" value="Show"/>
+                    </center>
+                </div>
+                <div class="col-md-12">
+                    <div class="text-center">
+
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-top:15px;">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="sensor_content" data-url>
+                            <thead>
+                            <tr>
+                                <th>Date Time</th>
+                                <th>Mine Name</th>
+                                <th>Location Name</th>
+                                <th>Sensor Name</th>
+                                <th>Sensor Value</th>
+                                <th>Sensor Unit</th>
+                                <th>Tag No</th>
+                            </tr>
+                            </thead>
+                            <tbody id="sensor_content_body">
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        var X;
+        $(document).ready(function () {
+            d_table();
+            console.log('Table');
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
+            });
+
+            $("#id_mine_name").addClass('form-control');
+
+
+            let strata_location_url = $('#id_location_id').attr('data-url');
+            let strata_sensor_url = $('#id_sensor_list').attr('data-url');
+
+            $("#id_mine_name").on("change", function () {
+                let mine_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: strata_location_url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        fill_dropdown(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown(result) {
+                $("#id_location_id").html("<option value=''>--Select Location--</option>");
+                for (var strata in result) {
+                    if (result.hasOwnProperty(strata)) {
+                        $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
+                    }
+                }
+            }
+
+            $("#id_location_id").on("change", function () {
+                let location_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: strata_sensor_url,
+                    data: {
+                        'id': location_id
+                    },
+                    success: function (data) {
+                        fill_dropdown_sensor(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown_sensor(result) {
+                $("#id_sensor_list").html("<option value=''>--Select Location--</option>");
+                for (var sensor in result) {
+                    if (result.hasOwnProperty(sensor)) {
+                        $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                    }
+                }
+
+            }
+
+            $("#btn_show").click(function () {
+                let sensor_id = $("#id_sensor_list").val();
+                let warning_value = $("#id_warning_list").val();
+                let url = $(this).data('url');
+                if ((sensor_id) && (warning_value)) {
+                    let date_from = $("#from_date").val();
+                    let date_to = $("#to_date").val();
+                    if(isEmpty(date_from)){
+                        date_from='1899-01-01 00:00:00';
+                    }
+                    if(isEmpty(date_to)){
+                        date_to='2999-01-01 00:00:00';
+                    }
+                    if(isEmpty(sensor_id)){
+                        alert('Please choose sensor');
+                        return false;
+                    }
+                    $("#sensor_content_body").empty();//empty the table on each click
+                    $.ajax({
+                        type: "get",
+                        url: url,
+                        data: {
+                            'id': sensor_id,
+                            'date_from': date_from,
+                            'date_to': date_to,
+                            'warning_value': warning_value,
+                        },
+                        beforeSend: function () {
+                            $("#btn_show").val("Please wait...");
+                            $("#btn_show").prop('disabled', true);
+                        },
+                        success: function (data) {
+                            fill_table_sensor(data.result);
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                } else {
+                    alert("Please choose sensor and Warning Type");
+                }
+
+            });
+
+            function fill_table_sensor(result) {
+                X = result;
+                var Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
+                //datatable = "";
+                datatable = $('#sensor_content').DataTable();
+
+                if ( $.fn.DataTable.isDataTable('#sensor_content') ) {
+                    $('#sensor_content').DataTable().destroy();
+                }
+
+                for (strata in result) {
+                    if (result.hasOwnProperty(strata)) {
+                        var row = datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();                        
+                    }
+                }
+                
+                d_table();
+                $("#btn_show").val("Show");
+                $("#btn_show").prop('disabled', false);
+            }
+
+            function d_table() {
+                $('#sensor_content').DataTable({
+                    paging: false,
+                    searching: true,
+                    "ordering": false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            }
+        });
+
+    </script>
+{% endblock %}

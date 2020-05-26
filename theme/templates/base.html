@@ -336,7 +336,7 @@
                                         class="label label-default">Manual Mode</span></a></li>
                                 <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                         class="label label-default">Manual Mode</span></a></li>
-                                <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
+                                <!-- <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li> -->
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -359,6 +359,31 @@
                                 <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
                                 <li><a href="{% url 'Strata:daily_report' %}">Daily Average Report</a></li>
                                 <li><a href="{% url 'Strata:warning_report' %}">Warning Report</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="pe-7s-display1"></i>
+                                <p>Slope/Landslide Monitoring 
+                                    <span class="caret"></span>
+                                </p>
+                            </a>
+                            <ul class="dropdown-menu  navbar-color">
+
+                                <li><a href="{% url 'Slope:convergence_add_location' %}">Add Slope Zone/Location</a></li>
+                                <li><a href="{% url 'Slope:convergence_manage_location' %}">Manage Slope Location</a></li>
+
+                                <li><a href="{% url 'Slope:add_sensor_in_location' %}">Add Slope Sensor</a></li>
+                                <li><a href="{% url 'Slope:manage_sensor_in_location' %}">Manage Slope Sensor</a></li>
+                                <li><a href="{% url 'Slope:live_data_tabular' %}">Live Slope Data in Tabular(using IP)</a></li>
+                                <li><a href="{% url 'Slope:show_sensor_graph' %}">Live Slope Data in Graph(using IP)</a></li>
+                                <li><a href="{% url 'Slope:date_range_tabular' %}">Slope Data b/n Dates</a></li>
+                                <li><a href="{% url 'Slope:show_graph_date_range' %}">Slope Graph b/n Dates</a></li>
+                                <li><a href="{% url 'Slope:daily_report' %}">Slope Daily Average Report</a></li>
+                                <li><a href="{% url 'Slope:warning_report' %}">Slope Warning Report</a></li>
+                                <li><a href="{% url 'Slope:show_json' %}">Show JSON/MQTT data(Test)</a></li>
+                                <li><a href="{% url 'Slope:slope_live_table' %}">Show Realtime slope data(Tabular)-Static</a></li>
+                                <li><a href="{% url 'Slope:slope_live_table_dynamic' %}">Show Realtime slope data(Tabular)-Dynamic</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -387,6 +412,9 @@
                                 <li><a href="{% url 'water_level_monitoring:graph_water_data_bet_two_datetime' %}">Graph
                                     Water level
                                     between two datetime</a></li>
+                                    <li><a href="{% url 'water_level_monitoring:warning_water_data_bet_two_datetime' %}">Warning Information
+                                        between two
+                                        datetime</a></li>
                             </ul>
                         </li>
                         <li class="dropdown  dropdown-large">
@@ -472,6 +500,7 @@
                                     </ul>
                                 </li>
                             </ul>
+
                         <li class="dropdown ">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-wallet "></i>
@@ -639,7 +668,23 @@
                                 <li><a href="{% url 'employee:contactus' %}">Contact Us</a></li>
                                 <li><a href="{% url 'news:index' %}">News</a></li>
                                 <li><a href="{% url 'setting:manage_constant' %}">Manage Settings</a></li>
-                            </ul>
+
+<!-- 
+                                <hr>
+                                <h3 style="color: crimson;">Slope & Landslide Monitoring</h3>
+
+                                <li><a href="{% url 'Slope:convergence_add_location' %}">Add Location/Zone</a></li>
+                                <li><a href="{% url 'Slope:convergence_manage_location' %}">Manage Location/Zone</a></li>
+
+                                <li><a href="{% url 'Slope:add_sensor_in_location' %}">Add Landslide Sensor</a></li>
+                                <li><a href="{% url 'Slope:manage_sensor_in_location' %}">Manage Landslide Sensor</a></li>
+                                <li><a href="{% url 'Slope:live_data_tabular' %}">Live Data in Tabular Slope</a></li>
+                                <li><a href="{% url 'Slope:show_sensor_graph' %}">Live Data in Graph Slope</a></li>
+                                <li><a href="{% url 'Slope:date_range_tabular' %}">Data b/n Dates</a></li>
+                                <li><a href="{% url 'Slope:show_graph_date_range' %}">Graph b/n Dates</a></li>
+                                <li><a href="{% url 'Slope:daily_report' %}">Daily Average Report</a></li>
+                                <li><a href="{% url 'Slope:warning_report' %}">Warning Report</a></li>
+                            </ul> -->
                         </li>
 
                         <ul class="nav navbar-nav">

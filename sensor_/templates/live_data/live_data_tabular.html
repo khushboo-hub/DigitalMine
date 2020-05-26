@@ -1,0 +1,695 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+<!--<style type="text/css">-->
+<!--    #sensor_name_id {-->
+<!--    margin-top: -60px !important;-->
+<!--}-->
+<!--</style>-->
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Sensor Live Data:</h1>
+            <div class="row">
+                <div class="form-group">
+
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Mine</label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.mine_id}}
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="" class="" id="mode_id">Choose Mode</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="id_mode">
+                                        <option>--Select Mode--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <br><br>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="node_name">Choose Node</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="id_location_list">
+                                        <option>--Select Node--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="time_id">Time Interval</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="" value="30" id="id_interval">
+                                    <label for="" class="" id="time_sec"><span>(Sec)</span></label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="sensor_name">Choose Sensor</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="sensor_name_id">
+                                        <option>--Select Sensor--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="time_id1">Time Interval</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="" value="30" id="id_interval1">
+                                    <label for="" class="" id="time_sec1"><span>(Sec)</span></label>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12" style="margin-top:15px;">
+
+                        <div id="tableDiv"></div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+<script>
+    var add;
+    var interval_time = 0;
+    $("#id_mine_id").addClass('form-control');
+    $("#id_location_list").hide();
+    $("#node_name").hide();
+    $("#id_interval").hide();
+    $("#time_id").hide();
+    $("#time_sec").hide();
+    $("#id_interval1").hide();
+    $("#time_id1").hide();
+    $("#time_sec1").hide();
+    $("#sensor_name").hide();
+    $("#sensor_name_id").hide();
+    $("#mode_id").hide();
+    $("#id_mode").hide();
+    $("#id_mine_id").on("change", function () {
+        $("#mode_id").show();
+        $("#id_mode").show();
+        fill_dropdown_mode();
+
+    });
+
+    function fill_dropdown_mode() {
+        $("#id_mode").html("<option>--Select Mode--</option>");
+
+        $("#id_mode").append($("<option />").text('Node wise'));
+        $("#id_mode").append($("<option />").text('Sensor wise'));
+    }
+
+    $("#id_mode").on("change", function () {
+        if ($("#id_mode").val() == 'Node wise') {
+            $("#sensor_name").hide();
+            $("#sensor_name_id").hide();
+            $("#id_location_list").show();
+            $("#node_name").show();
+            $("#id_interval1").hide();
+            $("#time_id1").hide();
+            $("#time_sec1").hide();
+            mine_id = $("#id_mine_id").val();
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_mine_ajax' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    //console.log(data.result);
+                    fill_dropdown(data.result);
+                    return data;
+                },
+                error: function () {
+                    console.log("Something Went Wrong! : Fetch Mine Ajax");
+                }
+            });
+        } else if ($("#id_mode").val() == 'Sensor wise') {
+            $("#id_location_list").hide();
+            $("#node_name").hide();
+            $("#id_interval").hide();
+            $("#time_id").hide();
+            $("#time_sec").hide();
+            $("#sensor_name").show();
+            $("#sensor_name_id").show();
+            fill_dropdown_sensor_node();
+        }
+    });
+
+    function fill_dropdown(result) {
+        $("#id_location_list").html("<option>--Select Node--</option>");
+        for (index = 0; index < result.length; index++) {
+            //alert(result[index]);
+            var str_array = result[index].split(',');
+            //alert("id="+str_array[0]+":name="+str_array[1]);
+            $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
+        }
+    }
+
+    function fill_dropdown_sensor_node() {
+        $("#sensor_name_id").html("<option>--Select Mode--</option>");
+        $("#sensor_name_id").append($("<option />").text('CH4'));
+        $("#sensor_name_id").append($("<option />").text('CO'));
+        $("#sensor_name_id").append($("<option />").text('CO2'));
+        $("#sensor_name_id").append($("<option />").text('H2'));
+        $("#sensor_name_id").append($("<option />").text('H2S'));
+        $("#sensor_name_id").append($("<option />").text('NO2'));
+        $("#sensor_name_id").append($("<option />").text('O2'));
+        $("#sensor_name_id").append($("<option />").text('SO2'));
+    }
+
+    $("#id_location_list").on("change", function () {
+
+        //clearInterval(interval_time);
+        $("#id_interval").show();
+        $("#time_id").show();
+        $("#time_sec").show();
+    });
+    $("#sensor_name_id").on("change", function () {
+        //clearInterval(interval_time);
+        $("#id_interval1").show();
+        $("#time_id1").show();
+        $("#time_sec1").show();
+    });
+
+    $("#btn_show").on("click", function () {
+        clearInterval(add);
+        $("#btn_show").val("Please wait...");
+        $("#btn_show").prop('disabled', true);
+        interval_time = ($("#id_interval").val() * 1000);
+        interval_time1 = ($("#id_interval1").val() * 1000);
+        node_id1 = $("#id_location_list").val();
+        sensor_name_id1 = $("#sensor_name_id").val();
+        $("#tableDiv").empty();
+
+        //alert(sensor_name_id1)
+        if (sensor_name_id1 == "") {
+            alert("Please Choose Node");
+            $("#btn_show").val("Show");
+            $("#btn_show").prop('disabled', false);
+        } else if (sensor_name_id1 == "CH4") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "CO") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "CO2") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "H2") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "H2S") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "NO2") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "O2") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else if (sensor_name_id1 == "SO2") {
+            $("#sensor_content_body").empty();//empty the table on each click
+            $("#table_head").empty();//empty the table on each click
+            $.ajax({
+                type: "get",
+                url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_table' %}",
+                data: {
+                    'id': sensor_name_id1
+                },
+                success: function (data) {
+                    console.log(data.result);
+                    //alert(data.result);
+                    fill_table_sensor_heading(data.result);
+
+                    return data;
+                },
+                error: function () {
+                    //alert("Something Went Wrong!");
+                    console.log("error");
+                }
+            });
+            //alert(node_id1);
+
+            setInterval(function () {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_sensor_body' %}",
+                    data: {
+                        'id': sensor_name_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor(data.result, data.result1);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+            }, interval_time1);//time in milliseconds
+        } else {
+            if (node_id1 == "") {
+                alert("Please Choose Node");
+                $("#btn_show").val("Show");
+                $("#btn_show").prop('disabled', false);
+            } else {
+
+                $("#sensor_content_body").empty();//empty the table on each click
+                $("#table_head").empty();//empty the table on each click
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_values_ajax_h' %}",
+                    data: {
+                        'id': node_id1
+                    },
+                    success: function (data) {
+                        console.log(data.result);
+                        //alert(data.result);
+                        fill_table_sensor_heading(data.result);
+
+                        return data;
+                    },
+                    error: function () {
+                        //alert("Something Went Wrong!");
+                        console.log("error");
+                    }
+                });
+                //alert(node_id1);
+
+                add = setInterval(function () {
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:fetch_sensor_values_ajax_p' %}",
+                        data: {
+                            'id': node_id1
+                        },
+                        success: function (data) {
+                            console.log(data.result);
+                            //alert(data.result);
+                            fill_table_sensor(data.result, data.result1);
+
+                            return data;
+                        },
+                        error: function () {
+                            //alert("Something Went Wrong!");
+                            console.log("error");
+                        }
+                    });
+                }, interval_time);//time in milliseconds
+            }
+        }
+    });
+    function fill_table_sensor_heading(result) {
+
+
+        var tableHeaders="";
+
+        var x;
+
+        for (x=0;x<result.length;x++) {
+            tableHeaders+= "<th>" + result[x] + "</th>";
+
+        }
+            //console.log(tableHeaders);
+        $("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
+        $('#displayTable').DataTable({
+            retrieve: true,
+            paging: false,
+            searching: true,
+            "ordering": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+    }
+
+
+    function fill_table_sensor(result, result1) {
+
+        if ($.fn.DataTable.isDataTable('#displayTable')) {
+            $('#displayTable').DataTable().destroy();
+        }
+        var tablebody;
+        var tablecolor;
+        var x;
+        var y = 0;
+        var z = 0;
+        for (x=0;x<result.length;x++) {
+            if (z < 3) {
+                tablebody += '<td><span style="color:black;" >' + result[x] + '</span></td>';
+                z++;
+            } else {
+                tablecolor = result1[y]
+                tablebody += '<td><span style="color:' + tablecolor + ';" >' + result[x] + '</span></td>';
+                y++;
+            }
+
+        }
+        $("#tab_1").prepend('<tr>' + tablebody + '</tr>');
+        $('#displayTable').DataTable({
+            retrieve: true,
+            paging: false,
+            searching: true,
+            "ordering": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+        $("#btn_show").val("Show");
+        $("#btn_show").prop('disabled', false);
+    }
+
+
+    $(document).ready(function () {
+        $('#displayTable').DataTable({
+            retrieve: true,
+            paging: false,
+            searching: true,
+            "ordering": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+</script>
+{% endblock %}

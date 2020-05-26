@@ -90,7 +90,7 @@ def dashboard_calling(request):
         SENSORS = []
         Sensors = Sensor_Node.objects.filter(mine_id=mine.id,node_id=node.id)
         for sensor in Sensors:
-            SENSORS.append({'mine':sensor.mine_id,'node_id':node.id, 'ip':sensor.ip_add,'sensor_name':sensor.sensorname,'sensor_id':sensor.id})
+            SENSORS.append({'mine':sensor.mine_id,'node_id':node.id, 'ip':sensor.ip_add,'sensor_name':sensor.sensor_name,'sensor_id':sensor.id})
         NODES.append({str(node.name): SENSORS})
 
     print(nodes)

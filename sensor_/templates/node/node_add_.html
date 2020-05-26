@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+<style type="text/css">
+
+    @media screen and (min-width: 1080px) {
+
+        .modal-dialog {
+
+            width: 1700px !important; /* New width for default modal */
+
+        }
+    }
+
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add/Edit Node</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:node_manage' %}">Manage Node</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Select Mine</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form_control">
+                                        {{form.mine_id}}
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Node ID</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.nodeid}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                          <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.name}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Location</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.location}}
+                                </div>
+                            </div>
+                        </div>
+
+                         <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>X Axis</label>
+                                </div>
+                                <div class="col-md-6" id="x_axis" data-toggle="modal" data-target="#myModal">
+                                    {{form.x_axis}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Y Axis</label>
+                                </div>
+                                <div class="col-md-6" id="y_axis" data-toggle="modal" data-target="#myModal">
+                                    {{form.y_axis}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Image1</label>
+                                </div>
+                                <div class="col-md-6" id="CurrentPhotoCheck1">
+                                    {{form.photo1}}
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Image2</label>
+                                </div>
+                                <div class="col-md-6" id="CurrentPhotoCheck2">
+                                    {{form.photo2}}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Description</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.description}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Create Node"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+
+<section class="KBmap" id="KBtestmap"/>
+<script>
+$(document).ready(function() {
+    setImageData($('#id_mine_id').val());
+    $("#id_mine_id").addClass('form-control');
+    $('#KBtestmap').hide();
+
+$("#id_mine_id").on("change",function(){
+    if($(this).val()!=''){
+        setImageData(this.value);
+        $('#RouterCreate').prop("disabled", false)
+    }
+    else{
+        $('#RouterCreate').prop("disabled", true)
+    }
+    $('#KBtestmap').hide();
+});
+
+ $("#id_x_axis").click(function(){
+        if($('#id_mine_id').val()!=""){
+                PointInitialization();
+                var elem = document.getElementById("KBtestmap");
+                openFullscreen(elem);
+                FULLSCREEN();
+        }
+        ZoomButtonsInitialization();
+    });
+
+    $("#id_y_axis").click(function(){
+        if($('#id_mine_id').val()!=""){
+            PointInitialization();
+            var elem = document.getElementById("KBtestmap");
+            openFullscreen(elem);
+        }
+       // ZoomButtonsInitialization();
+    });
+
+    function setImageData(mine_id){
+    url=$("#get_url").data('url');
+
+        $.ajax({
+            type:"get",
+            url: "{% url 'Strata:fetch_map_image' %}",
+            data: {
+                     'id': mine_id
+                   },
+            success: function(data) {
+                // CreateMapModel(data.result.image_url,data.result.name);
+                tempData=data;
+                  CreateKBtestMap(data.result.image_url);
+
+                //console.log(data.result.name);
+                //console.log(data.result.image_url);
+                    },
+            error: function(){
+                    console.log("something is not right.please contact admin - 1");
+                 }
+            });
+}
+
+
+	function CreateKBtestMap(data){
+            var img=data;
+            //console.log(url);
+         if(addedKBmaps.length>0){
+            addedKBmaps.pop();
+            $('.KBmap__mapContainer').remove();
+         }
+
+        //alert(img);
+
+        if(img){
+        createKBmap('KBtestmap', '/media/'+img);
+                 var icon="/static/image/router.svg";
+                 KBtestmap.addMarker(icon,$('#id_x_axis').val(),$('#id_y_axis').val(),'Test');
+
+				// KBtestmap.importJSON(jsonData);
+				KBtestmap.showAllMapMarkers();
+
+
+				}
+        else{
+            $("#map").css("");
+            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+        }
+
+
+    };
+var added=0;
+var P;
+function PointInitialization(){
+$(".KBmap__mapHolder").click(function(e){
+
+            if(added==0){
+                   var temp= mousePositionElement(e);
+                   P=temp;
+                   console.log(temp);
+                   var icon="/static/image/router.svg";
+                   var offset = $(this).offset();
+                   var offsetWidth=$('#KBtestmap')[0].offsetWidth;
+                   var ScrollWidth=$('#KBtestmap')[0].scrollWidth;
+
+                   var offsetHeight=$('#KBtestmap')[0].offsetHeight;
+                   var ScrollHeight=$('#KBtestmap')[0].scrollHeight;
+
+                   var offsetY=((offsetHeight-ScrollHeight)/offsetHeight)*100;
+                   var offsetX=((offsetWidth-ScrollWidth)/offsetWidth)*100;
+                   console.log(offsetX+" "+offsetY);
+                   var PosX=temp.x+offsetY;
+                   var PosY=temp.y-((document.documentElement.scrollTop))/7.8+offsetX;
+                   //var PosY=temp.y
+                    console.log(PosX+" "+PosY);
+
+                   var random=Math.floor((Math.random() * 10) + 1);
+                   var node_id=$('#id_nodeid').val();
+                   var node_mine_name=$('#id_mine_id').children("option:selected").text();
+                   var markerName="Test"
+                   var NodeName=node_id+"||"+node_mine_name+"||";
+                   var ipAddress=$('#id_ip_add').val();
+                   var routerLocation=$('#id_location').val();
+                   var routerAddress=$('#id_address').val();
+
+                   var NodeContent="<small>";
+
+                   NodeContent+="<strong >"+"Name : ";
+                   NodeContent+="<span class='badge'>";
+                   NodeContent+=$('#id_name').val();
+                   NodeContent+="</span>";
+                   NodeContent+="</strong></br>";
+
+
+
+                   NodeContent+="<strong >"+"Location : ";
+                   NodeContent+="<span class='badge'>";
+                   NodeContent+=routerLocation;
+                   NodeContent+="</span>";
+                   NodeContent+="</strong></br>";
+
+
+                   NodeContent+="<strong >"+"Description : ";
+                   NodeContent+="<span class='badge'>";
+                   NodeContent+=$('#id_description').val();
+                   NodeContent+="</span>";
+                   NodeContent+="</strong></br>";
+                   NodeContent+="</small>";
+
+                   var KBkeys=KBtestmap.mapMarkers;
+
+                   if("Test" in KBkeys)KBkeys.Test.removeMarker();
+
+                   KBtestmap.addMarker(icon,PosX,PosY,markerName);
+                   KBtestmap.mapMarkers[markerName].addModal(NodeName,NodeContent);
+
+                   $('#id_x_axis').val(PosX);
+                   $('#id_y_axis').val(PosY);
+                   $('.KBmap__marker').not(':last').remove();
+
+                   KBtestmap.showAllMapMarkers();
+
+                   }
+                });}
+var ZoomLevel;
+
+
+function ZoomButtonsInitialization(){
+          var $section = $('#KBtestmap');
+          var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
+            increment       : 0.01,
+            minScale        : 1,
+            maxScale        : 10,
+            startTransform  : 'scale(1.0)',
+            disablePan: false,
+            contain: 'invert',
+            });
+          $panzoom.parent().on('mousewheel.focal', function( e ) {
+            e.preventDefault();
+            ZoomLevel=e;
+            var delta = e.delta || e.originalEvent.wheelDelta;
+
+            var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+            $panzoom.panzoom('zoom', zoomOut, {
+              animate: false,
+              focal: e
+            });
+          });}
+    $(document).keyup(function(e) {
+ // if (e.keyCode === 13) $('.save').click();     // enter
+  if (e.keyCode === 27 || e.keyCode === 13){ //esc
+        $(function () {
+            $('#AddRouter').modal('toggle');
+        });
+  }
+});
+
+
+
+
+document.addEventListener("fullscreenchange", function (event) {
+    if(checkFullScreenStatus()){$('#KBtestmap').show();}
+    else{$('#KBtestmap').hide();}
+});
+
+    $( "#CurrentPhotoCheck1" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover1')
+    $( "#CurrentPhotoCheck2" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover2')
+
+    $('#CurrentPhotoCheckOnHover1').attr('data-toggle','tooltip');
+    $('#CurrentPhotoCheckOnHover2').attr('data-toggle','tooltip');
+
+    $('#CurrentPhotoCheckOnHover1').attr('class','red-tooltip');
+    $('#CurrentPhotoCheckOnHover2').attr('class','red-tooltip');
+
+    $('#CurrentPhotoCheckOnHover2').attr('title',"<img src='"+$('#CurrentPhotoCheckOnHover2').attr("href")+"' />");
+     $('#CurrentPhotoCheckOnHover1').attr('title',"<img src='"+$('#CurrentPhotoCheckOnHover1').attr("href")+"' />");
+
+    $('a[data-toggle="tooltip"]').tooltip({
+        animated: 'fade',
+        placement: 'bottom',
+        html: true
+    });
+
+});
+
+
+
+
+
+
+
+
+<!--$(document).ready(function() {-->
+<!--    $("#id_mine_id").addClass('form-control');-->
+<!--    $("#map").empty()-->
+<!--    $("#x_axis").on("click", function () {-->
+<!--      select_location();-->
+
+<!--    });-->
+<!--    $("#y_axis").on("click", function () {-->
+<!--      select_location();-->
+
+<!--    });-->
+<!--});-->
+<!--function select_location(){-->
+<!--     mine = $("#id_mine_id").val()-->
+<!--     //alert(mine);-->
+<!--        $("#map").empty()-->
+<!--        $("#mymodel1").empty()-->
+
+<!--        $.ajax({-->
+<!--            type: "get",-->
+<!--            url: "{% url 'sensor:fetch_map_ajax' %}",-->
+<!--            data: {-->
+<!--                'id': mine-->
+<!--            },-->
+<!--            success: function (data) {-->
+
+<!--                $('<img class="image image-responsive" src="/media/'+data.result+ '" width="1668px" height="1500px" id="image_id" controls/>').appendTo($("#mymodel1"));-->
+<!--                $("#image").hide();-->
+<!--                $("#image_id").click(function (e) {-->
+<!--                      $("#image").hide();-->
+<!--                    var offset = $(this).offset();-->
+<!--                    var x_axis1= e.pageX - offset.left;-->
+<!--                    var x_axis2 = e.pageY - offset.top;-->
+<!--                    $("#usr").val(x_axis1)-->
+<!--                    $("#usr1").val(x_axis2)-->
+<!--                    $("#id_x_axis").val(x_axis1)-->
+<!--                    $("#id_y_axis").val(x_axis2)-->
+<!--                    $('<img  class= "image1" id="image" src="/media/mine_map_image/node_logo.png"  STYLE="position:absolute; TOP:' +  x_axis2 + '; LEFT:' + x_axis1+ '; WIDTH:30px; HEIGHT:30px "/>').appendTo($("#mymodel1"));-->
+<!--                    //-->
+<!--                    $("#image").show();-->
+<!--                });-->
+
+<!--            },-->
+<!--        });-->
+<!--}-->
+</script>
+<style>
+    .red-tooltip + .tooltip > .tooltip-inner {background-color: #fff;}
+    .red-tooltip + .tooltip > .tooltip-arrow { border-bottom-color:#fff; }
+</style>
+{% endblock %}
