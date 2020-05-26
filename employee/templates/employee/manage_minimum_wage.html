@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <section class="col-md-12">
+            <h3 class="page-header text-center"><b>Rate of Minimum Wage</b>
+                <small>&nbspManage the minimmum wage</small>
+            </h3>
+            {#            <div class="row text-center">#}
+            {#                <div class="col-md-12">#}
+            {#                    <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Wireless Node</a>#}
+            {#                </div>#}
+            {#            </div>#}
+            <br>
+            <div class="row">
+                <form id="minimum_wage" method="post">
+                    {% csrf_token %}
+                    <div class="col-md-12">
+
+                        <div class="col-md-2">
+                            <label class="">Select Mine</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select name="mine_id" required="" onchange="this.form.submit()" id="id_mine_id"
+                                    class="form-control">
+                                {% for m in mine %}
+
+                                    <option {% if selected == m.id %} selected {% endif %}
+                                                                      value="{{ m.id }}">{{ m.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <br>
+            <table class="table table-bordered">
+                <thead class="thead-light" style="background-color: black">
+                <tr>
+                    <th style="color: white;" scope="col">#</th>
+                    {% for wage in data %}
+                        <th style="color: white;" scope="col">{{ wage.category }}</th>
+                        {#      <th scope="col">Last</th>#}
+                        {#      <th scope="col">Handle</th>#}
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+
+                    <th scope="row">Minimum Basic</th>
+                    {% for wage in data %}
+                        <td>{{ wage.minimum_basic }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th scope="row">DA</th>
+                    {% for wage in data %}
+                        <td>{{ wage.dearness_allowance }}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    <th scope="row">Overtime</th>
+                    {% for wage in data %}
+                        <td>{{ wage.overtime }}</td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+
+        </section>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#id_mine_id').addClass('form-control');
+            $('#id_mine_id').on('change', function () {
+                $('#minimum_wage').form.submit();
+            });
+        });
+    </script>
+{% endblock %}
+

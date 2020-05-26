@@ -22,9 +22,9 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from employee.forms import EmployeeForm
+from employee.forms import EmployeeForm,RateOfMinimumWageForm
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
-from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign
+from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign,RateOfMinimumWages
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from accounts.tokens import account_activation_token
@@ -40,7 +40,7 @@ from django.views.decorators.cache import cache_page
 
 # Create your views here.
 @login_required
-def employee_manage(request, template_name='employee/employee_manage.html'):
+def employee_manage(request, template_name='employee/employee_manage_.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
 
@@ -625,6 +625,31 @@ def update_shift_link_ajax(request):
 
 
 @login_required
+def MinimumWage(request,template_name='employee/minimum_wage.html'):
+    form=RateOfMinimumWageForm()
+    if request.method=="POST":
+        form=RateOfMinimumWageForm(request.POST or None)
+        print('form errors',form.errors)
+        if form.is_valid():
+            form.save()
+            return redirect('employee:manage_minimum_wage')
+    return render(request,template_name,{'form':form})
+
+@login_required
+def ManageMinimumWage(request,template_name='employee/manage_minimum_wage.html'):
+    minimum_wage=RateOfMinimumWages.objects.filter(mine_id=1)
+    form=RateOfMinimumWageForm()
+    mine_table = MineDetails.objects.all()
+    selected=0
+    if request.method == "POST":
+        selected=request.POST.get('mine_id')
+        minimum_wage = RateOfMinimumWages.objects.filter(mine_id=selected)
+        selected=int(selected)
+
+    return render(request,template_name,{'data':minimum_wage,'mine':mine_table,'selected':selected})
+
+
+@login_required
 def save_updated_shift(request):
     print(request.POST)
     obj = EmployeeShiftAssign()
@@ -774,4 +799,23 @@ def profile_ajax(request):
         return JsonResponse(data)
 
     data['error'] = "Something Went Wrong!"
+    return JsonResponse(data)
+
+from django.utils.crypto import get_random_string
+@login_required
+def validate_token(request):
+    data={}
+    available = 0
+    if request.is_ajax():
+        token=request.GET.get('token')
+
+        try:
+            check = get_object_or_404(Employee,token_no=token)
+            token = get_random_string()
+            available = 1
+        except :
+            pass
+        data['result'] = {"token":token,"available":available}
+    else:
+        data['result'] = "Not Ajax"
     return JsonResponse(data)

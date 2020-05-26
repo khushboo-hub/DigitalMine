@@ -159,9 +159,6 @@
         td:nth-last-child(2) {
             text-align: center;
         }
-
-        @media (min-width: 768px)
-            @mdiapadding-top : 220px;
     </style>
     <script>
         window.onload = function () {
@@ -791,7 +788,7 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/accounts/logout">Logout</a>
+                <a class="btn btn-primary" href="{% url 'logout' %}?next={{ request.path | urlencode }}">Logout</a>
             </div>
         </div>
     </div>

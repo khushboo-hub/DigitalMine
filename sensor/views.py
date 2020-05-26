@@ -1942,11 +1942,13 @@ def encrypt(txt):
 
 
 def decrypt(txt):
+    print('decrypting',txt)
     try:
         # base64 decode
         txt = base64.urlsafe_b64decode(txt)
         cipher_suite = Fernet(settings.ENCRYPT_KEY)
         decoded_text = cipher_suite.decrypt(txt).decode("ascii")
+        print('decoded text',decoded_text)
         return decoded_text
     except Exception as e:
         # log the error

@@ -3,7 +3,7 @@ from datetime import date
 from django import forms
 from employee.models import Employee
 from .models import Employee
-from .models import SensorData, MineDetails, MineShift,MiningRole
+from .models import SensorData, MineDetails, MineShift, MiningRole, RateOfMinimumWages
 
 STATE = (
     ('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'),
@@ -20,8 +20,9 @@ STATE = (
 
 )
 
+
 class MiningRoleForm(forms.ModelForm):
-    def __init__(self, mine_id,parent=None, *args, **kwargs):
+    def __init__(self, mine_id, parent=None, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
         if not parent:
             self.fields['parent_role'] = forms.ModelChoiceField(
@@ -51,7 +52,12 @@ class MiningRoleForm(forms.ModelForm):
         widgets = {
             'type': forms.RadioSelect(),
         }
-        fields = ['mine','parent_role', 'name', 'type', 'description']
+        fields = ['mine', 'parent_role', 'name', 'type', 'description']
+
+
+from django.utils.crypto import get_random_string
+
+u'rRXVe68NO7m3mHoBS488KdHaqQPD6Ofv'
 
 
 class EmployeeForm(forms.ModelForm):
@@ -59,7 +65,10 @@ class EmployeeForm(forms.ModelForm):
         super(EmployeeForm, self).__init__(*args, **kwargs)
         self.fields['mining_role'] = forms.ModelChoiceField(
             queryset=MiningRole.objects.filter(mine_id=mine_id)
-        ) #Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
+        )
+        self.fields['token_no'].initial = "T00001"
+        # Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
+
     # =================for Personal Details======================
     GENDER_CHOICES = (
         ('M', 'Male'),
@@ -84,6 +93,17 @@ class EmployeeForm(forms.ModelForm):
         ('AB+', 'AB+'),
         ('AB-', 'AB-'),
     )
+    NATIONALITY = (
+        ('INDIAN', 'INDIAN'),
+        ('OTHERS', 'OTHERS')
+    )
+    CATEGORY = (
+        ('HS', 'Highly Skilled'),
+        ('S', 'Skilled'),
+        ('SS', 'Semi Skilled'),
+        ('US', 'Under Skilled'),
+    )
+
     empid = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Emp-ID (Ex: E001)/आए डी '
@@ -114,18 +134,24 @@ class EmployeeForm(forms.ModelForm):
         'onchange': "try{setCustomValidity('')}catch(e){}"
 
     }))
-    address = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
+    present_address = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'rows': '3',
-        'placeholder': 'Please Enter Permanent Address here / पता '
+        'placeholder': 'Please Enter Present Address here / वर्तमान पता '
     }))
+    permanent_address = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'rows': '3',
+        'placeholder': 'Please Enter Permanent Address here / स्थायी पता '
+    }))
+
     state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
-        'name':'myState',
-        'id':'mystate',
+        'name': 'myState',
+        'id': 'mystate',
         'placeholder': 'State /राज्य'
     }))
 
-   # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
+    # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
 
     # mine = forms.CharField(required=False,
     #                        widget=forms.Select(choices=MineDetails.objects.all().values_list('id', 'name'),
@@ -136,8 +162,8 @@ class EmployeeForm(forms.ModelForm):
     # mining_role = forms.CharField(required=False, widget=forms.Select(choices=MiningRole.objects.all().values_list('id','name'),attrs={'class': 'form-control', }), )
     # immediate_staff=forms.CharField(required=False,widget=forms.Select(choices=Employee.objects.all().values_list('id','name'),attrs={'class': 'form-control', }))
     city = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'name':'myCity',
-        'id':'mycity',
+        'name': 'myCity',
+        'id': 'mycity',
         'placeholder': 'Please Enter Your City / शहर'
     }))
     pin = forms.CharField(required=False, widget=forms.TextInput(attrs={
@@ -146,7 +172,48 @@ class EmployeeForm(forms.ModelForm):
     }))
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect())
     marital_status = forms.ChoiceField(choices=MARITAL_STATUS, widget=forms.RadioSelect())
+    spouse_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Spouse Name'
+    }))
+    nationality = forms.CharField(widget=forms.Select(choices=NATIONALITY, attrs={'class': 'form-control', }), )
+    identification_mark = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Identification mark '
+    }))
+    signature = forms.ImageField()
 
+    category_address = forms.CharField(widget=forms.Select(choices=CATEGORY, attrs={'class': 'form-control', }), )
+
+    esic_ip = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'ESIC IP '
+    }))
+    lwf = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'LWF '
+    }))
+    uan = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'UAN '
+    }))
+    date_of_exit = forms.DateField(widget=forms.TextInput(attrs=
+    {
+        'class': 'form-control datepicker',
+        'value': date.today()
+    }))
+    reason_of_exit = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Reason of Exit '
+    }))
+    service_book_no = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Service Book Number '
+    }))
+    remarks = forms.CharField(required=True, widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Remarks '
+    }))
     # =================for Mining Info======================
     # mine
     rfid = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
@@ -189,7 +256,7 @@ class EmployeeForm(forms.ModelForm):
     }))
 
     #############   Additional Info  ###################
-    aadhaar_no = forms.CharField(max_length=20, required=False, widget=forms.TextInput(attrs={
+    aadhaar_no = forms.CharField(max_length=19, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Aadhaar No / आधार नं '
     }))
@@ -245,17 +312,19 @@ class EmployeeForm(forms.ModelForm):
 
     class Meta:
         model = Employee
-        fields = ['empid', 'name', 'father_name', 'dob', 'address', 'email', 'mob', 'state', 'city', 'pin', 'gender',
+        fields = ['empid', 'name', 'father_name', 'dob', 'present_address', 'permanent_address', 'email', 'mob',
+                  'state', 'city', 'pin', 'gender',
                   'marital_status', 'photo', 'mine', 'rfid', 'designation'
             , 'token_no', 'retirement_date', 'mining_role', 'job_type', 'is_rescue', 'date_of_joining', 'cat_type',
                   'immediate_staff', 'blood_group', 'medical_status'
             , 'aadhaar_no', 'pan_no', 'voter_id_no', 'medical_ins_no', 'bank_name', 'bank_ac_no', 'bank_ifsc',
                   'bank_pf_no',
-                  'edu_course_name', 'edu_board_name', 'edu_year', 'edu_percent']
+                  'edu_course_name', 'edu_board_name', 'edu_year', 'edu_percent', 'spouse_name', 'nationality',
+                  'identification_mark', 'signature', 'category_address', 'esic_ip', 'lwf', 'date_of_exit',
+                  'reason_of_exit', 'service_book_no', 'remarks']
         widgets = {
             'date_of_joining': forms.DateInput(attrs={'class': 'datepicker'}),
         }
-
 
 
 class MineDetailsForm(forms.ModelForm):
@@ -278,7 +347,7 @@ class MineDetailsForm(forms.ModelForm):
         'id': 'mystate',
         'placeholder': 'State /राज्य'
     }))
-    latitude = forms.FloatField(required=False, min_value=0,widget=forms.NumberInput(attrs={
+    latitude = forms.FloatField(required=False, min_value=0, widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Latitude (ex:23.7413105) '
     }))
@@ -303,7 +372,7 @@ class MineDetailsForm(forms.ModelForm):
         'placeholder': 'Tehsil /Taluka / Sub Division'
     }))
     district = forms.CharField(required=False, widget=forms.TextInput(attrs={
-        'id':'mycity',
+        'id': 'mycity',
         'class': 'form-control',
         'placeholder': 'District'
     }))
@@ -326,9 +395,6 @@ class MineDetailsForm(forms.ModelForm):
         fields = ['name', 'area', 'state', 'latitude', 'longitude', 'mine_map_image', 'mine_map_unit',
                   'village_area_road', 'tehsil_taluka_subdivision', 'district',
                   'pin', 'date_of_opening', 'lin_no']
-
-
-
 
 
 class MyDataForm(forms.ModelForm):
@@ -358,3 +424,29 @@ class MiningShiftForm(forms.ModelForm):
     class Meta():
         model = MineShift
         fields = ['shift_name', 'time_from', 'time_to', 'description']
+
+
+class RateOfMinimumWageForm(forms.ModelForm):
+    CATEGORY = (
+        ('HS', 'Highly Skilled'),
+        ('S', 'Skilled'),
+        ('SS', 'Semi Skilled'),
+        ('US', 'Under Skilled'),
+    )
+    category = forms.CharField(required=True, widget=forms.Select(choices=CATEGORY, attrs={'class': 'form-control', }))
+    minimum_basic = forms.FloatField(required=True, min_value=0, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Basic Pay in ₹'
+    }))
+    dearness_allowance = forms.FloatField(required=True, min_value=0, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Rate of DA in %'
+    }))
+    overtime = forms.FloatField(required=True, min_value=0, widget=forms.NumberInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Overtime/hour in ₹'
+    }))
+
+    class Meta():
+        model = RateOfMinimumWages
+        fields = ['mine_id', 'category', 'minimum_basic', 'dearness_allowance', 'overtime']
