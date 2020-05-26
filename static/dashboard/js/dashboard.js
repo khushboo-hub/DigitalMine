@@ -690,7 +690,6 @@ $(document).ready(function () {
     //------------------------------------------------------------------------------------------------------------------
 
     var watermonitoringajax = function (water_l_value, water_m_value, water_h_value, water_t_height, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-        console.log('water monitotring');
         $.ajax({
             type: "get",
             url: url,

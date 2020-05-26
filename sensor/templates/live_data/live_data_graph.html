@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <div class="container">
         <section class="col-md-12">
             <h1 class="page-header">Sensor Live Graph:</h1>
@@ -213,6 +212,7 @@
             }
 
             $("#btn_show").click(function () {
+                console.log('clicked');
                 let mode = $("#id_mode").val();
                 if (!isEmpty(mode)) {
                     if (mode == 'Node Wise' || mode == 0) {
