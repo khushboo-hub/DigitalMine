@@ -132,20 +132,27 @@ def iframe_show_graph_water_sensor(request, mine_id, location):
 
 def fetch_sensor_details(request):  # fetch IP address and water level only (For graph)
     data = {}
-    if request.is_ajax():
+    if  request.is_ajax():
         id = request.GET.get('id', None)
-        location_details = water_level_monitoring_model.objects.values_list().filter(id=id)
+        water_sensor = water_level_monitoring_model.objects.filter(id=id)
         data = {}
         i = 0
-        location_data = []
-        for r in location_details:
-            # print(r)
-            location_data.append(
-                str(r[13]) + '@#' + str(r[4]) + '@#' + str(r[5]) + '@#' + str(r[6]) + '@#' + str(r[3]) + '@#' + str(
-                    r[15]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[9]) + '@#' + str(r[10]) + '@#' + str(
-                    r[11]) + '@#' + str(r[12]))
-            i = i + 1
-        data['result'] = location_data
+
+        for sensor in water_sensor:
+            data['result']={'level1':sensor.alarm_water_level_1,
+                                  'level2':sensor.alarm_water_level_2,
+                                  'level3':sensor.alarm_water_level_3,
+                                  'total_height':sensor.distance_bet_roof_and_water,
+                                  'level1_msg':sensor.level_1_msg,
+                                  'level2_msg':sensor.level_2_msg,
+                                  'level3_msg':sensor.level_3_msg,
+                                  'level1_audio': str(sensor.level_1_audio),
+                                  'level2_audio': str(sensor.level_2_audio),
+                                  'level3_audio': str(sensor.level_3_audio),
+                                  'audio_type':sensor.audio_play_type,
+                                  'moter_start_level':sensor.moter_start_level,
+                                  'moter_stop_level':sensor.moter_stop_level
+                                  }
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
