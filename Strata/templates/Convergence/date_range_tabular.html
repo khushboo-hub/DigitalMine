@@ -196,7 +196,8 @@
             function fill_table_sensor(result,datatable) {
                 for (strata in result) {
                     if (result.hasOwnProperty(strata)) {
-                         datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
+                        var row = datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
+                        //checkAndPlay(result.sensor_value);
                     }
                 }
 

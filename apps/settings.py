@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'dashboard',
     'setting',
     'wm_test',
+    'Slope',
 ]
 
 MIDDLEWARE = [

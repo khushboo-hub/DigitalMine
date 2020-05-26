@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+
+
+<div class="container">
+    <div class="row">
+<section class="col-md-12">
+    <h1 class="page-header">Manage Node</h1>
+    <div class="row text-center">
+        <div class="col-md-12">
+            <a class="btn btn-primary" href="{% url 'sensor:node_add' %}">Add Node</a>
+        </div>
+    </div>
+    <hr>
+    <!-- Table content -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="content">
+                    <thead>
+                        <tr>
+                            <th>SL No</th>
+                            <th>ID</th>
+                            <th>Mine</th>
+                            <th>Node</th>
+                            <th>Connection Type</th>
+                            <th>Arduino</th>
+                            <th>Wireless</th>
+                            <th>Port No</th>
+                            <th>IP Address</th>
+                            <th class="text-center" colspan="3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                            {% for connection_table in object_list %}
+
+                        <tr>
+
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ connection_table.0 }}</td>
+                            <td>{{ connection_table.1 }}</td>
+                            <td>{{ connection_table.2 }}</td>
+                            <td>{{ connection_table.3 }}</td>
+                            <td>{{ connection_table.4 }}</td>
+                            <td>{{ connection_table.5 }}</td>
+                            <td><span id="id_port"></span>{{ connection_table.6 }}<span data_attr1 = "{{ connection_table.6 }}"></span></td>
+                            <td><span id="id_ipno"></span>{{ connection_table.7 }}<span data_attr2 = "{{ connection_table.7 }}"></span></td>
+                            <td class="text-center"><a href="{% url 'sensor:connection_edit' connection_table.0 %}" title="Edit Connection."><span class="glyphicon glyphicon-pencil"></span></a></td>
+                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'sensor:connection_delete' connection_table.0  %}" title="Delete Connection."><span class="glyphicon glyphicon-trash"></span></a></td>
+                            <td class="text-center"><a href="{% url 'gasmonitoring_auto:background_view' connection_table.0 %}"><button  type="button" class="btn btn-success" id="id_start">Start</button></a></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!--end Table content -->
+</section>
+        </div>
+</div>
+
+
+ <div class="modal fade" id="update_info" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">
+                    Alert!
+                </h4>
+            </div>
+            <div class="modal-body">Are you sure, You want to delete?
+            </div>
+            <div class="modal-footer">
+                <a  id="sureDelete"><button type="button" class="btn btn-danger" >Yes</button></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+  <script>
+      $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+
+
+
+  </script>
+
+{% endblock %}

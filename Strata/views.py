@@ -220,7 +220,6 @@ def show_strata_location(request, template_name='Convergence/show_location.html'
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
-
 @login_required
 def fetch_sensor_ajax(request):
     data = {}
@@ -234,7 +233,6 @@ def fetch_sensor_ajax(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-
 
 @login_required
 def get_data_from_node_mcu(request):
@@ -263,7 +261,6 @@ def get_data_from_node_mcu(request):
         sensor_data.append(str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + 'Network Error')
     data['result'] = sensor_data
     return JsonResponse(data)
-
 
 @login_required
 def fetch_sensor_common_values_ajax(request):
@@ -296,7 +293,6 @@ def fetch_sensor_common_values_ajax(request):
         data['result'] = "Not Ajax"
 
     return JsonResponse(data)
-
 
 @login_required
 def fetch_sensor_values_ajax(request):
@@ -536,7 +532,6 @@ def warning_level_information(request):  # for 1 for strata 2 for water 3 for al
         data["light_result"] = ""
     return JsonResponse(data)
 
-
 @login_required
 def push_mail(mail_subject="", mail_html_content=""):
     receiver_data = setting.objects.values_list().filter(name="receiver_email")
@@ -593,7 +588,6 @@ def date_range_tabular(request, template_name='Convergence/date_range_tabular.ht
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
 
-
 @login_required
 def fetch_sensor_date_range(request):
     data = {}
@@ -629,12 +623,10 @@ def fetch_sensor_date_range(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-
 @login_required
 def show_graph_date_range(request, template_name='Convergence/date_range_graph.html'):
     form = Live_data_tabular(request.POST)
     return render(request, template_name, {'form': form})
-
 
 @login_required
 def ajx_sensor_graph_date_range(request):
@@ -755,7 +747,6 @@ def audio_setting(request, sensor_id):
         return redirect('Strata:manage_sensor_in_location')
     return render(request, "Convergence/audio_setting.html", {'form': form})
 
-
 @login_required
 def fetch_map_image(request):
     data = {}
@@ -786,6 +777,11 @@ def strata_average_report(request,template_name='strata_average_report.html'):
     
 def daily_report(request):
     return HttpResponse("Under Development")
+    
+@login_required
+def warning_report(request, template_name='warning_date_range_tabular.html'):
+    form = Live_data_tabular()
+    return render(request, template_name, {'form': form})
 
 
 

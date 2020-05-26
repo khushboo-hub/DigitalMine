@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load staticfiles %}
+<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+ <!--<body id="bg" style="background-image: url('{% static "image/electronics.jpg"%}')";> -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add Arduino under: {{ nodename }}</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:arduino_manage' nodeid %}">Manage Arduino</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form method="post" enctype="multipart/form-data">{% csrf_token %}
+
+
+                        <!--<div class="form-group">-->
+                            <!--<table  class="table table-responsive table-bordered">-->
+                            <!--&lt;!&ndash;{{ form.as_table }}&ndash;&gt;-->
+                            <!--&lt;!&ndash;<label class="" >Name</label>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<input type="text" class="form-control" placeholder="Enter your name" name="fname">&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{form.as_table}}&ndash;&gt;-->
+                            <!--&lt;!&ndash;{{ form }}&ndash;&gt;-->
+                                <!--</table>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Mine :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="nodemineid" class="form-control"  value= "{{nodemineid}}">
+                                </div>
+                            </div>
+                           <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Node :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="nodename" class="form-control" value= "{{nodename}}">
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Arduino ID :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.arduino_id}}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                          <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Type :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.type}}
+                                </div>
+                            </div>
+                              <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>No Of Sensors :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.noofsensors}}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Port No :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.port_no}}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Baudrate :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{form.baudrate}}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                <label>Photo :</label>
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.photo }}
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="form-group">
+                            <div class="row text-center">
+                        <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:arduino_connection' %}">Establish Connection </a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

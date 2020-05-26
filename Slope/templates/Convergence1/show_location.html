@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header">Slope:(Show Location)
+                    <small>&nbsp&nbsp&nbspHere you can see different Location of Slope in Underground Mine</small>
+                </h1>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" id="get_url" data-url="Slope/fetch_map_image" class=""
+                                               id="choose_mine">1. Choose Mine:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.mine_name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+    </div>
+
+
+    <section class="KBmap" id="KBtestmap"></section>
+
+
+    <script>
+
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_name").addClass('form-control');
+            $("#id_mine_name").change(function () {
+                setImageData(this.value);
+                SlopeLocationData(this.value);
+            });
+            var tempData1, tempData;
+
+            function SlopeLocationData(mine_id) {
+                url = $("#get_slope_url").data('url');
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'Slope:fetch_slope_data' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        // CreateMapModel(data.result.image_url,data.result.name);
+                        tempData1 = data;
+                        //console.log(data.result[0].location_name);
+                        //CreateKBtestMap(data);
+                        CreateKBtestMap(tempData1.result)
+                        //console.log(data.result.name);
+                        //console.log(data.result.image_url);
+                    },
+                    error: function () {
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+
+            }
+
+            function setImageData(mine_id) {
+                url = $("#get_url").data('url');
+
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'Slope:fetch_map_image' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        // CreateMapModel(data.result.image_url,data.result.name);
+                        tempData = data;
+                        // CreateKBtestMap(data);
+
+                        //console.log(data.result.name);
+                        //console.log(data.result.image_url);
+                    },
+                    error: function () {
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+            }
+
+
+            function CreateKBtestMap(jsonData) {
+                var img = tempData.result.image_url;
+                if (addedKBmaps.length > 0) {
+                    addedKBmaps.pop();
+                    $('.KBmap__mapContainer').remove();
+                }
+                if (img) {
+                    createKBmap('KBtestmap', '/media/' + img);
+                    KBtestmap.importJSON(jsonData);
+                    KBtestmap.showAllMapMarkers();
+
+                } else {
+                    $("#map").css("");
+                    $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+                }
+
+
+            };
+            var added = 0;
+            var c = 0;
+
+            (function ($) {
+                $.fn.clickToggle = function (func1, func2) {
+                    var funcs = [func1, func2];
+                    this.data('toggleclicked', 0);
+                    this.click(function () {
+                        var data = $(this).data();
+                        var tc = data.toggleclicked;
+                        $.proxy(funcs[tc], this)();
+                        data.toggleclicked = (tc + 1) % 2;
+                    });
+                    return this;
+                };
+            }(jQuery));
+            $('div.fixedContainer1').clickToggle(function () {
+                added = 1;
+                console.log(added);
+                $('.btn-primary.slope_fix_location').text("Change The Slope Location");
+                $('.slope_fix_location.btn-primary').addClass('btn-success').removeClass('btn-primary');
+                $('.slope_fix_location').addClass('slope_change_location').removeClass('slope_fix_location');
+
+            }, function () {
+                added = 0;
+                console.log(added);
+                $('.btn-success.slope_change_location').text("Fix The Slope Location");
+                $('.btn-success').addClass('btn-primary').removeClass('btn-success');
+                $('.slope_change_location').addClass('slope_fix_location').removeClass('slope_change_location');
+
+            });
+        });
+    </script>
+
+{% endblock %}
+

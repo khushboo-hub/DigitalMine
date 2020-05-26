@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header" style="text-align: left;"><b>Show Slope Graph between dates</b></h2>
+                <div class="row">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Mine:</label>
+                    </div>
+                    <div class="col-md-3">
+                        {{ form.mine_name }}
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Location:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_location_id"
+                                data-url="{% url 'Slope:fetch_location_ajax' %}">
+                            <option value="">--Select Location--</option>
+                        </select>
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">Choose Sensor:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="id_sensor_list"
+                                data-url="{% url 'Slope:fetch_sensor_ajax' %}">>
+                            <option value="">--Select Sensor--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:30px;">
+                    <div class="col-md-1">
+                        <label for="" class="" id="">From Date:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="from_date" name="">
+                    </div>
+                    <div class="col-md-1">
+                        <label for="" class="" id="">To Date:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="text" class="form-control" id="to_date" name="">
+                    </div>
+                    <div class="col-md-4">
+                        <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                    </div>
+                </div>
+                <div id='Slopemonitoring' data-Slope-location="{{ iframe_Slope_location }}"
+                     data-Slope-sensor="{{ iframe_Slope_sensor }}"
+                     data-values-url="{% url 'Slope:fetch_sensor_date_range' %}"
+                     data-url="{% url 'Slope:fetch_sensor_common_values_ajax' %}">
+
+                    <!-- Plotly chart will be drawn inside this DIV --></div>
+            </section>
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
+            });
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD hh:mm:ss'
+            });
+            let Slope_location_url = $('#id_location_id').attr('data-url');
+            let Slope_sensor_url = $('#id_sensor_list').attr('data-url');
+            $("#id_mine_name").addClass('form-control');
+            $("#id_mine_name").on("change", function () {
+                let mine_id = this.value;
+                console.log(mine_id);
+                $.ajax({
+                    type: "get",
+                    url: Slope_location_url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown(result) {
+                console.log(result);
+                $("#id_location_id").html("<option>--Select Location--</option>");
+                for (var Slope in result) {
+                    if (result.hasOwnProperty(Slope)) {
+                        $("#id_location_id").append($("<option />").val(result[Slope].id).text(result[Slope].name));
+                    }
+                }
+            }
+
+            $("#id_location_id").on("change", function () {
+                let location_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: Slope_sensor_url,
+                    data: {
+                        'id': location_id
+                    },
+                    success: function (data) {
+                        fill_dropdown_sensor(data.result);
+
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            });
+
+            function fill_dropdown_sensor(result) {
+
+                $("#id_sensor_list").html("<option>--Select Location--</option>");
+                for (var sensor in result) {
+                    if (result.hasOwnProperty(sensor)) {
+                        $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                    }
+                }
+            }
+
+            let Slope_url = $('#Slopemonitoring').attr('data-url');
+            let Slope_values_url = $('#Slopemonitoring').attr('data-values-url');
+
+            $("#btn_show").click(function () {
+                $("#btn_show").val("Please wait...");
+                $("#btn_show").prop('disabled', true);
+
+                let sensor_id = $("#id_sensor_list").val();
+                if (sensor_id) {
+                    let datefrom = $("#from_date").val();
+                    let dateto = $("#to_date").val();
+                    SlopeStart(sensor_id, Slope_url, datefrom, dateto);
+                }
+            });
+
+            function SlopeStart(sensor_id, url, datefrom, dateto) {
+                $.xhrPool.abortAll();
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': sensor_id
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                    },
+                    success: function (data) {
+                        var Slope = data.result;
+                        $("#ip_hidden").val(Slope.ip);
+                        let Slope_l_Value = parseFloat(Slope.level1);
+                        let Slope_l_color = Slope.level1_color;
+
+                        let Slope_m_Value = parseFloat(Slope.level2);
+                        let Slope_m_color = Slope.level2_color;
+
+                        let Slope_h_Value = parseFloat(Slope.level3);
+                        let Slope_h_color = Slope.level3_color;
+
+                        let Slope_audio_type = Slope.audio_type;
+                        let Slope_first_warning = Slope.level1_msg;
+                        let Slope_second_warning = Slope.level2_msg;
+                        let Slope_third_warning = Slope.level3_msg;
+
+                        let Slope_first_audio = Slope.level1_audio;
+                        let Slope_second_audio = Slope.level2_audio;
+                        let Slope_third_audio = Slope.level3_audio;
+                        //INITIALIZING PLOTLY
+
+                        Slopemonitoringajax(Slope_l_Value, Slope_m_Value, Slope_h_Value, Slope_values_url, sensor_id, datefrom, dateto);
+
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }, timeout: 10000
+                });
+            }
+
+            var Slopemonitoringajax = function (Slope_l_Value, Slope_m_Value, Slope_h_Value, url, sensor_id, datefrom, dateto) {
+
+                SlopeAjax = $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': sensor_id,
+                        'date_from': datefrom,
+                        'date_to': dateto,
+                    },
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                    },
+                    success: function (data) {
+                        let time = [];
+                        let SlopeValue = [];
+                        let SlopeL = [];
+                        let SlopeM = [];
+                        let SlopeH = [];
+                        let SlopeHH = [];
+                        let Slope = data.result;
+                        for (let st in Slope) {
+                            if (Slope.hasOwnProperty(st)) {
+                                time.push(Slope[st].date);
+                                SlopeValue.push(Slope[st].sensor_value / 15);
+                                SlopeL.push(Slope_l_Value);
+                                SlopeM.push(Slope_m_Value);
+                                SlopeH.push(Slope_h_Value);
+                                SlopeHH.push(Slope_h_Value * 1.2);
+                            }
+                        }
+                        let sL = {
+                            x: time,
+                            y: SlopeL.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: 'rgba(158,158,158,0.18)', //white
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: 'Safe',
+                        };
+                        let sM = {
+                            x: time,
+                            y: SlopeM.reverse(),
+                            fill: 'tonexty',
+                            mode: 'lines',
+                            fillcolor: '#0096888a',
+                            hoverinfo: 'skip',
+                            name: '1st Level',
+
+                        };
+                        let sH = {
+                            x: time,
+                            y: SlopeH.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#ffeb3b75',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '2nd Level',
+
+                        };
+                        let sHH = {
+                            x: time,
+                            y: SlopeHH.reverse(),
+                            fill: 'tonexty',
+                            type: 'scatter',
+                            fillcolor: '#f443368c',
+                            hoverinfo: 'skip',
+                            mode: 'lines',
+                            name: '3rd Level',
+
+                        };
+                        let s = {
+                            x: time,
+                            y: SlopeValue.reverse(),
+                            type: 'scatter',
+                            fillcolor: 'rgba(3,169,244,0.5)',
+                            mode: 'markers+lines',
+                            marker: {
+                                color: 'rgba(3,169,244,1)',
+                                size: 12
+                            },
+                            hoveron: 'points',
+                            hovertemplate: '%{x} : %{y:0.2f} mm<extra></extra>',
+                            hoverinfo: 'text',
+                            title: 'Time',
+                            name: 'Slope',
+                        };
+
+
+                        let Slope_layout = {
+                            xaxis: {
+                                nticks: 10,
+                                domain: [0, 1],
+                                title: "Time",
+                            },
+                            yaxis: {
+                                domain: [0, 1],
+                                title: "Slope Level (in mm)",
+                                range: [0, Slope_h_Value * 1.2]
+                            },
+                            images: [{
+                                name: 'watermark_1',
+                                source: "http://localhost:8000/static/image/csir_logo.svg",
+                                xref: "paper",
+                                yref: "paper",
+                                x: 0.25,
+                                y: 0.9,
+                                sizex: 0.7,
+                                sizey: 0.7,
+                                opacity: 0.1,
+                                layer: "below"
+                            }],
+                            showlegend: true,
+                            legend: {
+                                xanchor: "left",//"auto" | "left" | "center" | "right"
+                                yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                                y: 1,//number between or equal to -2 and 3
+                                x: 0,//number between or equal to -2 and 3
+                                orientation: "h"
+                            }
+                        };
+                        let config = {responsive: true};
+                        let update = [sL, sM, sH, sHH, s];
+                        Plotly.react('Slopemonitoring', update, Slope_layout, config, [0, 1, 2, 3, 4]);
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    },
+                    timeout: 60000,
+                })
+            };
+        });
+    </script>
+{% endblock %}

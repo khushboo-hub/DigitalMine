@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+{% block content %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header" style="text-align: left;"><b>SLOPE LIVE DATA</b>
+                    <small> Here we can view live slope data</small>
+                </h1>
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Mine:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form.mine_name }}
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Location:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select required class="form-control" id="id_location_id"
+                                            data-url="{% url 'Slope:fetch_location_ajax' %}">
+                                        <option value="">--Select Location--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Choose Sensor:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select required class="form-control" id="id_sensor_list"
+                                            data-url="{% url 'Slope:fetch_sensor_ajax' %}">
+                                        <option value="">--Select Sensor--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Time Interval
+                                        <small> (in Seconds)</small>
+                                        :</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="" value="30" id="id_interval">
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="text-center" style="margin-top: 10px;">
+                                <input id="btn_show" class="btn btn-primary" value="Show"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:15px;">
+                            <div class="col-md-4">
+                                <label for="" class="" id="">Wireless data is comming from IP:</label>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" readonly id="ip_hidden">
+                            </div>
+                        </div>
+                        <div class="col-md-12" style="margin-top:15px;">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="sensor_content"
+                                       data-url="{% url 'Slope:fetch_sensor_details' %}">
+                                    <thead>
+                                    <tr>
+                                        <th>Date Time</th>
+                                        <th>Mine Name</th>
+                                        <th>Location Name</th>
+                                        <th>Sensor Name</th>
+                                        <th>Sensor Value</th>
+                                        <th>Sensor Unit</th>
+                                        <th>Tag No</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="sensor_content_body"
+                                           data-url="{% url 'Slope:fetch_sensor_values_ajax' %}">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+                $("#id_mine_name").addClass('form-control');
+
+                let slope_location_url = $('#id_location_id').data('url');
+                let slope_sensor_url = $('#id_sensor_list').data('url');
+                let slope_sensor_details_url = $('#sensor_content').data('url');
+                let slope_sensor_values_url = $('#sensor_content_body').data('url');
+
+
+                $("#id_mine_name").on("change", function () {
+                    let mine_id = this.value;
+                    $.ajax({
+                        type: "get",
+                        url: slope_location_url,
+                        data: {
+                            'id': mine_id
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            fill_dropdown(data.result);
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                });
+
+                function fill_dropdown(result) {
+                    $("#id_location_id").html("<option value=''>--Select Location--</option>");
+                    for (var slope in result) {
+                        if (result.hasOwnProperty(slope)) {
+                            $("#id_location_id").append($("<option />").val(result[slope].id).text(result[slope].name));
+                        }
+                    }
+                }
+
+                $("#id_location_id").on("change", function () {
+                    let location_id = this.value;
+                    $.ajax({
+                        type: "get",
+                        url: slope_sensor_url,
+                        data: {
+                            'id': location_id
+                        },
+                        success: function (data) {
+                            fill_dropdown_sensor(data.result);
+
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                });
+
+                function fill_dropdown_sensor(result) {
+                    $("#id_sensor_list").html("<option value=''>--Select Location--</option>");
+                    for (var sensor in result) {
+                        if (result.hasOwnProperty(sensor)) {
+                            $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                        }
+                    }
+
+                }
+
+                //======================================================================================================================
+                let l_value = "";
+                let m_value = "";
+                let h_value = "";
+                let audio_type = "";
+                let first_warning = "";
+                let second_warning = "";
+                let third_warning = "";
+
+                let first_audio = "";
+                let second_audio = "";
+                let third_audio = "";
+
+                $("#id_sensor_list").on("change", function () {
+                    let sensor_id = this.value;
+                    $.ajax({
+                        type: "get",
+                        url: slope_sensor_details_url,
+                        data: {
+                            'sensor_id': sensor_id
+                        },
+                        success: function (data) {
+                            var slope = data.result;
+                            $("#ip_hidden").val(slope.ip);
+                            l_value = parseFloat(slope.level1);
+                            l_color = slope.level1_color;
+
+                            m_value = parseFloat(slope.level2);
+                            m_color = slope.level2_color;
+
+                            h_value = parseFloat(slope.level3);
+                            h_color = slope.level3_color;
+
+                            audio_type = slope.audio_type;
+                            first_warning = slope.level1_msg;
+                            second_warning = slope.level2_msg;
+                            third_warning = slope.level3_msg;
+
+                            first_audio = slope.level1_audio;
+                            second_audio = slope.level2_audio;
+                            third_audio = slope.level3_audio;
+
+                            $('#sensor_content').DataTable({
+                                paging: false,
+                                searching: true,
+                                "ordering": false,
+                                dom: 'Bfrtip',
+                                buttons: [
+                                    'copy', 'csv', 'excel', 'pdf', 'print'
+                                ],
+                                "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                                    if (aData[4] == "Network Error") {
+                                        $('td', nRow).css('background-color', '#f86161');
+                                    } else if (aData[4] > l_value && aData[4] <= m_value) {
+                                        $('td', nRow).css('background-color', l_color);
+                                    } else if (aData[4] > m_value && aData[4] <= h_value) {
+                                        $('td', nRow).css('background-color', m_color);
+                                    } else if (aData[4] > h_value) {
+                                        $('td', nRow).css('background-color', h_color);
+                                    }
+                                }
+                            });
+                        },
+                        error: function () {
+                            console.log("Something went wrong!");
+                        }
+                    });
+                });
+
+                //====================================================================================================================
+                let interval_time = 0;
+                $("#btn_show").click(function () {
+                    let warning_validation = 2;
+                    interval_time = ($("#id_interval").val() * 1000);
+                    let sensor_id = $("#id_sensor_list").val();
+
+                    if (sensor_id) {
+                        if (isEmpty(sensor_id)) {
+                            alert('Please choose sensor');
+                            return false;
+                        }
+
+                        $("#btn_show").val("Please wait...");
+                        $("#btn_show").prop('disabled', true);
+                        $("#sensor_content_body").empty();//empty the table on each click
+
+                        setInterval(function () {
+                            $.ajax({
+                                type: "get",
+                                url: slope_sensor_values_url,
+                                data: {
+                                    'id': sensor_id
+                                },
+                                success: function (data) {
+                                    fill_table_sensor(data.result);
+                                    return data;
+                                },
+                                error: function () {
+                                    console.log("Something Went Wrong!");
+                                }
+                            });
+                        }, interval_time);//time in milliseconds
+
+                    } else {
+                        alert("Please choose sensor");
+                    }
+                });
+
+                function fill_table_sensor(result) {
+                    let Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
+                    let datatable = $('#sensor_content').DataTable();
+                    let row = datatable.row.add([result.date, result.mine, result.location, result.sensor_name, result.sensor_value, result.unit, result.tag]).draw().node();
+
+                    checkAndPlay(result.sensor_value);
+
+                    $("#btn_show").val("Show");
+                    $("#btn_show").prop('disabled', false);
+                }
+
+                $("#btn_print").click(function () {
+                    window.print();
+                });
+
+                function checkAndPlay(sensorValue) {
+
+                    var loc = window.location;
+                    var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
+
+                    if ((parseFloat(sensorValue) > parseFloat(l_value)) && (parseFloat(sensorValue) < parseFloat(m_value))) {//low level
+                        $.toast({
+                            heading: '<b>Slope Monitoring : First Level Warning</b>',
+                            text: first_warning,
+                            showHideTransition: 'fade',
+                            position: 'bottom-right',
+                            icon: 'error',
+                            color: 'green'
+                        })
+                        if (audio_type == "text2voice") {
+                            Speak(first_warning, 9, 0.5);
+                        } else {
+                            path = baseUrl + first_audio;
+                            var playNow = new Audio(path);
+                            playNow.play();
+                        }
+                    }
+                    if ((parseFloat(sensorValue) > parseFloat(m_value)) && (parseFloat(sensorValue) < parseFloat(h_value))) {//middle level
+                        $.toast({
+                            heading: '<b>Slope Monitoring : Second Level Warning </b>',
+                            text: second_warning,
+                            showHideTransition: 'fade',
+                            position: 'bottom-right',
+                            icon: 'error'
+                        })
+                        if (audio_type == "text2voice") {
+                            console.log(second_warning)
+                            Speak(second_warning, 9, 0.5);
+                        } else {
+                            path = baseUrl + second_audio;
+                            var playNow = new Audio(path);
+                            playNow.play();
+                        }
+                    }
+
+                    if (parseFloat(sensorValue) > parseFloat(h_value)) {//high level
+
+                        $.toast({
+                            heading: '<b>Slope Monitoring : Third Level Warning</b> ',
+                            text: third_warning,
+                            position: 'bottom-right',
+                            showHideTransition: 'fade',
+                            icon: 'error'
+                        })
+                        if (audio_type == "text2voice") {
+                            Speak(third_warning, 9, 0.5);
+                        } else {
+                            path = baseUrl + third_audio;
+                            var playNow = new Audio(path);
+                            playNow.play();
+                        }
+                    }
+                }
+            }
+        );
+    </script>
+{% endblock %}

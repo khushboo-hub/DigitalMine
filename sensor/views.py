@@ -129,7 +129,6 @@ def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
     print('profile', current_user.id)
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
@@ -998,7 +997,7 @@ def fetch_sensor_values(request):
 
 
 @login_required
-def live_data_graph(request, template_name='live_data/live_data_graph.html'):
+def live_data_graph(request, template_name='live_data/live_data_graph_.html'):
     form = NodeForm(request.POST)
 
     return render(request, template_name, {'form': form})

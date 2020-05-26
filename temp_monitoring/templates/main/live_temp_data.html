@@ -28,12 +28,33 @@
                     </form>
                     <br/>
                     <div class="row">
-                         <div class="text-center">
+                        <div class="col-md-2">
+                            <label>Data Acquisition:</label>
+                        </div>
+                        <div class="col-md-1"><input
+                            data-url="{% url 'temp_monitoring:start_save_sensor' %}"
+                            id="isGoaf"
+                            class="isGoaf"
+                            type="checkbox"
+                            data-toggle="toggle" data-on="Off"
+                            data-off="On" data-onstyle="danger"
+                            data-offstyle="success">
+                        </div>
+                         <div class="col-md-2">
                             <input type="submit" id="btn_show" class="btn btn-primary" value="Show"/>
                         </div>
+                        <div class="col-md-2">
+                            <input type="button" id="" class="btn btn-success" value="View History(Tabular)"/>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="button" id="" class="btn btn-success" value="View History(Graphical)"/>
+                        </div>
+
+                        
                     </div>
                     
                     <div class="col-md-12" style="margin-top:15px;">
+                        <div id='stratamonitoring'></div>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="sensor_content">
                                 <thead>
@@ -54,6 +75,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -61,75 +83,173 @@
     </div>
 </div>
 
- <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
- <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+
 
 <script>
     
     
 
 //======================================================================================================================
+ //------------------------------------------------------------------------------------------------------------------
+ 
 
-//====================================================================================================================
+                $("#btn_show").click(function () {
+                    $.xhrPool.abortAll();
+                    $("#btn_show").val("Please wait...");
+                    $("#btn_show").prop('disabled', true);
+                    interval_time=($("#id_interval").val()* 1000);
+                    let sensor_id = $("#id_sensor_list").val();
+                    let strata_url="{% url 'temp_monitoring:fetch_sensor_values_ajax' %}";
+                    if (sensor_id) {
+                        
+                        $("#sensor_content_body").empty();//empty the table on each click
+                        strataStart(sensor_id, strata_url);
+                        
+                    }
+                });
 
 
-    var interval_time=0;
-    $("#btn_show").click(function(){
-         var warning_validation = 2;
-        $("#btn_show").val("Please wait...");
-        $("#btn_show").prop('disabled', true);
-        interval_time=($("#id_interval").val()* 1000);
-        sensor_id=$("#id_sensor_list").val();
+                function strataStart(sensor_id, url) {
+                        
+                        function rand() {
+                            return Math.random();
+                        }
+
+                        var time = new Date();
+
+                        var WBT = {
+                        x: [],
+                        y: [],
+                        mode: 'scatter',
+                        line: {
+                            color: '#80CAF6',
+                            shape: 'spline'
+                        },
+                        name:'WBT'
+                        }
+
+                        var DWT = {
+                        x: [],
+                        y: [],
+                        xaxis: 'x2',
+                        yaxis: 'y2',
+                        mode: 'scatter',
+                        line: {color: '#DF56F1'},
+                        name:'DBT'
+                        };
+
+                        var layout = {
+                        xaxis: {
+                            type: 'date',
+                            domain: [0, 1],
+                            showticklabels: false
+                        },
+                        yaxis: {domain: [0.6,1]},
+                        xaxis2: {
+                            type: 'date',
+                            anchor: 'y2',
+                            domain: [0, 1]
+                        },
+                        yaxis2: {
+                            anchor: 'x2',
+                            domain: [0, 0.4]},
+                        }
+
+                        var data = [WBT,DWT];
+
+                        Plotly.newPlot('stratamonitoring', data, layout);
+
+                        var cnt = 0;
+
+
+
+                        var interval = setInterval(function() {
+
+                                var time = new Date();
+                                $.ajax({
+                                        type:"get",
+                                        url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
+                                        data: {
+                                                'id': sensor_id
+                                            },
+                                        success: function(data) {
+                                            // console.log(data.result);
+                                            $('tr').css({ 'background-color' : '#FFFFFF'});
+                                            fill_table_sensor(data.result);
+                                            wbt=data.result.wbt;
+                                            dbt=data.result.dbt;
+                                            var update = {
+                                            x: [[time], [time]],
+                                            y: [[wbt], [dbt]]
+                                            }
+                                            Plotly.extendTraces('stratamonitoring', update, [0,1])
+                                            if(++cnt === 100) clearInterval(interval);    
+
+
+
+                                            return data;
+                                                },
+                                        error: function(){
+                                                console.log("error he ji");
+                                            }
+                                    });
+                        }, interval_time);
+                       
+                }
+//====================================================================================================================Dewangshu
+
+
+    // var interval_time=0;
+    // $("#btn_show").click(function(){
+    //      var warning_validation = 2;
+    //     $("#btn_show").val("Please wait...");
+    //     $("#btn_show").prop('disabled', true);
+    //     interval_time=($("#id_interval").val()* 1000);
+    //     sensor_id=$("#id_sensor_list").val();
         
            
-            $("#sensor_content_body").empty();//empty the table on each click
+    //         $("#sensor_content_body").empty();//empty the table on each click
 
-            setInterval(function(){
-                    $.ajax({
-                    type:"get",
-                    url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
-                    data: {
-                             'id': sensor_id
-                           },
-                    success: function(data) {
-                        // console.log(data.result);
-                        $('tr').css({ 'background-color' : '#FFFFFF'});
-                        fill_table_sensor(data.result);
+    //         setInterval(function(){
+    //                 $.ajax({
+    //                 type:"get",
+    //                 url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
+    //                 data: {
+    //                          'id': sensor_id
+    //                        },
+    //                 success: function(data) {
+    //                     // console.log(data.result);
+    //                     $('tr').css({ 'background-color' : '#FFFFFF'});
+    //                     fill_table_sensor(data.result);
 
-                        return data;
-                            },
-                    error: function(){
-                            console.log("error he ji");
-                         }
-                    });
-            }, interval_time);//time in milliseconds
+    //                     return data;
+    //                         },
+    //                 error: function(){
+    //                         console.log("error he ji");
+    //                      }
+    //                 });
+    //         }, interval_time);//time in milliseconds
      
 
-    });
+    // });
     function fill_table_sensor(result){
 
         if ( $.fn.DataTable.isDataTable('#sensor_content') ) {
           $('#sensor_content').DataTable().destroy();
         }
 
-        for (index = 0; index < result.length; index++) {
-            var str_array = result[index].split(',');
-            console.log(str_array);
-            // $("#ip_hidden").val(str_array[1]);
+        console.log(result);
+        $("#sensor_content").prepend($("<tr bgcolor=''><td>"+result.date+"</td><td>LM-35 (Temp Sensor)</td><td>"+result.wbt+" &#8451;</td><td>"+result.dbt+" &#8451;</td><td>"+result.relativeHumidity+"<br>"+result.rel_hum_status+"</td><td>"+result.dewPointTemp+"<br>"+result.dew_status+"</td><td>"+result.moistureContent+"</td><td>"+result.sigmaHeat+"</td><td>"+result.enthalpy+"</td></tr>"));
+        // for (index = 0; index < result.length; index++) {
+        //     var str_array = result[index].split(',');
+        //     console.log(str_array);
+        //     // $("#ip_hidden").val(str_array[1]);
             
-            $("#sensor_content").prepend($("<tr bgcolor='#ADFF2F'><td>"+str_array[0]+"</td><td>LM-35 (Temp Sensor)</td><td>"+str_array[1]+" &#8451;</td><td>"+str_array[2]+" &#8451;</td><td>"+str_array[3]+"<br>"+str_array[8]+"</td><td>"+str_array[4]+"<br>"+str_array[9]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td></tr>"));
+        //     $("#sensor_content").prepend($("<tr bgcolor=''><td>"+str_array[0]+"</td><td>LM-35 (Temp Sensor)</td><td>"+str_array[1]+" &#8451;</td><td>"+str_array[2]+" &#8451;</td><td>"+str_array[3]+"<br>"+str_array[8]+"</td><td>"+str_array[4]+"<br>"+str_array[9]+"</td><td>"+str_array[5]+"</td><td>"+str_array[6]+"</td><td>"+str_array[7]+"</td></tr>"));
            
-        }
+        // }
 
-        d_table();
-        $("#btn_show").val("Show");
-        $("#btn_show").prop('disabled', false);
+       
     }
     $("#btn_print").click(function(){
         window.print();
@@ -150,7 +270,38 @@
     $(document).ready(function() {
          
         d_table();
+
+       
+        // half_url=$("#isGoaf").data('url'),
+        ip=$("#id_sensor_list").val();
+        // save_url=uuu+$("#id_sensor_list").val();
+        // $("#isGoaf").attr("data-url",save_url);
     } );
+    //---------for data acquisition
+    $('.isGoaf').change(function () {
+                let goafId=this.id;
+                $.ajax({
+                    type: "get",
+                    url: $(this).data('url'),
+                    data: {
+                        // csrfmiddlewaretoken: "{{ csrf_token }}",
+                        id:ip,
+                    },
+                    success: function (json) {
+                        console.log(json);
+
+                        // $('#'+goafId).bootstrapToggle(json.status);
+                        if(json.hasOwnProperty("error")){
+                            $('#'+goafId).bootstrapToggle('off');
+                        }
+                    },
+                    error: function () {
+                         $('#'+goafId).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+                console.log($(this).data('val'), $(this).prop('checked'));
+            });
 
 
 </script>

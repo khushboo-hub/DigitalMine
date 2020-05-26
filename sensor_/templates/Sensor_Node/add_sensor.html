@@ -1,0 +1,250 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<script src="{% static 'js/jscolor.js' %}"></script>
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Add/Edit Sensor Under ( <span style="color:Tomato;">{{minename}}</span> / <span style="color:Tomato;">{{nodename}}</span>  )</h1>
+            <div class="row text-center">
+                <div class="col-md-12">
+                    <a class="btn btn-primary" href="{% url 'sensor:manage_sensor' mine nodeid %}">Manage Sensor</a>
+                </div>
+            </div>
+            <hr>
+            <!-- Table content -->
+            <div class="row">
+                <div class="form-group">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="input-group">
+                         <input type="hidden" id="nodemineid" type="text" class="form-control" value="{{nodemineid}}" >
+                        </div>
+                        <div class="input-group">
+                         <input type="hidden" id="nodeid" type="text" class="form-control" value="{{nodeid}}" >
+                        </div>
+                                <!--<div class="col-md-6">-->
+                                    <!--<div class="col-md-4">-->
+                                        <!--<label for="" class="" id="">IP Address:<font color="red">*</font></label>-->
+                                    <!--</div>-->
+                                    <!--<div class="col-md-8">-->
+                                        <!--{{form.ip_add}}-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Sensor ID:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensorid}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Sensor Name:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.sensorname }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Sensor Unit:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensorunit}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Theshold Vlaue:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.thresholdlimit}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Warning Unit:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensorunit1}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{form.greenlevel}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor1(this)'} form-control" value="ADFF2F">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Warning Unit:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensorunit2}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{form.yellowlevel}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor2(this)'} form-control" value="FFA500">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Warning Unit:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensorunit3}}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{form.redlevel}}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor3(this)'} form-control" value="FF0000">
+                                    </div>
+                                </div>
+                            </div>
+                <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">IP Address:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.ip_add}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensormsg1}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-2 Message:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{form.sensormsg2}}
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.sensormsg3}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Description:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{form.description}}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                        </div>
+                    </form>
+                </div>
+            </div><!--end Table content -->
+        </section>
+    </div>
+</div>
+<style>
+
+</style>
+<script>
+$(document).ready(function(){
+        $("#id_mine_name").addClass('form-control');
+        $("#id_mine").addClass('form-control');
+        $("#id_name").addClass('form-control');
+
+});
+//
+// $("#id_mine_name").on("change",function(){
+//     mine_id=this.value;
+//     $.ajax({
+//             type:"get",
+//
+//             url: "{% url 'Strata:fetch_location_ajax' %}",
+//             data: {
+//                      'id': mine_id
+//                    },
+//             success: function(data) {
+//                 //console.log(data.result);
+//                 //alert(data.result[0]);
+//                 fill_dropdown(data.result);
+//
+//                 return data;
+//                     },
+//             error: function(){
+//                     console.log("error he ji");
+//                  }
+//             });
+// });
+// function fill_dropdown(result){
+//     $("#id_location_id").html("<option>--Select Location--</option>");
+//     for (index = 0; index < result.length; index++) {
+//     //alert(result[index]);
+//     var str_array = result[index].split(',');
+//     //alert("id="+str_array[0]+":name="+str_array[1]);
+//     $("#id_location_id").append($("<option />").val(str_array[0]).text(str_array[1]));
+//     }
+// }
+
+function setTextColor1(picker) {
+		$("#id_greenlevel").val( '#' + picker.toString());
+	}
+function setTextColor2(picker) {
+		$("#id_yellowlevel").val( '#' + picker.toString());
+	}
+function setTextColor3(picker) {
+		$("#id_redlevel").val( '#' + picker.toString());
+	}
+</script>
+
+{% endblock %}
+

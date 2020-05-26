@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css">
+<div class="container">
+    <div class="row">
+        <section class="col-md-12">
+            <h1 class="page-header">Sensor Live Data:</h1>
+            <div class="row">
+                <div class="form-group">
+
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-12">
+                                <div class="col-md-2">
+                                    <label for="" class="" id="">Choose Mine</label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{form.mine_id}}
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label for="" class="" id="mode_id">Choose Mode</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="mode">
+                                        <option value="">--Select Mode--</option>
+                                        <option value="0">Node wise</option>
+                                        <option value="1">Sensor wise</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <br><br>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="node_name">Choose Node</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" id="id_location_list">
+                                        <option>--Select Node--</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="" class="" id="time_id">Time Interval</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" name="" value="30" id="id_interval">
+                                    <label for="" class="" id="time_sec"><span>(Sec)</span></label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="" class="" id="sensor_name">Choose Sensor</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select class="form-control" id="sensor_name_id">
+                                    <option>--Select Sensor--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="col-md-12">
+                        <div class="text-center">
+                            <button type="button" id="btn_show" class="btn btn-primary" value="Show">Show</button>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-top:15px;">
+                        <div class="table-responsive">
+                            <body>
+                            <div id="tableDiv"></div>
+                            </body>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
+<script>
+$("#id_mine_id").addClass('form-control');
+$(document).ready(function() {
+    $("#id_location_list").hide(); //location list
+    $("#node_name").hide();
+    $("#id_interval").hide();
+    $("#time_id").hide();
+    $("#time_sec").hide();
+     $("#sensor_name").hide();
+    $("#sensor_name_id").hide();
+    $("#mode_id").hide();
+    $("#mode").hide();
+  $('#displayTable').DataTable({retrieve: true,
+                paging: false,
+                searching: true,
+                "ordering": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+         });
+        $("#btn_show").val("Show");
+    $("#btn_show").prop('disabled', false);
+} );
+$("#id_mine_id").on("change",function(){
+    clearInterval(LIVEDATA);
+    $('#tableDiv').empty()
+    $('#displayTable').DataTable().destroy(); //Destroy DataTable
+
+    var mine_id=$(this).val();
+    if(!isEmpty(mine_id)){
+    $("#mode").show();
+    $('#mode_id').show();
+    SelectMode(mine_id);}
+    else{
+        $("#id_location_list").hide(); //location list
+        $("#node_name").hide();
+        $("#id_interval").hide();
+        $("#time_id").hide();
+        $("#time_sec").hide();
+        $("#sensor_name").hide();
+        $("#sensor_name_id").hide();
+        $("#mode_id").hide();
+        $("#mode").hide();
+    }
+});
+
+function SelectMode(mine_id){
+     $("#mode").on("change",function(){
+        clearInterval(LIVEDATA);
+        var mode=$(this).val();
+        if(!isEmpty(mode)){
+            $('#tableDiv').empty();
+            $('#displayTable').DataTable().destroy(); //Destroy DataTable
+            Populate_Node_or_Sensor(mine_id,mode);}
+        else{
+            $('#id_location_list').empty();
+            $('#tableDiv').empty();
+            $('#displayTable').DataTable().destroy(); //Destroy DataTable
+        }
+     });
+}
+
+function Populate_Node_or_Sensor(mine_id,mode){
+    $.ajax({
+            type: "get",
+            url: "{% url 'sensor:populate_mode_ajax' %}",
+            data: {
+                'mine_id': mine_id,
+                'mode':mode,
+            },
+            success: function (data) {
+              if(mode=='0'){
+                PopulateNode(data.result);
+              }
+              else if(mode=='1'){
+                PopulateSensor(data.result);
+              }
+              return data;
+            },
+            error: function () {
+                console.log("Something Went Wrong! : Fetch Mine Ajax");
+            }
+        });
+}
+function PopulateNode(Node){
+    $('#id_location_list').show();
+    $("#node_name").show();
+    $('#node_name').html('Choose Node');
+    $('#id_location_list').empty();
+    $('#id_location_list').append('<option value="">--Select Node--</option>');
+    for(node in Node){
+        $('#id_location_list').append('<option value='+Node[node].id+'>'+node+'</option>');
+    }
+   $("#id_location_list").on("change",function(){
+    clearInterval(LIVEDATA);
+    $('#btn_show').html('Show');
+    $('#tableDiv').empty();
+    $('#displayTable').DataTable().destroy(); //Destroy DataTable
+       $('#id_interval').show();
+       $('#time_sec').show();
+       $('#time_id').show();
+       mine_id=$('#id_mine_id').val();
+       mode=$('#mode').val();
+       node=$(this).val();
+       $.ajax({
+            type: "get",
+            url: "{% url 'sensor:populate_header_ajax' %}",
+            data: {
+                'mine_id': mine_id,
+                'node':node,
+                'mode':mode,
+            },
+            success: function (data) {
+             console.log(data);
+              fill_table_sensor_heading(data.result)
+              return data;
+            },
+            error: function () {
+                console.log("Something Went Wrong! : Fetch Mine Ajax");
+            }
+        });
+
+        //Populate_Node_or_Sensor(mine_id,mode);
+
+     });
+}
+var X;
+function PopulateSensor(Sensor){
+    $('#tableDiv').empty()
+    $('#displayTable').DataTable().destroy(); //Destroy DataTable
+    console.log('sensor')
+    X=Sensor;
+    $('#id_location_list').show();
+    $("#node_name").show();
+    $('#node_name').html('Choose Sensor');
+    $('#id_location_list').empty();
+    $('#id_location_list').append('<option value="">--Select Sensor--</option>');
+    for(sensor in Sensor){
+        $('#id_location_list').append('<option value='+sensor+'>'+Sensor[sensor].sensor_name+'</option>');
+    }
+}
+var XX;
+var LIVEDATA;
+$('#btn_show').click(function(){
+    mine_id=$('#id_mine_id').val();
+    mode=$('#mode').val();
+    node=$('#id_location_list').val();
+    time_interval=$('#id_interval').val();
+    $('#btn_show').html('Please Wait.....');
+    LIVEDATA=setInterval(function () {
+        $.ajax({
+            type: "get",
+            url: "{% url 'sensor:populate_sensor_live_ajax' %}",
+            data: {
+                'mine_id': mine_id,
+                'node':node,
+                'mode':mode,
+            },
+
+            success: function (data) {
+             console.log(data);
+             XX=data;
+             $('#btn_show').html('<span id="loading" class="glyphicon glyphicon-refresh"></span><span> Showing</span>');
+             //$('#btn_show').html('Showing');
+             fill_sensor_live_data(data.result);
+              return data;
+            },
+            error: function () {
+                console.log("Something Went Wrong! : Fetch Mine Ajax");
+            }
+        });
+       },time_interval*1000);
+
+});
+var str;
+var tbh;
+var Y;
+function fill_table_sensor_heading(result){
+    $('#tableDiv').empty()
+    $('#displayTable').DataTable().destroy(); //Destroy DataTable
+        var tableHeaders="";
+       Y=result;
+     var x;
+
+     for (x in result){
+        if(x!="dateTime")
+         tableHeaders += "<th>" + x + "("+result[x].unit+")</th>";
+         else{tableHeaders += "<th>"+result[x].unit+"</th>";}
+    }
+    tbh=tableHeaders;
+$("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' +tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
+     $('#displayTable').DataTable({retrieve: true,
+           paging: false,
+           searching: true,
+            "order": [[ 0, "desc" ]],
+           dom: 'Bfrtip',
+           buttons: [
+               'copy', 'csv', 'excel', 'pdf', 'print'
+           ],
+        'rowCallback': function(row, data, index){
+            WarningLevel(row,data,index,result);
+         }
+     });
+
+}
+var X,Z;
+function WarningLevel(row,data,index,result){
+           X=result;
+           Z=row;
+
+          // console.log(data);
+            for(d=1;d<data.length;d++){
+                if(data[d]<= 10.0){
+                    $(row).find('td:eq('+d+')').css('color', 'green');
+                }
+                else if(data[d]>10 && data[d]<=20){
+                    $(row).find('td:eq('+d+')').css('color', 'yellow');
+                }
+                else{
+                    $(row).find('td:eq('+d+')').css('color', 'red');
+                }
+            }
+}
+function fill_sensor_live_data(data){
+    datatable=$('#displayTable').DataTable();
+    result=[]
+    for(d in data){
+        result.push(data[d])
+    }
+    datatable.row.add(result).draw().node();
+   }
+
+</script>
+{% endblock %}

@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    {% load staticfiles %}
+    <script src="{% static 'js/jscolor.js' %}"></script>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h2 class="page-header"><b>Slope SETTING : ADD SENSOR</b>
+                    <small>&nbsp&nbsp&nbspHere you can add different sensors under any Location</small>
+                </h2>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Choose Mine:<font color="red">*</font> </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.mine_name }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Choose Location:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <select class="form-control" id="id_location_id"
+                                                data-url="{% url 'Slope:fetch_location_ajax' %}" name="location_id">
+                                            <option>--Select Location--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Sensor Name:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.sensor_name }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Sensor Unit:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.sensor_unit }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Tag No:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.tag_no }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Warning Unit:<font
+                                                color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_1_warning_unit }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{ form.level_1_color }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor1(this)'} form-control"
+                                               value="ADFF2F">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Warning Unit:<font
+                                                color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_2_warning_unit }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{ form.level_2_color }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor2(this)'} form-control"
+                                               value="FFA500">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Warning Unit:<font
+                                                color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_3_warning_unit }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Color:</label>
+                                    </div>
+                                    <div class="col-md-5">
+                                        {{ form.level_3_color }}
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input class="jscolor {onFineChange:' setTextColor3(this)'} form-control"
+                                               value="FF0000">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-1 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_1_msg }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-2 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_2_msg }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Level-3 Message:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.level_3_msg }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Audio Play Type:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.audio_play_type }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- -------------------------Audio upload ----------------------------------------------------- -->
+                            <div id="audio_container" style="display:None">
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-1 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_1_audio }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-2 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_2_audio }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-12">
+                                        <div class="col-md-4">
+                                            <label for="" class="" id="">Level-3 Audio:</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.level_3_audio }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!---------------End upoladed audio---------------------------------->
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">IP Address:<font color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.ip_address }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Time Interval(in Sec):<font
+                                                color="red">*</font></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.interval_time }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Description:</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.description }}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit"/>
+                            </div>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+    </div>
+    <style>
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_name").addClass('form-control');
+
+            $("#id_mine_name").on("change", function () {
+                let mine_id = this.value;
+                let url = $("#id_location_id").data('url');
+                $.ajax({
+                    type: "get",
+                    url: url,
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result);
+
+                        return data;
+                    },
+                    error: function () {
+                        console.log("error he ji");
+                    }
+                });
+            });
+
+            function fill_dropdown(result) {
+                $("#id_location_id").html("<option>--Select Location--</option>");
+                for (var Slope in result) {
+                    if (result.hasOwnProperty(Slope)) {
+                        $("#id_location_id").append($("<option />").val(result[Slope].id).text(result[Slope].name));
+                    }
+                }
+            }
+
+            function setTextColor1(picker) {
+                $("#color1").val('#' + picker.toString());
+            }
+
+            function setTextColor2(picker) {
+                $("#color2").val('#' + picker.toString());
+            }
+
+            function setTextColor3(picker) {
+                $("#color3").val('#' + picker.toString());
+            }
+
+            $("input[name$='audio_play_type']").change(function () {
+                let is_value = $(this).val();
+                if (is_value == "text2voice") {
+                    $("#audio_container").hide();
+                } else {
+                    $("#audio_container").show();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
