@@ -30,3 +30,13 @@ class setting(models.Model):
 #     operations = [
 #         migrations.RunPython(load_data)
 #     ]
+
+class Notification(models.Model):
+    type = models.IntegerField()
+    message = models.CharField(db_column='Message', max_length=100)  # Field name made lowercase.
+    time = models.DateTimeField()
+    isread = models.IntegerField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'notification'

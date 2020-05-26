@@ -19,7 +19,6 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <!--                <div><a href="{% url 'sensor:background_data'%}" title="show live"><span class="glyphicon glyphicon-pencil"></span></a></div>-->
                     <table class="table table-bordered" id="content">
                         <thead>
                         <tr>
@@ -59,14 +58,14 @@
                                                                        data-off="off" data-onstyle="success"
                                                                        data-offstyle="danger"></td>
                                 <td class="text-center">
-                                    <a href="{% url 'sensor:edit_sensor' wireless.id wireless.node_id %}"
+                                    <a href="{% url 'sensor:edit_sensor' wireless.id|encrypt wireless.node_id|encrypt %}"
                                         title="Edit Node.">
                                         <span class="glyphicon glyphicon-pencil"></span>
                                     </a>
 
                                 </td>
                                 <td class="text-center"><a href="#" class="delete"
-                                                           data-url="{% url 'sensor:delete_sensor' wireless.id wireless.node_id %}"
+                                                           data-url="{% url 'sensor:delete_sensor' wireless.id|encrypt %}"
                                                            title="Delete Node."><span
                                         class="glyphicon glyphicon-trash"></span></a></td>
                             </tr>

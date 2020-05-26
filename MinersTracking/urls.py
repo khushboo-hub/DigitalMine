@@ -7,6 +7,7 @@ app_name = 'MinersTracking'
 urlpatterns = [
     path('', views.init, name='init'),
     path('create_router/', views.create_router, name='create_router'),
+    path('test', views.test, name='test'),
     path('update_router/<int:pk>',views.update_router,name='update_router'),
     path('edit_router/',views.edit_router,name='edit_router'),
     path('delete_router/', views.delete_router, name='delete_router'),

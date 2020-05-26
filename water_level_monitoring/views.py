@@ -202,81 +202,7 @@ def push_mail(mail_subject="", mail_html_content=""):
     # res = email.send()
 
 
-@background(schedule=5)
-def run_back_save(id):
-    print("===============Water message start=========================")
-    new_inst = water_level_monitoring_data_acquisition_model()
-    new_inst.sensor_id = id
-    new_inst.sensor_value = '0.00'
-    sensor_details = water_level_monitoring_model.objects.get(id=id)
-    global whcount
-    global wmcount
-    global wlcount
-    try:
-        response = requests.get('http://' + str(sensor_details.ip_address))
-        sensor_val = strip_tags(response.text)
-        if (sensor_val):
-            new_inst.sensor_value = str(float(sensor_val))
-        else:
-            new_inst.sensor_value = 'No Data'
-    except Exception as x:
-        new_inst.sensor_value = 'Network Error'
-    new_inst.save()
-    # print(new_inst.sensor_value)
-    h_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_3)
-    m_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_2)
-    l_range = float(sensor_details.distance_bet_roof_and_water) - float(sensor_details.alarm_water_level_1)
-    water = float(sensor_details.distance_bet_roof_and_water) - float(sensor_val)
-    if new_inst.sensor_value != "Network Error":
-        if (float(h_range) > float(new_inst.sensor_value)):  # high
-            mail_subject = "WATER WARNING MESSAGES - High"
-            mail_html_content = "Water Level Warning : High Warning level. current value is " + str(water)
-            push_mail(mail_subject, mail_html_content)
-            # mixer.init()
-            if (sensor_details.audio_play_type == "mp3only"):
-                print('hello')  # mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_3_audio))
-            else:
-                msg = sensor_details.level_3_msg
-                tts = gTTS(text=msg, lang='en')
-                tts.save(f"media/water_warning_audio/highTextWarning{whcount % 2}.mp3")
-                # mixer.music.load(MEDIA_ROOT + f"/water_warning_audio/highTextWarning{whcount%2}.mp3")
-            # mixer.music.play()
-            whcount += 1
 
-        elif ((float(m_range) > (float(new_inst.sensor_value))) and (
-                (float(new_inst.sensor_value)) > float(h_range))):  # medium
-            mail_subject = "WATER WARNING MESSAGES - Medium"
-            mail_html_content = "Water Level Warning : Medium Warning level. current value is " + str(water)
-            push_mail(mail_subject, mail_html_content)
-            # mixer.init()
-            if (sensor_details.audio_play_type == "mp3only"):
-                print('hello')
-            else:
-                msg = sensor_details.level_2_msg
-                tts = gTTS(text=msg, lang='en')
-                tts.save(f"media/water_warning_audio/mediumTextWarning{wmcount % 2}.mp3")
-                # mixer.music.load(MEDIA_ROOT + f"/water_warning_audio/mediumTextWarning{wmcount%2}.mp3")
-            # mixer.music.play()
-            wmcount += 1
-
-        elif ((float(l_range) > (float(new_inst.sensor_value))) and (
-                (float(new_inst.sensor_value)) < float(l_range))):  # low
-            mail_subject = "WATER WARNING MESSAGES - Low"
-            mail_html_content = "Water Level Warning : Low Warning level. current value is " + str(water)
-            push_mail(mail_subject, mail_html_content)
-            # mixer.init()
-            if (sensor_details.audio_play_type == "mp3only"):
-                print('# mixer.music.load(MEDIA_ROOT + "/" + str(sensor_details.level_2_audio))')
-            else:
-                msg = sensor_details.level_1_msg
-                tts = gTTS(text=msg, lang='en')
-                tts.save(f"media/water_warning_audio/lowTextWarning{wlcount % 2}.mp3")
-                # mixer.music.load(MEDIA_ROOT + f"/water_warning_audio/lowTextWarning{wlcount%2}.mp3")
-            # mixer.music.play()
-            wlcount += 1
-    else:
-        print("error")
-    print("====================Water end=======")
 
 
 def live_data_water_sensor(request):
@@ -387,3 +313,22 @@ def warning_fetch_water_data_bet_two_datetime(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+#======================== Background task only==================================
+@background(schedule=5)
+def run_back_save(id):
+
+    new_inst = water_level_monitoring_data_acquisition_model()
+    new_inst.sensor_id = id
+    new_inst.sensor_value = '0.00'
+    sensor_details = water_level_monitoring_model.objects.get(id=id)
+    try:
+        response = requests.get('http://' + str(sensor_details.ip_address))
+        sensor_val = strip_tags(response.text)
+        if (sensor_val):
+            new_inst.sensor_value = str(float(sensor_val))
+        else:
+            new_inst.sensor_value = 'No Data'
+    except Exception as x:
+        new_inst.sensor_value = 'Network Error'
+    new_inst.save()
+    print("# water  saved value is " + new_inst.sensor_value)

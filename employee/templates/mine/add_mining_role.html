@@ -2,76 +2,83 @@
 
 {% block content %}
     {% load staticfiles %}
-    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-    <!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h1 class="page-header">Add Mining Role
-                    <small>&nbsp&nbsp&nbspHere you can add basic info of mining
-                        Role/Class
-                    </small>
-                    </sma></h1>
+                <h3 class="page-header"><b>MANAGE MININIG ROLE: {{ action }} ROLE</b>
+                    <small>Here you can add basic info of mining Role/Class</small>
+                </h3>
 
                 <div class="row text-center">
                     <div class="col-md-12">
                         <a class="btn btn-primary" href="{% url 'employee:manage_mining_role' %}">Manage Role</a>
                     </div>
                 </div>
-                <hr>
-                <center>
-                    <h4><b>Mine Name(You are logged & staff under):</b>
-                        <address style="color:orangered;">{% if admin %}All {% else %}
-                            {{ mine_name.name }}{% endif %}</address>
-                    </h4>
-                </center>
+                <br>
+                <div style="text-align: center;">
+{#                    <h4><b>Mine Name(You are logged & staff under):</b>#}
+{#                        <address style="color:orangered;">{% if admin %}All {% else %}#}
+{#                            {{ mine_name.name }}{% endif %}</address>#}
+{#                    </h4>#}
+                </div>
                 <!-- Table content -->
                 <div class="row">
                     <div class="form-group">
                         <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
 
-
                             <div class="form-group">
                                 <table class="table table-responsive table-bordered">
                                     <tbody>
-                                    {% if admin %}
+
                                         <tr>
                                             <th><label for="id_mine">Mine:</label></th>
                                             <td>
-                                                {{ form.mine }}
+                                                {% if admin %}
+                                                    {{ form.mine }}
+                                                {% else %}
+                                                    <b>{{ mine_name.name }}<b>
+                                                {% endif %}
+
                                             </td>
                                         </tr>
-                                    {% endif %}
+
                                     <tr>
                                         <th><label for="id_parent_role" id="fetch_role"
                                                    data-url="{% url 'employee:mine_role_fetch_ajax' %}">Parent
-                                            role:</label></th>
+                                            role:</label>
+                                        <input type="checkbox" name="parent" id="parent" aria-label="Checkbox for following text input">
+                                        </th>
                                         <td>
                                             {{ form.parent_role }}
+                                            <span style="color:red">{{form.parent_role.errors|striptags}}</span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th><label for="id_name">Name:</label></th>
+                                        <th>
+                                            <label for="id_name">Name:</label>
+
+                                        </th>
+
                                         <td>
                                             {{ form.name }}
+                                            <span style="color:red">{{form.name.errors|striptags}}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th><label for="id_type_0">Type:</label></th>
                                         <td>
                                             {{ form.type }}
+                                            <span style="color:red">{{form.type.errors|striptags}}</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th><label for="id_description">Description:</label></th>
                                         <td>
                                             {{ form.description }}
+                                            <span style="color:red">{{form.description.errors|striptags}}</span>
                                         </td>
                                     </tr>
                                     </tbody>
-                                    <!--                            {{ form.as_table }}-->
                                 </table>
                                 <div class="text-center"><input type="submit" class="btn btn-primary" value="Submit"/>
                                 </div>
@@ -89,7 +96,6 @@
 
     </style>
     <script>
-    var X;
         $(document).ready(function () {
             $("#id_parent_role").addClass('form-control');
              $("#id_parent_role").prop('required',false);
@@ -119,6 +125,18 @@
                     error: function () {
                     }
                 });
+            });
+            if(isEmpty($('#id_parent_role').val())){
+                    $('#parent').prop('checked', true);
+                }
+
+            $('#id_parent_role').change(function(){
+                if(isEmpty(this.value)){
+                    $('#parent').prop('checked', true);
+                }
+                else{
+                     $('#parent').prop('checked', false);
+                }
             })
         });
 

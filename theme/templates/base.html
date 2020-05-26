@@ -2,18 +2,20 @@
 <html lang="en">
 <head>
     {% load static %}
-    {% load staticfiles %}
-    <title>Digital Mine (IoT) | CSIR-CIMFR</title>
+
+     <title>Digital Mine (IoT) | CSIR-CIMFR</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-
+     <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
-    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">
+
+{#    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">#}
+
+
 
     <meta name="keywords"
           content="csir,cimfr,central institute mining and fuel research digital, Council of Scientific and Industrial Research, digital mine, internet of things,
@@ -28,7 +30,7 @@
     <meta itemprop="image" content="https://s3.amazonaws.com/creativetim_bucket/products/18/opt_navbar_thumbnail3.jpg">
 
     <style>
-        #lang-switcher {
+         #lang-switcher {
             position: fixed;
             bottom: 10px;
             right: 5px;
@@ -82,6 +84,7 @@
             border-radius: 5px;
 
         }
+
 
         .wrap {
             width: 1000px;
@@ -157,6 +160,8 @@
             text-align: center;
         }
 
+        @media (min-width: 768px)
+            @mdiapadding-top : 220px;
     </style>
     <script>
         window.onload = function () {
@@ -164,6 +169,8 @@
                 document.location = '/mobile';
             }
         }
+
+
     </script>
 
     <link rel="stylesheet" href="{% static 'css/kisku_custom.css' %}">
@@ -171,6 +178,7 @@
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/filepond.css' %}">
     <link rel="stylesheet" href="{% static 'css/MaterialIcons.css' %}">
+
 
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
@@ -188,28 +196,45 @@
     <link rel="stylesheet" href="{% static 'css/autocomplete-custom.css' %}">
 
 
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <link href="{% static  'css/jquery-ui.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'fonts/Roboto.css' %}" rel='stylesheet' type='text/css'>
     <link href="{% static 'css/select2.min.css' %}" rel="stylesheet"/>
+
+
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="{% static 'css/material.teal-red.min.css' %}">
+
     <link href="{% static 'css/pe-icon-7-stroke.css' %}" rel="stylesheet"/>
     <link href="{% static 'css/ct-navbar.css' %}" rel="stylesheet"/>
+
+    <!--     Font Awesome     -->
     <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+
     <link href="{% static 'css/prettify.css' %}" rel="stylesheet"/>
     <link href="{% static 'fonts/GrandHotel.css' %}" rel='stylesheet' type='text/css'>
-    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-    <link href="{% static 'css/bootstrap-toggle.min.css' %}" rel="stylesheet">
+     <link href="{% static 'css/bootstrap-toggle.min.css' %}" rel="stylesheet">
 
     <style>
+        .container.tim-container {
+            width: 99%;
+        }
+
         .navbar-transparent {
             background-color: #34ACDC;
             background-color: rgba(52, 172, 220, 0.98);
 
         }
+
     </style>
 
+    <script>
+        //paste this code under the head tag or in a separate js file.
+        // Wait for window load
+        $(document).ready(function () {
+            // Animate loader off screen
+            $(".se-pre-con").fadeOut("slow");
+        });
+    </script>
 
 </head>
 <body>
@@ -241,6 +266,8 @@
                             <img src="{% static '/image/csir_logo.svg' %}" width="60px">
                         </div>
                         <div class="brand" style="width:200px;">Digital Mine Using Internet of Things(IoT)</div>
+
+
                     </a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -294,7 +321,7 @@
                             </a>
                             <ul class="dropdown-menu  navbar-color">
 
-                                <li><a href="{% url 'MinersTracking:init' %}">Router Config.</a></li>
+                                <li><a href="{% url 'MinersTracking:init' %}">Router Configuration</a></li>
 
                                 <li><a href="{% url 'MinersTracking:live_tracking_in_tabular' %}">Tracking in
                                     Tabular</a></li>
@@ -314,7 +341,8 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-                                <li><a href="{% url 'sensor:node_add' %}">Add & Manage Wireless Node<sub></sub></a></li>
+                                <li><a href="{% url 'sensor:node_add'  %}">Add Wireless Node<sub></sub></a></li>
+                                <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a></li>
 
                                 <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
                                 <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
@@ -357,7 +385,7 @@
                                 <li><a href="{% url 'Strata:show_sensor_graph' %}">Live Data in Graph</a></li>
                                 <li><a href="{% url 'Strata:date_range_tabular' %}">Data b/n Dates</a></li>
                                 <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
-                                <li><a href="{% url 'Strata:daily_report' %}">Daily Average Report</a></li>
+                                <li><a href="{% url 'Strata:strata_average_report' %}">Strata Average Report</a></li>
                                 <li><a href="{% url 'Strata:warning_report' %}">Warning Report</a></li>
                             </ul>
                         </li>
@@ -412,9 +440,9 @@
                                 <li><a href="{% url 'water_level_monitoring:graph_water_data_bet_two_datetime' %}">Graph
                                     Water level
                                     between two datetime</a></li>
-                                    <li><a href="{% url 'water_level_monitoring:warning_water_data_bet_two_datetime' %}">Warning Information
-                                        between two
-                                        datetime</a></li>
+                                <li><a href="{% url 'water_level_monitoring:warning_water_data_bet_two_datetime' %}">Warning Information
+                                    between two
+                                    datetime</a></li>
                             </ul>
                         </li>
                         <li class="dropdown  dropdown-large">
@@ -430,6 +458,7 @@
                                     <ul class="">
                                         <li class="dropdown-header" style="color:white;"><strong>Coal Report</strong>
                                         </li>
+
                                         <li><a href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
                                             Annual Report</a></li>
                                         <li class="colorClass"><a
@@ -462,6 +491,7 @@
                                     </ul>
                                 </li>
 
+
                                 <li class="col-sm-6">
                                     <ul>
                                         <li class="dropdown-header" style="color:white;"><strong>Metal Report</strong>
@@ -487,6 +517,7 @@
                                         <li><a target="" href="{% url 'DGMS_Forms:manage_development_permission' %}">Dervelopment
                                             Permission </a></li>
 
+
                                         <li><a href="{% url 'DGMS_Forms:ManageVentilation' %}">Manage Ventilation
                                             Report </a></li>
                                         <li>
@@ -510,6 +541,7 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
+
                                 <li><a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a></li>
                                 <li><a href="{% url 'inventory_management:category_add' %}">Add Category</a></li>
                                 <li><a href="{% url 'inventory_management:product_add' %}">Add Product</a></li>
@@ -539,6 +571,7 @@
                                 <li class="col-sm-6">
                                     <ul class="">
                                         <li class="dropdown-header" style="color:white;">Sword of Truth</li>
+
                                         <li><a href="{% url 'ProductionMonitoring:vehicle_add' %}">Add Vehicle</a></li>
                                         <li><a href="{% url 'ProductionMonitoring:vehicle_manage' %}">Manage Vehicle</a>
                                         </li>
@@ -725,13 +758,20 @@
                                 </li>
                             {% endif %}
                         </ul>
+
                     </ul>
+
+
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
+
         <div class="blurred-container"></div>
+
+
     </div> <!-- end menu-dropdown -->
 </div>
+
 
 <div class="row">
     <div class="col-md-2"></div>
@@ -753,21 +793,7 @@
         {% block content %}
         {% endblock %}
     </div><!-- content -->
-    <div>
-        <main>
-            <button id="lang-switcher" class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">language</i>
-            </button>
-            <ul class="mdl-menu mdl-menu--top-right mdl-js-menu" for="lang-switcher">
-                <a href="{% url 'setting:change_language' 'en' %}">
-                    <li class="mdl-menu__item">English</li>
-                </a>
-                <a href="{% url 'setting:change_language' 'in' %}">
-                    <li class="mdl-menu__item">हिंदी</li>
-                </a>
-            </ul>
-        </main>
-    </div>
+
 </div>
 <div class="modal fade" style="position:absolute" id="update_info" role="dialog">
     <div class="modal-dialog modal-confirm ">
@@ -813,7 +839,6 @@
     </div>
 </div>
 
-
 <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
 
@@ -829,7 +854,7 @@
 <script src="{% static 'js/vfs_fonts.js' %}"></script>
 <script src="{% static 'js/buttons.html5.min.js' %}"></script>
 <script src="{% static 'js/buttons.print.min.js' %}"></script>
-{#<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>#}
+
 <script src="{% static 'js/plotly-latest.min.js' %}"></script>
 <script src="{% static 'js/KBmapmarkers.js' %}"></script>
 <script src="{% static 'js/KBmapmarkersCords.js' %}"></script>
@@ -839,16 +864,13 @@
 <script src="{% static 'js/jquery.connectingLine.js' %}"></script>
 <script src="{% static 'js/jquery.svg.min.js' %}"></script>
 <script src="{% static 'js/jquery.md5.min.js' %}"></script>
+<script src="{% static 'js/printThis.js' %}"></script>
 
 <script src="{% static 'datetime/js/moment.js' %}"></script>
 <script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
 <script src="{% static 'datetime/js/collapse.js' %}"></script>
 <script src="{% static 'datetime/js/transition.min.js' %}"></script>
-<script src="{% static 'js/printThis.js' %}"></script>
-
 <script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
-<script src="{% static 'js/select2.min.js' %}"></script>
-<script src="{% static 'js/toastr.min.js' %}"></script>
 <script src="{% static 'js/prettify.js' %}"></script>
 <script src="{% static 'js/filepond.js' %}"></script>
 <script src="{% static 'js/svg.min.js' %}"></script>
@@ -857,13 +879,9 @@
 <script src="{% static 'js/jquery.toast.js' %}"></script>
 <script src="{% static 'js/material.min.js' %}"></script>
 <script src="{% static 'js/bootstrap-toggle.min.js' %}"></script>
-
-<script>
-    $(document).ready(function () {
-        $(".se-pre-con").fadeOut("slow");
-    });
-</script>
-
+<script src="{% static 'js/select2.min.js' %}"></script>
+<script src="{% static 'js/toastr.min.js' %}"></script>
+ <script src="{% static 'js/prettify.js' %}"></script>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -890,6 +908,7 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut",
         };
+
 
         $('ul.nav li.dropdown').hover(function () {
             $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
@@ -919,6 +938,7 @@
                 }
             });
         })();
+
 
         (function profilepicture() {
             $.ajax({
@@ -955,21 +975,22 @@
         {#var interval_time = 5000;#}
         {#var myVar = setInterval(startGlobalWarningFunction, interval_time);#}
 
-        (function start() {
-            $.ajax({
-                type: "GET",
-                url: "{% url 'setting:globalWarningFunction' %}",
-                success: function (data) {
-                    switchingWarningFunction(data);
-                },
-                error: function () {
-                    console.log("Something went wrong. Please contact admin");
-                },
-                complete: function () {
-                    setTimeout(start, 1000);
-                }
-            });
-        })();
+        //(function start() {
+        //    $.ajax({
+        //        type: "GET",
+        {#//        url: "{% url 'setting:globalWarningFunction' %}",#}
+        //        success: function (data) {
+        //            switchingWarningFunction(data);
+        //        },
+        //        error: function () {
+        //            console.log("Something went wrong. Please contact admin");
+        //        },
+        //        complete: function () {
+        //            setTimeout(start, 1000);
+         //       }
+         //   });
+        //})();
+
 
         {#setInterval(function(){#}
         {#    $.ajax({#}
@@ -1133,5 +1154,6 @@
 
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
+<!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>

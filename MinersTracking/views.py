@@ -65,13 +65,21 @@ def update_router(request, pk, template_name='MinersTracking/update_router.html'
     return render(request, template_name, {'form': form, 'object_list': books,'pk':pk})
 
 
+def test(request,template_name="MinersTracking/test.html"):
+    data={}
+    Mines=get_object_or_404(MineDetails,id=1)
+    data['image']=Mines.mine_map_image
+    return render(request,template_name,data)
+
 @csrf_protect
 @login_required
 def create_router(request):
     response_data = {}
 
     if request.is_ajax():
+
         if request.method == 'POST':
+            print('Hello Miners Tracking')
             mine = request.POST.get('mine')
             router = str(request.POST.get('router_id'))
             address = str(request.POST.get('address'))
@@ -96,7 +104,9 @@ def create_router(request):
                 response_data['success'] = "Router Created Successfully!!"
                 response_data['book']=serializers.serialize('json', TrackingRouter.objects.filter(pk=tracking_router_inst.pk), fields=('mine_id','router_id','address','location','is_block','x_axis','y_axis','is_blocked','ip_add'))
                 return JsonResponse(response_data)
-            except:
+            except Exception as e:
+                print('Miners Tracking',e)
+
                 response_data['error'] = "Router Already Available!"
                 return JsonResponse(response_data)
     else:
@@ -272,16 +282,33 @@ def all_mine_page(request, template_name='MinersTracking/all_mine_page.html'):
     return render(request, template_name, {'object_list': book})
 
 
+import hashlib
+
 @login_required
 def live_tracking_in_map(request, mine_id, template_name='MinersTracking/live_tracking_in_map.html'):
+    # print('Here')
     data = {}
-    mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
-    data['mine_data'] = mine_data
-    routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
+    mine_data = MineDetails.objects.filter(id=mine_id)[0]
+    data['mine'] = mine_data
+    routers = TrackingRouter.objects.filter(mine_id_id=mine_id)
     data['routers'] = routers
     miners = Employee.objects.filter(mine_id=mine_id)
-    print(miners)
-    data['miners'] = miners
+    miner=[]
+    for m in miners:
+        try:
+            mining_role_details = MiningRole.objects.get(id=m.mining_role_id)
+            mining_role = mining_role_details.type
+        except:
+            mining_role='officer'
+            pass
+        if mining_role == 'worker':
+            css = 'MinerWorkerIcon'
+        elif mining_role == 'officer':
+            css = 'MinerOfficerIcon'
+        hash_object = hashlib.sha512(str(m.id).encode())
+        miner.append({'id':hash_object.hexdigest(),'name':m.name,'css':css})
+
+    data['miners'] = miner
 
     return render(request, template_name, data)
 
@@ -385,51 +412,51 @@ def fetch_miner_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        miner_details = Employee.objects.values_list().filter(mine_id=mine_id)
-        router_details = TrackingRouter.objects.values_list().filter(mine_id=mine_id)
-        mine_details = MineDetails.objects.values_list().filter(id=mine_id)
+        miner_details = Employee.objects.filter(mine_id=mine_id)
+        router_details = TrackingRouter.objects.filter(mine_id=mine_id)
+        mine_details = MineDetails.objects.filter(id=mine_id)
 
         miner_data = {}
         mine_data = {}
-        for r in miner_details:
+        for m in miner_details:
             miner_data_temp = {}
-            miner_data["Miner" + str(r[0])] = {}
+            miner_data["Miner" + str(m.id)] = {}
             ###0-id,2-name,15-rfid
-            miner_data_temp['name'] = str(r[2])
-            miner_data_temp['rfid'] = str(r[15])
-            miner_data["Miner" + str(r[0])] = miner_data_temp
+            miner_data_temp['name'] = str(m.name)
+            miner_data_temp['rfid'] = str(m.rfid)
+            miner_data["Miner" + str(m.id)] = miner_data_temp
             # miner_data.append(str(r[0])+','+str(r[2])+','+str(r[15]))
 
         router_datas = {}
-        for xx in router_details:
+        for r in router_details:
             router_data = {}
-            str_new = "mapMarker" + str(xx[0])
+            str_new = "mapMarker" + str(r.id)
             router_datas[str_new] = {}
-            router_data['cordX'] = str(xx[6])
-            router_data['cordY'] = str(xx[7])
+            router_data['cordX'] = str(r.x_axis)
+            router_data['cordY'] = str(r.y_axis)
             icon='/static/image/router.svg'
-            if xx[5] == 'Yes':
+            if r.is_block == 'Yes':
                 icon='/static/image/blockedrouter.svg'
-            elif xx[5] == 'No':
+            elif r.is_block == 'No':
                 icon='/static/image/router.svg'
             router_data['icon'] = icon
-            router_model_data = {'title': str(xx[2]), 'content': str(xx[4])}
+            router_model_data = {'title': str(r.router_id), 'content': "<b>Address: </b>"+str(r.address)+"<br><b>Location: </b>"+str(r.location)}
             router_data['modal'] = router_model_data
             router_datas[str_new] = router_data
             ###0-id,2-router_routerrend(str(xx[0])+','+str(xx[2])+','+str(xx[3])+','+str(xx[4])+','+str(xx[5])+','+str(xx[8])+','+str(xx[6])+','+str(xx[7]))
 
         for mm in mine_details:
             ###1-mine_name,6-map
-            mine_data['name'] = str(mm[1])
-            mine_data['image_url'] = str(mm[6])
+            mine_data['name'] = str(mm.name)
+            mine_data['image_url'] = str(mm.mine_map_image)
             # mine_data.append(str(mm[1])+','+str(mm[6]))
-        for r in router_details:
-            router_name=str(r[2])
-            miners_in_router={}
-            #print(router_name)
-
-            #for mmr in miners_in_router:
-                # print(mmr)
+        # for r in router_details:
+        #     router_name=str(r[2])
+        #     miners_in_router={}
+        #     #print(router_name)
+        #
+        #     #for mmr in miners_in_router:
+        #         # print(mmr)
 
         data['result'] = miner_data
         data['routers'] = router_datas
@@ -595,6 +622,8 @@ def get_all_miners_data(request):
                         icon='/static/image/miner_officer.svg'
 
                     single_miner_data['icon'] = icon
+                    hash_object = hashlib.sha512(str(m.id).encode())
+                    single_miner_data['id']=hash_object.hexdigest()
                     single_miner_data['iconClass']=iconClass
                     single_miner_data['router_id']=str(router_details.router_id)
                     current_time=datetime.datetime.now()
@@ -609,5 +638,5 @@ def get_all_miners_data(request):
 
     else:
         data['result'] = "Not Ajax"
-    print(data)
+    # print(data)
     return JsonResponse(data)

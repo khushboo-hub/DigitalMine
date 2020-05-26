@@ -2,16 +2,13 @@
 
 {% block content %}
 {% load staticfiles %}
-<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+{#<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">#}
 <div class="container">
     <div class="row">
         <section class="col-md-12">
-            <h1 class="page-header">{{action}}
+            <h3 class="page-header"><b>MANAGE MINE: {{action}} MINE</b>
                 <small>Here you can add/edit basic info of mine<span style="color:#ff9800">{{mine_name}}</span></small>
-                </sma></h1>
+            </h3>
 
             <div class="row text-center">
                 <div class="col-md-12">
@@ -19,7 +16,6 @@
                        title="Click Here to Manage Employees">Manage Mine</a>
                 </div>
             </div>
-            <hr>
             <!-- Table content -->
             <div class="row">
                 <div class="form-group">

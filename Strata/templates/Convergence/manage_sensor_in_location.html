@@ -15,8 +15,10 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h2 class="page-header" style="text-align: left;"><b>Manage Sensor</b>
-                    <small> Here you can manage sensor</small>
+                <h2 class="page-header" style="text-align: left;"><b>
+                {{ "manage strata sensor"|upper }}
+                </b>
+                    <small> Here you can manage strata sensor</small>
                 </h2>
                 <div class="row text-center">
                     <div class="col-md-12">
@@ -24,6 +26,7 @@
                     </div>
                 </div>
                 <br>
+
                 <!-- Table content -->
                 <div class="row">
                     <div class="col-md-12">
@@ -56,8 +59,9 @@
                                         <td>{{ strata.ip }}</td>
                                         <td class="text-center"><input {% if strata.background %}checked {% endif %}
                                                                        data-url="{% url 'Strata:start_save_sensor' strata.id %}"
-                                                                       id="isGoaf{{ strata.id }}"
-                                                                       data-val="{{ strata.id }}" class="isGoaf"
+                                                                       id="isAcquire{{ strata.id }}"
+                                                                       data-val="{{ strata.id }}"
+                                                                       class="DataAcquisition"
                                                                        type="checkbox"
                                                                        data-toggle="toggle" data-on="On"
                                                                        data-off="off" data-onstyle="success"
@@ -94,8 +98,8 @@
                 $('#update_info').modal('show');
             });
 
-            $('.isGoaf').change(function () {
-                let goafId=this.id;0
+            $('.DataAcquisition').change(function () {
+                let isAcquire = this.id;
                 $.ajax({
                     type: "post",
                     url: $(this).data('url'),
@@ -104,12 +108,12 @@
                     },
                     success: function (json) {
                         console.log(json);
-                        if(json.hasOwnProperty("error")){
-                            $('#'+goafId).bootstrapToggle('off');
+                        if (json.hasOwnProperty("error")) {
+                            $('#' + isAcquire).bootstrapToggle('off');
                         }
                     },
                     error: function () {
-                         $('#'+goafId).bootstrapToggle('off');
+                        $('#' + isAcquire).bootstrapToggle('off');
                         console.log("something is not right.please contact admin - 1");
                     }
                 });

@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 ###################
 import serial
+from background_task import background
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -31,9 +32,12 @@ from django.utils.http import urlsafe_base64_encode
 from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
+from employee.models import Employee
 import re
 from django.db import IntegrityError
 from django.views.decorators.cache import cache_page
+
+
 # Create your views here.
 @login_required
 def employee_manage(request, template_name='employee/employee_manage.html'):
@@ -43,7 +47,7 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
     if request.user.is_superuser:
         book = Employee.objects.all()
     else:
-        book=Employee.objects.filter(mine_id=profile.mine_id.id)
+        book = Employee.objects.filter(mine_id=profile.mine_id.id)
     data = {}
     data['object_list'] = book
     for b in book:
@@ -51,27 +55,32 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
     return render(request, template_name, data)
 
 
-
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
     profile = get_object_or_404(profile_extension, user_id=request.user.id)
     if profile.mine_id is not None:
-        form = EmployeeForm(profile.mine_id.id,initial={'mine': profile.mine_id.id})
+        form = EmployeeForm(profile.mine_id.id, initial={'mine': profile.mine_id.id})
     else:
         form = EmployeeForm(1)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST or None, request.FILES)
+        form = EmployeeForm(request.POST.get('mine'),request.POST or None, request.FILES or None)
         if form.is_valid():
-            form.save()
+            employee=form.save()
+            # fs=profile_extension()
+            # fs.mine_id=employee.mine
+            # fs.user_id=employee.id
+            # fs.profile_avatar=employee.photo
+            # fs.save()
         return redirect('employee:employee_manage')
 
     return render(request, template_name, {'form': form})
 
+
 @login_required
 def employee_edit(request, pk, template_name='employee/employee_add.html'):
     book = get_object_or_404(Employee, pk=pk)
-    form = EmployeeForm(book.mine_id,request.POST or None, request.FILES or None, instance=book)
+    form = EmployeeForm(book.mine_id, request.POST or None, request.FILES or None, instance=book)
     print('Form Errors', form.errors)
     if form.is_valid():
         print('form is valid')
@@ -156,63 +165,81 @@ def more_details_ajax(request):
 
     data['error'] = "Something Went Wrong"
     return JsonResponse(data)
-from accounts.models import profile_extension
-from employee.models import Employee
+
+
+
+
+
 @login_required
 def generate_login_details_ajax(request):
     data = {}
     if request.is_ajax():
-        # miner_id = request.POST.get('miner_id')
-        # email=request.POST.get('email')
         try:
             email = request.POST.get('email')
             password = request.POST.get('pass')
 
             username = request.POST.get('username')
-            print('username',username)
+            print('username', username)
             print('pass', password)
             print('email', email)
             data['result'] = email
-            user = User.objects.create_user(username=username,
-                                            email=email,
-                                            password=password)
+            try:
+                user = User.objects.create_user(username=username,
+                                                email=email,
+                                                password=password)
 
-            user.is_active = False
-            user.save()
-            employee=get_object_or_404(Employee, email=email)
-            fs = profile_extension()
-            fs.user_id = user
-            fs.mine_id=employee.mine
-            fs.save()
-            current_site = get_current_site(request)
-            mail_subject = 'Activate your Miner account.'
-            message = render_to_string('acc_active_email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            })
-            to_email = email
-            email = EmailMessage(
-                mail_subject, message, to=[to_email]
-            )
-            email.send()
-            data['confirm_registration'] = 'Please confirm your email address to complete the registration'
-            data['username'] = username
-            data['password'] = password
-            data['success'] = "Account Creation Successfully! User need to Confirm email to login!"
-            return JsonResponse(data)
-        except IntegrityError as e:
-            data['ie']="Account with this username and email address already exists!"
+
+                current_site = get_current_site(request)
+                sendverifyemail(current_site.domain,user.username,email,urlsafe_base64_encode(force_bytes(user.pk)),account_activation_token.make_token(user))
+                user.is_active = False
+                user.save()
+                employee = get_object_or_404(Employee, email=email)
+                fs = profile_extension()
+                fs.user_id = user
+                fs.mine_id = employee.mine
+                fs.profile_avatar=employee.photo
+                fs.save()
+
+                data['confirm_registration'] = 'Please confirm your email address to complete the registration'
+                data['username'] = username
+                data['password'] = password
+                data['success'] = "Account Creation Successfully! User need to Confirm email to login!"
+                return JsonResponse(data)
+
+            except IntegrityError as e:
+                data['ie'] = "Account with this username and email address already exists!"
+                return JsonResponse(data)
         except Exception as e:
-            print('error',e)
+            print('error', e)
             data['ie'] = "Something went wrong.Try again later"
             user.delete()
             fs.delete()
-
-
-    data['error'] = "Something Went Wrong!"
+            return JsonResponse(data)
+    else:
+        data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+
+@background(schedule=1)
+def sendverifyemail(domain,user,email,uid,token):
+    print('Email Background',domain,user,email,uid,token)
+    mail_subject = 'Activate your Miner account.'
+    message = render_to_string('acc_active_email.html', {
+        'user': user,
+        'domain': domain,
+        'uid': uid,
+        'token': token,
+    })
+    to_email = email
+    email = EmailMessage(
+        mail_subject, message, to=[to_email]
+    )
+    try:
+        email.send()
+        return True
+    except Exception as e:
+        print('error',e)
+        sendverifyemail(domain, user, email, uid, token)
 
 
 @login_required
@@ -308,8 +335,8 @@ def add_mine(request, template_name='mine/mine_add.html'):
         if form.is_valid():
             form.save()
             return redirect('employee:manage_mine')
-        return render(request, template_name, {'form': form, 'action': 'Add Mine', 'mine_name': ''})
-    return render(request, template_name, {'form': form,'action':'Add Mine','mine_name':''})
+        # return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
+    return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
 
 
 @login_required
@@ -325,11 +352,11 @@ def manage_mine(request, template_name='mine/mine_manage.html'):
 def edit_mine(request, pk, template_name='mine/mine_add.html'):
     book = get_object_or_404(MineDetails, pk=pk)
     print(book)
-    form = MineDetailsForm(request.POST or None,request.FILES or None, instance=book)
+    form = MineDetailsForm(request.POST or None, request.FILES or None, instance=book)
     if form.is_valid():
         form.save()
         return redirect('employee:manage_mine')
-    return render(request, template_name, {'form': form,'action':'Manage Mine','mine_name':'('+str(book.name)+')'})
+    return render(request, template_name, {'form': form, 'action': 'EDIT', 'mine_name': '(' + str(book.name) + ')'})
 
 
 @login_required
@@ -345,60 +372,26 @@ def delete_mine(request, pk):
 def add_mining_role(request, template_name='mine/add_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    admin_or_not=0
+    admin_or_not = 0
     if request.user.is_superuser:
-        admin_or_not=1
+        admin_or_not = 1
     else:
-        admin_or_not=0
+        admin_or_not = 0
 
-    form = MiningRoleForm(profile.mine_id.id,request.POST)  # Passed Mine id as an argument
-    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
-    if form.is_valid():
-        fs=form.save(commit=False)
-        if not request.user.is_superuser:
-            fs.mine_id=profile.mine_id.id
-        fs.save()
-        return redirect('employee:manage_mining_role')
-
-    return render(request, template_name, {'form': form,'mine_name':mine_name,'admin':admin_or_not})
-
-
-@login_required
-def mine_role_fetch_ajax(request):
-    data = {}
-    if request.is_ajax():
-        mine = request.GET.get('mine_id')
-        data['result'] = serializers.serialize('json', MiningRole.objects.filter(mine_id=mine), fields=('id','name'
-                                                                              ))
-    else:
-        data['result']="Not Ajax"
-    return JsonResponse(data)
-
-@login_required
-def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
-    # book = Employee.objects.all()
-    book = MiningRole.objects.all()
-    current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
-    admin_or_not=0
-    try:
-        current_user=request.user
-        profile=get_object_or_404(profile_extension,user_id=current_user.id)
+    form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
+    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+    if request.method == "POST":
         if request.user.is_superuser:
-            book = MiningRole.objects.all().order_by('mine_id')
-            admin_or_not=1
-        else:
-            book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
-            admin_or_not = 0
-    except:
-        pass
-    data = {}
-    data['object_list'] = book
-    data['mine_name']=mine_name
-    data['admin']=admin_or_not
+            form = MiningRoleForm(request.POST.get('mine'), request.POST or None, instance=book)
+        if form.is_valid():
+            fs = form.save(commit=False)
+            if not request.user.is_superuser:
+                fs.mine_id = profile.mine_id.id
+            fs.save()
+            return redirect('employee:manage_mining_role')
 
-    return render(request, template_name, data)
+    return render(request, template_name,
+                  {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
 
 
 @login_required
@@ -406,22 +399,35 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(MiningRole, pk=pk)
-    form = MiningRoleForm(request.POST or None, instance=book)
-    mine_name=MineDetails.objects.get(id=profile.mine_id.id)
-    if profile.mine_id is None:
-        roles=MiningRole.objects.all()
+    form = MiningRoleForm(profile.mine_id.id, None, request.POST or None, instance=book)
+    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+    admin_or_not = 0
+    if request.user.is_superuser:
+        admin_or_not = 1
     else:
-        roles=MiningRole.objects.filter(mine_id=profile.mine_id.id)
+        admin_or_not = 0
 
-    selected_role=book.parent_role
-    if book.parent_role is None:
-        selected_role=""
-    else:
-        selected_role=book.parent_role.id
-    if form.is_valid():
-        form.save()
-        return redirect('employee:manage_mining_role')
-    return render(request, template_name, {'form': form,'roles':roles,'selected_role':selected_role,'mine_name':mine_name})
+    if request.method == "POST":
+        if request.user.is_superuser:
+            if request.POST.get('parent'):
+                form = MiningRoleForm(request.POST.get('mine'), request.POST.get('parent'), request.POST or None,
+                                      instance=book)
+            else:
+                form = MiningRoleForm(request.POST.get('mine'), None, request.POST or None, instance=book)
+
+        if request.POST.get('parent'):
+            form = MiningRoleForm(request.POST.get('mine'), request.POST.get('parent'), request.POST or None,
+                                  instance=book)
+
+        if form.is_valid():
+            fs = form.save(commit=False)
+            if not request.user.is_superuser:
+                fs.mine_id = profile.mine_id.id
+            fs.save()
+            return redirect('employee:manage_mining_role')
+
+    return render(request, template_name,
+                  {'form': form, 'mine_name': mine_name, 'action': 'EDIT', 'admin': admin_or_not})
 
 
 @login_required
@@ -429,6 +435,45 @@ def delete_mining_role(request, pk):
     book = get_object_or_404(MiningRole, pk=pk)
     book.delete()
     return redirect('employee:manage_mining_role')
+
+
+@login_required
+def mine_role_fetch_ajax(request):
+    data = {}
+    if request.is_ajax():
+        mine = request.GET.get('mine_id')
+        data['result'] = serializers.serialize('json', MiningRole.objects.filter(mine_id=mine), fields=('id', 'name'
+                                                                                                        ))
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
+@login_required
+def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
+    # book = Employee.objects.all()
+    book = MiningRole.objects.all()
+    current_user = request.user
+    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+    admin_or_not = 0
+    try:
+        current_user = request.user
+        profile = get_object_or_404(profile_extension, user_id=current_user.id)
+        if request.user.is_superuser:
+            book = MiningRole.objects.all().order_by('mine_id')
+            admin_or_not = 1
+        else:
+            book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            admin_or_not = 0
+    except:
+        pass
+    data = {}
+    data['object_list'] = book
+    data['mine_name'] = mine_name
+    data['admin'] = admin_or_not
+
+    return render(request, template_name, data)
 
 
 ####################### Mining Shift ######################
@@ -683,8 +728,8 @@ def contactview(request):
     #                           RequestContext(request))
 
 
-def thankyou(request,template='thankyou.html'):
-    return render(request,template)
+def thankyou(request, template='thankyou.html'):
+    return render(request, template)
 
 
 @login_required
@@ -717,8 +762,8 @@ def profile_ajax(request):
         book = get_object_or_404(User, pk=current_user.id)
         profile = profile_extension.objects.get(user_id=book)
         data['profile_avatar'] = str(profile.profile_avatar)
-        data['mine']=str(profile.mine_id)
-        admin_or_not=0
+        data['mine'] = str(profile.mine_id)
+        admin_or_not = 0
         if request.user.is_superuser:
             admin_or_not = 1
         else:

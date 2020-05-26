@@ -150,8 +150,6 @@
                         </form>
                     </div>
                 </div>
-
-
             </section>
 
         </div>
@@ -274,6 +272,7 @@
                         console.log(temp);
                         var icon = "/static/image/router.svg";
                         var offset = $(this).offset();
+                        {#console.log(offset);#}
                         var offsetWidth = $('#KBtestmap')[0].offsetWidth;
                         var ScrollWidth = $('#KBtestmap')[0].scrollWidth;
 
@@ -282,11 +281,11 @@
 
                         var offsetY = ((offsetHeight - ScrollHeight) / offsetHeight) * 100;
                         var offsetX = ((offsetWidth - ScrollWidth) / offsetWidth) * 100;
-                        console.log(offsetX + " " + offsetY);
-                        var PosX = temp.x + offsetY;
-                        var PosY = temp.y - ((document.documentElement.scrollTop)) / 7.8 + offsetX;
+                        console.log('offset',offsetX + " " + offsetY);
+                        var PosX = parseFloat(temp.x)
+                        var PosY = parseFloat(temp.y) ;//- ((document.documentElement.scrollTop)) / 7.8 + offsetX;
                         //var PosY=temp.y
-                        console.log(PosX + " " + PosY);
+                        console.log('axis',PosX + " " + PosY);
 
                         var random = Math.floor((Math.random() * 10) + 1);
                         var node_id = $('#id_node_id').val();

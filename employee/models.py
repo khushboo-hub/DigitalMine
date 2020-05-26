@@ -40,7 +40,7 @@ class MiningRole(models.Model):
         ('worker', 'Worker'),
     )
 
-    parent_role = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+    parent_role = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True,default=None)
     mine=models.ForeignKey(MineDetails,on_delete=models.CASCADE,blank=True,null=True)
     name=models.CharField(max_length=200)
     type=models.CharField(max_length=100,blank=True,choices=MINING_TYPE1,default='worker')

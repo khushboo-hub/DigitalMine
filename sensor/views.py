@@ -10,6 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.forms import ModelForm
 
+from apps import settings
 from gasmonitoring_wifi.models import Fire_exp_gasesWifi
 from .models import Node, Wireless, Sensor_Node, gasModel_auto
 from .models import MineDetails
@@ -22,110 +23,111 @@ from accounts.models import profile_extension
 from background_task.models import Task
 
 
-def sensor1_manage(request, wireless_id, template_name='sensor/sensor1_manage.html'):
-    book = Sensor.objects.filter(wireless_id=wireless_id)
-    data = {}
-    data['object_list'] = book
-    data['wireless_id'] = wireless_id
-    return render(request, template_name, data, {'wirelessid': wireless_id})
-
-
-def sensor1_add(request, wireless_id, template_name='sensor/sensor1_add.html'):
-    # print(wireless_id)
-    mine_table = Wireless.objects.get(id=wireless_id)
-    wireless_name = mine_table.name
-    # print(wireless_name)
-    form = SensorForm(request.POST or None, request.FILES)
-    object = Sensor()
-    if form.is_valid():
-        object.sensorid = request.POST.get("sensorid")
-        object.sensorname = request.POST.get("sensorname")
-        object.minrange = request.POST.get("minrange")
-        object.maxrange = request.POST.get("maxrange")
-        object.sensorunit = request.POST.get("sensorunit")
-        object.thresholdlimit = request.POST.get("thresholdlimit")
-        object.greenlevel = request.POST.get("greenlevel")
-        object.yellowlevel = request.POST.get("yellowlevel")
-        object.redlevel = request.POST.get("redlevel")
-        object.photo = request.FILES.get("photo")
-        object.wireless_id = wireless_id
-        # form.save()
-        object.save()
-        # return redirect("/sensor/sensor1_manage/" + str(wireless_id))
-        return redirect("/sensor/node_manage")
-    return render(request, template_name, {'form': form, 'wirelessname': wireless_name, 'wirelessid': wireless_id})
-
-
-def sensor1_edit(request, pk, wireless_id, template_name='sensor/sensor1_add.html'):
-    book = get_object_or_404(Sensor, pk=pk)
-    form = SensorForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('/sensor/sensor1_manage/' + str(wireless_id))
-    return render(request, template_name, {'form': form, 'wirelessid': wireless_id})
-
-
-def sensor1_delete(request, wireless_id, pk):
-    book = get_object_or_404(Sensor, pk=pk)
-    book.delete()
-    return redirect("/sensor/sensor1_manage/" + str(wireless_id))
-
-
-##Wireless Info Details
-
-def wireless_manage(request, node_id, template_name='wireless/wireless_manage.html'):
-    book = Wireless.objects.filter(node_id=node_id)
-    data = {}
-    data['object_list'] = book
-    data['node_id'] = node_id
-
-    mine_table = Node.objects.get(id=node_id)
-    # data['mine_name'] = mine_table.name
-    data['node_name'] = mine_table.name
-    data['node_mine_id'] = mine_table.mine_id
-    return render(request, template_name, data, {'nodeid': node_id})
-
-
-def wireless_add(request, node_id, template_name='wireless/wireless_add.html'):
-    form = WirelessForm(request.POST or None, request.FILES)
-    mine_table = Node.objects.get(id=node_id)
-    node_name = mine_table.name
-    node_mine_id = mine_table.mine_id
-    # print(node_name)
-    object = Wireless()
-    if form.is_valid():
-        object.ipaddress = request.POST.get("ipaddress")
-        object.name = request.POST.get("name")
-        object.node_id = node_id
-        # print(request.POST)
-        # print(object)
-        object.save()
-        # form.save()
-        return redirect('/sensor/wireless_manage/' + str(node_id))
-    return render(request, template_name,
-                  {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
-
-
-def wireless_edit(request, pk, node_id, template_name='wireless/wireless_add.html'):
-    book = get_object_or_404(Wireless, pk=pk)
-    form = WirelessForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('/sensor/wireless_manage/' + str(node_id))
-    return render(request, template_name, {'form': form, 'nodeid': node_id})
-
-
-def wireless_delete(request, node_id, pk):
-    book = get_object_or_404(Wireless, pk=pk)
-    book.delete()
-    return redirect("/sensor/wireless_manage/" + str(node_id))
-
+# def sensor1_manage(request, wireless_id, template_name='sensor/sensor1_manage.html'):
+#     book = Sensor.objects.filter(wireless_id=wireless_id)
+#     data = {}
+#     data['object_list'] = book
+#     data['wireless_id'] = wireless_id
+#     return render(request, template_name, data, {'wirelessid': wireless_id})
+#
+#
+# def sensor1_add(request, wireless_id, template_name='sensor/sensor1_add.html'):
+#     # print(wireless_id)
+#     mine_table = Wireless.objects.get(id=wireless_id)
+#     wireless_name = mine_table.name
+#     # print(wireless_name)
+#     form = SensorForm(request.POST or None, request.FILES)
+#     object = Sensor()
+#     if form.is_valid():
+#         object.sensorid = request.POST.get("sensorid")
+#         object.sensorname = request.POST.get("sensorname")
+#         object.minrange = request.POST.get("minrange")
+#         object.maxrange = request.POST.get("maxrange")
+#         object.sensorunit = request.POST.get("sensorunit")
+#         object.thresholdlimit = request.POST.get("thresholdlimit")
+#         object.greenlevel = request.POST.get("greenlevel")
+#         object.yellowlevel = request.POST.get("yellowlevel")
+#         object.redlevel = request.POST.get("redlevel")
+#         object.photo = request.FILES.get("photo")
+#         object.wireless_id = wireless_id
+#         # form.save()
+#         object.save()
+#         # return redirect("/sensor/sensor1_manage/" + str(wireless_id))
+#         return redirect("/sensor/node_manage")
+#     return render(request, template_name, {'form': form, 'wirelessname': wireless_name, 'wirelessid': wireless_id})
+#
+#
+# def sensor1_edit(request, pk, wireless_id, template_name='sensor/sensor1_add.html'):
+#     book = get_object_or_404(Sensor, pk=pk)
+#     form = SensorForm(request.POST or None, request.FILES or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('/sensor/sensor1_manage/' + str(wireless_id))
+#     return render(request, template_name, {'form': form, 'wirelessid': wireless_id})
+#
+#
+# def sensor1_delete(request, wireless_id, pk):
+#     book = get_object_or_404(Sensor, pk=pk)
+#     book.delete()
+#     return redirect("/sensor/sensor1_manage/" + str(wireless_id))
+#
+#
+# ##Wireless Info Details
+#
+# def wireless_manage(request, node_id, template_name='wireless/wireless_manage.html'):
+#     book = Wireless.objects.filter(node_id=node_id)
+#     data = {}
+#     data['object_list'] = book
+#     data['node_id'] = node_id
+#
+#     mine_table = Node.objects.get(id=node_id)
+#     # data['mine_name'] = mine_table.name
+#     data['node_name'] = mine_table.name
+#     data['node_mine_id'] = mine_table.mine_id
+#     return render(request, template_name, data, {'nodeid': node_id})
+#
+#
+# def wireless_add(request, node_id, template_name='wireless/wireless_add.html'):
+#     form = WirelessForm(request.POST or None, request.FILES)
+#     mine_table = Node.objects.get(id=node_id)
+#     node_name = mine_table.name
+#     node_mine_id = mine_table.mine_id
+#     # print(node_name)
+#     object = Wireless()
+#     if form.is_valid():
+#         object.ipaddress = request.POST.get("ipaddress")
+#         object.name = request.POST.get("name")
+#         object.node_id = node_id
+#         # print(request.POST)
+#         # print(object)
+#         object.save()
+#         # form.save()
+#         return redirect('/sensor/wireless_manage/' + str(node_id))
+#     return render(request, template_name,
+#                   {'form': form, 'nodename': node_name, 'nodeid': node_id, 'nodemineid': node_mine_id})
+#
+#
+# def wireless_edit(request, pk, node_id, template_name='wireless/wireless_add.html'):
+#     book = get_object_or_404(Wireless, pk=pk)
+#     form = WirelessForm(request.POST or None, request.FILES or None, instance=book)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('/sensor/wireless_manage/' + str(node_id))
+#     return render(request, template_name, {'form': form, 'nodeid': node_id})
+#
+#
+# def wireless_delete(request, node_id, pk):
+#     book = get_object_or_404(Wireless, pk=pk)
+#     book.delete()
+#     return redirect("/sensor/wireless_manage/" + str(node_id))
+#
 
 ## Node Details
 
 @login_required
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
+    print('profile', current_user.id)
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     form = NodeForm(initial={'mine_id': profile.mine_id.id})
     if request.method == "POST":
@@ -134,12 +136,13 @@ def node_add(request, template_name='node/node_add.html'):
         if form.is_valid():
             form.save()
             return redirect(reverse('sensor:node_add'))
-    return render(request, template_name,{'form': form, 'action': "Add","alert": "added"})
+    return render(request, template_name, {'form': form, 'action': "Add", "alert": "added"})
 
 
 @csrf_protect
 @login_required
 def node_edit(request, pk, template_name='node/node_add.html'):
+    pk=decrypt(pk)
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
@@ -150,7 +153,7 @@ def node_edit(request, pk, template_name='node/node_add.html'):
             return redirect(reverse('sensor:node_manage'))
 
     return render(request, template_name,
-                  {'form': form,  'action': "Edit",'alert': "updated"})
+                  {'form': form, 'action': "Edit", 'alert': "updated"})
 
 
 @csrf_protect
@@ -173,7 +176,7 @@ def node_manage(request, template_name='node/node_manage.html'):
                 if task:
                     background_task = 1
 
-            except:
+            except Task.DoesNotExist:
                 background_task = 0
                 break
                 pass
@@ -185,14 +188,11 @@ def node_manage(request, template_name='node/node_manage.html'):
 @login_required
 def node_delete(request):
     data = {}
-
     if request.is_ajax():
         if request.method == 'POST':
             pk = request.POST.get('id')
-            # print(pk)
             try:
                 book = Node.objects.get(pk=pk)
-                # print(book)
                 book.delete()
                 data['success'] = "Router Deteled Successfully!"
                 return JsonResponse(data)
@@ -204,23 +204,24 @@ def node_delete(request):
     return JsonResponse(data)
 
 
-def load_map(request):
-    data = {}
-    if request.POST:
-        mine_id = request.POST.get("mine_id")
-        mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
-        data['mine_data'] = mine_data
-        routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
-        data['routers'] = routers
-    mine_table = MineDetails.objects.all()
-    data['object_list'] = mine_table
-    # print(data)
-    return render(request, "sensor/load_map.html", data)
+# def load_map(request):
+#     data = {}
+#     if request.POST:
+#         mine_id = request.POST.get("mine_id")
+#         mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
+#         data['mine_data'] = mine_data
+#         routers = TrackingRouter.objects.values_list().filter(mine_id_id=mine_id)
+#         data['routers'] = routers
+#     mine_table = MineDetails.objects.all()
+#     data['object_list'] = mine_table
+#     # print(data)
+#     return render(request, "sensor/load_map.html", data)
 
 
 def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
     # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
-
+    mine_id=decrypt(mine_id)
+    node_id=decrypt(node_id)
     sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
     data = {}
     prepared_data = []
@@ -274,7 +275,7 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
             SensorModel.node_id = node
             SensorModel.mine_id = mine
             SensorModel.save()
-            return redirect('/sensor/manage_sensor/' + str(mine_id) + '/' + str(node_id))
+            return redirect('/sensor/manage_sensor/' + encrypt(mine_id) + '/' + encrypt(node_id))
         else:
             print("&&&&&&&&&")
         # print(node_name)
@@ -285,7 +286,8 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
                    'mine_name': mine_name, 'mine': mine_id, 'action': 'ADD'})
 
 
-def delete_sensor(request, pk, node_id):
+def delete_sensor(request, pk):
+    pk=decrypt(pk)
     book = get_object_or_404(Sensor_Node, pk=pk)
     book.delete()
     return redirect(request.META.get('HTTP_REFERER'))
@@ -293,6 +295,8 @@ def delete_sensor(request, pk, node_id):
 
 def edit_sensor(request, pk, node_id,
                 template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
+    pk=decrypt(pk)
+    node_id=decrypt(node_id)
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     mine_id = mine_table.mine_id_id
@@ -305,7 +309,7 @@ def edit_sensor(request, pk, node_id,
     if form.is_valid():
         form.save()
 
-        return redirect('/sensor/manage_sensor/' + str(mine_id) + "/" + str(node_id))
+        return redirect('/sensor/manage_sensor/' + encrypt(mine_id) + "/" + encrypt(node_id))
     return render(request, template_name,
                   {'form': form, 'node_name': node_name, 'node_id': node_id,
                    'mine_name': mine_name, 'mine': mine_id, 'action': 'EDIT'})
@@ -368,11 +372,11 @@ def load_map(request):
 
 
 ## For Establish Connection
-
-class ConnectionForm(ModelForm):
-    class Meta:
-        model = Node
-        fields = ['mine_id']
+#
+# class ConnectionForm(ModelForm):
+#     class Meta:
+#         model = Node
+#         fields = ['mine_id']
 
 
 # def connection_manage(request, template_name='connection/connection_manage.html'):
@@ -434,27 +438,27 @@ class ConnectionForm(ModelForm):
 #     # return HttpResponse('Ok....')
 
 
-def connection_add(request, template_name='connection/connection_add.html'):
-    form = ConnectionForm(request.POST or None, request.FILES)
-    # if form.is_valid():
-    #     form.save()
-    # return redirect('sensor:connection_manage')
-    return render(request, template_name, {'form': form})
-
-
-def connection_edit(request, pk, template_name='connection/connection_add.html'):
-    connection_table = get_object_or_404(Connection, pk=pk)
-    form = ConnectionForm(request.POST or None, request.FILES or None, instance=connection_table)
-    if form.is_valid():
-        form.save()
-        return redirect('sensor:connection_save')
-    return render(request, template_name, {'form': form})
-
-
-def connection_delete(request, pk):
-    connection_table = get_object_or_404(Connection, pk=pk)
-    connection_table.delete()
-    return redirect("sensor:connection_manage")
+# def connection_add(request, template_name='connection/connection_add.html'):
+#     form = ConnectionForm(request.POST or None, request.FILES)
+#     # if form.is_valid():
+#     #     form.save()
+#     # return redirect('sensor:connection_manage')
+#     return render(request, template_name, {'form': form})
+#
+#
+# def connection_edit(request, pk, template_name='connection/connection_add.html'):
+#     connection_table = get_object_or_404(Connection, pk=pk)
+#     form = ConnectionForm(request.POST or None, request.FILES or None, instance=connection_table)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('sensor:connection_save')
+#     return render(request, template_name, {'form': form})
+#
+#
+# def connection_delete(request, pk):
+#     connection_table = get_object_or_404(Connection, pk=pk)
+#     connection_table.delete()
+#     return redirect("sensor:connection_manage")
 
 
 def fetch_node_ajax(request):
@@ -495,23 +499,23 @@ def fetch_node_ajax(request):
 #     return JsonResponse(data)
 
 
-def fetch_wireless(request):
-    data = {}
-    if request.is_ajax():
-        node_id = request.GET.get('id', None)
-        wireless_info = Wireless.objects.values_list().filter(node_id=node_id)
-
-        data = {}
-        i = 0
-        wireless_data = []
-        for r in wireless_info:
-            wireless_data.append(str(r[1]) + ',' + str(r[3]))
-            i = i + 1
-            data['result'] = wireless_data
-    else:
-        data['result'] = "Something went wrong!"
-
-    return JsonResponse(data)
+# def fetch_wireless(request):
+#     data = {}
+#     if request.is_ajax():
+#         node_id = request.GET.get('id', None)
+#         wireless_info = Wireless.objects.values_list().filter(node_id=node_id)
+#
+#         data = {}
+#         i = 0
+#         wireless_data = []
+#         for r in wireless_info:
+#             wireless_data.append(str(r[1]) + ',' + str(r[3]))
+#             i = i + 1
+#             data['result'] = wireless_data
+#     else:
+#         data['result'] = "Something went wrong!"
+#
+#     return JsonResponse(data)
 
 
 # def fetch_port(request):
@@ -532,22 +536,22 @@ def fetch_wireless(request):
 #     return JsonResponse(data)
 
 
-def fetch_ip(request):
-    data = {}
-    if request.is_ajax():
-        wireless_id = request.GET.get('id', None)
-        ip_info = Wireless.objects.values_list().filter(id=wireless_id)
-        data = {}
-        i = 0
-        ip_data = []
-        for r in ip_info:
-            ip_data.append(str(r[0]) + ',' + str(r[2]))
-            i = i + 1
-            data['result'] = ip_data
-    else:
-        data['result'] = "Something went wrong!"
-
-    return JsonResponse(data)
+# def fetch_ip(request):
+#     data = {}
+#     if request.is_ajax():
+#         wireless_id = request.GET.get('id', None)
+#         ip_info = Wireless.objects.values_list().filter(id=wireless_id)
+#         data = {}
+#         i = 0
+#         ip_data = []
+#         for r in ip_info:
+#             ip_data.append(str(r[0]) + ',' + str(r[2]))
+#             i = i + 1
+#             data['result'] = ip_data
+#     else:
+#         data['result'] = "Something went wrong!"
+#
+#     return JsonResponse(data)
 
 
 # def save_connection(request, template_name='connection/connection_manage.html'):
@@ -681,45 +685,45 @@ def run_back_save(sensor_id):
     #     task.delete()
 
 
-@background(schedule=5)
-def getsensordata(ip, mine_id, node_id, gas_name):
-    print("##############")
-    try:
-        object = gasModel_auto()
-        response = requests.get('http://' + str(ip))
-        sensor_value = str(strip_tags(response.text))  # read the line of text from the serial port
-        object.mine_id = mine_id
-        object.node_id = node_id
-        object.sensor_value = sensor_value
-        object.sensor_name = gas_name
+# @background(schedule=5)
+# def getsensordata(ip, mine_id, node_id, gas_name):
+#     print("##############")
+#     try:
+#         object = gasModel_auto()
+#         response = requests.get('http://' + str(ip))
+#         sensor_value = str(strip_tags(response.text))  # read the line of text from the serial port
+#         object.mine_id = mine_id
+#         object.node_id = node_id
+#         object.sensor_value = sensor_value
+#         object.sensor_name = gas_name
+#
+#     except Exception as e:
+#         pass
+#     object.save()
 
-    except Exception as e:
-        pass
-    object.save()
 
-
-def background_view(request, pk, template_name='node/node_manage.html'):
-    book = Node.objects.all()
-    data = {}
-    data['object_list'] = book
-    node_details = Sensor_Node.objects.values_list().filter(node_id=pk)
-    print("*************")
-    # print(node_details)
-    for r in node_details:
-        mine_id = str(r[1])
-        node_id = str(r[2])
-        gas_name = str(r[5])
-        try:
-            ip = str(r[3])
-
-            if (ip != 'NULL'):
-                # print(ip)
-                getsensordata(ip, mine_id, node_id, gas_name, repeat=1)
-                print("Hi..............")
-        except:
-            pass
-
-    return render(request, template_name, data)
+# def background_view(request, pk, template_name='node/node_manage.html'):
+#     book = Node.objects.all()
+#     data = {}
+#     data['object_list'] = book
+#     node_details = Sensor_Node.objects.values_list().filter(node_id=pk)
+#     print("*************")
+#     # print(node_details)
+#     for r in node_details:
+#         mine_id = str(r[1])
+#         node_id = str(r[2])
+#         gas_name = str(r[5])
+#         try:
+#             ip = str(r[3])
+#
+#             if (ip != 'NULL'):
+#                 # print(ip)
+#                 getsensordata(ip, mine_id, node_id, gas_name, repeat=1)
+#                 print("Hi..............")
+#         except:
+#             pass
+#
+#     return render(request, template_name, data)
 
 
 @login_required
@@ -756,12 +760,12 @@ def iframe_live_data(request, mine_id, node_id, sensor_id, template_name='live_d
     return render(request, template_name, {'node_name': node_name, 'sensor_name': sensor_name})
 
 
-#########demo
-def background_data(request):
-    live = gasModel_auto.objects.values_list()
-    # print(live)
-
-    return render(request)
+########demo
+# def background_data(request):
+#     live = gasModel_auto.objects.values_list()
+#     # print(live)
+#
+#     return render(request)
 
 
 def fetch_mine_ajax(request):
@@ -781,186 +785,186 @@ def fetch_mine_ajax(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-
-def fetch_sensor_values_ajax_p(request):
-    data = {}
-    if request.is_ajax():
-        sensor_data = []
-        sensor_data1 = []
-
-        node_id2 = request.GET.get('id', None)
-        sensor_details = Sensor_Node.objects.values_list().filter(node_id=node_id2)
-        # print(sensor_details)
-
-        for r1 in sensor_details:
-            location_details1 = str(r1[2])
-            mine_details = str(r1[1])
-
-        location_details = Node.objects.get(id=location_details1)
-        mine_details = MineDetails.objects.get(id=mine_details)
-        now = datetime.now()
-        ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
-        sensor_data.append(ok_date)
-        sensor_data.append(str(mine_details.name))
-        sensor_data.append(str(location_details.name))
-
-        for r in sensor_details:
-            try:
-                ip_add = str(r[3])
-                sensor_name = str(r[5])
-                unit = str(r[6])
-                sensorunit1 = str(r[8])
-                sensorunit2 = str(r[9])
-                sensorunit3 = str(r[10])
-                green = str(r[14])
-                yellow = str(r[15])
-                red = str(r[16])
-                response = requests.get('http://' + ip_add)
-
-                if (sensor_name == "CH4"):
-                    CH4 = strip_tags(response.text)
-                    if (int(CH4) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(CH4 + ' ' + unit))
-                    elif ((int(CH4) >= int(sensorunit1)) & (int(CH4) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(CH4 + ' ' + unit))
-                    elif ((int(CH4) >= int(sensorunit2)) & (int(CH4) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(CH4 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(CH4 + ' ' + unit))
-                    # sensor_data.append(sensor_name)
-
-                elif (sensor_name == "CO"):
-                    CO = strip_tags(response.text)
-                    if (int(CO) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(CO + ' ' + unit))
-                    elif ((int(CO) >= int(sensorunit1)) & (int(CO) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(CO + ' ' + unit))
-                    elif ((int(CO) >= int(sensorunit2)) & (int(CO) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(CO + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(CO + ' ' + unit))
-
-                    # sensor_data.append(sensor_name)
-
-                elif (sensor_name == "CO2"):
-                    CO2 = strip_tags(response.text)
-                    if (int(CO2) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(CO2 + ' ' + unit))
-                    elif ((int(CO2) >= int(sensorunit1)) & (int(CO2) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(CO2 + ' ' + unit))
-                    elif ((int(CO2) >= int(sensorunit2)) & (int(CO2) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(CO2 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(CO2 + ' ' + unit))
-                elif (sensor_name == "O2"):
-                    O2 = strip_tags(response.text)
-                    if (int(O2) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(O2 + ' ' + unit))
-                    elif ((int(O2) >= int(sensorunit1)) & (int(O2) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(O2 + ' ' + unit))
-                    elif ((int(O2) >= int(sensorunit2)) & (int(O2) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(O2 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(O2 + ' ' + unit))
-                elif (sensor_name == "H2S"):
-                    H2S = strip_tags(response.text)
-                    if (int(H2S) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(H2S + ' ' + unit))
-                    elif ((int(H2S) >= int(sensorunit1)) & (int(H2S) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(H2S + ' ' + unit))
-                    elif ((int(H2S) >= int(sensorunit2)) & (int(H2S) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(H2S + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(H2S + ' ' + unit))
-                elif (sensor_name == "NO2"):
-                    NO2 = strip_tags(response.text)
-                    if (int(NO2) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(NO2 + ' ' + unit))
-                    elif ((int(NO2) >= int(sensorunit1)) & (int(NO2) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(NO2 + ' ' + unit))
-                    elif ((int(NO2) >= int(sensorunit2)) & (int(NO2) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(NO2 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(NO2 + ' ' + unit))
-                elif (sensor_name == "SO2"):
-                    SO2 = strip_tags(response.text)
-                    if (int(SO2) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(SO2 + ' ' + unit))
-                    elif ((int(SO2) >= int(sensorunit1)) & (int(SO2) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(SO2 + ' ' + unit))
-                    elif ((int(SO2) >= int(sensorunit2)) & (int(SO2) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(SO2 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(SO2 + ' ' + unit))
-                elif (sensor_name == "H2"):
-                    H2 = strip_tags(response.text)
-                    if (int(H2) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(H2 + ' ' + unit))
-                    elif ((int(H2) >= int(sensorunit1)) & (int(H2) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(H2 + ' ' + unit))
-                    elif ((int(H2) >= int(sensorunit2)) & (int(H2) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(H2 + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(H2 + ' ' + unit))
-                else:
-                    He = strip_tags(response.text)
-                    if (int(He) < int(sensorunit1)):
-                        sensor_data1.append('#1216f6')
-                        sensor_data.append(str(He + ' ' + unit))
-                    elif ((int(He) >= int(sensorunit1)) & (int(He) < int(sensorunit2))):
-                        sensor_data1.append(str(green))
-                        sensor_data.append(str(He + ' ' + unit))
-                    elif ((int(He) >= int(sensorunit2)) & (int(He) < int(sensorunit3))):
-                        sensor_data1.append(str(yellow))
-                        sensor_data.append(str(He + ' ' + unit))
-                    else:
-                        sensor_data1.append(str(red))
-                        sensor_data.append(str(He + ' ' + unit))
-            except Exception as x:
-                sensor_data.append('Network Error')
-                sensor_data1.append('Network Error')
-
-        data['result'] = sensor_data
-        data['result1'] = sensor_data1
-        # print(data)
-
-    else:
-        data['result'] = "Not Ajax"
-        data['heading'] = "Not Ajax"
-    return JsonResponse(data)
-
+#
+# def fetch_sensor_values_ajax_p(request):
+#     data = {}
+#     if request.is_ajax():
+#         sensor_data = []
+#         sensor_data1 = []
+#
+#         node_id2 = request.GET.get('id', None)
+#         sensor_details = Sensor_Node.objects.values_list().filter(node_id=node_id2)
+#         # print(sensor_details)
+#
+#         for r1 in sensor_details:
+#             location_details1 = str(r1[2])
+#             mine_details = str(r1[1])
+#
+#         location_details = Node.objects.get(id=location_details1)
+#         mine_details = MineDetails.objects.get(id=mine_details)
+#         now = datetime.now()
+#         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
+#         sensor_data.append(ok_date)
+#         sensor_data.append(str(mine_details.name))
+#         sensor_data.append(str(location_details.name))
+#
+#         for r in sensor_details:
+#             try:
+#                 ip_add = str(r[3])
+#                 sensor_name = str(r[5])
+#                 unit = str(r[6])
+#                 sensorunit1 = str(r[8])
+#                 sensorunit2 = str(r[9])
+#                 sensorunit3 = str(r[10])
+#                 green = str(r[14])
+#                 yellow = str(r[15])
+#                 red = str(r[16])
+#                 response = requests.get('http://' + ip_add)
+#
+#                 if (sensor_name == "CH4"):
+#                     CH4 = strip_tags(response.text)
+#                     if (int(CH4) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(CH4 + ' ' + unit))
+#                     elif ((int(CH4) >= int(sensorunit1)) & (int(CH4) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(CH4 + ' ' + unit))
+#                     elif ((int(CH4) >= int(sensorunit2)) & (int(CH4) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(CH4 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(CH4 + ' ' + unit))
+#                     # sensor_data.append(sensor_name)
+#
+#                 elif (sensor_name == "CO"):
+#                     CO = strip_tags(response.text)
+#                     if (int(CO) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(CO + ' ' + unit))
+#                     elif ((int(CO) >= int(sensorunit1)) & (int(CO) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(CO + ' ' + unit))
+#                     elif ((int(CO) >= int(sensorunit2)) & (int(CO) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(CO + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(CO + ' ' + unit))
+#
+#                     # sensor_data.append(sensor_name)
+#
+#                 elif (sensor_name == "CO2"):
+#                     CO2 = strip_tags(response.text)
+#                     if (int(CO2) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(CO2 + ' ' + unit))
+#                     elif ((int(CO2) >= int(sensorunit1)) & (int(CO2) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(CO2 + ' ' + unit))
+#                     elif ((int(CO2) >= int(sensorunit2)) & (int(CO2) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(CO2 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(CO2 + ' ' + unit))
+#                 elif (sensor_name == "O2"):
+#                     O2 = strip_tags(response.text)
+#                     if (int(O2) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(O2 + ' ' + unit))
+#                     elif ((int(O2) >= int(sensorunit1)) & (int(O2) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(O2 + ' ' + unit))
+#                     elif ((int(O2) >= int(sensorunit2)) & (int(O2) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(O2 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(O2 + ' ' + unit))
+#                 elif (sensor_name == "H2S"):
+#                     H2S = strip_tags(response.text)
+#                     if (int(H2S) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(H2S + ' ' + unit))
+#                     elif ((int(H2S) >= int(sensorunit1)) & (int(H2S) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(H2S + ' ' + unit))
+#                     elif ((int(H2S) >= int(sensorunit2)) & (int(H2S) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(H2S + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(H2S + ' ' + unit))
+#                 elif (sensor_name == "NO2"):
+#                     NO2 = strip_tags(response.text)
+#                     if (int(NO2) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(NO2 + ' ' + unit))
+#                     elif ((int(NO2) >= int(sensorunit1)) & (int(NO2) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(NO2 + ' ' + unit))
+#                     elif ((int(NO2) >= int(sensorunit2)) & (int(NO2) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(NO2 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(NO2 + ' ' + unit))
+#                 elif (sensor_name == "SO2"):
+#                     SO2 = strip_tags(response.text)
+#                     if (int(SO2) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(SO2 + ' ' + unit))
+#                     elif ((int(SO2) >= int(sensorunit1)) & (int(SO2) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(SO2 + ' ' + unit))
+#                     elif ((int(SO2) >= int(sensorunit2)) & (int(SO2) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(SO2 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(SO2 + ' ' + unit))
+#                 elif (sensor_name == "H2"):
+#                     H2 = strip_tags(response.text)
+#                     if (int(H2) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(H2 + ' ' + unit))
+#                     elif ((int(H2) >= int(sensorunit1)) & (int(H2) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(H2 + ' ' + unit))
+#                     elif ((int(H2) >= int(sensorunit2)) & (int(H2) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(H2 + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(H2 + ' ' + unit))
+#                 else:
+#                     He = strip_tags(response.text)
+#                     if (int(He) < int(sensorunit1)):
+#                         sensor_data1.append('#1216f6')
+#                         sensor_data.append(str(He + ' ' + unit))
+#                     elif ((int(He) >= int(sensorunit1)) & (int(He) < int(sensorunit2))):
+#                         sensor_data1.append(str(green))
+#                         sensor_data.append(str(He + ' ' + unit))
+#                     elif ((int(He) >= int(sensorunit2)) & (int(He) < int(sensorunit3))):
+#                         sensor_data1.append(str(yellow))
+#                         sensor_data.append(str(He + ' ' + unit))
+#                     else:
+#                         sensor_data1.append(str(red))
+#                         sensor_data.append(str(He + ' ' + unit))
+#             except Exception as x:
+#                 sensor_data.append('Network Error')
+#                 sensor_data1.append('Network Error')
+#
+#         data['result'] = sensor_data
+#         data['result1'] = sensor_data1
+#         # print(data)
+#
+#     else:
+#         data['result'] = "Not Ajax"
+#         data['heading'] = "Not Ajax"
+#     return JsonResponse(data)
+#
 
 def fetch_sensor_values_ajax_h(request):
     data = {}
@@ -1492,6 +1496,7 @@ def fetch_sensor_values_ajax_sensor_body(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
+import hashlib
 
 @login_required
 def fetch_map_image(request):
@@ -1520,10 +1525,13 @@ def fetch_map_image(request):
             else:
                 node_data['icon'] = '/static/image/node_red.svg'
             node_data['photo2'] = str(n.photo2)
+            hash_object = hashlib.sha512(str(n.id).encode())
+            hash=hash_object.hexdigest()
             node_modal_data = {'title': str(n.name) + "||" + str(n.location),
-                               'content': '<div id="content' + n.name + '"></div>'}
+                               'content': '<div id="Content' + hash + '"></div>'}
             node_data['modal'] = node_modal_data
-            nodes_data[str(n.name)] = node_data
+
+            nodes_data[hash] = node_data
         data['mine'] = mine_data
         data['node'] = nodes_data
 
@@ -1555,7 +1563,6 @@ def node_sensor_data(request):
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         node_id = request.GET.get('node_id', None)
-        node_name = request.GET.get('node_name', None)
         mine_details = MineDetails.objects.values_list().filter(id=mine_id)
         data = {}
         mine_data = {}
@@ -1577,10 +1584,12 @@ def node_sensor_data(request):
                 sensor_data[str(sd.sensor_name)] = {'value': gasValue, 'unit': sd.sensor_unit, 'warning': warning}
                 print(sensor_data)
             except:
-                data['error'] = "Connection Error!"
-                return JsonResponse(data)
+                sensor_data[str(sd.sensor_name)] = {'value': "Connection Error!", 'unit': sd.sensor_unit, 'warning': 1}
+                pass
 
-        data[str(node_name)] = sensor_data
+        hash_object = hashlib.sha512(str(node_id).encode())
+
+        data[hash_object.hexdigest()] = sensor_data
         return JsonResponse(data)
     else:
         data['result'] = "Not Ajax"
@@ -1591,27 +1600,35 @@ import matplotlib.pyplot as plt
 import io
 import numpy as np
 from django.db.models import Avg
-from django.db.models.functions import NullIf
+from django.db.models.functions import NullIf, TruncDay
 from django.db.models import Value
 
 
 @login_required
 def ellicots(request, pk, template_name='sensor/test.html'):
     data = {}
+    pk=decrypt(pk)
     data['node_id'] = pk
     return render(request, template_name, data)
 
+
 @login_required
-def locate_node(request, mine_id,node_id,template_name='sensor/test1.html'):
+def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
+    mine_id=decrypt(mine_id)
+    node_id=decrypt(node_id)
     data = {}
 
     data['mine_id'] = mine_id
     try:
-        node=get_object_or_404(Node,mine_id=mine_id,pk=node_id)
+        node = get_object_or_404(Node, mine_id=mine_id, pk=node_id)
         data['x'] = node.x_axis
         data['y'] = node.y_axis
+        data['node_name'] = node.name
+        data['content'] = node.description
+        data['location'] = node.location
+
     except:
-        data['error']=1
+        data['error'] = 1
         pass
     return render(request, template_name, data)
 
@@ -1624,258 +1641,257 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
     data = {}
     if request.is_ajax():
         node_id = request.GET.get('id', None)
+        node_id=decrypt(node_id)
         date_from = request.GET.get('date_from', None)
         date_from += " 00:00:00"
         date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
         date_to = request.GET.get('date_to', None)
         date_to += " 00:00:00"
         date_to = datetime.strptime(date_to, "%Y-%m-%d %H:%M:%S").date()
-        # print(date_from, date_to)
-        day = timedelta(days=1)
-        hour = timedelta(hours=24)
         graph = []
-        i = 0;
-        while date_from <= date_to:
-            print(date_from, date_from + hour)
 
-            data_list = gasModel_auto.objects.filter(date_time__range=(
-                date_from, date_from + hour
-            ), node_id=node_id).values('sensor_id', 'sensor_name').annotate(avg=Avg(NullIf('sensor_value', Value(0))))
-            if data_list:
-                gases = {}
+        class GraphData:
+            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
+            explos = 5
+            idtest = 0
+
+        data_list = gasModel_auto.objects.filter(date_time__range=(
+            date_from, date_to
+        ), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),
+                                                                          avg=Avg(NullIf('sensor_value', Value(0))))
+
+        # SELECT AVG(sensor_value), sensor_name, sensor_id, date_time FROM `gasmodel_auto` GROUP BY sensor_name, DATE(date_time), sensor_id
+
+        DateWiseData = {}
+        for d in data_list:
+            DateWiseData[d['day']] = []
+        for d in data_list:
+            list = {'name': d['sensor_name'], 'avg': d['avg']}
+            DateWiseData[d['day']].append(list)
+
+        i = 1
+        gases = {}
+
+        for DateWise in DateWiseData:
+            gases['CO'] = gases['CO2'] = gases['CH4'] = gases['O2'] = gases['H2'] = gases['N2'] = gases['C2H4'] = 0
+            # print(DateWise)
+            for gas in DateWiseData[DateWise]:
+                gases[gas['name']] = gas['avg']
+
+            Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
+                'C2H4']
+            try:
+                gases['CO'] = (gases['CO'] / Total) * 100
+            except:
                 gases['CO'] = 0
+            try:
+                gases['CO2'] = (gases['CO2'] / Total) * 100
+            except:
                 gases['CO2'] = 0
+            try:
+                gases['CH4'] = (gases['CH4'] / Total) * 100
+            except:
                 gases['CH4'] = 0
+            try:
+                gases['O2'] = (gases['O2'] / Total) * 100
+            except:
                 gases['O2'] = 0
+            try:
+                gases['H2'] = (gases['H2'] / Total) * 100
+            except:
                 gases['H2'] = 0
+            try:
+                gases['N2'] = (gases['N2'] / Total) * 100
+            except:
                 gases['N2'] = 0
+            try:
+                gases['C2H4'] = (gases['C2H4'] / Total) * 100
+            except:
                 gases['C2H4'] = 0
 
-                for d in data_list:
-                    gases[d['sensor_name']] = d['avg']
-                    print('Data', d)
-                data = {}
-                print(gases)
-                # Percentage Values of gases
+            #####################################
 
-                Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
-                    'C2H4']
-                try:
-                    gases['CO'] = (gases['CO'] / Total) * 100
-                except:
-                    gases['CO'] = 0
-                try:
-                    gases['CO2'] = (gases['CO2'] / Total) * 100
-                except:
-                    gases['CO2'] = 0
-                try:
-                    gases['CH4'] = (gases['CH4'] / Total) * 100
-                except:
-                    gases['CH4'] = 0
-                try:
-                    gases['O2'] = (gases['O2'] / Total) * 100
-                except:
-                    gases['O2'] = 0
-                try:
-                    gases['H2'] = (gases['H2'] / Total) * 100
-                except:
-                    gases['H2'] = 0
-                try:
-                    gases['N2'] = (gases['N2'] / Total) * 100
-                except:
-                    gases['N2'] = 0
-                try:
-                    gases['C2H4'] = (gases['C2H4'] / Total) * 100
-                except:
-                    gases['C2H4'] = 0
+            graphpoints = []
 
-                #####################################
+            dates = []
+            dates.append(datetime.now())
 
-                class GraphData:
-                    o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-                    explos = 5
-                    idtest = 0
+            x = GraphData()
+            x.o2 = gases['O2']  # 3.2734952481520594
+            x.co = gases['CO']  # 10.03167898627244
+            x.ch4 = gases['CH4']  # 9.820485744456176
+            x.co2 = gases['CO2']  # 14.783526927138332
+            x.h2 = gases['N2']  # 23.231256599788807
+            x.n2 = gases['N2']  # 19.1129883843717
+            x.c2h4 = gases['C2H4']  # 19.746568109820487
 
-                graphpoints = []
+            x.explos = 5
+            pt = x.ch4 + x.co + x.h2
 
-                dates = []
-                dates.append(datetime.now())
+            ch4low = 5
+            colow = 12.5
+            h2low = 4
+            ch4high = 14
+            cohigh = 74.2
+            h2high = 74.2
+            ch4nose = 5.9
+            conose = 13.8
+            h2nose = 4.3
+            ch4np = 6.07
+            conp = 4.13
+            h2np = 16.59
 
-                x = GraphData()
-                x.o2 = gases['O2']  # 3.2734952481520594
-                x.co = gases['CO']  # 10.03167898627244
-                x.ch4 = gases['CH4']  # 9.820485744456176
-                x.co2 = gases['CO2']  # 14.783526927138332
-                x.h2 = gases['N2']  # 23.231256599788807
-                x.n2 = gases['N2']  # 19.1129883843717
-                x.c2h4 = gases['C2H4']  # 19.746568109820487
+            try:
+                Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
+            except ZeroDivisionError:
+                Llow = 1
+                pass
+            try:
+                Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
+            except ZeroDivisionError:
+                Lhigh = 1
+                pass
+            try:
+                Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
+            except ZeroDivisionError:
+                Lnose = 1
+                pass
+            try:
+                Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
+            except ZeroDivisionError:
+                Nex = 1
+                pass
+            # print('low high', Llow, Lhigh, Lnose, Nex)
+            Oxnose = 0.2093 * (100 - Nex - Lnose)
 
-                ##explosibility calculation again
-                idn = 1
-                x.explos = 5
-                pt = x.ch4 + x.co + x.h2
+            ##total combustible at extinctive point
+            Le = 20.93 * Lnose / (20.93 - Oxnose)
+            ##oxygen at lower limit
+            Ob = -20.93 * Llow / 100 + 20.93
+            ##oxygen at upper limit
+            Oc = -20.93 * Lhigh / 100 + 20.93
 
-                ch4low = 5
-                colow = 12.5
-                h2low = 4
-                ch4high = 14
-                cohigh = 74.2
-                h2high = 74.2
-                ch4nose = 5.9
-                conose = 13.8
-                h2nose = 4.3
-                ch4np = 6.07
-                conp = 4.13
-                h2np = 16.59
+            if ((x.o2 >= 0) and (pt >= 0)):
+                if (100 * x.o2 + 20.93 * pt >= 2093):
+                    x.explos = 4
+                if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
+                    x.explos = 0
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                    x.explos = 2
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 3
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 1
 
-                try:
-                    Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-                except ZeroDivisionError:
-                    Llow = 1
-                    pass
-                try:
-                    Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-                except ZeroDivisionError:
-                    Lhigh = 1
-                    pass
-                try:
-                    Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-                except ZeroDivisionError:
-                    Lnose = 1
-                    pass
-                try:
-                    Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
-                except ZeroDivisionError:
-                    Nex = 1
-                    pass
-                # print('low high', Llow, Lhigh, Lnose, Nex)
-                Oxnose = 0.2093 * (100 - Nex - Lnose)
+            # print('EXPLOS', x.explos)
+            # 0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
 
-                ##total combustible at extinctive point
-                Le = 20.93 * Lnose / (20.93 - Oxnose)
-                ##oxygen at lower limit
-                Ob = -20.93 * Llow / 100 + 20.93
-                ##oxygen at upper limit
-                Oc = -20.93 * Lhigh / 100 + 20.93
+            ##calculating Ellicott's Extension point
 
-                if ((x.o2 >= 0) and (pt >= 0)):
-                    if (100 * x.o2 + 20.93 * pt >= 2093):
-                        x.explos = 4
-                    if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-                        x.explos = 0
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                        x.explos = 2
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * x.o2 + (
-                            Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        x.explos = 3
-                    if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * x.o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * x.o2 + (
-                            Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        x.explos = 1
+            ##calculating new x,y coordinates after origin shift
+            xx = pt - Lnose
+            yx = x.o2 - Oxnose
 
-                # print('EXPLOS', x.explos)
-                # 0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
+            xp = Llow - Lnose
+            yp = Ob - Oxnose
 
-                ##calculating Ellicott's Extension point
+            xq = Lhigh - Lnose
+            yq = Oc - Oxnose
 
-                ##calculating new x,y coordinates after origin shift
-                xx = pt - Lnose
-                yx = x.o2 - Oxnose
+            xs = Le - Lnose
+            ys = -Oxnose
 
-                xp = Llow - Lnose
-                yp = Ob - Oxnose
-
-                xq = Lhigh - Lnose
-                yq = Oc - Oxnose
-
-                xs = Le - Lnose
-                ys = -Oxnose
-
-                # calculating polar coordinates
-                def properarctan(valuex, valuey):
-                    print('x y', valuex, valuey)
-                    if valuex >= 0:
-                        if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                            return (360 + np.degrees(np.arctan(valuey / valuex)))
-                        else:
-                            return np.degrees(np.arctan(valuey / valuex))
+            # calculating polar coordinates
+            def properarctan(valuex, valuey):
+                print('x y', valuex, valuey)
+                if valuex >= 0:
+                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                        return (360 + np.degrees(np.arctan(valuey / valuex)))
                     else:
-                        return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
-
-                rx = np.sqrt(xx * xx + yx * yx)
-                thx = properarctan(xx, yx)
-
-                rp = np.sqrt(xp * xp + yp * yp)
-                thp = properarctan(xp, yp)
-
-                rq = np.sqrt(xq * xq + yq * yq)
-                thq = properarctan(xq, yq)
-
-                rs = np.sqrt(xs * xs + ys * ys)
-                ths = properarctan(xs, ys)
-                ##calculating r,theta values based on explosibiility
-                if x.explos == 3:
-                    rm = rx
-                    thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-                elif (x.explos == 1 or x.explos == 2):
-                    rm = rx
-                    thm = 270 + (90 * ((thx - ths) / (
-                            thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-                elif x.explos == 0:
-                    rm = rx
-                    thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
+                        return np.degrees(np.arctan(valuey / valuex))
                 else:
-                    # print('Else part')
-                    rm = 0
-                    thm = 0
-                x.elx = rm * np.cos(np.radians(thm))
-                x.ely = rm * np.sin(np.radians(thm))
-                # print('GP', x.elx, x.ely, rm, thm)
-                graphpoints.append(x)
+                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
 
-                idn = 0
+            rx = np.sqrt(xx * xx + yx * yx)
+            thx = properarctan(xx, yx)
 
-                def markercrtr(numb):
-                    createdstring = '$' + str(numb + 1) + '$'
-                    return createdstring
+            rp = np.sqrt(xp * xp + yp * yp)
+            thp = properarctan(xp, yp)
 
-                def markerclr(numb):
-                    tot = 5  # len(graphpoints) #10
-                    colorstring = '#77b5fe'
-                    if (numb < tot / 5):  # 2
-                        colorstring = '#8a2be2'
-                    elif (numb < 2 * tot / 5):  # 4
-                        colorstring = '#8db600'
-                    elif (numb < 3 * tot / 5):  # 6
-                        colorstring = '#ffff00'
-                    elif (numb < 4 * tot / 5):  # 8
-                        colorstring = '#eaa221'
-                    else:
-                        colorstring = '#ffc0cb'
-                    return colorstring
+            rq = np.sqrt(xq * xq + yq * yq)
+            thq = properarctan(xq, yq)
 
-                graph.append({
-                    'x': x.elx,
-                    'y': x.ely,
-                    'color': markerclr(i),
-                    'dates': str(date_from)
-                })
+            rs = np.sqrt(xs * xs + ys * ys)
+            ths = properarctan(xs, ys)
+            ##calculating r,theta values based on explosibiility
+            if x.explos == 3:
+                rm = rx
+                thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
+            elif (x.explos == 1 or x.explos == 2):
+                rm = rx
+                thm = 270 + (90 * ((thx - ths) / (
+                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+            elif x.explos == 0:
+                rm = rx
+                thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
+            else:
+                # print('Else part')
+                rm = 0
+                thm = 0
+            x.elx = rm * np.cos(np.radians(thm))
+            x.ely = rm * np.sin(np.radians(thm))
+            # print('GP', x.elx, x.ely, rm, thm)
+            graphpoints.append(x)
 
-            date_from += day
+            idn = 0
+
+            def markercrtr(numb):
+                createdstring = '$' + str(numb + 1) + '$'
+                return createdstring
+
+            def markerclr(numb):
+                print('numb', numb)
+                tot = 10  # len(graphpoints) #10
+                colorstring = '#77b5fe'
+                if (numb < tot / 5):  # 2
+                    colorstring = '#8a2be2'
+                elif (numb < 2 * tot / 5):  # 4
+                    colorstring = '#8db600'
+                elif (numb < 3 * tot / 5):  # 6
+                    colorstring = '#ffff00'
+                elif (numb < 4 * tot / 5):  # 8
+                    colorstring = '#eaa221'
+                else:
+                    colorstring = '#ffc0cb'
+                return colorstring
+
+            graph.append({
+                'x': x.elx,
+                'y': x.ely,
+                'color': markerclr(i),
+                'dates': str(DateWise)
+            })
+
+            # date_from += day
             i += 1
         data['result'] = graph
 
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-    # return render(request,template_name,{'data':data})
+
+
+# return render(request,template_name,{'data':data})
 
 
 from django.template.defaulttags import register
@@ -1886,9 +1902,76 @@ def get_item(dictionary, key):
     return dictionary.get(str(key))
 
 
+@register.filter(name='encrypt')
+def encrypt(key):
+    return encrypt(key)
+
+@register.filter(name='decrypt')
+def decrypt(key):
+    return decrypt(key)
+
 def isNum(data):
     try:
         int(data)
         return True
     except ValueError:
         return False
+
+
+from cryptography.fernet import Fernet
+import base64
+
+
+
+def encrypt(txt):
+    try:
+        # convert integer etc to string first
+        txt = str(txt)
+        # get the key from settings
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)  # key should be byte
+        # #input should be byte, so convert the text to byte
+        encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
+        # encode to urlsafe base64 format
+        encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
+        return encrypted_text
+    except Exception as e:
+        # log the error if any
+        print(e)
+        return None
+
+
+def decrypt(txt):
+    try:
+        # base64 decode
+        txt = base64.urlsafe_b64decode(txt)
+        cipher_suite = Fernet(settings.ENCRYPT_KEY)
+        decoded_text = cipher_suite.decrypt(txt).decode("ascii")
+        return decoded_text
+    except Exception as e:
+        # log the error
+        print(e)
+        return None
+
+from django.core.signing import Signer
+
+@register.filter(name="signed")
+def signed(txt,id):
+    id=id%26
+    temp_text=""
+    for t in txt:
+        ch = bytes(t, 'utf-8')
+        s = bytes([ch[0] + int(id)])
+        s=str(s)
+        temp_text+=s[2]
+    return temp_text
+
+@register.filter(name="unsigned")
+def unsigned(txt,id):
+    id=id%26
+    temp_text=""
+    for t in txt:
+        ch = bytes(t, 'utf-8')
+        s = bytes([ch[0] - int(id)])
+        s=str(s)
+        temp_text+=s[2]
+    return temp_text

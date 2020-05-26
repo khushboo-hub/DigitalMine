@@ -85,6 +85,7 @@ function checkFullScreenStatus(){return  (document.fullscreenElement)?true:false
 }(jQuery));
 
 function openFullscreen(elem) {
+    ZoomButtonsInitialization();
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
   } else if (elem.mozRequestFullScreen) { /* Firefox */
@@ -139,6 +140,7 @@ var ZoomLevel=1;
 function ZoomButtonsInitialization(){
        console.log("Zoom Inititlaization");
         ZoomLevel=0;
+
           var $section = $('#KBtestmap');
           var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
             increment       : 0.1,
@@ -147,13 +149,11 @@ function ZoomButtonsInitialization(){
             startTransform  : 'scale(1.0)',
             disablePan: false,
             contain: 'invert',
+              passive: false
             });
           $panzoom.parent().on('mousewheel.focal', function( e ) {
             e.preventDefault();
-            console.log('value',ZoomLevel);
-
             var delta = e.delta || e.originalEvent.wheelDelta;
-            console.log(delta);
             if(parseInt(delta) == -120){
                 ZoomLevel--;
                 if(ZoomLevel<0)ZoomLevel=1;

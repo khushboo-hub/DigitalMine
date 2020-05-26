@@ -41,13 +41,13 @@
                         <label for="" class="" id="">From Date Time:</label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="from_date" name="">
+                        <input type="text" class="form-control" id="from_date" value="{% now "Y-m-d  08:00:00" %}">
                     </div>
                     <div class="col-md-1">
                         <label for="" class="" id="">To Date Time:</label>
                     </div>
                     <div class="col-md-3">
-                        <input type="text" class="form-control" id="to_date" name="">
+                        <input type="text" class="form-control" id="to_date" value="{% now "Y-m-d  H:i:s" %}">
                     </div>
                     <div class="col-md-1">
                         <label for="" class="" id="">Warning Type:</label>
@@ -102,10 +102,10 @@
             d_table();
             console.log('Table');
             $('#from_date').datetimepicker({
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
             $('#to_date').datetimepicker({
-                format: 'YYYY-MM-DD hh:mm:ss'
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
 
             $("#id_mine_name").addClass('form-control');
@@ -171,6 +171,10 @@
             }
 
             $("#btn_show").click(function () {
+
+                datatable = $('#sensor_content').DataTable();
+                datatable.clear().draw();
+
                 let sensor_id = $("#id_sensor_list").val();
                 let warning_value = $("#id_warning_list").val();
                 let url = $(this).data('url');
@@ -202,7 +206,7 @@
                             $("#btn_show").prop('disabled', true);
                         },
                         success: function (data) {
-                            fill_table_sensor(data.result);
+                            fill_table_sensor(data.result,datatable);
                             return data;
                         },
                         error: function () {
@@ -215,23 +219,14 @@
 
             });
 
-            function fill_table_sensor(result) {
-                X = result;
-                var Mid = parseInt($("#myTable").DataTable().rows().count()) + 1
-                //datatable = "";
-                datatable = $('#sensor_content').DataTable();
-
-                if ( $.fn.DataTable.isDataTable('#sensor_content') ) {
-                    $('#sensor_content').DataTable().destroy();
-                }
+            function fill_table_sensor(result,datatable) {
 
                 for (strata in result) {
                     if (result.hasOwnProperty(strata)) {
-                        var row = datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();                        
+                        datatable.row.add([result[strata].date, result[strata].mine, result[strata].location, result[strata].sensor, result[strata].sensor_value, result[strata].unit, result[strata].tag]).draw().node();
                     }
                 }
                 
-                d_table();
                 $("#btn_show").val("Show");
                 $("#btn_show").prop('disabled', false);
             }

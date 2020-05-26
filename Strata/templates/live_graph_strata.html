@@ -19,7 +19,7 @@
                     <div class="col-md-4">
                         <select class="form-control" id="id_location_id"
                                 data-url="{% url 'Strata:fetch_location_ajax' %}">
-                            <option>--Select Location--</option>
+                            <option>--- Choose Value ---</option>
                         </select>
                     </div>
                 </div>
@@ -31,7 +31,7 @@
                     <div class="col-md-4">
                         <select class="form-control" id="id_sensor_list"
                                 data-url="{% url 'Strata:fetch_sensor_ajax' %}">
-                            <option value="">--Select Sensor--</option>
+                            <option value="">--- Choose Value ---</option>
                         </select>
                     </div>
                     <div class="col-md-2">
@@ -78,7 +78,7 @@
                             'id': mine_id
                         },
                         success: function (data) {
-                            fill_dropdown(data.result);
+                            fill_dropdown(data.result,"id_location_id");
                             return data;
                         },
                         error: function () {
@@ -87,17 +87,6 @@
                     });
                 });
 
-                //------------------------------------------------------------------------------------------------------------------
-                function fill_dropdown(result) {
-                    $("#id_location_id").html("<option>--Select Location--</option>");
-                    for (var strata in result) {
-                        if (result.hasOwnProperty(strata)) {
-                            $("#id_location_id").append($("<option />").val(result[strata].id).text(result[strata].name));
-                        }
-                    }
-                }
-
-                //------------------------------------------------------------------------------------------------------------------
                 $("#id_location_id").on("change", function () {
 
                     let location_id = this.value;
@@ -108,8 +97,7 @@
                             'id': location_id
                         },
                         success: function (data) {
-                            fill_dropdown_sensor(data.result);
-                            return data;
+                            fill_dropdown(data.result,"id_sensor_list");
                         },
                         error: function () {
                             console.log("Something Went Wrong!");
@@ -118,17 +106,18 @@
                 });
 
                 //------------------------------------------------------------------------------------------------------------------
-                function fill_dropdown_sensor(result) {
+                function fill_dropdown(result,id_name) {
 
-                    $("#id_sensor_list").html("<option>--Select Location--</option>");
+                    $("#"+id_name).html("<option>--- Choose Value ---</option>");
                     for (var sensor in result) {
                         if (result.hasOwnProperty(sensor)) {
-                            $("#id_sensor_list").append($("<option />").val(result[sensor].id).text(result[sensor].name));
+                            $("#"+id_name).append($("<option />").val(result[sensor].id).text(result[sensor].name));
                         }
                     }
                 }
 
                 //------------------------------------------------------------------------------------------------------------------
+                var strata_unit = "";
                 var strata_l_label = "Low";
                 var strata_l_Value = "";
                 var strata_l_color = "";
@@ -183,8 +172,10 @@
                         },
                         success: function (data) {
                             let strata = data.result;
+
                             $("#ip_hidden").val(strata.ip);
 
+                            strata_unit = strata.unit;
                             strata_l_Value = parseFloat(strata.level1);
                             strata_l_color = strata.level1_color;
 
@@ -276,7 +267,7 @@
                                 },
                                 yaxis: {
                                     domain: [0, 1],
-                                    title: "Strata Level (in mm)",
+                                    title: $("#id_sensor_list option:selected").text()+"  (in "+strata_unit+")",
                                     range: [0, strata_h_Value * 1.2]
                                 },
                                 images: [{
