@@ -698,8 +698,9 @@
                                 <li><a href="{% url 'employee:contactus' %}">Contact Us</a></li>
                                 <li><a href="{% url 'news:index' %}">News</a></li>
                                 <li><a href="{% url 'setting:manage_constant' %}">Manage Settings</a></li>
+                            </ul>
 
-<!-- 
+<!--
                                 <hr>
                                 <h3 style="color: crimson;">Slope & Landslide Monitoring</h3>
 
@@ -716,7 +717,7 @@
                                 <li><a href="{% url 'Slope:warning_report' %}">Warning Report</a></li>
                             </ul> -->
                         </li>
-
+                         <li class="dropdown">
                         <ul class="nav navbar-nav">
                             {% if user.is_authenticated %}
                                 <li class="dropdown">
@@ -755,6 +756,7 @@
                                 </li>
                             {% endif %}
                         </ul>
+                         </li>
 
                     </ul>
 
