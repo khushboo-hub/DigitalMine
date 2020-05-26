@@ -23,6 +23,13 @@ from django.http import HttpResponse, JsonResponse
 
 
 def login(request):
+    print('request',request.GET.get('next'))
+    next=request.GET.get('next')
+    if next:
+        redirect_url=next
+    else:
+        redirect_url = homeViews.home
+
     if request.user.is_authenticated:
         return redirect(homeViews.home)
 
@@ -45,7 +52,7 @@ def login(request):
             user = authenticate(username=username, password=password)
         if user is not None:
             auth_login(request, user)
-            return redirect(homeViews.home)
+            return redirect(redirect_url)
         else:
 
             messages.error(request,
@@ -132,24 +139,26 @@ def activate(request, uidb64, token):
 def profile(request,action="overview", template_name='profile.html'):
     current_user = request.user
     active={}
-    active['overview']=""
-    active['setting']=""
-    active['tasks']=""
-    active['help']=""
-    active[action]="active"
+    active['overview'] = ""
+    active['setting'] = ""
+    active['tasks'] = ""
+    active['help'] = ""
+    active[action] = "active"
     book = get_object_or_404(User, pk=current_user.id)
     book_extension, created = profile_extension.objects.get_or_create(user_id=book)
     form_extension = ProfileExtensionForm(request.POST or None, request.FILES, instance=book_extension)
 
 
-    if action=='overview':
+    if action == 'overview':
         form = ProfileForm(request.POST or None, instance=book)
     elif action == 'setting':
         form = PasswordChangeCustomForm(request.user)
         try:
             if request.method == 'POST':
                 form=PasswordChangeCustomForm(request.user,request.POST)
+
                 if form.is_valid():
+
                     form.save()
                     return render(request, template_name,
                                   {'form': form, 'form_extension': form_extension, 'active': active})
@@ -177,7 +186,7 @@ def profile(request,action="overview", template_name='profile.html'):
                 fs.save()
             return redirect(request.META.get('HTTP_REFERER'))
     except Exception as e:
-        print('Error MEssage=>', e)
+        print('Error Message=>', e)
 
     return render(request, template_name, {'form': form, 'form_extension': form_extension,'active':active})
 
@@ -197,3 +206,12 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
+
+
+from sensor.views import decrypt,encrypt
+def In(request,id,tempplate_name='profile.html'):
+    ids = str(decrypt(id))
+    return HttpResponse('profile'+id+" "+ids)
+
+
+

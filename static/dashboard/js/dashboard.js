@@ -552,6 +552,7 @@ $(document).ready(function () {
 
             },
             success: function (data) {
+                console.log('water', data);
                 for (index = 0; index < data.result.length; index++) {
                     var str_array = data.result[index].split('@#');
                     water_l_value = str_array[1];
@@ -635,6 +636,35 @@ $(document).ready(function () {
                 };
 
                 var water_layout = {
+                    shapes: [
+                        {
+                            type: 'line',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: 100.0,
+                            x1: 1,
+                            y1: 100.0,
+                            line: {
+                                color: 'rgb(255, 0, 0)',
+                                width: 4,
+                                dash: 'dot'
+                            }
+                        },
+                         {
+                            type: 'line',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: 150.0,
+                            x1: 1,
+                            y1: 150.0,
+                            line: {
+                                color: 'rgb(255, 0, 0)',
+                                width: 4,
+                                dash: 'dot'
+                            }
+                        }
+
+                    ],
                     xaxis: {
                         nticks: 10,
                         domain: [0, 1],
@@ -950,7 +980,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "get",
-            url:notification_url ,
+            url: notification_url,
             success: function (data) {
                 HashDataPrev = "";
                 HashDataPrev = HashDataCurr;
@@ -965,7 +995,7 @@ $(document).ready(function () {
                 }
                 if (HashDataPrev != HashDataCurr) {
                     $('#notifications').empty();
-                     $('#notifications').append('<h6 class="dropdown-header">Alerts Center </h6>');
+                    $('#notifications').append('<h6 class="dropdown-header">Alerts Center </h6>');
                     if (!isEmpty(data) && HashDataPrev != HashDataCurr) {
 
                         for (notify in data) {
@@ -1007,8 +1037,8 @@ $(document).ready(function () {
 
             },
             complete: function () {
-                    setTimeout(notification, 3000);
-                }
+                setTimeout(notification, 3000);
+            }
         })
         ;
     })

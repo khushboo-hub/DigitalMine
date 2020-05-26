@@ -56,7 +56,7 @@ class ProfileExtensionForm(forms.ModelForm):
 class PasswordChangeCustomForm(PasswordChangeForm):
     error_css_class = 'has-error'
     error_messages = {'password_incorrect':
-                          "कृपया सहcvbcी पासवर्ड दर्ज करें."}
+                          "कृपया सही पासवर्ड दर्ज करें."}
     old_password = CharField(required=True, label='Συνθηματικό',
                              widget=PasswordInput(attrs={
                                  'class': 'form-control'}),

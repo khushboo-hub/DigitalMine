@@ -3,11 +3,11 @@
     <style>
 
     </style>
-   	<ol class="breadcrumb">
-		<li><a href="/">Home</a></li>
-		<li><a href="#">Employee</a></li>
-		<li class="active">Add</li>
-	</ol>
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="#">Employee</a></li>
+        <li class="active">Add</li>
+    </ol>
     <div class="container">
 
         <div class="row">
@@ -136,43 +136,20 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_address" id="id_address">Address / पता </label>
-
+                                            <label class="" for="id_photo" id="id_photo">Spouse / फोटो </label>
                                         </div>
-                                        <div class="col-md-8">
-                                            {{ form.address }}
-                                            <span style="color:red">{{ form.address.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_state" id="id_state">State / राज्य </label>
-                                        </div>
-                                        <div class="col-md-8 autocomplete">
-                                            {{ form.state }}
-                                            <span style="color:red">{{ form.state.errors|striptags }}</span>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_city" id="id_city">City / शहर </label>
-                                        </div>
-                                        <div class="col-md-8 autocomplete">
-                                            {{ form.city }}
-                                            <span style="color:red">{{ form.city.errors|striptags }}</span>
+                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                            {{ form.spouse_name }}
+                                            <span style="color:red">{{ form.photo.errors|striptags }}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pin" id="id_pin">Pin / पिन </label>
-
+                                            <label class="" for="id_photo" id="id_photo">Nationality </label>
                                         </div>
-                                        <div class="col-md-8">
-                                            {{ form.pin }}
-                                            <span style="color:red">{{ form.pin.errors|striptags }}</span>
+                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                            {{ form.nationality }}
+                                            <span style="color:red">{{ form.nationality.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -186,6 +163,98 @@
                                             <span style="color:red">{{ form.photo.errors|striptags }}</span>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_photo" id="id_photo">Signature </label>
+                                        </div>
+                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                            {{ form.signature }}
+                                            <span style="color:red">{{ form.signature.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </fieldset>
+
+                            <br/><br/>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; ">Address</span>
+                                </legend>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_address" id="id_address">Present Address / वर्तमान
+                                                पता</label>
+
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.present_address }}
+                                            <span style="color:red">{{ form.address.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_address" id="id_address">Permanent Address / स्थायी
+                                                पता </label>
+                                            <div class="checkbox" style="font-size: 12px;font-family: cursive;">
+                                                <label><input type="checkbox" id="same_address" value="">Same as Present
+                                                    Address</label>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.permanent_address }}
+                                            <span style="color:red">{{ form.address.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_state" id="id_state">State / राज्य </label>
+                                        </div>
+                                        <div class="col-md-8 autocomplete">
+                                            {{ form.state }}
+                                            <span style="color:red">{{ form.state.errors|striptags }}</span>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_city" id="id_city">City / शहर </label>
+                                        </div>
+                                        <div class="col-md-8 autocomplete">
+                                            {{ form.city }}
+                                            <span style="color:red">{{ form.city.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pin" id="id_pin">Pin / पिन </label>
+
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.pin }}
+                                            <span style="color:red">{{ form.pin.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_photo" id="id_photo">Identification Mark</label>
+                                        </div>
+                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                            {{ form.identification_mark }}
+                                            <span style="color:red">{{ form.identification_mark.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+
                                     <div class="col-md-6">
                                         <div class="col-md-4">
 
@@ -195,11 +264,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </fieldset>
-
-                            <br/><br/>
-
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Mining Info</span></legend>
                                 <div class="form-group col-md-12">
@@ -305,7 +370,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_token_no" id="id_token_no">Token No / टोकन
+                                            <label class="" for="id_token_no">Token No / टोकन
                                                 No. </label>
                                         </div>
                                         <div class="col-md-8">
@@ -358,10 +423,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-
+                                            <label class="" for="id_medical_status" id="id_medical_status">Category
+                                                Address</label>
                                         </div>
                                         <div class="col-md-8">
-
+                                            {{ form.category_address }}
+                                            <span style="color:red">{{ form.category_address.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -375,7 +442,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_aadhaar_no" id="id_aadhaar_no">Aadhar No/आधार
+                                            <label class="" for="id_aadhaar_no" id="id_aadhaar">Aadhar No/आधार
                                                 नं</label>
                                         </div>
                                         <div class="col-md-8">
@@ -411,6 +478,87 @@
                                         <div class="col-md-8">
                                             {{ form.medical_ins_no }}
                                             <span style="color:red">{{ form.medical_ins_no.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_esic_ip" id="id_esic">ESIC IP</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.esic_ip }}
+                                            <span style="color:red">{{ form.esic_ip.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">LWF</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.lwf }}
+                                            <span style="color:red">{{ form.lwf.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+
+                                        <div class="col-md-4">
+                                            <label class="" for="id_date_of_joining" id="id_date_of_exit">Date of
+                                                Exit
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class='input-group date' id='doe_date_time_picker'>
+                                                {{ form.date_of_exit }}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                                <!--                                        {{form.date_of_joining}}-->
+                                            </div>
+                                            <span style="color:red">{{ form.date_of_joining.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">Reason of Exit</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.reason_of_exit }}
+                                            <span style="color:red">{{ form.reason_of_exit.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">Service Book No</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.service_book_no }}
+                                            <span style="color:red">{{ form.service_book_no.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">UAN</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.uan }}
+                                            <span style="color:red">{{ form.uan.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">Remarks</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.remarks }}
+                                            <span style="color:red">{{ form.remarks.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -562,34 +710,97 @@
                     html: true
                 });
             }
-        });
 
-
-        $(function () {
-
-            var date_from = $('#doj_date_time_picker').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-            date_from.children()[0].id = "id_date_fr";
-            date_from.children()[0].required = "true";
-
-            var date_to = $('#dor_date_time_picker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                useCurrent: false //Important! See issue #1075
-            });
-            $('#dob_date_time_picker').datetimepicker({
-                format: 'YYYY-MM-DD',
-                useCurrent: false //Important! See issue #1075
+            $('#id_present_address').on('input', function () {
+                let checked = $('#same_address').prop('checked');
+                if (checked) {
+                    $('#id_permanent_address').val($(this).val());
+                }
             });
 
-            date_to.children()[0].id = "id_date_to";
-            date_to.children()[0].required = "true";
-
-            $("#doj_date_time_picker").on("dp.change", function (e) {
-                $('#dor_date_time_picker').data("DateTimePicker").minDate(e.date);
+            $('#same_address').change(function () {
+                let checked = $(this).prop('checked');
+                if (checked) {
+                    $('#id_permanent_address').val($('#id_present_address').val());
+                } else {
+                    $('#id_permanent_address').val('');
+                }
             });
-            $("#dor_date_time_picker").on("dp.change", function (e) {
-                $('#doj_date_time_picker').data("DateTimePicker").maxDate(e.date);
+
+            function Token_generate(token) {
+                $.ajax({
+                    url: "{% url 'employee:validate_token' %}",
+                    data: {
+                        'token': token
+                    },
+                    success: function (data) {
+                        console.log('token', data);
+                        if (data.hasOwnProperty('result')) {
+                            data = data.result;
+                            if (data.available) {
+                                $('#id_token_no').val(data.token);
+                                Token_generate(data.token);
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.log('Something Went Wrong!');
+                    }
+                });
+            }
+
+            var typingTimer;
+            var doneTypingInterval = 5000;
+            var $input = $('#id_token_no');
+            let token = $input.val()
+            Token_generate(token);
+
+            $input.on('keyup', function () {
+                clearTimeout(typingTimer);
+                let token = $(this).val()
+                typingTimer = setTimeout(Token_generate(token), doneTypingInterval);
+            });
+            $input.on('keydown', function () {
+                clearTimeout(typingTimer);
+            });
+            $(function () {
+
+                var date_from = $('#doj_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+                date_from.children()[0].id = "id_date_fr";
+                date_from.children()[0].required = "true";
+
+                var date_to = $('#dor_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#dob_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    useCurrent: false //Important! See issue #1075
+                });
+                $('#doe_date_time_picker').datetimepicker({
+                    format: 'YYYY-MM-DD',
+                    useCurrent: false //Important! See issue #1075
+                });
+
+                date_to.children()[0].id = "id_date_to";
+                date_to.children()[0].required = "true";
+
+                $("#doj_date_time_picker").on("dp.change", function (e) {
+                    $('#dor_date_time_picker').data("DateTimePicker").minDate(e.date);
+                });
+                $("#dor_date_time_picker").on("dp.change", function (e) {
+                    $('#doj_date_time_picker').data("DateTimePicker").maxDate(e.date);
+                });
+            });
+
+            $('#id_aadhaar_no').keyup(function () {
+                var foo = $(this).val().split("-").join(""); // remove hyphens
+                if (foo.length > 0) {
+                    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+                }
+                $(this).val(foo);
             });
         });
 

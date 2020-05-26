@@ -163,33 +163,34 @@
                                 </div>
                                 <h3>Change Password</h3>
                                 <div class="form-group">
-                                    {{form.old_password.errors|escape}}
+
                                     <label class="col-lg-3 control-label">Old Password:</label>
                                     <div class="col-lg-8">
 
 
                                         <!--              <input class="form-control" type="text" value="Jane">-->
                                         {{form.old_password}}
-                                        <span>{{form.old_password.errors}}</span>
+                                         <span style="color: red;">{{form.old_password.errors|striptags}}
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    {{form.new_password1.errors}}
+
                                     <label class="col-lg-3 control-label">New Password:</label>
 
                                     <div class="col-lg-8">
                                         <!--              <input class="form-control" type="text" value="Jane">-->
                                         {{form.new_password1}}
-
+                                        <span style="color: red;">{{form.new_password1.errors|striptags}}
                                     </div>
 
                                 </div>
                                 <div class="form-group">
-                                    {{form.new_password2.errors}}
+
                                     <label class="col-lg-3 control-label">Confirm Password:</label>
                                     <div class="col-lg-8">
                                         <!--              <input class="form-control" type="text" value="Bishop">-->
                                        {{form.new_password2}}
+                                         <span style="color: red;">{{form.new_password2.errors|striptags}}
                                     </div>
                                 </div>
                                 <div class="form-group">

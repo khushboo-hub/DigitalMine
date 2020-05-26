@@ -13,6 +13,8 @@ urlpatterns = [
     path('more_details_ajax', views.more_details_ajax, name='more_details_ajax'),
     path('generate_login_details_ajax', views.generate_login_details_ajax, name='generate_login_details_ajax'),
     path('update_shift_link_ajax', views.update_shift_link_ajax, name="update_shift_link_ajax"),
+    path('minimum_wage', views.MinimumWage, name='minimum_wage'),#new
+    path('manage_minimum_wage', views.ManageMinimumWage, name='manage_minimum_wage'),#new
 
     path('getsensordata', views.getsensordata, name='getsensordata'),
 
@@ -47,4 +49,5 @@ urlpatterns = [
     path('contactus/', views.ContactUsPageView.as_view(), name='contactus'),
     path('checkifuserfieldempty',views.checkifuserfieldempty,name='checkifuserfieldempty'),
     path('profile_ajax/',views.profile_ajax,name='profile_ajax'),
+    path('validate_token',views.validate_token,name='validate_token'),
 ]

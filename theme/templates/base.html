@@ -159,9 +159,6 @@
         td:nth-last-child(2) {
             text-align: center;
         }
-
-        @media (min-width: 768px)
-            @mdiapadding-top : 220px;
     </style>
     <script>
         window.onload = function () {
@@ -701,8 +698,9 @@
                                 <li><a href="{% url 'employee:contactus' %}">Contact Us</a></li>
                                 <li><a href="{% url 'news:index' %}">News</a></li>
                                 <li><a href="{% url 'setting:manage_constant' %}">Manage Settings</a></li>
+                            </ul>
 
-<!-- 
+<!--
                                 <hr>
                                 <h3 style="color: crimson;">Slope & Landslide Monitoring</h3>
 
@@ -719,7 +717,7 @@
                                 <li><a href="{% url 'Slope:warning_report' %}">Warning Report</a></li>
                             </ul> -->
                         </li>
-
+                         <li class="dropdown">
                         <ul class="nav navbar-nav">
                             {% if user.is_authenticated %}
                                 <li class="dropdown">
@@ -758,6 +756,7 @@
                                 </li>
                             {% endif %}
                         </ul>
+                         </li>
 
                     </ul>
 
@@ -833,7 +832,7 @@
             <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                <a class="btn btn-primary" href="/accounts/logout">Logout</a>
+                <a class="btn btn-primary" href="{% url 'logout' %}?next={{ request.path | urlencode }}">Logout</a>
             </div>
         </div>
     </div>
