@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import connection
 from django.shortcuts import render
-from pyasn1.compat.octets import null
 
 from .models import MineDetails, Node, Sensor_Node, MinerTracking, TrackingRouter, water_level_monitoring_model, \
     Employee
