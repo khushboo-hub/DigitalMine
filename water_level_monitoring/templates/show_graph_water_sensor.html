@@ -61,7 +61,8 @@
                         'id': mine_id
                     },
                     success: function (data) {
-                        fill_dropdown(data.result);
+                        if(data.hasOwnProperty('result')){
+                        fill_dropdown(data.result);}
                     },
                     error: function () {
                         console.log("something went wrong");

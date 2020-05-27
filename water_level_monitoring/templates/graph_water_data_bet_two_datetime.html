@@ -1,30 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
-    .margin_top{
-     margin-top: 15px;
-    }
-</style>
-  <!-- Plotly.js -->
-<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-
-
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-             <h2 class="page-header"><b>WATER LEVEL GRAPH B/N TWO DATE-TIME</b><small>  Here we can view graph b/n range </small></h2>
-        </div>
-    </div>
-    <div class="row margin_top">
+    <div class="container">
+        <section class="col-md-12">
+            <h3 class="page-header"><b>WATER LEVEL GRAPH BETWEEN TWO DATE-TIME</b>
+                <small> Here we can view graph data b/n two date-time</small>
+            </h3>
+            <div class="row">
                 <div class="col-md-2">
-                     <label for="" class="" id="">Choose Mine:</label>
+                    <label for="" class="" id="">Choose Mine:</label>
                 </div>
                 <div class="col-md-4">
-                    {{form.mine_id}}
+                    {{ form.mine_id }}
                 </div>
                 <div class="col-md-2">
                     <label for="" class="" id="">Choose Location:</label>
@@ -35,9 +21,10 @@
                     </select>
                 </div>
             </div>
-            <div class="row margin_top">
+            <br>
+            <div class="row">
                 <div class="col-md-2">
-                     <label for="" class="" id="">Date-Time From:</label>
+                    <label for="" class="" id="">Date-Time From:</label>
                 </div>
                 <div class="col-md-4">
                     <input type="text" class="form-control" id="from_date" value="{% now "Y-m-d  08:00:00" %}">
@@ -49,98 +36,113 @@
                     <input type="text" class="form-control" id="to_date" value="{% now "Y-m-d  H:i:s" %}">
                 </div>
             </div>
-    <div class="row">
-        <div class="col-md-12 margin_top">
-            <center><input type="button" id="btn_show" class="btn btn-primary" value="Show"/></center>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-     <span class="border border-primary">
-         <div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
-     </span>
-</div>
-<script>
-       $("#id_mine_id").addClass('form-control');
-//------------------------------------------------------------------------------------------------------------------
-    $("#id_mine_id").on("change",function(){
-        mine_id=this.value;
-        $.ajax({
-            type:"get",
-            url: "{% url 'water_level_monitoring:fetch_location_ajax' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                fill_dropdown(data.result);
-                    },
-            error: function(){
-                    console.log("something went wrong");
-                 }
-        });
-    });
-    //------------------------------------------------------------------------------------------------------------------
-     function fill_dropdown(result){
-        $("#id_location_list").html("<option value=''>--Select Location--</option>");
-        for (index = 0; index < result.length; index++) {
-            var str_array = result[index].split(',');
-            $("#id_location_list").append($("<option />").val(str_array[0]).text(str_array[1]));
-        }
-    }
-//======================================================================================================================
 
-//======================================================================================================================
-$('#from_date').datetimepicker({
-    format: 'YYYY-MM-DD HH:mm:ss'
-});
-$('#to_date').datetimepicker({
-    format: 'YYYY-MM-DD HH:mm:ss'
-});
-//======================================================================================================================
- $("#btn_show").click(function() {
-     var location = $("#id_location_list").val();
-      var date_from = $("#from_date").val();
-      var date_to = $("#to_date").val();
-     if (location) {
-         $(this).val("Please wait...");
-         $("#btn_show").prop('disabled', true);
-        $.ajax({
-                type: "get",
-                url: "{% url 'water_level_monitoring:fetch_water_data_bet_two_datetime' %}",
-                data: {
-                    'id': location,
-                    'date_from': date_from,
-                    'date_to': date_to,
-                },
-                success: function (data) {
-                    //console.log(data.result);
-                    var x_data=[];
-                    var y_data=[];
-                    for (index = 0; index < data.result.length; index++) {
-                        var str_array = data.result[index].split(',');
-                        x_data.push(moment(str_array[0]).format("DD-MM-YYYY HH:mm:ss"));
-                        y_data.push(str_array[3]);
-                    }
-                    console.log(x_data);
-                    console.log(y_data);
-                    var data = [{
-                            x: x_data.reverse(),
-                            y: y_data.reverse(),
-                            type: 'scatter'
-                        }];
-                    Plotly.newPlot('myDiv', data, {}, {showSendToCloud: true});
-                    $("#btn_show").val("Show");
-                    $("#btn_show").prop('disabled', false);
-                   // return data;
-                },
-                error: function () {
-                    console.log("something went wrong");
-                }
+            <br>
+            <div class="text-center">
+                <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+            </div>
+            <div id="watermonitoring"></div>
+        </section>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_id").addClass('form-control');
+            $('#from_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss'
             });
-     }else{
-         alert("Please choose location");
-     }
- });
-  </script>
-</body>
+            $('#to_date').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss'
+            });
+            //------------------------------------------------------------------------------------------------------------------
+            $("#id_mine_id").on("change", function () {
+                let mine_id = this.value;
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'water_level_monitoring:fetch_location_ajax' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        fill_dropdown(data.result);
+                    },
+                    error: function () {
+                        console.log("something went wrong");
+                    }
+                });
+            });
+
+            //------------------------------------------------------------------------------------------------------------------
+            function fill_dropdown(waterSensor) {
+                $("#id_location_list").empty();
+                if (isEmpty(waterSensor)) {
+                    $("#id_location_list").append($("<option />").val('').text('--No Location Found--'));
+                    return;
+                }
+                $("#id_location_list").append($("<option />").val('').text('--Select Location--'));
+                for (let water in waterSensor) {
+                    if (waterSensor.hasOwnProperty(water)) {
+                        $("#id_location_list").append($("<option />").val(waterSensor[water].id).text(waterSensor[water].name));
+                    }
+                }
+            }
+
+            //======================================================================================================================
+
+            //======================================================================================================================
+
+            //======================================================================================================================
+            $("#btn_show").click(function () {
+                let mine = $('#id_mine_id').val();
+                let location_id = $("#id_location_list").val();
+                if (isEmpty(mine)) {
+                    alert('Select Mine');
+                    return;
+                }
+                if (isEmpty(location_id)) {
+                    alert('Select Location');
+                    return;
+                }
+                let date_from = $("#from_date").val();
+                let date_to = $("#to_date").val();
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'water_level_monitoring:fetch_water_data_bet_two_datetime' %}",
+                        data: {
+                            'id': location_id,
+                            'date_from': date_from,
+                            'date_to': date_to,
+                        },
+                        beforeSend: function () {
+                            $(this).val("Please wait...");
+                            $("#btn_show").prop('disabled', true);
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result')) {
+                                let water_data = data.result;
+                                let x = [];
+                                let y = [];
+                                for (let water in water_data) {
+                                    if (water_data.hasOwnProperty(water)) {
+                                        x.push(moment(water_data[water].date).format("DD-MM-YYYY HH:mm:ss"));
+                                        y.push(water_data[water].sensor_value);
+                                    }
+                                }
+                                var data = [{
+                                    x: x.reverse(),
+                                    y: y.reverse(),
+                                    type: 'scatter'
+                                }];
+                                Plotly.newPlot('watermonitoring', data, {}, {showSendToCloud: true});
+                                $("#btn_show").val("Show");
+                                $("#btn_show").prop('disabled', false);
+                                // return data;
+                            }
+                        },
+                        error: function () {
+                            console.log("Something went wrong");
+                        }
+                    });
+            });
+        });
+    </script>
 {% endblock %}

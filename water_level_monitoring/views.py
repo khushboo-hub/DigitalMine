@@ -269,37 +269,21 @@ def fetch_water_data_bet_two_datetime(request):
     prepared_data = []
     data = {}
     if request.is_ajax():
-        # id=6&date_from=2019-08-06+12%3A00%3A00&date_to=2019-08-07+12%3A00%3A00 500 (Internal Server Error)
         location = request.GET.get('id', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
-        # location = 6
-        # date_from = "2019-08-06 12:00:00"
-        # date_to = "2019-08-07 12:00:00"
 
-        a = date_from + '.000000'
-        b = date_to + '.000000'
-        from_d = datetime.datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
-        from_t = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
-        from_d = from_d.replace(microsecond=000000)
-        from_t = from_t.replace(microsecond=999999)
+        date_from = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S')
+        date_to = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S')
 
         water_level_data_details = water_level_monitoring_model.objects.get(id=location)
         mine_details = MineDetails.objects.get(id=water_level_data_details.mine_id_id)
-        # print("============================================================================================================")
-        # print(water_level_data_details)
-        # print("============================================================================================================")
-        # print(mine_details)
 
-        water_data_details = water_level_monitoring_data_acquisition_model.objects.values_list().filter(
-            sensor_id=location).filter(created_date__range=(from_d, from_t)).order_by('-id')
-        # print(water_data_details.query)
-        #
-        for r in water_data_details:
-            # print(r[3])
-            # c_date = datetime.datetime.strptime(str(r[3], '%Y-%m-%d %H:%M:%S'))
-            prepared_data.append(
-                str(r[3]) + ',' + mine_details.name + ',' + water_level_data_details.area_name + ',' + str(r[2]))
+        water_data_details = water_level_monitoring_data_acquisition_model.objects.filter(
+            sensor_id=location).filter(created_date__range=(date_from, date_to)).order_by('-id')
+
+        for water in water_data_details:
+            prepared_data.append({'date':water.created_date,'mine':mine_details.name,'area':water_level_data_details.area_name,'sensor_value':water.sensor_value})
 
         data['result'] = prepared_data
     else:
@@ -328,17 +312,13 @@ def warning_fetch_water_data_bet_two_datetime(request):
 
         a = date_from + '.000000'
         b = date_to + '.000000'
-        from_d = datetime.datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
-        from_t = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
+        from_d = datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
+        from_t = datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
         from_d = from_d.replace(microsecond=000000)
         from_t = from_t.replace(microsecond=999999)
 
         water_level_data_details = water_level_monitoring_model.objects.get(id=location)
         mine_details = MineDetails.objects.get(id=water_level_data_details.mine_id_id)
-        # print("============================================================================================================")
-        # print(water_level_data_details)
-        # print("============================================================================================================")
-        # print(mine_details)
 
         if (int(warning_value) == 3):
             range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(
@@ -354,22 +334,18 @@ def warning_fetch_water_data_bet_two_datetime(request):
             range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(
                 water_level_data_details.alarm_water_level_3)
 
-        water_data_details = water_level_monitoring_data_acquisition_model.objects.values_list().filter(
+        print('range from',range_from,'to',range_to)
+        water_data_details = water_level_monitoring_data_acquisition_model.objects.filter(
             sensor_id=location).filter(sensor_value__range=(range_from, range_to)).filter(
             created_date__range=(from_d, from_t)).order_by('-id')
-        # print(water_data_details.query)
-        #
-        for r in water_data_details:
-            # print(r[3])
-            # c_date = datetime.datetime.strptime(str(r[3], '%Y-%m-%d %H:%M:%S'))
-            prepared_data.append(
-                str(r[3]) + ',' + mine_details.name + ',' + water_level_data_details.area_name + ',' + str(r[2]))
+
+        for water in water_data_details:
+            prepared_data.append({'date': water.created_date, 'mine': mine_details.name ,'area':water_level_data_details.area_name ,'sensor_value':water.sensor_value})
 
         data['result'] = prepared_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
-
 
 # ======================== Background task only==================================
 @background(schedule=5)
