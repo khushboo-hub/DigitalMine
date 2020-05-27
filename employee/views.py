@@ -15,6 +15,7 @@ import matplotlib.animation as animation
 ###################
 import serial
 from background_task import background
+from django.contrib import messages
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -23,6 +24,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from employee.forms import EmployeeForm,RateOfMinimumWageForm
+from sensor.views import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
 from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign,RateOfMinimumWages
 from django.contrib.sites.shortcuts import get_current_site
@@ -350,17 +352,19 @@ def manage_mine(request, template_name='mine/mine_manage.html'):
 
 @login_required
 def edit_mine(request, pk, template_name='mine/mine_add.html'):
+    pk=decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
-    print(book)
     form = MineDetailsForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('employee:manage_mine')
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('employee:manage_mine')
     return render(request, template_name, {'form': form, 'action': 'EDIT', 'mine_name': '(' + str(book.name) + ')'})
 
 
 @login_required
 def delete_mine(request, pk):
+    pk=decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
     book.delete()
     return redirect('employee:manage_mine')
@@ -494,38 +498,42 @@ def manage_mining_shift(request, mine_id, template_name='mine/manage_mining_shif
 def add_mining_shift(request, mine_id, template_name='mine/add_mining_shift.html'):
     mine_table = MineDetails.objects.get(id=mine_id)
     mine_name = mine_table.name
-    form = MiningShiftForm(request.POST)
+    mine_id = mine_table.id
+    form = MiningShiftForm()
     # print(form)
     # return HttpResponse("ok")
+    if request.method == "POST":
+        form = MiningShiftForm(request.POST or None)
+        object = MineShift()
+        try:
+            if form.is_valid():
+                object.shift_name = request.POST.get("shift_name")
+                object.description = request.POST.get("description")
+                object.time_from = request.POST.get("time_from")
+                object.time_to = request.POST.get("time_to")
+                object.mine_id = mine_id
 
-    object = MineShift()
-    try:
-        if form.is_valid():
-            object.shift_name = request.POST.get("shift_name")
-            object.description = request.POST.get("description")
-            object.time_from = request.POST.get("time_from")
-            object.time_to = request.POST.get("time_to")
-            object.mine_id = mine_id
-            # print(request.POST)
-            # form.save()
-            object.save()
+                object.save()
 
-            return redirect('/employee/manage_mining_shift/' + str(mine_id))
-        # else:
-        #     return  HttpResponse("some error")
-    except Exception as e:
-        return HttpResponse("Exception mera he " + str(e))
-    return render(request, template_name, {'form': form, 'mine_name': mine_name})
+                return redirect('/employee/manage_mining_shift/' + str(mine_id))
+        except Exception as e:
+            messages.error(request, 'Oops!, Something went wrong!')
+            pass
+    return render(request, template_name, {'form': form, 'mine_name': mine_name,'mine_id':mine_id})
 
 
 @login_required
 def edit_mining_shift(request, pk, mine_id, template_name='mine/add_mining_shift.html'):
     book = get_object_or_404(MineShift, pk=pk)
+    mine_table = MineDetails.objects.get(id=mine_id)
+    mine_name = mine_table.name
+    mine_id = mine_table.id
     form = MiningShiftForm(request.POST or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('/employee/manage_mining_shift/' + str(mine_id))
-    return render(request, template_name, {'form': form})
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('/employee/manage_mining_shift/' + str(mine_id))
+    return render(request, template_name, {'form': form,'mine_name': mine_name,'mine_id':mine_id})
 
 
 @login_required

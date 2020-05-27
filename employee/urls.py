@@ -20,8 +20,8 @@ urlpatterns = [
 
     path('add_mine', views.add_mine, name='add_mine'),
     path('manage_mine', views.manage_mine, name='manage_mine'),
-    path('edit_mine/<int:pk>', views.edit_mine, name='edit_mine'),
-    path('delete_mine/<int:pk>', views.delete_mine, name='delete_mine'),
+    path('edit_mine/<str:pk>', views.edit_mine, name='edit_mine'),
+    path('delete_mine/<str:pk>', views.delete_mine, name='delete_mine'),
     path('show_role_chart/', views.show_role_chart, name='show_role_chart'),
     path('fetch_role_ajax/', views.fetch_role_ajax, name='fetch_role_ajax'),
 
