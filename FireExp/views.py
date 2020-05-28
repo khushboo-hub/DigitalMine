@@ -6,27 +6,19 @@
 ###     Last Modified:
 ###     Modified function,any:
 ##################################################################################
-import sys
-import matplotlib as mpl
-from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.decorators import login_required
 # mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
-from numpy.random import rand
 import io
-import time
 import datetime
 from datetime import timedelta
 import serial
 from time import sleep
-
-from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.template import Template, Context
 from django.shortcuts import render
 from .models import Gasdb,Fire_exp_gases
-
 from .forms import FireForm
 from .forms import EraseForm
 from .forms import DisplayForm

@@ -313,6 +313,9 @@ def warning_fetch_water_data_bet_two_datetime(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+def warning_report(request):
+    HttpResponse("development")
 #======================== Background task only==================================
 @background(schedule=5)
 def run_back_save(id):
