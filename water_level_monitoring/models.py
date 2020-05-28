@@ -12,9 +12,9 @@ class water_level_monitoring_model(models.Model):
 
     distance_bet_roof_and_water = models.CharField(max_length=50, null=True, blank=True)
 
-    alarm_water_level_1 = models.CharField(max_length=200, null=True, blank=True)
-    alarm_water_level_2 = models.CharField(max_length=200, null=True, blank=True)
-    alarm_water_level_3 = models.CharField(max_length=200, null=True, blank=True)
+    alarm_water_level_1 = models.FloatField()
+    alarm_water_level_2 = models.FloatField()
+    alarm_water_level_3 = models.FloatField()
 
     level_1_msg = models.CharField(max_length=200, null=True, blank=True,default='First Stage Warning Message , Please be Careful.')
     level_2_msg = models.CharField(max_length=200, null=True, blank=True,default='Second Stage Warning Message , Please be alert situation is not good.')
@@ -40,7 +40,7 @@ class water_level_monitoring_model(models.Model):
 
 class water_level_monitoring_data_acquisition_model(models.Model):
     sensor_id = models.IntegerField()
-    sensor_value = models.CharField(max_length=50,null=True,blank=True,default='0.0')
+    sensor_value = models.FloatField()
     created_date = models.DateTimeField(default=datetime.now, blank=True)
 
     class Meta:

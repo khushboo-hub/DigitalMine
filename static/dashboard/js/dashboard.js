@@ -112,7 +112,7 @@ $(document).ready(function () {
 
     const scale = (num, in_min, in_max, out_min, out_max) => {
         return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    }
+    };
 
     function getRandomIntInclusive(min, max) {
         min = Math.ceil(min);
@@ -174,7 +174,7 @@ $(document).ready(function () {
     let strata_third_audio = "";
 
 
-    sensor_id = $('#stratamonitoring').attr('data-strata-sensor');
+    let sensor_id = $('#stratamonitoring').attr('data-strata-sensor');
 
     strataStart(sensor_id, strata_url);
 
@@ -215,48 +215,6 @@ $(document).ready(function () {
                 //INITIALIZING PLOTLY
                 var y = [];
                 var time = new Date();
-
-                var strata_white = {
-                    x: [1, 2, 3, 4],
-                    y: [strata_l_Value, strata_l_Value, strata_l_Value, strata_l_Value],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: 'rgba(158,158,158,0.18)', //white
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: 'Safe',
-
-                };
-                var strata_green = {
-                    x: [1, 2, 3, 4],
-                    y: [strata_m_Value, strata_m_Value, strata_m_Value, strata_m_Value],
-                    fill: 'tonexty',
-                    mode: 'lines',
-                    fillcolor: '#0096888a',
-                    hoverinfo: 'skip',
-                    name: '1st Level',
-                };
-                var strata_yellow = {
-                    x: [1, 2, 3, 4],
-                    y: [strata_h_Value, strata_h_Value, strata_h_Value, strata_h_Value],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: '#ffeb3b75',
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: '2nd Level',
-                };
-                var strata_red = {
-                    x: [1, 2, 3, 4],
-                    y: [strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2, strata_h_Value * 1.2],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: '#f443368c',
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: '3rd Level',
-
-                };
                 var strata = {
                     x: [time],
                     y: y,
@@ -275,6 +233,51 @@ $(document).ready(function () {
                 };
 
                 var strata_layout = {
+                    shapes: [
+                        {
+                            type: 'rect',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: strata_l_Value,
+                            x1: 1,
+                            y1: strata_m_Value,
+                            line: {
+                                color: '#0096888a',
+                                width: 1,
+                                dash: 'line'
+                            },
+                            fillcolor: '#0096888a'
+                        },
+                        {
+                            type: 'rect',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: strata_m_Value,
+                            x1: 1,
+                            y1: strata_h_Value,
+                            line: {
+                                color: '#ffeb3b75',
+                                width: 1,
+                                dash: 'line'
+                            },
+                            fillcolor: '#ffeb3b75'
+                        },
+                        {
+                            type: 'rect',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: strata_h_Value,
+                            x1: 1,
+                            y1: strata_h_Value * 1.2,
+                            line: {
+                                color: '#f443368c',
+                                width: 1,
+                                dash: 'line'
+                            },
+                            fillcolor: '#f443368c'
+                        }
+
+                    ],
                     xaxis: {
                         nticks: 10,
                         domain: [0, 1],
@@ -305,15 +308,15 @@ $(document).ready(function () {
                         x: 0,//number between or equal to -2 and 3
                         orientation: "h"
                     }
-                }
+                };
 
-                var strata_data = [strata_white, strata_green, strata_yellow, strata_red, strata];
-                var config = {responsive: true}
+                var strata_data = [strata];
+                var config = {responsive: true};
                 Plotly.react('stratamonitoring', strata_data, strata_layout, config);
 
                 //PLOTLY INITIALZATION END
 
-                // stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
+                stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, strata_values_url, strata_audio_type, strata_first_warning, strata_second_warning, strata_third_warning, strata_first_audio, strata_second_audio, strata_third_audio);
 
             },
             error: function () {
@@ -326,7 +329,7 @@ $(document).ready(function () {
 
     var CHECK = 0;
     //------------------------------------------------------------------------------------------------------------------
-    var sock = new WebSocket("ws://192.168.1.131:3000");  //replace this address with the one the node.js server prints out. keep port 3000
+    /*var sock = new WebSocket("ws://192.168.1.131:3000");  //replace this address with the one the node.js server prints out. keep port 3000
     //var display=document.getElementById("display")
 
     sock.onopen = function (event) {
@@ -346,8 +349,8 @@ $(document).ready(function () {
                 //GasMonitoring(sensor.data[0], 20, "nodeprogress");
 
                 var update = {
-                    x: [[time, time], [time, time], [time, time], [time, time], [time]],
-                    y: [[5, 5], [10, 10], [20, 20], [20 * 1.2, 20 * 1.2], [sensor.data[0]]],
+                    x: [[time]],
+                    y: [[sensor.data[0]]],
                 };
                 var olderTime = time.setMinutes(time.getMinutes() - 1);
                 var futureTime = time.setMinutes(time.getMinutes() + 1);
@@ -386,21 +389,17 @@ $(document).ready(function () {
                 GasMonitoring(sensor.data[0], 20, "methane");
                 GasMonitoring(sensor.data[0], 20, "hydrogen");
                 GasMonitoring(sensor.data[0], 20, "nodeprogress");
-
                 /*
                 Plotly.extendTraces('Graph2', {
                     x: [[time]],
                     y: [[sensor.data[0]]]
                 }, [0]);
-                */
+
             }
-        }
+        }}; */
 
-        //display.innerHTML+=event.data+"<br />"; //add incoming message from server to the log screen previous string + new string(message)
-    }
-
-    /*var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-        console.log('flag', strataFlag);
+    var stratamonitoringajax = function (strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
+        console.log('flag strata monitoring', strataFlag);
         StrataAjax = $.ajax({
             type: "get",
             url: url,
@@ -416,8 +415,8 @@ $(document).ready(function () {
                 var value = data.result.sensor_value;
                 time = new Date();
                 var update = {
-                    x: [[time], [time], [time], [time], [time]],
-                    y: [[strata_l_Value], [strata_m_Value], [strata_h_Value], [strata_h_Value * 1.2], [value]],
+                    x: [[time]],
+                    y: [[value]],
                 };
                 var olderTime = time.setMinutes(time.getMinutes() - 1);
                 var futureTime = time.setMinutes(time.getMinutes() + 1);
@@ -439,7 +438,7 @@ $(document).ready(function () {
                 };
 
                 Plotly.relayout('stratamonitoring', minuteView);
-                Plotly.extendTraces('stratamonitoring', update, [0, 1, 2, 3, 4]);
+                Plotly.extendTraces('stratamonitoring', update, [0]);
                 checkAndPlay(Number(value), strata_l_Value, strata_m_Value, strata_h_Value, "Strata Warning", audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio);
 
             },
@@ -454,7 +453,7 @@ $(document).ready(function () {
                 setTimeout(stratamonitoringajax(strata_l_Value, strata_m_Value, strata_h_Value, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio), 100);
             }, timeout: 60000,
         });
-    };*/
+    };
 
     function checkAndPlay(sensorValue, l_value, m_value, h_value, string, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
         // console.log(sensorValue);
@@ -469,7 +468,7 @@ $(document).ready(function () {
                 showHideTransition: 'fade',
                 position: 'bottom-right',
                 icon: 'error'
-            })
+            });
             if (audio_type == "text2voice") {
                 Speak(first_warning, 9, 0.5);
             } else {
@@ -485,7 +484,7 @@ $(document).ready(function () {
                 showHideTransition: 'fade',
                 position: 'bottom-right',
                 icon: 'error'
-            })
+            });
             if (audio_type == "text2voice") {
                 //console.log(second_warning)
                 Speak(second_warning, 9, 0.5);
@@ -503,7 +502,7 @@ $(document).ready(function () {
                 position: 'bottom-right',
                 showHideTransition: 'fade',
                 icon: 'error'
-            })
+            });
             if (audio_type == "text2voice") {
                 Speak(third_warning, 9, 0.5);
             } else {
@@ -515,24 +514,24 @@ $(document).ready(function () {
     }
 
 
-    //WATER MONITORING
-    var water_l_color = "#C0DF81";
-    var water_m_color = "#FEFE9A";
-    var water_h_color = "#F37C84";
-
-    var water_l_value = "";
-    var water_m_value = "";
-    var water_h_value = "";
-    var water_t_height = 0;
-
-    var water_audio_type = "";
-    var water_first_warning = "";
-    var water_second_warning = "";
-    var water_third_warning = "";
-
-    var water_first_audio = "";
-    var water_second_audio = "";
-    var water_third_audio = "";
+    // //WATER MONITORING
+    // var water_l_color = "#C0DF81";
+    // var water_m_color = "#FEFE9A";
+    // var water_h_color = "#F37C84";
+    //
+    // var water_l_value = "";
+    // var water_m_value = "";
+    // var water_h_value = "";
+    // var water_t_height = 0;
+    //
+    // var water_audio_type = "";
+    // var water_first_warning = "";
+    // var water_second_warning = "";
+    // var water_third_warning = "";
+    //
+    // var water_first_audio = "";
+    // var water_second_audio = "";
+    // var water_third_audio = "";
 
     var water_sensor_id = $('#watermonitoring').attr('data-water-sensor');
 
@@ -553,160 +552,131 @@ $(document).ready(function () {
             },
             success: function (data) {
                 console.log('water', data);
-                for (index = 0; index < data.result.length; index++) {
-                    var str_array = data.result[index].split('@#');
-                    water_l_value = str_array[1];
-                    water_m_value = str_array[2];
-                    water_h_value = str_array[3];
-                    water_t_height = parseInt(str_array[4]);
+                if (data.hasOwnProperty('result')) {
+                    let water = data.result;
+                    let water_l_value = parseFloat(water.level1);
+                    let water_m_value = parseFloat(water.level2);
+                    let water_h_value = parseFloat(water.level3);
+                    let water_t_height = parseFloat(water.total_height);
                     //    console.log(water_l_value, water_m_value, water_h_value, water_t_height)
 
-                    water_audio_type = str_array[5];
-                    water_first_warning = str_array[6];
-                    water_second_warning = str_array[7];
-                    water_third_warning = str_array[8];
+                    let water_audio_type = water.audio_type;
+                    let water_first_warning = water.level1_msg;
+                    let water_second_warning = water.level2_msg;
+                    let water_third_warning = water.level3_msg;
 
-                    water_first_audio = str_array[9];
-                    water_second_audio = str_array[10];
-                    water_third_audio = str_array[11];
-                }
+                    let water_first_audio = water.level1_audio;
+                    let water_second_audio = water.level1_audio;
+                    let water_third_audio = water.level1_audio;
 
 
-                //INITIALIZING PLOTLY
-                var water_white = {
-                    x: [1, 2, 3, 4],
-                    y: [water_l_value, water_l_value, water_l_value, water_l_value],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: 'rgba(158,158,158,0.18)', //white
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: 'Safe',
-
-                };
-                var water_green = {
-                    x: [1, 2, 3, 4],
-                    y: [water_m_value, water_m_value, water_m_value, water_m_value],
-                    fill: 'tonexty',
-                    mode: 'lines',
-                    fillcolor: '#0096888a',
-                    hoverinfo: 'skip',
-                    name: '1st Level',
-                };
-
-                var water_yellow = {
-                    x: [1, 2, 3, 4],
-                    y: [water_h_value, water_h_value, water_h_value, water_h_value],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: '#ffeb3b75',
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: '2nd Level',
-                };
-                var water_red = {
-                    x: [1, 2, 3, 4],
-                    y: [water_t_height, water_t_height, water_t_height, water_t_height],
-                    fill: 'tonexty',
-                    type: 'scatter',
-                    fillcolor: '#f443368c',
-                    hoverinfo: 'skip',
-                    mode: 'lines',
-                    name: '3rd Level',
-
-                };
-
-                var time = new Date();
-                var y = [];
-                var water = {
-                    x: [time],
-                    y: y,
-                    fill: 'tozeroy',
-                    type: 'scatter',
-                    fillcolor: 'rgba(3,169,244,0.5)',
-                    mode: 'markers+lines',
-                    marker: {
-                        color: 'rgba(3,169,244,1)',
-                        size: 12
-                    },
-                    hoveron: 'points',
-                    hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',
-                    hoverinfo: 'text',
-                    name: 'Water',
-                };
-
-                var water_layout = {
-                    shapes: [
-                        {
-                            type: 'line',
-                            xref: 'paper',
-                            x0: 0,
-                            y0: 100.0,
-                            x1: 1,
-                            y1: 100.0,
-                            line: {
-                                color: 'rgb(255, 0, 0)',
-                                width: 4,
-                                dash: 'dot'
-                            }
+                    var time = new Date();
+                    var y = [];
+                    var watertrace = {
+                        x: [time],
+                        y: y,
+                        fill: 'tozeroy',
+                        type: 'scatter',
+                        fillcolor: 'rgba(3,169,244,0.5)',
+                        mode: 'markers+lines',
+                        marker: {
+                            color: 'rgba(3,169,244,1)',
+                            size: 12
                         },
-                         {
-                            type: 'line',
-                            xref: 'paper',
-                            x0: 0,
-                            y0: 150.0,
-                            x1: 1,
-                            y1: 150.0,
-                            line: {
-                                color: 'rgb(255, 0, 0)',
-                                width: 4,
-                                dash: 'dot'
+                        hoveron: 'points',
+                        hovertemplate: '%{x} : %{y:0.2f} cm<extra></extra>',
+                        hoverinfo: 'text',
+                        name: 'Water',
+                    };
+
+                    var water_layout = {
+                        shapes: [
+                            {
+                                type: 'rect',
+                                xref: 'paper',
+                                x0: 0,
+                                y0: water_l_value,
+                                x1: 1,
+                                y1: water_m_value,
+                                line: {
+                                    color: '#0096888a',
+                                    width: 1,
+                                    dash: 'line'
+                                },
+                                fillcolor: '#0096888a'
+                            },
+                            {
+                                type: 'rect',
+                                xref: 'paper',
+                                x0: 0,
+                                y0: water_m_value,
+                                x1: 1,
+                                y1: water_h_value,
+                                line: {
+                                    color: '#ffeb3b75',
+                                    width: 1,
+                                    dash: 'line'
+                                },
+                                fillcolor: '#ffeb3b75'
+                            },
+                            {
+                                type: 'rect',
+                                xref: 'paper',
+                                x0: 0,
+                                y0: water_h_value,
+                                x1: 1,
+                                y1: water_t_height,
+                                line: {
+                                    color: '#f443368c',
+                                    width: 1,
+                                    dash: 'line'
+                                },
+                                fillcolor: '#f443368c'
                             }
+
+                        ],
+                        xaxis: {
+                            nticks: 10,
+                            domain: [0, 1],
+                            title: "Time",
+                        },
+                        yaxis: {
+                            //{#scaleanchor: "x",#}
+                            domain: [0, 1],
+                            title: "Water Level(cm)",
+                            range: [0, water_t_height * 1.2]
+                        },
+                        images: [{
+                            name: 'watermark_1',
+                            source: "http://localhost:8000/static/image/csir_logo.svg",
+                            xref: "paper",
+                            yref: "paper",
+                            x: 0.40,
+                            y: 0.9,
+                            sizex: 0.7,
+                            sizey: 0.7,
+                            opacity: 0.1,
+                            layer: "below"
+                        }],
+                        showlegend: true,
+                        legend: {
+                            xanchor: "left",//"auto" | "left" | "center" | "right"
+                            yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
+                            y: 1,//number between or equal to -2 and 3
+                            x: 0,//number between or equal to -2 and 3
+                            orientation: "h"
                         }
+                    };
 
-                    ],
-                    xaxis: {
-                        nticks: 10,
-                        domain: [0, 1],
-                        title: "Time",
-                    },
-                    yaxis: {
-                        //{#scaleanchor: "x",#}
-                        domain: [0, 1],
-                        title: "Water Level(cm)",
-                        range: [0, water_t_height * 1.2]
-                    },
-                    images: [{
-                        name: 'watermark_1',
-                        source: "http://localhost:8000/static/image/csir_logo.svg",
-                        xref: "paper",
-                        yref: "paper",
-                        x: 0.40,
-                        y: 0.9,
-                        sizex: 0.7,
-                        sizey: 0.7,
-                        opacity: 0.1,
-                        layer: "below"
-                    }],
-                    showlegend: true,
-                    legend: {
-                        xanchor: "left",//"auto" | "left" | "center" | "right"
-                        yanchor: "bottom",//"auto" | "top" | "middle" | "bottom"
-                        y: 1,//number between or equal to -2 and 3
-                        x: 0,//number between or equal to -2 and 3
-                        orientation: "h"
-                    }
+                    var water_data = [watertrace];
+                    var config = {responsive: true};
+                    Plotly.react('watermonitoring', water_data, water_layout, config);
+
+                    //PLOTLY INITIALZATION END
+
+
+                    watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
                 }
-
-                var water_data = [water_white, water_green, water_yellow, water_red, water];
-                var config = {responsive: true}
-                Plotly.react('watermonitoring', water_data, water_layout, config);
-
-                //PLOTLY INITIALZATION END
-
-
-                // watermonitoringajax(water_l_value, water_m_value, water_h_value, water_t_height, water_values_url, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
-
             },
             error: function () {
                 console.log("Something Went Wrong!");
@@ -720,7 +690,6 @@ $(document).ready(function () {
     //------------------------------------------------------------------------------------------------------------------
 
     var watermonitoringajax = function (water_l_value, water_m_value, water_h_value, water_t_height, url, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-
         $.ajax({
             type: "get",
             url: url,
@@ -731,28 +700,30 @@ $(document).ready(function () {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
-                let value = water_t_height - data.result.sensor_value
-                time = new Date();
-                //console.log('Generate', water_l_value, water_m_value, water_h_value);
-                let update = {
-                    x: [[time], [time], [time], [time], [time]],
-                    y: [[water_l_value], [water_m_value], [water_h_value], [water_t_height], [value]],
-                };
-                let olderTime = time.setMinutes(time.getMinutes() - 1);
-                let futureTime = time.setMinutes(time.getMinutes() + 1);
-                let minuteView = {
-                    xaxis: {
-                        type: 'date',
-                        range: [olderTime, futureTime],
-                        title: 'Time',
-                        nticks: 10,
-                        domain: [0, 1],
-                    }
-                };
-                Plotly.relayout('watermonitoring', minuteView);
-                Plotly.extendTraces('watermonitoring', update, [0, 1, 2, 3, 4]);
-                checkAndPlay(Number(value), water_l_value, water_m_value, water_h_value, "Water Level Warning", audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio);
-
+                if (data.hasOwnProperty('result')) {
+                    let water=data.result;
+                    let value = water_t_height - water.sensor_value;
+                    time = new Date();
+                    //console.log('Generate', water_l_value, water_m_value, water_h_value);
+                    let update = {
+                        x: [[time]],
+                        y: [[value]],
+                    };
+                    let olderTime = time.setMinutes(time.getMinutes() - 1);
+                    let futureTime = time.setMinutes(time.getMinutes() + 1);
+                    let minuteView = {
+                        xaxis: {
+                            type: 'date',
+                            range: [olderTime, futureTime],
+                            title: 'Time',
+                            nticks: 10,
+                            domain: [0, 1],
+                        }
+                    };
+                    Plotly.relayout('watermonitoring', minuteView);
+                    Plotly.extendTraces('watermonitoring', update, [0]);
+                    checkAndPlay(Number(value), water_l_value, water_m_value, water_h_value, "Water Level Warning", audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio);
+                }
             },
             error: function () {
                 console.log("Something Went Wrong!");
@@ -962,7 +933,7 @@ $(document).ready(function () {
 
                     showlegend: false
                 };
-                var config = {responsive: true}
+                var config = {responsive: true};
                 Plotly.newPlot('fireExp', data, layout, config, {modeBarButtonsToRemove: ['autoScale2d']});
 
             },

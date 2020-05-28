@@ -3,13 +3,13 @@ from turtledemo import clock
 # from pygame import mixer
 
 import requests
-import datetime
+from datetime import datetime
 
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.auth.decorators import login_required
 #####################
 
 # Create your views here.
@@ -50,7 +50,8 @@ def manage_water_sensor(request):
     for s in sensors:
         background_task = 0
         try:
-            task = Task.objects.get(task_name='water_level_monitoring.views.run_back_save', task_params="[[" + str(s.id) + "], {}]",
+            task = Task.objects.get(task_name='water_level_monitoring.views.run_back_save',
+                                    task_params="[[" + str(s.id) + "], {}]",
                                     locked_at__isnull=True)
             background_task = 1
         except:
@@ -94,14 +95,12 @@ def fetch_location_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
-        location_details = water_level_monitoring_model.objects.values_list().filter(mine_id=mine_id)
+        location_details = water_level_monitoring_model.objects.filter(mine_id=mine_id)
 
         data = {}
-        i = 0
         location_data = []
         for r in location_details:
-            location_data.append(str(r[0]) + ',' + str(r[2]))
-            i = i + 1
+            location_data.append({'id':r.id,'name':r.area_name})
         data['result'] = location_data
     else:
         data['result'] = "Not Ajax"
@@ -134,59 +133,113 @@ def fetch_sensor_details(request):  # fetch IP address and water level only (For
     data = {}
     if request.is_ajax():
         id = request.GET.get('id', None)
-        location_details = water_level_monitoring_model.objects.values_list().filter(id=id)
+        water_sensor = water_level_monitoring_model.objects.filter(id=id)
         data = {}
         i = 0
-        location_data = []
-        for r in location_details:
-            # print(r)
-            location_data.append(
-                str(r[13]) + '@#' + str(r[4]) + '@#' + str(r[5]) + '@#' + str(r[6]) + '@#' + str(r[3]) + '@#' + str(
-                    r[15]) + '@#' + str(r[7]) + '@#' + str(r[8]) + '@#' + str(r[9]) + '@#' + str(r[10]) + '@#' + str(
-                    r[11]) + '@#' + str(r[12]))
-            i = i + 1
-        data['result'] = location_data
+
+        for sensor in water_sensor:
+            data['result'] = {'ip': sensor.ip_address,
+                              'level1': sensor.alarm_water_level_1,
+                              'level2': sensor.alarm_water_level_2,
+                              'level3': sensor.alarm_water_level_3,
+                              'total_height': sensor.distance_bet_roof_and_water,
+                              'level1_msg': sensor.level_1_msg,
+                              'level2_msg': sensor.level_2_msg,
+                              'level3_msg': sensor.level_3_msg,
+                              'level1_audio': str(sensor.level_1_audio),
+                              'level2_audio': str(sensor.level_2_audio),
+                              'level3_audio': str(sensor.level_3_audio),
+                              'audio_type': sensor.audio_play_type,
+                              'moter_start_level': sensor.moter_start_level,
+                              'moter_stop_level': sensor.moter_stop_level
+                              }
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
 
 # *****************************************************************************************************************************************************************************************************
+@login_required
 def fetch_water_level_ajax(request):
     data = {}
+    sensor_data = []
     if request.is_ajax():
-        sensor_data = []
-        id = request.GET.get('id', None)
-        sensor_details = water_level_monitoring_model.objects.get(id=id)
-        mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
 
-        ok_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        sensor_id = request.GET.get('id', None)
+        sensor_details = water_level_monitoring_model.objects.get(id=sensor_id)
+        mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
+        now = datetime.now()
+        ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
+
         try:
             response = requests.get('http://' + str(sensor_details.ip_address))
             sensor_val = strip_tags(response.text)
-            # sensor_val=0.3
-            if (sensor_val):
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.area_name) + ',' + str(float(sensor_val)))
+            if sensor_val:
+                sensor_data = {'id': str(sensor_details.id),
+                               # 'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               # 'location': str(sensor_details.location_id),
+                               # 'sensor_name': str(sensor_details.sensor_name),
+                               # 'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': str(sensor_val),
+                               # 'tag': str(sensor_details.tag_no),
+                               # 'audio_type': str(sensor_details.audio_play_type),
+                               # 'first_warning_msg': str(sensor_details.level_1_msg),
+                               # 'second_warning_msg': str(sensor_details.level_2_msg),
+                               # 'third_warning_msg': str(sensor_details.level_3_msg),
+                               # 'first_warning_audio': str(sensor_details.level_1_audio),
+                               # 'second_warning_audio': str(sensor_details.level_2_audio),
+                               # 'third_warning_audio': str(sensor_details.level_3_audio)}
+                               }
             else:
-                sensor_data.append(
-                    str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                        mine_details.name) + ',' + str(sensor_details.area_name) + ',' + 'No Data')
+                sensor_data = {'id': str(sensor_details.id),
+                               # 'ip': str(sensor_details.ip_address),
+                               'date': str(ok_date),
+                               'mine': str(mine_details.name),
+                               # 'location': str(sensor_details.location_id),
+                               # 'sensor_name': str(sensor_details.sensor_name),
+                               # 'unit': str(sensor_details.sensor_unit),
+                               'sensor_value': 'No data',
+                               # 'tag': str(sensor_details.tag_no),
+                               # 'audio_type': str(sensor_details.audio_play_type),
+                               # 'first_warning_msg': str(sensor_details.level_1_msg),
+                               # 'second_warning_msg': str(sensor_details.level_2_msg),
+                               # 'third_warning_msg': str(sensor_details.level_3_msg),
+                               # 'first_warning_audio': str(sensor_details.level_1_audio),
+                               # 'second_warning_audio': str(sensor_details.level_2_audio),
+                               # 'third_warning_audio': str(sensor_details.level_3_audio)}
+                               }
+
 
         except Exception as x:
-            sensor_data.append(
-                str(sensor_details.id) + ',' + str(sensor_details.ip_address) + ',' + ok_date + ',' + str(
-                    mine_details.name) + ',' + str(sensor_details.area_name) + ',' + 'Error')
+            sensor_data = {'id': str(sensor_details.id),
+                           # 'ip': str(sensor_details.ip_address),
+                           'date': str(ok_date),
+                           'mine': str(mine_details.name),
+                           # 'location': str(sensor_details.location_id),
+                           # 'sensor_name': str(sensor_details.sensor_name),
+                           # 'unit': str(sensor_details.sensor_unit),
+                           'sensor_value': 'Network Error',
+                           # 'tag': str(sensor_details.tag_no),
+                           # 'audio_type': str(sensor_details.audio_play_type),
+                           # 'first_warning_msg': str(sensor_details.level_1_msg),
+                           # 'second_warning_msg': str(sensor_details.level_2_msg),
+                           # 'third_warning_msg': str(sensor_details.level_3_msg),
+                           # 'first_warning_audio': str(sensor_details.level_1_audio),
+                           # 'second_warning_audio': str(sensor_details.level_2_audio),
+                           # 'third_warning_audio': str(sensor_details.level_3_audio)}
+                           }
+
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
 
-def start_save_water_data(request,sensor_id):
-
-    task = Task.objects.filter(task_name='water_level_monitoring.views.run_back_save', task_params="[[" + str(sensor_id) + "], {}]",
+def start_save_water_data(request, sensor_id):
+    task = Task.objects.filter(task_name='water_level_monitoring.views.run_back_save',
+                               task_params="[[" + str(sensor_id) + "], {}]",
                                locked_at__isnull=True)
     if task:
         task.delete()
@@ -200,9 +253,6 @@ def push_mail(mail_subject="", mail_html_content=""):
     email = EmailMessage(mail_subject, mail_html_content, "", ['shyamd148@gmail.com'])
     email.content_subtype = "html"
     # res = email.send()
-
-
-
 
 
 def live_data_water_sensor(request):
@@ -219,37 +269,21 @@ def fetch_water_data_bet_two_datetime(request):
     prepared_data = []
     data = {}
     if request.is_ajax():
-        # id=6&date_from=2019-08-06+12%3A00%3A00&date_to=2019-08-07+12%3A00%3A00 500 (Internal Server Error)
         location = request.GET.get('id', None)
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
-        # location = 6
-        # date_from = "2019-08-06 12:00:00"
-        # date_to = "2019-08-07 12:00:00"
 
-        a = date_from + '.000000'
-        b = date_to + '.000000'
-        from_d = datetime.datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
-        from_t = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
-        from_d = from_d.replace(microsecond=000000)
-        from_t = from_t.replace(microsecond=999999)
+        date_from = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S')
+        date_to = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S')
 
         water_level_data_details = water_level_monitoring_model.objects.get(id=location)
         mine_details = MineDetails.objects.get(id=water_level_data_details.mine_id_id)
-        # print("============================================================================================================")
-        # print(water_level_data_details)
-        # print("============================================================================================================")
-        # print(mine_details)
 
-        water_data_details = water_level_monitoring_data_acquisition_model.objects.values_list().filter(
-            sensor_id=location).filter(created_date__range=(from_d, from_t)).order_by('-id')
-        # print(water_data_details.query)
-        #
-        for r in water_data_details:
-            # print(r[3])
-            # c_date = datetime.datetime.strptime(str(r[3], '%Y-%m-%d %H:%M:%S'))
-            prepared_data.append(
-                str(r[3]) + ',' + mine_details.name + ',' + water_level_data_details.area_name + ',' + str(r[2]))
+        water_data_details = water_level_monitoring_data_acquisition_model.objects.filter(
+            sensor_id=location).filter(created_date__range=(date_from, date_to)).order_by('-id')
+
+        for water in water_data_details:
+            prepared_data.append({'date':water.created_date,'mine':mine_details.name,'area':water_level_data_details.area_name,'sensor_value':water.sensor_value})
 
         data['result'] = prepared_data
     else:
@@ -261,9 +295,11 @@ def graph_water_data_bet_two_datetime(request):
     form = add_water_sensor_form()
     return render(request, "graph_water_data_bet_two_datetime.html", {"form": form})
 
+
 def warning_water_data_bet_two_datetime(request):
     form = add_water_sensor_form()
     return render(request, "warning_water_data_bet_two_datetime.html", {"form": form})
+
 
 def warning_fetch_water_data_bet_two_datetime(request):
     prepared_data = []
@@ -273,53 +309,51 @@ def warning_fetch_water_data_bet_two_datetime(request):
         date_from = request.GET.get('date_from', None)
         date_to = request.GET.get('date_to', None)
         warning_value = request.GET.get('warning_value', None)
-        
+
         a = date_from + '.000000'
         b = date_to + '.000000'
-        from_d = datetime.datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
-        from_t = datetime.datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
+        from_d = datetime.strptime(a, '%Y-%m-%d %H:%M:%S.%f')
+        from_t = datetime.strptime(b, '%Y-%m-%d %H:%M:%S.%f')
         from_d = from_d.replace(microsecond=000000)
         from_t = from_t.replace(microsecond=999999)
 
         water_level_data_details = water_level_monitoring_model.objects.get(id=location)
         mine_details = MineDetails.objects.get(id=water_level_data_details.mine_id_id)
-        # print("============================================================================================================")
-        # print(water_level_data_details)
-        # print("============================================================================================================")
-        # print(mine_details)
 
-        if(int(warning_value) == 3):
-            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_1)
+        if (int(warning_value) == 3):
+            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(
+                water_level_data_details.alarm_water_level_1)
             range_to = int(water_level_data_details.distance_bet_roof_and_water)
-        elif(int(warning_value) == 2):
-            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_2)
-            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_1)
+        elif (int(warning_value) == 2):
+            range_from = int(water_level_data_details.distance_bet_roof_and_water) - int(
+                water_level_data_details.alarm_water_level_2)
+            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(
+                water_level_data_details.alarm_water_level_1)
         else:
-            range_from = 0 
-            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(water_level_data_details.alarm_water_level_3)
-        
+            range_from = 0
+            range_to = int(water_level_data_details.distance_bet_roof_and_water) - int(
+                water_level_data_details.alarm_water_level_3)
 
-        water_data_details = water_level_monitoring_data_acquisition_model.objects.values_list().filter(
-            sensor_id=location).filter(sensor_value__range=(range_from, range_to)).filter(created_date__range=(from_d, from_t)).order_by('-id')
-        # print(water_data_details.query)
-        #
-        for r in water_data_details:
-            # print(r[3])
-            # c_date = datetime.datetime.strptime(str(r[3], '%Y-%m-%d %H:%M:%S'))
-            prepared_data.append(
-                str(r[3]) + ',' + mine_details.name + ',' + water_level_data_details.area_name + ',' + str(r[2]))
+        print('range from',range_from,'to',range_to)
+        water_data_details = water_level_monitoring_data_acquisition_model.objects.filter(
+            sensor_id=location).filter(sensor_value__range=(range_from, range_to)).filter(
+            created_date__range=(from_d, from_t)).order_by('-id')
+
+        for water in water_data_details:
+            prepared_data.append({'date': water.created_date, 'mine': mine_details.name ,'area':water_level_data_details.area_name ,'sensor_value':water.sensor_value})
 
         data['result'] = prepared_data
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
+
 def warning_report(request):
     HttpResponse("development")
 #======================== Background task only==================================
+
 @background(schedule=5)
 def run_back_save(id):
-
     new_inst = water_level_monitoring_data_acquisition_model()
     new_inst.sensor_id = id
     new_inst.sensor_value = '0.00'

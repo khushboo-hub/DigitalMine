@@ -997,7 +997,7 @@ def fetch_sensor_values(request):
 
 
 @login_required
-def live_data_graph(request, template_name='live_data/live_data_graph_.html'):
+def live_data_graph(request, template_name='live_data/live_data_graph.html'):
     form = NodeForm(request.POST)
 
     return render(request, template_name, {'form': form})
