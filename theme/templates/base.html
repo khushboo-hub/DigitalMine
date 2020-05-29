@@ -43,7 +43,8 @@
             margin-bottom: 0px;
 
         }
-        .navbar-right{
+
+        .navbar-right {
             float: left !important;
         }
 
@@ -78,8 +79,13 @@
 
         {#.navbar-nav > li > .dropdown-menu {#}
         {#    left: auto;#}
-        {#}#}
-        .navbar-nav > li > a > p{
+        {
+        #}#}
+        .navbar-nav > li > a > p {
+            font-size: 10px !important;
+        }
+
+        .navbar .navbar-nav p {
             font-size: 11px !important;
         }
 
@@ -166,67 +172,79 @@
         }
 
         .dropdown-large {
-  position: static !important;
-}
-.dropdown-menu-large {
-  margin-left: 16px !important;
-  margin-right: 16px !important;
-  padding: 20px 0px !important;
-}
-.dropdown-menu-large > li > ul {
-  padding: 0;
-  margin: 0;
-}
-.dropdown-menu-large > li > ul > li {
-  list-style: none;
-}
-.dropdown-menu-large > li > ul > li > a {
-  display: block;
-  padding: 3px 20px;
-  clear: both;
-  font-weight: normal;
-  line-height: 1.428571429;
-  color: #333333;
-  white-space: normal;
-}
-.dropdown-menu-large > li ul > li > a:hover,
-.dropdown-menu-large > li ul > li > a:focus {
-  text-decoration: none;
-  color: #262626;
-  background-color: #f5f5f5;
-}
-.dropdown-menu-large .disabled > a,
-.dropdown-menu-large .disabled > a:hover,
-.dropdown-menu-large .disabled > a:focus {
-  color: #999999;
-}
-.dropdown-menu-large .disabled > a:hover,
-.dropdown-menu-large .disabled > a:focus {
-  text-decoration: none;
-  background-color: transparent;
-  background-image: none;
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-  cursor: not-allowed;
-}
-.dropdown-menu-large .dropdown-header {
-  color: #428bca;
-  font-size: 18px;
-}
-@media (max-width: 768px) {
-  .dropdown-menu-large {
-    margin-left: 0 ;
-    margin-right: 0 ;
-  }
-  .dropdown-menu-large > li {
-    margin-bottom: 30px;
-  }
-  .dropdown-menu-large > li:last-child {
-    margin-bottom: 0;
-  }
-  .dropdown-menu-large .dropdown-header {
-    padding: 3px 15px !important;
-  }
-}
+            position: static !important;
+        }
+
+        .dropdown-menu-large {
+            margin-left: 16px !important;
+            margin-right: 16px !important;
+            padding: 20px 0px !important;
+        }
+
+        .dropdown-menu-large > li > ul {
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown-menu-large > li > ul > li {
+            list-style: none;
+        }
+
+        .dropdown-menu-large > li > ul > li > a {
+            display: block;
+            padding: 3px 20px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.428571429;
+            color: #333333;
+            white-space: normal;
+        }
+
+        .dropdown-menu-large > li ul > li > a:hover,
+        .dropdown-menu-large > li ul > li > a:focus {
+            text-decoration: none;
+            color: #262626;
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-menu-large .disabled > a,
+        .dropdown-menu-large .disabled > a:hover,
+        .dropdown-menu-large .disabled > a:focus {
+            color: #999999;
+        }
+
+        .dropdown-menu-large .disabled > a:hover,
+        .dropdown-menu-large .disabled > a:focus {
+            text-decoration: none;
+            background-color: transparent;
+            background-image: none;
+            filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+            cursor: not-allowed;
+        }
+
+        .dropdown-menu-large .dropdown-header {
+            color: #428bca;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .dropdown-menu-large {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .dropdown-menu-large > li {
+                margin-bottom: 30px;
+            }
+
+            .dropdown-menu-large > li:last-child {
+                margin-bottom: 0;
+            }
+
+            .dropdown-menu-large .dropdown-header {
+                padding: 3px 15px !important;
+            }
+        }
     </style>
     <script>
         window.onload = function () {
@@ -310,7 +328,7 @@
             height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
-<div id="navbar-full">
+<div id="navbar-full" style="height: 8%;">
     <div id="navbar">
         <!--
          navbar-default can be changed with navbar-ct-blue navbar-ct-azzure navbar-ct-red navbar-ct-green navbar-ct-orange navbar-fixed-top
@@ -330,7 +348,7 @@
                         <div class="logo">
                             <img src="{% static '/image/csir_logo.svg' %}" width="60px">
                         </div>
-                        <div class="brand" style="width:200px;">Digital Mine Using Internet of Things(IoT)</div>
+                        <div class="brand" style="width:180px;">Digital Mine Using Internet of Things(IoT)</div>
                     </a>
                 </div>
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -375,6 +393,111 @@
                                     Record</a></li>
                                 <li><a href="{% url 'Training_Rescue_Accident:Accident_Manage' %}">Manage Accident
                                     Record</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown  dropdown-large">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="pe-7s-news-paper"></i>
+                                <p>
+                                    Monitoring
+                                    <span class="caret"></span>
+                                </p>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
+                                <li class="col-sm-4">
+                                    <ul class="">
+
+                                        <li class="dropdown-header" style="color:white;"><strong> <i
+                                                class="pe-7s-display1"></i>Environment
+                                            Monitoring</strong>
+                                        </li>
+
+                                        <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
+                                        <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a>
+                                        </li>
+
+                                        <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
+                                        <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
+                                        <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
+
+                                        <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf
+                                            Area<sub></sub></a>
+                                        </li>
+                                        <li><a href="{% url 'gasmonitoring_wifi:manage_goaf_area' %}">Manage Goaf
+                                            Area<sub></sub></a></li>
+                                        <li><a href="{% url 'FireExp:manual_entry' %}">Fire Status and
+                                            Explosibility(Manual)</a>
+                                        </li>
+                                        <li><a href="{% url 'FireExp:automatic_entry' %}">Fire Status and
+                                            Explosibility(Automatic)</a></li>
+                                        <li><a href="{% url 'gasmonitoring_wifi:show_area' %}">Fire Status and
+                                            Explosibility(Wi-Fi)<sub></sub></a></li>
+                                        <!--<li><a href="{% url 'FireExp:line_chart_gas_ratios' %}">Fire Status and Explosibility(Gas Ratio Chart)</a></li>-->
+                                        <!--<li><a href="#"></a></li>-->
+                                        <li><a href="{% url 'temp_monitoring:index' %}">Mine Air Analysis <span
+                                                class="label label-default">Manual Mode</span></a></li>
+                                        <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
+                                                class="label label-default">Manual Mode</span></a></li>
+                                    </ul>
+                                </li>
+
+
+                                <li class="col-sm-4">
+                                    <ul>
+                                        <li class="dropdown-header" style="color:white;"><strong><i
+                                                class="pe-7s-display1"></i>Strata
+                                            Monitoring</strong>
+                                        </li>
+                                        <li><a href="{% url 'Strata:convergence_add_location' %}">Add Location</a></li>
+                                        <li><a href="{% url 'Strata:convergence_manage_location' %}">Manage Location</a>
+                                        </li>
+
+                                        <li><a href="{% url 'Strata:add_sensor_in_location' %}">Add Sensor</a></li>
+                                        <li><a href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
+                                        </li>
+                                        <li><a href="{% url 'Strata:live_data_tabular' %}">Live Data in Tabular</a></li>
+                                        <li><a href="{% url 'Strata:show_sensor_graph' %}">Live Data in Graph</a></li>
+                                        <li><a href="{% url 'Strata:date_range_tabular' %}">Data b/n Dates</a></li>
+                                        <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
+                                        <li><a href="{% url 'Strata:strata_average_report' %}">Strata Average Report</a>
+                                        </li>
+                                        <li><a href="{% url 'Strata:warning_report' %}">Strata Warning Report</a></li>
+                                    </ul>
+                                </li>
+                                <li class="col-sm-4">
+                                    <ul>
+                                        <li class="dropdown-header" style="color:white;"><strong><i
+                                                class="pe-7s-display1"></i>Slope/Landslide
+                                            Monitoring</strong>
+                                        </li>
+                                        <li><a href="{% url 'Slope:convergence_add_location' %}">Add Slope
+                                            Zone/Location</a>
+                                        </li>
+                                        <li><a href="{% url 'Slope:convergence_manage_location' %}">Manage Slope
+                                            Location</a>
+                                        </li>
+
+                                        <li><a href="{% url 'Slope:add_sensor_in_location' %}">Add Slope Sensor</a></li>
+                                        <li><a href="{% url 'Slope:manage_sensor_in_location' %}">Manage Slope
+                                            Sensor</a></li>
+                                        <li><a href="{% url 'Slope:live_data_tabular' %}">Live Slope Data in
+                                            Tabular(using
+                                            IP)</a></li>
+                                        <li><a href="{% url 'Slope:show_sensor_graph' %}">Live Slope Data in Graph(using
+                                            IP)</a>
+                                        </li>
+                                        <li><a href="{% url 'Slope:date_range_tabular' %}">Slope Data b/n Dates</a></li>
+                                        <li><a href="{% url 'Slope:show_graph_date_range' %}">Slope Graph b/n Dates</a>
+                                        </li>
+                                        <li><a href="{% url 'Slope:daily_report' %}">Slope Daily Average Report</a></li>
+                                        <li><a href="{% url 'Slope:warning_report' %}">Slope Warning Report</a></li>
+                                        <li><a href="{% url 'Slope:show_json' %}">Show JSON/MQTT data(Test)</a></li>
+                                        <li><a href="{% url 'Slope:slope_live_table' %}">Show Realtime slope
+                                            data(Tabular)-Static</a></li>
+                                        <li><a href="{% url 'Slope:slope_live_table_dynamic' %}">Show Realtime slope
+                                            data(Tabular)-Dynamic</a></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -513,7 +636,8 @@
                                     Information
                                     between two
                                     datetime</a></li>
-                                <li><a href="{% url 'water_level_monitoring:warning_report' %}">Water Monitoring Warning Report</a></li>
+                                <li><a href="{% url 'water_level_monitoring:warning_report' %}">Water Monitoring Warning
+                                    Report</a></li>
                             </ul>
                         </li>
                         <li class="dropdown  dropdown-large">
@@ -602,6 +726,7 @@
                                     </ul>
                                 </li>
                             </ul>
+                        </li>
 
                         <li class="dropdown ">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -774,46 +899,43 @@
                                 <li><a href="{% url 'setting:manage_constant' %}">Manage Settings</a></li>
                             </ul>
                         </li>
-                        <ul class="nav navbar-nav">
-                            {% if user.is_authenticated %}
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                        <i class="pe-7s-user"> <span class="label incomplete_profile_check hidden">Update Profile</span></i>
+                        {% if user.is_authenticated %}
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="pe-7s-user"> <span class="label incomplete_profile_check hidden">Update Profile</span></i>
 
-                                        <p>Welcome! {{ user.username }}<b class="caret"></b></p>
-                                    </a>
+                                    <p>Welcome! {{ user.username }}<b class="caret"></b></p>
+                                </a>
 
-                                    <ul class="dropdown-menu navbar-color" role="menu">
-                                        <li class="divider"></li>
-                                        <li class="text-center">
-                                            <img src="" id="profile_avatar"
-                                                                     onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
-                                                                     width="100px" height="100px"
-                                                                     class="avatar img-circle"></li>
-                                        <li class="text-center profile-usertitle-job" style="color:white;"
-                                            id="mine_name">Hello World
-                                        </li>
-                                        <li class="divider"></li>
-                                        <li><a href="{% url 'dashboard:dashboard_calling' %}"><span
-                                                class="glyphicon glyphicon-dashboard"></span>
-                                            Dashboard</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="/accounts/profile/overview/"><span
-                                                class="glyphicon glyphicon-th"></span>
-                                            Profile</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="/accounts/password_change/"><span
-                                                class="glyphicon glyphicon-refresh"></span>
-                                            Change Password </a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
-                                                class="glyphicon glyphicon-off"></span>
-                                            Logout </a></li>
-                                    </ul>
-                                </li>
-                            {% endif %}
-                        </ul>
-
+                                <ul class="dropdown-menu navbar-color dropdown-menu-right" role="menu">
+                                    <li class="divider"></li>
+                                    <li class="text-center">
+                                        <img src="" id="profile_avatar"
+                                             onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
+                                             width="100px" height="100px"
+                                             class="avatar img-circle"></li>
+                                    <li class="text-center profile-usertitle-job" style="color:white;"
+                                        id="mine_name">Hello World
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li><a href="{% url 'dashboard:dashboard_calling' %}"><span
+                                            class="glyphicon glyphicon-dashboard"></span>
+                                        Dashboard</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/accounts/profile/overview/"><span
+                                            class="glyphicon glyphicon-th"></span>
+                                        Profile</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/accounts/password_change/"><span
+                                            class="glyphicon glyphicon-refresh"></span>
+                                        Change Password </a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
+                                            class="glyphicon glyphicon-off"></span>
+                                        Logout </a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
                     </ul>
 
 
@@ -821,7 +943,7 @@
             </div><!-- /.container-fluid -->
         </nav>
 
-{#        <div class="blurred-container"></div>#}
+        {#        <div class="blurred-container"></div>#}
 
 
     </div> <!-- end menu-dropdown -->
