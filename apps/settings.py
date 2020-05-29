@@ -240,9 +240,9 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 def show_toolbar(request):
-    return False
+    return True
 
 DEBUG_TOOLBAR_CONFIG={
-    'INTERCEPT_REDIRECTS':False,
+    'INTERCEPT_REDIRECTS':True,
     'SHOW_TOOLBAR_CALLBACK':show_toolbar
 }
