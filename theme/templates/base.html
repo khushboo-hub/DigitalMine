@@ -449,7 +449,7 @@
                                 <li><a href="{% url 'Strata:date_range_tabular' %}">Data b/n Dates</a></li>
                                 <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
                                 <li><a href="{% url 'Strata:strata_average_report' %}">Strata Average Report</a></li>
-                                <li><a href="{% url 'Strata:warning_report' %}">Warning Report</a></li>
+                                <li><a href="{% url 'Strata:warning_report' %}">Strata Warning Report</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -513,6 +513,7 @@
                                     Information
                                     between two
                                     datetime</a></li>
+                                <li><a href="{% url 'water_level_monitoring:warning_report' %}">Water Monitoring Warning Report</a></li>
                             </ul>
                         </li>
                         <li class="dropdown  dropdown-large">
@@ -784,7 +785,8 @@
 
                                     <ul class="dropdown-menu navbar-color" role="menu">
                                         <li class="divider"></li>
-                                        <li class="text-center"><img src="" id="profile_avatar"
+                                        <li class="text-center">
+                                            <img src="" id="profile_avatar"
                                                                      onerror="this.onerror=null;this.src='/media/employee_image/male_alt_photo.svg';"
                                                                      width="100px" height="100px"
                                                                      class="avatar img-circle"></li>

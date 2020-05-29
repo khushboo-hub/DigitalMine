@@ -347,7 +347,11 @@ def warning_fetch_water_data_bet_two_datetime(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-# ======================== Background task only==================================
+
+def warning_report(request):
+    HttpResponse("development")
+#======================== Background task only==================================
+
 @background(schedule=5)
 def run_back_save(id):
     new_inst = water_level_monitoring_data_acquisition_model()

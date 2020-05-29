@@ -23,5 +23,7 @@ urlpatterns = [
 
     path('warning_water_data_bet_two_datetime', views.warning_water_data_bet_two_datetime, name='warning_water_data_bet_two_datetime'),
     path('warning_fetch_water_data_bet_two_datetime', views.warning_fetch_water_data_bet_two_datetime, name='warning_fetch_water_data_bet_two_datetime'),
+    path('warning_fetch_water_data_bet_two_datetime', views.warning_fetch_water_data_bet_two_datetime, name='warning_fetch_water_data_bet_two_datetime'),
+    path('warning_report', views.warning_report, name='warning_report'),
     
 ]

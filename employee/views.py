@@ -35,9 +35,7 @@ from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 from employee.models import Employee
-import re
 from django.db import IntegrityError
-from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
