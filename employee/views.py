@@ -387,12 +387,11 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
 
     if request.method == "POST":
         if request.user.is_superuser:
-            print('It is Super User',request.POST.get('parent'))
-            form = MiningRoleForm(request.POST.get('mine'), request.POST or None)
-        print("=====================================================")
-        print('Mine',request.POST.get('mine'))
+
+            form = MiningRoleForm(request.POST.get('mine'),None, request.POST or None)
+            print('form error',form.errors)
         if form.is_valid():
-            print("========================Next=============================")
+            print('form is valid')
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
