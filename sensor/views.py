@@ -141,7 +141,7 @@ def node_add(request, template_name='node/node_add.html'):
 @csrf_protect
 @login_required
 def node_edit(request, pk, template_name='node/node_add.html'):
-    pk=decrypt(pk)
+    pk = decrypt(pk)
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
@@ -219,9 +219,11 @@ def node_delete(request):
 
 def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
     # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
-    mine_id=decrypt(mine_id)
-    node_id=decrypt(node_id)
-    sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id)
+    mine_id = decrypt(mine_id)
+    node_id = decrypt(node_id)
+    sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id).only('sensor_id', 'sensor_name',
+                                                                                      'ip_add', 'sensor_unit',
+                                                                                      'sensor_threshold_limit')
     data = {}
     prepared_data = []
     background_task = 0
@@ -286,7 +288,7 @@ def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.
 
 
 def delete_sensor(request, pk):
-    pk=decrypt(pk)
+    pk = decrypt(pk)
     book = get_object_or_404(Sensor_Node, pk=pk)
     book.delete()
     return redirect(request.META.get('HTTP_REFERER'))
@@ -294,8 +296,8 @@ def delete_sensor(request, pk):
 
 def edit_sensor(request, pk, node_id,
                 template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
-    pk=decrypt(pk)
-    node_id=decrypt(node_id)
+    pk = decrypt(pk)
+    node_id = decrypt(node_id)
     mine_table = Node.objects.get(id=node_id)
     node_name = mine_table.name
     mine_id = mine_table.mine_id_id
@@ -783,6 +785,7 @@ def fetch_mine_ajax(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
 
 #
 # def fetch_sensor_values_ajax_p(request):
@@ -1495,7 +1498,9 @@ def fetch_sensor_values_ajax_sensor_body(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
+
 import hashlib
+
 
 @login_required
 def fetch_map_image(request):
@@ -1525,7 +1530,7 @@ def fetch_map_image(request):
                 node_data['icon'] = '/static/image/node_red.svg'
             node_data['photo2'] = str(n.photo2)
             hash_object = hashlib.sha512(str(n.id).encode())
-            hash=hash_object.hexdigest()
+            hash = hash_object.hexdigest()
             node_modal_data = {'title': str(n.name) + "||" + str(n.location),
                                'content': '<div id="Content' + hash + '"></div>'}
             node_data['modal'] = node_modal_data
@@ -1606,15 +1611,15 @@ from django.db.models import Value
 @login_required
 def ellicots(request, pk, template_name='sensor/test.html'):
     data = {}
-    pk=decrypt(pk)
+    pk = decrypt(pk)
     data['node_id'] = pk
     return render(request, template_name, data)
 
 
 @login_required
 def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
-    mine_id=decrypt(mine_id)
-    node_id=decrypt(node_id)
+    mine_id = decrypt(mine_id)
+    node_id = decrypt(node_id)
     data = {}
 
     data['mine_id'] = mine_id
@@ -1640,7 +1645,7 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
     data = {}
     if request.is_ajax():
         node_id = request.GET.get('id', None)
-        node_id=decrypt(node_id)
+        node_id = decrypt(node_id)
         date_from = request.GET.get('date_from', None)
         date_from += " 00:00:00"
         date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
@@ -1905,9 +1910,11 @@ def get_item(dictionary, key):
 def encrypt(key):
     return encrypt(key)
 
+
 @register.filter(name='decrypt')
 def decrypt(key):
     return decrypt(key)
+
 
 def isNum(data):
     try:
@@ -1919,7 +1926,6 @@ def isNum(data):
 
 from cryptography.fernet import Fernet
 import base64
-
 
 
 def encrypt(txt):
@@ -1940,39 +1946,40 @@ def encrypt(txt):
 
 
 def decrypt(txt):
-    print('decrypting',txt)
     try:
         # base64 decode
         txt = base64.urlsafe_b64decode(txt)
         cipher_suite = Fernet(settings.ENCRYPT_KEY)
         decoded_text = cipher_suite.decrypt(txt).decode("ascii")
-        print('decoded text',decoded_text)
         return decoded_text
     except Exception as e:
         # log the error
         print(e)
         return None
 
+
 from django.core.signing import Signer
 
+
 @register.filter(name="signed")
-def signed(txt,id):
-    id=id%26
-    temp_text=""
+def signed(txt, id):
+    id = id % 26
+    temp_text = ""
     for t in txt:
         ch = bytes(t, 'utf-8')
         s = bytes([ch[0] + int(id)])
-        s=str(s)
-        temp_text+=s[2]
+        s = str(s)
+        temp_text += s[2]
     return temp_text
 
+
 @register.filter(name="unsigned")
-def unsigned(txt,id):
-    id=id%26
-    temp_text=""
+def unsigned(txt, id):
+    id = id % 26
+    temp_text = ""
     for t in txt:
         ch = bytes(t, 'utf-8')
         s = bytes([ch[0] - int(id)])
-        s=str(s)
-        temp_text+=s[2]
+        s = str(s)
+        temp_text += s[2]
     return temp_text

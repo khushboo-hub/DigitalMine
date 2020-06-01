@@ -401,6 +401,7 @@ body{
 }
 .dropdown-menu-large > li > ul > li {
   list-style: none;
+
 }
 .dropdown-menu-large > li > ul > li > a {
   display: block;
@@ -431,8 +432,9 @@ body{
   cursor: not-allowed;
 }
 .dropdown-menu-large .dropdown-header {
-  color: #428bca;
-  font-size: 18px;
+    color: #428bca;
+    font-size: 16px;
+    font-style: oblique;
 }
 @media (max-width: 768px) {
   .dropdown-menu-large {
@@ -685,6 +687,7 @@ if it's not present, don't show loader */
     .dropdown-menu.navbar-color>li>ul>li>a{
         color:#ffffff;
         background-color:#36acdb;
+        font-size: 13px;
     }
     .dropdown-menu.navbar-color{
         background-color:#38aedd;
