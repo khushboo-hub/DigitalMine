@@ -8,13 +8,12 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.forms import ModelForm
+
 
 from apps import settings
-from gasmonitoring_wifi.models import Fire_exp_gasesWifi
 from .models import Node, Sensor_Node, gasModel_auto
 from .models import MineDetails
-from .forms import NodeForm, Sensor_NodeForm, gasModel_autoForm
+from .forms import NodeForm, Sensor_NodeForm
 import requests
 from background_task import background
 from datetime import datetime

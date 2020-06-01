@@ -1,6 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 from employee.models import MineDetails
 from django.utils import timezone
 from datetime import datetime
@@ -41,6 +40,7 @@ class Node(models.Model):
     def get_absolute_url(self):
         return reverse('node:node_edit', kwargs={'pk': self.pk})
 
+#=======================================================Dated 2020_06_01 : shyam
 # class Sensor(models.Model):
 #     id = models.AutoField(primary_key=True)
 #     arduino_id = models.IntegerField(null=True, blank=True)
@@ -113,6 +113,7 @@ class Sensor_Node(models.Model):
         unique_together = ('mine_id','node_id','sensor_id')
 
 
+#=========================================================== Dated : 2020_06_01 : shyam
 # class Wireless(models.Model):
 #     node_id = models.IntegerField(null=True, blank=True)
 #     id = models.AutoField(primary_key=True)

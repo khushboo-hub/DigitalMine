@@ -15,12 +15,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
 
-    path('employee/',include('employee.urls',namespace='employee')),    ### Currently Not used : Created by:Dewangshu Earlier for testing
-    path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')), ### Tracking Module(Created:Dewangshu, Dated: June-July-2018)
-    path('FireExp/',include('FireExp.urls',namespace='FireExp')), ### Gas Monitoring/Sub-Module(Monitoring of Goaf Area,Created:Dewangshu, DATED: Aug-2018)
-    path('Controlling/',include('Controlling.urls',namespace='Controlling')),## Testing purpose for Controlling mines like Light,Fan etc(Created:Dewangshu,Dated:sep-18)
-    path('DGMS_Forms/',include('DGMS_Forms.urls',namespace='DGMS_Forms')),## Different forms/report of subimmion to DGMS(Created:Dewangshu,Dated:13-10-18)
-    path('Strata/',include('Strata.urls',namespace='Strata')),## For Starta Monitoring(Convergence,load etc)(Created:Dewangshu,Dated:26-10-18)
+    path('employee/',include('employee.urls',namespace='employee')),
+    path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')),
+    path('FireExp/',include('FireExp.urls',namespace='FireExp')),
+    path('Controlling/',include('Controlling.urls',namespace='Controlling')),
+    path('DGMS_Forms/',include('DGMS_Forms.urls',namespace='DGMS_Forms')),
+    path('Strata/',include('Strata.urls',namespace='Strata')),
     path('theme/',include('theme.urls',namespace='theme')),
 
 
