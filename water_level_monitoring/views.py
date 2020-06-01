@@ -4,8 +4,6 @@ from turtledemo import clock
 
 import requests
 from datetime import datetime
-
-from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404

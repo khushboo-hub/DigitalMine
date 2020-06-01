@@ -23,9 +23,12 @@ def dashboard_calling(request):
         mine = get_object_or_404(MineDetails, pk=mine_name)
     else:
         print('calling else')
-        mine = MineDetails.objects.all()[:1].get()
+        try:
+            mine = MineDetails.objects.all()[:1].get()
+        except:
+            return HttpResponse('Add Mine')
 
-    print(mine)
+
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     try:

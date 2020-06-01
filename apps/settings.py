@@ -118,7 +118,7 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'digi_mine',
+        'NAME': 'digi_mine_demo',
         'USER': 'root',
         'PASSWORD': 'root',
         'HOST': '127.0.0.1',
