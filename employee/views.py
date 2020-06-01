@@ -384,8 +384,10 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     mine_name = MineDetails.objects.get(id=profile.mine_id.id)
     if request.method == "POST":
         if request.user.is_superuser:
-            form = MiningRoleForm(request.POST.get('mine'), request.POST or None, instance=book)
+            form = MiningRoleForm(request.POST.get('mine'),None, request.POST or None)
+            print('form error',form.errors)
         if form.is_valid():
+            print('form is valid')
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id

@@ -16,23 +16,23 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="content">
+                            <table class="table table-bordered" id="MiningRole">
                                 <thead>
                                 <tr>
                                     <th>SL No</th>
-                                    <!--                            <th>ID</th>-->
                                     <th>Name</th>
                                     <th>Parent Role</th>
                                     <th>Type</th>
                                     <th>Mine</th>
-                                    <th class="text-center" colspan="3">Action</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
                                 </tr>
                                 </thead>
                                 <tbody>
+
                                 {% for book in object_list %}
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
-                                        <!--                            <td>{{ book.id }}</td>-->
                                         <td>{{ book.name }}</td>
                                         <td>{{ book.parent_role }}</td>
                                         <td>{{ book.type }}</td>
@@ -67,7 +67,49 @@
                 $("#sureDelete").attr("href", $(this).data('url'));
                 $('#update_info').modal('show');
 
+
             });
+            $('#MiningRole').DataTable({
+                dom: 'Bflrtip',
+                buttons: [
+
+
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 4]
+                        }
+                    },
+
+
+                ]
+
+            });
+
         });
 
     </script>
