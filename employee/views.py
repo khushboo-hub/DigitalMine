@@ -377,20 +377,28 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     admin_or_not = 0
     if request.user.is_superuser:
         admin_or_not = 1
+        form = MiningRoleForm(None,request.POST or None)  # Passed Mine id as an argument
+        mine_name = "Super User"
     else:
         admin_or_not = 0
+        form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
+        mine_name = MineDetails.objects.get(id=profile.mine_id.id)
 
-    form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
-    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
     if request.method == "POST":
         if request.user.is_superuser:
-            form = MiningRoleForm(request.POST.get('mine'), request.POST or None, instance=book)
+            print('It is Super User',request.POST.get('parent'))
+            form = MiningRoleForm(request.POST.get('mine'), request.POST or None)
+        print("=====================================================")
+        print('Mine',request.POST.get('mine'))
         if form.is_valid():
+            print("========================Next=============================")
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            return redirect('employee:manage_mining_role')
+            #return redirect('employee:manage_mining_role')
+        print(form.errors)
 
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
@@ -427,6 +435,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
                 fs.mine_id = profile.mine_id.id
             fs.save()
             return redirect('employee:manage_mining_role')
+        print(form.errors)
 
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'action': 'EDIT', 'admin': admin_or_not})
@@ -457,16 +466,18 @@ def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
     book = MiningRole.objects.all()
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
     admin_or_not = 0
     try:
         current_user = request.user
         profile = get_object_or_404(profile_extension, user_id=current_user.id)
         if request.user.is_superuser:
             book = MiningRole.objects.all().order_by('mine_id')
+            mine_name = "Super User"
             admin_or_not = 1
         else:
             book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            mine_name = MineDetails.objects.get(id=profile.mine_id.id)
             admin_or_not = 0
     except:
         pass
