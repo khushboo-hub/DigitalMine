@@ -12,9 +12,9 @@ from django.forms import ModelForm
 
 from apps import settings
 from gasmonitoring_wifi.models import Fire_exp_gasesWifi
-from .models import Node, Wireless, Sensor_Node, gasModel_auto
+from .models import Node, Sensor_Node, gasModel_auto
 from .models import MineDetails
-from .forms import NodeForm, WirelessForm, Sensor_NodeForm, gasModel_autoForm
+from .forms import NodeForm, Sensor_NodeForm, gasModel_autoForm
 import requests
 from background_task import background
 from datetime import datetime

@@ -20,7 +20,6 @@ from django.http import HttpResponse, JsonResponse
 
 
 def login(request):
-    print('request',request.GET.get('next'))
     next=request.GET.get('next')
     if next:
         redirect_url=next

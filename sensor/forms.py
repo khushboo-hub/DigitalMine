@@ -1,7 +1,7 @@
 from datetime import date
 
 from django import forms
-from .models import Node, Wireless, Sensor_Node
+from .models import Node, Sensor_Node
 
 
 class NodeForm(forms.ModelForm):
@@ -186,19 +186,19 @@ class Sensor_NodeForm(forms.ModelForm):
 #         model = Sensor
 #         fields = ['id','sensorid','sensorname','minrange','maxrange','sensorunit','thresholdlimit','greenlevel','yellowlevel','redlevel','photo']
 
-class WirelessForm(forms.ModelForm):
-    ipaddress = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'IP Address (Ex: 192.168.0.204)'
-    }))
-    name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
-        'class': 'form-control',
-        'placeholder': 'Name (Ex: WN001)'
-    }))
-
-    class Meta:
-        model = Wireless
-        fields = ['id', 'ipaddress', 'name']
+# class WirelessForm(forms.ModelForm):
+#     ipaddress = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'IP Address (Ex: 192.168.0.204)'
+#     }))
+#     name = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
+#         'class': 'form-control',
+#         'placeholder': 'Name (Ex: WN001)'
+#     }))
+#
+#     class Meta:
+#         model = Wireless
+#         fields = ['id', 'ipaddress', 'name']
 
 
 class gasModel_autoForm(forms.Form):
