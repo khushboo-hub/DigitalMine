@@ -26,7 +26,7 @@ def dashboard_calling(request):
         try:
             mine = MineDetails.objects.all()[:1].get()
         except:
-            return HttpResponse('Add Mine')
+            return HttpResponse('No mine found. Please add mine')
 
 
     current_user = request.user
