@@ -22,6 +22,8 @@ class SignupForm(UserCreationForm):
         return email
 
 
+# from gdstorage.storage import GoogleDriveStorage
+# gd_storage = GoogleDriveStorage()
 
 class profile_extension(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

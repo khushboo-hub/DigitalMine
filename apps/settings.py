@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'gdstorage',
     'debug_toolbar',
 
     'theme',
@@ -71,6 +72,7 @@ INSTALLED_APPS = [
     'setting',
     'wm_test',
     'Slope',
+
 ]
 
 MIDDLEWARE = [
@@ -87,6 +89,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'apps.urls'
+
 
 #ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
 #DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
@@ -146,31 +149,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-TAGS_INPUT_MAPPINGS = {
-    'some_app.SomeKeyword': {
-        'field': 'some_field',
-    },
-    'some_app.SomeOtherKeyword': {
-        'fields': ('some_field', 'some_other_field'),
-    },
-    'some_app.SomeSortedKeyword': {
-        'field': 'some_field',
-        'ordering': [
-            'some_field',
-            'some_other_field',
-        ],
-        'filters': {
-            'some_field__istartswith': 'a',
-        },
-        'excludes': {
-            'some_field__iexact': 'foobar',
-        },
-    },
-    'some_app.SomeCreateableKeyword': {
-        'field': 'some_field',
-        'create_missing': True,
-    },
-}
+# TAGS_INPUT_MAPPINGS = {
+#     'some_app.SomeKeyword': {
+#         'field': 'some_field',
+#     },
+#     'some_app.SomeOtherKeyword': {
+#         'fields': ('some_field', 'some_other_field'),
+#     },
+#     'some_app.SomeSortedKeyword': {
+#         'field': 'some_field',
+#         'ordering': [
+#             'some_field',
+#             'some_other_field',
+#         ],
+#         'filters': {
+#             'some_field__istartswith': 'a',
+#         },
+#         'excludes': {
+#             'some_field__iexact': 'foobar',
+#         },
+#     },
+#     'some_app.SomeCreateableKeyword': {
+#         'field': 'some_field',
+#         'create_missing': True,
+#     },
+# }
 # ADMIN_VIEW_PERMISSION_MODELS = [
 #     'auth.User',
 # ]
@@ -244,3 +247,4 @@ DEBUG_TOOLBAR_CONFIG={
     'INTERCEPT_REDIRECTS':True,
     'SHOW_TOOLBAR_CALLBACK':show_toolbar
 }
+# GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE ='my-project-1549610242332-d51f9c84fd50.json'

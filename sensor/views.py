@@ -126,9 +126,11 @@ from background_task.models import Task
 @login_required
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
-    print('profile', current_user.id)
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    form = NodeForm(initial={'mine_id': profile.mine_id.id})
+    if request.user.is_superuser:
+        form = NodeForm()
+    else:
+        form = NodeForm(initial={'mine_id': profile.mine_id_id},readonly={'mine_id':'disabled'})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
 
