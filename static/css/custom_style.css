@@ -360,6 +360,9 @@ height:auto;
       color: white !important;
        background-color: #337ab7 !important;
    }
+   .header{
+       background-color: #00bcd4 !important;
+   }
 }
 @media print and (orientation: portrait) {
          #printSection{

@@ -18,7 +18,7 @@ import serial
 from time import sleep
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
-from .models import Gasdb,Fire_exp_gases
+from .models import Gasdb, Fire_exp_gases
 from .forms import FireForm
 from .forms import EraseForm
 from .forms import DisplayForm
@@ -28,6 +28,7 @@ from .forms import PredictForm
 from .forms import SerialInputForm
 from .forms import EditForm
 from .forms import DeviceForm
+
 
 # Create your views here.
 @login_required
@@ -53,7 +54,7 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
             h2 = form.cleaned_data['h2']
             n2 = form.cleaned_data['n2']
             c2h4 = form.cleaned_data['c2h4']
-            date=form.cleaned_data['date']
+            date = form.cleaned_data['date']
 
             gasinst = Gasdb()
             gasinst.o2 = o2
@@ -64,7 +65,7 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
             gasinst.n2 = n2
             gasinst.c2h4 = c2h4
             # gasinst.date = datetime.date.today()
-            gasinst.date=date
+            gasinst.date = date
             gasinst.save()
     elif request.method == 'POST' and 'showbutton' in request.POST:
         form = FireForm(request.POST)
@@ -214,10 +215,11 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
         form5 = SerialInputForm()
         form6 = EditForm()
     resultdict = {'form': form, 'form1': form1, 'form2': form2, 'form3': form3, 'form4': form4, 'form5': form5,
-                      'form6': form6, 'graham': graham, 'young': young, 'coco2': coco2, 'jtr': jtr, 'chra': chra,
-                      'grahamm': grahamm, 'youngm': youngm, 'coco2m': coco2m, 'jtrm': jtrm, 'chram': chram,
-                      'explosm': explosm, 'a1flag': a1flag, 'a2flag': a2flag}
-    return render(request, template_name,resultdict)
+                  'form6': form6, 'graham': graham, 'young': young, 'coco2': coco2, 'jtr': jtr, 'chra': chra,
+                  'grahamm': grahamm, 'youngm': youngm, 'coco2m': coco2m, 'jtrm': jtrm, 'chram': chram,
+                  'explosm': explosm, 'a1flag': a1flag, 'a2flag': a2flag}
+    return render(request, template_name, resultdict)
+
 
 @login_required
 def show_database(request, template_name='FireExp/show_database.html'):
@@ -226,12 +228,13 @@ def show_database(request, template_name='FireExp/show_database.html'):
     data['object_list'] = gases
     return render(request, template_name, data)
 
+
 @login_required
 def analysis_button(request, template_name='FireExp/info_page.html'):
     return render(request, template_name)
 
 
-def analysis(request,page):
+def analysis(request, page):
     class GraphData:
         o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
         explos = 5
@@ -239,12 +242,11 @@ def analysis(request,page):
 
     graphpoints = []
 
-    if(page==0):
+    if (page == 0):
         FireExp = Gasdb.objects.all()
-    elif(page==1):
+    elif (page == 1):
         FireExp = Fire_exp_gases.objects.all()
     instance_count = FireExp.count()
-
 
     idn = 1
     for gas in FireExp:
@@ -288,7 +290,6 @@ def analysis(request,page):
             x.idtest = gas.id
         except Gasdb.DoesNotExist:
             x.idtest = None
-
 
         ##explosibility calculation again
         x.explos = 5
@@ -388,7 +389,7 @@ def analysis(request,page):
         elif (x.explos == 1 or x.explos == 2):
             rm = rx
             thm = 270 + (90 * ((thx - ths) / (
-                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
         elif x.explos == 0:
             rm = rx
             thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
@@ -401,8 +402,6 @@ def analysis(request,page):
 
         graphpoints.append(x)
         idn = idn + 1
-
-
 
     ##graph
     xlist = []
@@ -453,7 +452,7 @@ def analysis(request,page):
     while (idn < len(graphpoints)):
         trialxlist = graphpoints[idn].elx
         trialylist = graphpoints[idn].ely
-        print(trialxlist,trialylist)
+        print(trialxlist, trialylist)
         plt.scatter(trialxlist, trialylist, c=markerclr(idn), marker=markercrtr(idn))
         idn = idn + 1
 
@@ -488,7 +487,7 @@ def analysis(request,page):
 
 
 @login_required
-def explosibility(request,page, template_name='FireExp/explosibility.html'):
+def explosibility(request, page, template_name='FireExp/explosibility.html'):
     class GraphData:
         o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
         explos = 5
@@ -496,9 +495,9 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
 
     graphpoints = []
 
-    if(page == 0):
+    if (page == 0):
         FireExp = Gasdb.objects.all()
-    elif(page == 1):
+    elif (page == 1):
         FireExp = Fire_exp_gases.objects.all()
 
     idn = 1
@@ -547,7 +546,6 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
             x.idtest = gas.id
         except Gasdb.DoesNotExist:
             x.idtest = None
-
 
         ##explosibility calculation again
         x.explos = 5
@@ -647,7 +645,7 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
         elif (x.explos == 1 or x.explos == 2):
             rm = rx
             thm = 270 + (90 * ((thx - ths) / (
-                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
         elif x.explos == 0:
             rm = rx
             thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
@@ -657,12 +655,10 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
 
         x.elx = rm * np.cos(np.radians(thm))
         x.ely = rm * np.sin(np.radians(thm))
-        print("GPx",x)
+        print("GPx", x)
 
         graphpoints.append(x)
         idn = idn + 1
-
-
 
     ##graph
     xlist = []
@@ -678,8 +674,6 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
     for i in range(-12, 13):
         xaxislist.append(i)
         yaxislist.append(0)
-
-
 
     trialxlist = []
     trialylist = []
@@ -704,19 +698,18 @@ def explosibility(request,page, template_name='FireExp/explosibility.html'):
             colorstring = '#ffc0cb'
         return colorstring
 
-
     while (idn < len(graphpoints)):
         trialxlist = graphpoints[idn].elx
         trialylist = graphpoints[idn].ely
         # print('dates', dates[idn])
         graph.append({
-            'x':trialxlist,
-            'y':trialylist,
-            'color':markerclr(idn),
-            'dates':dates[idn]
-            })
+            'x': trialxlist,
+            'y': trialylist,
+            'color': markerclr(idn),
+            'dates': dates[idn]
+        })
         idn = idn + 1
-    data['result']=graph
+    data['result'] = graph
     return JsonResponse(data)
 
 
@@ -901,27 +894,30 @@ def automatic_entry(request, template_name='FireExp/automatic_entry.html'):
                 else:
                     explosm = "Unidentified"
 
-                gasinst.graham_ratio=graham
-                gasinst.graham_msg=grahamm
-                gasinst.young_ratio=young
-                gasinst.young_msg=youngm
-                gasinst.coco2_ratio=coco2
-                gasinst.coco2_msg=coco2m
-                gasinst.jtr_ratio=jtr
-                gasinst.jtr_msg=jtrm
-                gasinst.chra_ratio=chra
-                gasinst.chra_msg=chram
-                gasinst.explosm_result=explosm
+                gasinst.graham_ratio = graham
+                gasinst.graham_msg = grahamm
+                gasinst.young_ratio = young
+                gasinst.young_msg = youngm
+                gasinst.coco2_ratio = coco2
+                gasinst.coco2_msg = coco2m
+                gasinst.jtr_ratio = jtr
+                gasinst.jtr_msg = jtrm
+                gasinst.chra_ratio = chra
+                gasinst.chra_msg = chram
+                gasinst.explosm_result = explosm
                 gasinst.save()
                 print("sensors values and calculations saved succesfully")
             except Exception as e:
-                return HttpResponse("<body bgcolor='#E59887'><h2><center>Please Connect/Re-insert The Arduino Properly and Check PORT & Baoud Rate.</br></h2></center><small>" + str(e) + "</small></body>")
+                return HttpResponse(
+                    "<body bgcolor='#E59887'><h2><center>Please Connect/Re-insert The Arduino Properly and Check PORT & Baoud Rate.</br></h2></center><small>" + str(
+                        e) + "</small></body>")
             #########------------end --fetch data from arduino using port and save into database----------
     else:
-        form=DeviceForm()
+        form = DeviceForm()
     gases_db = Fire_exp_gases.objects.all()
-    resultdict = {'form':form,'gases_db':gases_db}
-    return render(request, template_name,resultdict)
+    resultdict = {'form': form, 'gases_db': gases_db}
+    return render(request, template_name, resultdict)
+
 
 @login_required
 def trends(request):
@@ -1180,6 +1176,7 @@ def trends(request):
     explosdict = {'explos_list': explosibilitylist, 'lastday': lastday, 'date_list': datelist, 'form': form}
     return render(request, 'FireExp/trends.html', explosdict)
 
+
 @login_required
 def test_graph(request):
     xlist = []
@@ -1223,15 +1220,17 @@ def test_graph(request):
 
     ##Add the contents of the StringIO or BytesIO object to the response, matching the mime type with the plot format (in this case, PNG) and return
     return HttpResponse(f.getvalue(), content_type="image/png")
+
+
 @login_required
 def line_chart_gas_ratios(request):
-    return render(request,"FireExp/line_chart_gas_ratios.html")
+    return render(request, "FireExp/line_chart_gas_ratios.html")
 
 
 def fetch_gas_ratios_ajax(request):
     gas_table = Fire_exp_gases.objects.all()
     default_items = []
-    i=0
+    i = 0
     for rr in gas_table:
         default_items.append([])
         default_items[i].append(str(rr.date.strftime("%d-%b")))
@@ -1239,8 +1238,7 @@ def fetch_gas_ratios_ajax(request):
         default_items[i].append(float(rr.graham_ratio))
         default_items[i].append(float(rr.coco2_ratio))
         default_items[i].append(float(rr.jtr_ratio))
-        i+=1
-
+        i += 1
 
     # print(default_items)
     data = {
@@ -1248,22 +1246,23 @@ def fetch_gas_ratios_ajax(request):
     }
     return JsonResponse(data)
 
+
 @login_required
 def young_co_ratio_page(request):
     return render(request, "FireExp/young_co_ratio_page.html")
+
 
 @login_required
 def fetch_young_co_ajax(request):
     gas_table = Fire_exp_gases.objects.all()
     default_items = []
-    i=0
+    i = 0
     for rr in gas_table:
         default_items.append([])
         default_items[i].append(str(rr.date.strftime("%d-%b")))
         default_items[i].append(float(rr.young_ratio))
         default_items[i].append(float(rr.co))
-        i+=1
-
+        i += 1
 
     # print(default_items)
     data = {

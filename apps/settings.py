@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'news',
     'emails',
     #'django_hosts',
-    'mail_templated',
+    # 'mail_templated',
     'dashboard',
     'setting',
     'wm_test',
@@ -241,7 +241,7 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 def show_toolbar(request):
-    return False
+    return True
 
 DEBUG_TOOLBAR_CONFIG={
     'INTERCEPT_REDIRECTS':True,

@@ -16,7 +16,7 @@ urlpatterns = [
     path('minimum_wage', views.MinimumWage, name='minimum_wage'),#new
     path('manage_minimum_wage', views.ManageMinimumWage, name='manage_minimum_wage'),#new
 
-    path('getsensordata', views.getsensordata, name='getsensordata'),
+    # path('getsensordata', views.getsensordata, name='getsensordata'),
 
     path('add_mine', views.add_mine, name='add_mine'),
     path('manage_mine', views.manage_mine, name='manage_mine'),

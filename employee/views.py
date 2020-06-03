@@ -13,7 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 ###################
-import serial
+
 from background_task import background
 from django.contrib import messages
 from django.core import serializers
@@ -89,7 +89,6 @@ def employee_edit(request, pk, template_name='employee/employee_add.html'):
             print("form saved")
             return redirect('employee:employee_manage')
         except Exception as e:
-            print('ERROR')
             print("error msg-->", e)
 
     return render(request, template_name, {'form': form})
@@ -114,7 +113,8 @@ def more_details_ajax(request):
             data['result'] = serializers.serialize('json', employees, fields=('name',
                                                                               'father_name',
                                                                               'dob',
-                                                                              'address',
+                                                                              'present_address',
+                                                                              'permanent_address',
                                                                               'email',
                                                                               'mob',
                                                                               'state',
@@ -122,6 +122,8 @@ def more_details_ajax(request):
                                                                               'pin',
                                                                               'gender',
                                                                               'marital_status',
+                                                                              'spouse_name',
+                                                                              'nationality',
                                                                               'photo',
                                                                               'mine',
                                                                               'rfid',
@@ -267,8 +269,8 @@ def fetch_role_ajax(request):
     return HttpResponse(data)
 
 
-@login_required
-def getsensordata(request):
+# @login_required
+# def getsensordata(request):
     # try:
     #     print("------Reading collection starts now------")
     #     sr = serial.Serial("COM3",9600)
@@ -296,34 +298,36 @@ def getsensordata(request):
 
     #############CONTINUOUS INSERT DATA FROM ARDUINO ##########
 
-    try:
-        while True:
-            sr = serial.Serial("COM4", 9600)
-            st = list(str(sr.readline(), 'utf-8'))
-            sr.close()
-            ard_data = str(''.join(st[:]))
-            f = SensorData()
-            f.data1 = ard_data
-            f.save()
-    except Exception as e:
-        ####################
-        fig, ax = plt.subplots()
-        line, = ax.plot(np.random.rand(10))
-        ax.set_ylim(0, 1)
+    # try:
+    #     while True:
+    #         sr = serial.Serial("COM4", 9600)
+    #         st = list(str(sr.readline(), 'utf-8'))
+    #         sr.close()
+    #         ard_data = str(''.join(st[:]))
+    #         f = SensorData()
+    #         f.data1 = ard_data
+    #         f.save()
+    # except Exception as e:
+    #     ####################
+    #     fig, ax = plt.subplots()
+    #     line, = ax.plot(np.random.rand(10))
+    #     ax.set_ylim(0, 1)
+    #
+    #     def update(data):
+    #         line.set_ydata(data)
+    #         return line,
+    #
+    #     def data_gen():
+    #         while True:
+    #             yield np.random.rand(10)
+    #
+    #     ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
+    #     plt.show()
+    #     ###################
+    #     return HttpResponse(
+    #         "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
 
-        def update(data):
-            line.set_ydata(data)
-            return line,
 
-        def data_gen():
-            while True:
-                yield np.random.rand(10)
-
-        ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
-        plt.show()
-        ###################
-        return HttpResponse(
-            "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
 
 
 @login_required
@@ -776,19 +780,14 @@ def thankyou(request, template='thankyou.html'):
 @login_required
 def checkifuserfieldempty(request):
     data = {}
-    total = 0
     if request.is_ajax():
 
         current_user = request.user
         book = get_object_or_404(User, pk=current_user.id)
-        # print(book.first_name)
-        # print(book.last_name)
         if book.first_name in [None, ''] or book.last_name in [None, '']:
-            # print("Is None")
             data['result'] = 1
         else:
             data['result'] = 0
-            # print('Not Empty')
         return JsonResponse(data)
 
     data['result'] = 0
@@ -804,14 +803,10 @@ def profile_ajax(request):
         profile = profile_extension.objects.get(user_id=book)
         data['profile_avatar'] = str(profile.profile_avatar)
         data['mine'] = str(profile.mine_id)
-        admin_or_not = 0
         if request.user.is_superuser:
-            admin_or_not = 1
+            data['admin'] = 1
         else:
-            admin_or_not = 0
-
-        data['admin'] = admin_or_not
-        print(profile.profile_avatar)
+            data['admin'] = 0
         return JsonResponse(data)
 
     data['error'] = "Something Went Wrong!"

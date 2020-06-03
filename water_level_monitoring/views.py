@@ -13,7 +13,6 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 from django.utils.html import strip_tags
 from background_task import background
-from gtts import gTTS
 
 from apps.settings import MEDIA_ROOT
 from employee.models import MineDetails
