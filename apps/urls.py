@@ -15,12 +15,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
 
-    path('employee/',include('employee.urls',namespace='employee')),    ### Currently Not used : Created by:Dewangshu Earlier for testing
-    path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')), ### Tracking Module(Created:Dewangshu, Dated: June-July-2018)
-    path('FireExp/',include('FireExp.urls',namespace='FireExp')), ### Gas Monitoring/Sub-Module(Monitoring of Goaf Area,Created:Dewangshu, DATED: Aug-2018)
-    path('Controlling/',include('Controlling.urls',namespace='Controlling')),## Testing purpose for Controlling mines like Light,Fan etc(Created:Dewangshu,Dated:sep-18)
-    path('DGMS_Forms/',include('DGMS_Forms.urls',namespace='DGMS_Forms')),## Different forms/report of subimmion to DGMS(Created:Dewangshu,Dated:13-10-18)
-    path('Strata/',include('Strata.urls',namespace='Strata')),## For Starta Monitoring(Convergence,load etc)(Created:Dewangshu,Dated:26-10-18)
+    path('employee/',include('employee.urls',namespace='employee')),
+    path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')),
+    path('FireExp/',include('FireExp.urls',namespace='FireExp')),
+    path('Controlling/',include('Controlling.urls',namespace='Controlling')),
+    path('DGMS_Forms/',include('DGMS_Forms.urls',namespace='DGMS_Forms')),
+    path('Strata/',include('Strata.urls',namespace='Strata')),
     path('theme/',include('theme.urls',namespace='theme')),
 
 
@@ -38,7 +38,7 @@ urlpatterns = [
     path('ProductionMonitoring/', include('ProductionMonitoring.urls',namespace='ProductionMonitoring')),
     path('sensor/', include('sensor.urls', namespace='sensor')),### prasanjit dey(gas monitoring)
     path('water_level_monitoring/', include('water_level_monitoring.urls', namespace='water_level_monitoring')),### SS MISHRA(water monitoring)
-    path('tags_input/', include('tags_input.urls', namespace='tags_input')),
+    # path('tags_input/', include('tags_input.urls', namespace='tags_input')),
     path('sms/', include('SMS.urls', namespace='sms')),
     path('news/', include('news.urls', namespace='news')),
     path('emails/', include('emails.urls', namespace='emails')),
@@ -51,7 +51,7 @@ urlpatterns = [
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
-                      # path('__debug__/', include(debug_toolbar.urls)),
+                      path('__debug__/', include(debug_toolbar.urls)),
                       # For django versions before 2.0:
                       # url(r'^__debug__/', include(debug_toolbar.urls)),
                   ] + urlpatterns

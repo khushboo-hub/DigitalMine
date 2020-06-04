@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'gdstorage',
     'debug_toolbar',
 
     'theme',
@@ -66,11 +67,12 @@ INSTALLED_APPS = [
     'news',
     'emails',
     #'django_hosts',
-    'mail_templated',
+    # 'mail_templated',
     'dashboard',
     'setting',
     'wm_test',
     'Slope',
+
 ]
 
 MIDDLEWARE = [
@@ -87,6 +89,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'apps.urls'
+
 
 #ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
 #DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
@@ -128,8 +131,6 @@ DATABASES = {
     }
 }
 
-
-
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -148,31 +149,31 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-TAGS_INPUT_MAPPINGS = {
-    'some_app.SomeKeyword': {
-        'field': 'some_field',
-    },
-    'some_app.SomeOtherKeyword': {
-        'fields': ('some_field', 'some_other_field'),
-    },
-    'some_app.SomeSortedKeyword': {
-        'field': 'some_field',
-        'ordering': [
-            'some_field',
-            'some_other_field',
-        ],
-        'filters': {
-            'some_field__istartswith': 'a',
-        },
-        'excludes': {
-            'some_field__iexact': 'foobar',
-        },
-    },
-    'some_app.SomeCreateableKeyword': {
-        'field': 'some_field',
-        'create_missing': True,
-    },
-}
+# TAGS_INPUT_MAPPINGS = {
+#     'some_app.SomeKeyword': {
+#         'field': 'some_field',
+#     },
+#     'some_app.SomeOtherKeyword': {
+#         'fields': ('some_field', 'some_other_field'),
+#     },
+#     'some_app.SomeSortedKeyword': {
+#         'field': 'some_field',
+#         'ordering': [
+#             'some_field',
+#             'some_other_field',
+#         ],
+#         'filters': {
+#             'some_field__istartswith': 'a',
+#         },
+#         'excludes': {
+#             'some_field__iexact': 'foobar',
+#         },
+#     },
+#     'some_app.SomeCreateableKeyword': {
+#         'field': 'some_field',
+#         'create_missing': True,
+#     },
+# }
 # ADMIN_VIEW_PERMISSION_MODELS = [
 #     'auth.User',
 # ]
@@ -240,9 +241,11 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 def show_toolbar(request):
-    return False
+    return True
 
 DEBUG_TOOLBAR_CONFIG={
-    'INTERCEPT_REDIRECTS':False,
+    'INTERCEPT_REDIRECTS':True,
     'SHOW_TOOLBAR_CALLBACK':show_toolbar
 }
+# GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE ='my-project-1549610242332-d51f9c84fd50.json'
+# X_FRAME_OPTIONS = 'SAMEORIGIN'

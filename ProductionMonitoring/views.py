@@ -2,7 +2,7 @@ import cv2
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404, render_to_response
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import VehicleForm1, WeighbridgeForm1, ManualentryForm1, ContainerdetailsForm1, Production_Tub_Form1, \
     Production_WasteMaterial_Form1, Production_DailyEntry_Form1, Production_Monthly_Form1, \
     Production_DailyDispatch_Form1, Production_MonthlyDispatch_Form1, Production_YearlyDispatch_Form1, \

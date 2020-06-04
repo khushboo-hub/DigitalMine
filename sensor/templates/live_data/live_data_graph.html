@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <div class="container">
         <section class="col-md-12">
             <h1 class="page-header">Sensor Live Graph:</h1>
@@ -96,7 +95,6 @@
                                 'id': mine_id
                             },
                             success: function (data) {
-                                console.log(data);
                                 if (data.hasOwnProperty('result')) {
                                     fill_dropdown(data.result);
                                 }
@@ -145,7 +143,6 @@
                             'id': node_id
                         },
                         success: function (data) {
-                            console.log(data);
                             if (data.hasOwnProperty('result')) {
                                 fill_dropdown_sensor(data.result);
                             }
@@ -186,7 +183,6 @@
                         },
                         beforeSend: function () {
                             $("#id_list").empty();
-
                         },
                         success: function (data) {
                             let Sensors = data.result;
@@ -196,9 +192,8 @@
                                 } else {
                                     $("#id_list").append($("<option />").val('').text('Select Sensor'));
                                 }
-                                for (s in Sensors) {
+                                for (let s in Sensors) {
                                     if (Sensors.hasOwnProperty(s)) {
-
                                         $("#id_list").append($("<option />").val(Sensors[s].sensor_name).text(Sensors[s].sensor_name));
                                     }
                                 }
@@ -212,6 +207,7 @@
                 }
             }
 
+            let warnings = []
             $("#btn_show").click(function () {
                 let mode = $("#id_mode").val();
                 if (!isEmpty(mode)) {
@@ -219,7 +215,6 @@
                         let sensor_id = $("#id_sensor_list").val();
                         let node_id = $("#id_list").val();
                         if (sensor_id == '0') {
-                            console.log('all',sensor_id,node_id)
                             $.ajax({
                                 type: "get",
                                 url: "{% url 'sensor:fetch_sensor_values_all_ajax' %}",
@@ -231,7 +226,9 @@
                                     $("#btn_show").prop('disabled', true);
                                 },
                                 success: function (data) {
-                                    fill_all(node_id, data.result);
+                                    if (data.hasOwnProperty('result')) {
+                                        fill_all(node_id, data.result);
+                                    }
                                     return data;
                                 },
                                 error: function () {
@@ -254,8 +251,8 @@
                                 },
                                 success: function (data) {
                                     if (data.hasOwnProperty('result')) {
-                                        console.log(data.result)
-                                        fill_graph_sensor(data.result.id, data.result.sensor_name, data.result.unit, data.result.color);
+                                        let Sensor = data.result;
+                                        fill_graph_sensor(Sensor);
                                     }
                                     return data;
                                 },
@@ -272,7 +269,13 @@
                 }
             });
 
-            function fill_graph_sensor(sensor_id, name, unit, level) {
+            function fill_graph_sensor(SensorInit) {
+                for(let s in SensorInit) {
+                    if(SensorInit.hasOwnProperty(s)) {
+                        $('<div>', {id: "X" + SensorInit.id}).appendTo($("#table"));
+                        $('<br><br>').appendTo($("#table"));
+                    }
+                }
                 function rand() {
                     x = 0;
                     return x;
@@ -283,14 +286,14 @@
                     x: [time],
                     y: [rand()],
                     mode: 'lines+markers',
-                    marker: {color: level, size: 8},
+                    marker: {color: SensorInit.color, size: 8},
                     line: {width: 4},
                     name: '<b>No Data Found</b>'
 
                 }]
                 var layout = {
                     title: {
-                        text: '<b>Live Sensor<i>(' + name + ')</i>Graph</b>',
+                        text: '<b>Live Sensor<i>(' + SensorInit.sensor_name + ')</i>Graph</b>',
                         font: {
                             family: 'Courier New, monospace',
                             size: 34
@@ -312,7 +315,7 @@
                     },
                     yaxis: {
                         title: {
-                            text: '<b>' + unit + '</b>',
+                            text: '<b>' + SensorInit.unit + '</b>',
                             font: {
                                 family: 'Courier New, monospace',
                                 size: 22,
@@ -327,61 +330,23 @@
                     }
                 };
 
-                Plotly.react('graph', data, layout);
+                Plotly.react('X' + SensorInit.id, data, layout);
 
                 (function sensorGraph() {
                     $.ajax({
                         type: "get",
                         url: "{% url 'sensor:fetch_sensor_values_ajax' %}",
                         data: {
-                            'id': sensor_id
+                            'id': SensorInit.id
                         },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
                                 data = data.result;
-
                                 function getData() {
-                                    x = data.sensor_value;
+                                    let x = data.sensor_value;
                                     return x;
                                 }
-
-                                var time = new Date();
-
-                                var update = {
-                                    'marker.color': data.sensor_warning_color,
-                                    name: '<b>' + data.sensor_warning_msg + '<b>',
-
-                                    type: 'scatter'
-
-                                }
-                                var update1 = {
-                                    x: [[time]],
-                                    y: [[getData()]]
-                                }
-                                var olderTime = time.setMinutes(time.getMinutes() - 1);
-                                var futureTime = time.setMinutes(time.getMinutes() + 1);
-
-                                var minuteView = {
-                                    xaxis: {
-                                        title: {
-                                            text: '<b>Time</b>',
-                                            font: {
-                                                family: 'Courier New, monospace',
-                                                size: 22,
-                                                color: '#060216'
-                                            }
-                                        },
-                                        type: '<b>date</b>',
-                                        range: [olderTime, futureTime],
-
-
-                                    }
-                                };
-
-                                Plotly.relayout('graph', minuteView);
-                                //Plotly.extendTraces('graph', update, [0])
-                                Plotly.restyle('graph', update);
-                                Plotly.extendTraces('graph', update1, [0]);
+                                ShowWarning(SensorInit, getData());
                             }
                         },
                         complete: function () {
@@ -393,10 +358,11 @@
 
             ////////////////////////////////////////////////////
 
-            function fill_all(node_id, Sensor) {
-                for (s in Sensor) {
-                    if (Sensor.hasOwnProperty(s)) {
-                        $('<div>', {id: "X" + Sensor[s].id}).appendTo($("#table"));
+            function fill_all(node_id, SensorInit) {
+                console.log('all', SensorInit);
+                for (let s in SensorInit) {
+                    if (SensorInit.hasOwnProperty(s)) {
+                        $('<div>', {id: "X" + SensorInit[s].id}).appendTo($("#table"));
                         $('<br><br>').appendTo($("#table"));
                     }
                 }
@@ -406,8 +372,8 @@
                     return x;
                 }
 
-                for (s in Sensor) {
-                    if (Sensor.hasOwnProperty(s)) {
+                for (let s in SensorInit) {
+                    if (SensorInit.hasOwnProperty(s)) {
                         var time = new Date();
                         var data = [{
                             x: [time],
@@ -419,7 +385,7 @@
                         }]
                         var layout = {
                             title: {
-                                text: '<b>Live Sensor<i>(' + Sensor[s].sensor_name + ')</i> Graph</b>',
+                                text: '<b>Live Sensor<i>(' + SensorInit[s].sensor_name + ')</i> Graph</b>',
                                 font: {
                                     family: 'Courier New, monospace',
                                     size: 34
@@ -441,7 +407,7 @@
                             },
                             yaxis: {
                                 title: {
-                                    text: '<b>' + Sensor[s].sensor_unit + '</b>',
+                                    text: '<b>' + SensorInit[s].sensor_unit + '</b>',
                                     font: {
                                         family: 'Courier New, monospace',
                                         size: 22,
@@ -456,19 +422,18 @@
                             }
                         };
 
-                        Plotly.react('X' + Sensor[s].id, data, layout);
+                        Plotly.react('X' + SensorInit[s].id, data, layout);
 
 
-                        (function sensorGraph(sensor_id) {
+                        (function sensorGraph(SensorInit) {
 
                             $.ajax({
                                 type: "get",
                                 url: "{% url 'sensor:fetch_sensor_values_ajax' %}",
                                 data: {
-                                    'id': sensor_id
+                                    'id': SensorInit.id
                                 },
                                 success: function (data) {
-                                    console.log(data);
                                     if (data.hasOwnProperty('result')) {
                                         data = data.result;
 
@@ -476,57 +441,21 @@
                                             x = data.sensor_value;
                                             return x;
                                         }
-
-                                        var time = new Date();
-
-                                        var update = {
-                                            'marker.color': data.sensor_warning_color,
-                                            name: '<b>' + data.sensor_warning_msg + '<b>',
-
-                                            type: 'scatter'
-
-                                        };
-                                        var update1 = {
-                                            x: [[time]],
-                                            y: [[getData()]]
-                                        }
-                                        var olderTime = time.setMinutes(time.getMinutes() - 1);
-                                        var futureTime = time.setMinutes(time.getMinutes() + 1);
-
-                                        var minuteView = {
-                                            xaxis: {
-                                                title: {
-                                                    text: '<b>Time</b>',
-                                                    font: {
-                                                        family: 'Courier New, monospace',
-                                                        size: 22,
-                                                        color: '#060216'
-                                                    }
-                                                },
-                                                type: '<b>date</b>',
-                                                range: [olderTime, futureTime],
-
-
-                                            }
-                                        };
-
-                                        Plotly.relayout('X' + sensor_id, minuteView);
-                                        Plotly.restyle('X' + sensor_id, update);
-                                        Plotly.extendTraces('X' + sensor_id, update1, [0]);
+                                        ShowWarning(SensorInit, getData())
                                     }
                                 },
                                 complete: function () {
-                                    setTimeout(sensorGraph(sensor_id), 5000);
+                                    setTimeout(sensorGraph(SensorInit), 5000);
                                 }
                             });
-                        })(Sensor[s].id);
+                        })(SensorInit[s]);
                     }
                 }
 
 
             }
 
-            ///////for sensor node
+
             function fill_graph_sensor_node(sensor_name, mine_id) {
                 $.ajax({
                     type: "get",
@@ -542,13 +471,11 @@
                     success: function (data) {
                         if (data.hasOwnProperty('result')) {
                             let Sensors = data.result;
-                            console.log(Sensors);
-                            for (s in Sensors) {
+                            for (let s in Sensors) {
                                 if (Sensors.hasOwnProperty(s)) {
                                     $('<div>', {id: "X" + Sensors[s].id}).appendTo($("#table"));
                                     $('<br><br>').appendTo($("#table"));
-                                    console.log(Sensors[s].id, mine_id, Sensors[s].sensor_unit, Sensors[s].sensor_node_name, Sensors[s].sensor_name);
-                                    fill_graph_sensor_node_all(Sensors[s].id, mine_id, Sensors[s].sensor_unit, Sensors[s].sensor_node_name, Sensors[s].sensor_name);
+                                    fill_graph_sensor_node_all(Sensors[s], mine_id);
                                 }
                             }
                         }
@@ -558,7 +485,7 @@
                 });
             }
 
-            function fill_graph_sensor_node_all(i, mine_id, unit, node_name, sensor_name) {
+            function fill_graph_sensor_node_all(SensorInit, mine_id) {
                 function rand() {
                     x1 = 0;
                     return x1;
@@ -572,10 +499,10 @@
                     marker: {color: '#1216f6', size: 8},
                     line: {width: 4},
                     name: '<b>No Data Found</b>'
-                }]
+                }];
                 var layout = {
                     title: {
-                        text: '<b>Live Graph for Sensor(' + sensor_name + ') in (' + node_name + ')</b>',
+                        text: '<b>Live Graph for Sensor(' + SensorInit.sensor_name + ') in (' + SensorInit.sensor_node_name + ')</b>',
                         font: {
                             family: 'Courier New, monospace',
                             size: 34
@@ -597,7 +524,7 @@
                     },
                     yaxis: {
                         title: {
-                            text: '<b>' + unit + '</b>',
+                            text: '<b>' + SensorInit.sensor_unit + '</b>',
                             font: {
                                 family: 'Courier New, monospace',
                                 size: 22,
@@ -612,62 +539,26 @@
                     }
                 };
 
-                Plotly.react('X' + i, data, layout);
+                Plotly.react('X' + SensorInit.id, data, layout);
 
-                var cnt = 0;
                 (function sensor_wise_result() {
                     $.ajax({
                         type: "get",
                         url: "{% url 'sensor:sensor_wise_node' %}",
                         data: {
-                            'id': sensor_name,
+                            'id': SensorInit.sensor_name,
                             'mine': mine_id
                         },
                         success: function (data) {
-
                             if (data.hasOwnProperty('result')) {
                                 let Sensors = data.result;
-                                for (s in Sensors) {
+                                for (let s in Sensors) {
                                     if (Sensors.hasOwnProperty(s)) {
                                         function getData() {
-                                            x2 = Sensors[s].sensor_value;
+                                            let x2 = Sensors[s].sensor_value;
                                             return x2;
                                         }
-
-                                        var time = new Date();
-                                        var update = {
-                                            'marker.color': Sensors[s].sensor_warning_color,
-                                            name: '<b>' + Sensors[s].sensor_warning_msg + '<b>',
-                                            type: 'scatter'
-
-                                        }
-                                        var update1 = {
-                                            x: [[time]],
-                                            y: [[getData()]]
-
-                                        }
-
-                                        var olderTime = time.setMinutes(time.getMinutes() - 1);
-                                        var futureTime = time.setMinutes(time.getMinutes() + 1);
-
-                                        var minuteView = {
-                                            xaxis: {
-                                                title: {
-                                                    text: '<b>Time</b>',
-                                                    font: {
-                                                        family: 'Courier New, monospace',
-                                                        size: 22,
-                                                        color: '#060216'
-                                                    }
-                                                },
-                                                type: '<b>date</b>',
-                                                range: [olderTime, futureTime]
-                                            }
-                                        };
-
-                                        Plotly.relayout('X' + Sensors[s].id, minuteView);
-                                        Plotly.restyle('X' + Sensors[s].id, update);
-                                        Plotly.extendTraces('X' + Sensors[s].id, update1, [0])
+                                        ShowWarning(SensorInit, getData())
                                     }
                                 }
                             }
@@ -678,6 +569,135 @@
                     });
                 })();
             }
+
+            function ShowWarning(SensorInit, sensor_value) {
+                var time = new Date();
+                var update = {
+                    'marker.color': SensorInit.sensor_warning_color,
+                    name: '<b>SensorInit.sensor_warning_msg<b>',
+                    type: 'scatter'
+                };
+                if (parseFloat(sensor_value) < parseFloat(SensorInit.level1)) {
+
+                    update = {
+                        'marker.color': '#' + SensorInit.sensor_warning_color,
+                        name: '<b>' + SensorInit.sensor_warning_msg + '<b>',
+                        type: 'scatter'
+                    };
+
+                } else if ((parseFloat(sensor_value) >= parseFloat(SensorInit.level1)) && (parseFloat(sensor_value) < parseFloat(SensorInit.level2))) {
+                    console.log('1st');
+                    update = {
+                        'marker.color': '#' + SensorInit.level1_color,
+                        name: '<b>' + SensorInit.level1_msg + '<b>',
+                        type: 'scatter'
+                    };
+
+
+                } else if ((parseFloat(sensor_value) >= parseFloat(SensorInit.level2)) && (parseFloat(sensor_value) < parseFloat(SensorInit.level3))) {
+                    update = {
+                        'marker.color': '#' + SensorInit.level2_color,
+                        name: '<b>' + SensorInit.level2_msg + '<b>',
+                        type: 'scatter'
+                    };
+
+                } else if (parseFloat(sensor_value) > parseFloat(SensorInit.level3)) {
+                    update = {
+                        'marker.color': '#' + SensorInit.level3_color,
+                        name: '<b>' + SensorInit.level3_msg + '<b>',
+                        type: 'scatter'
+                    };
+
+                }
+                var update1 = {
+                    x: [[time]],
+                    y: [[sensor_value]]
+                }
+                var olderTime = time.setMinutes(time.getMinutes() - 1);
+                var futureTime = time.setMinutes(time.getMinutes() + 1);
+
+                var minuteView = {
+                    xaxis: {
+                        title: {
+                            text: '<b>Time</b>',
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 22,
+                                color: '#060216'
+                            }
+                        },
+                        type: '<b>date</b>',
+                        range: [olderTime, futureTime],
+
+
+                    }
+                };
+
+                Plotly.relayout('X' + SensorInit.id, minuteView);
+                Plotly.restyle('X' + SensorInit.id, update);
+                Plotly.extendTraces('X' + SensorInit.id, update1, [0]);
+                checkAndPlay(sensor_value, SensorInit.level1, SensorInit.level2, SensorInit.level3, SensorInit.audio_type, SensorInit.level1_msg, SensorInit.level2_msg, SensorInit.level3_msg, SensorInit.level1_audio, SensorInit.level2_audio, SensorInit.level3_audio, SensorInit.sensor_name)
+            }
+
+            function checkAndPlay(sensorValue, l_value, m_value, h_value, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio, node_or_sensor_name) {
+
+                let loc = window.location;
+                let baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
+
+                if ((parseFloat(sensorValue) > parseFloat(l_value)) && (parseFloat(sensorValue) < parseFloat(m_value))) {//low level
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': First Level Warning</b>',
+                        text: first_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error',
+
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(first_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + first_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
+                if ((parseFloat(sensorValue) > parseFloat(m_value)) && (parseFloat(sensorValue) < parseFloat(h_value))) {//middle level
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': Second Level Warning </b>',
+                        text: second_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error',
+                    });
+                    if (audio_type == "text2voice") {
+                        console.log(second_warning)
+                        Speak(second_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + second_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
+
+                if (parseFloat(sensorValue) > parseFloat(h_value)) {//high level
+
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': Third Level Warning</b> ',
+                        text: third_warning,
+                        position: 'bottom-right',
+                        showHideTransition: 'fade',
+                        icon: 'error',
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(third_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + third_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
+            }
+
         });
     </script>
 {% endblock %}

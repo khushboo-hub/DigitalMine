@@ -24,8 +24,6 @@
 
 
     <title>Digital Mine(IoT) | Dashboard</title>
-
-    {% load staticfiles %}
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="{% static 'dashboard/vendor/fontawesome-free/css/all.min.css' %}" type="text/css">
 
@@ -631,7 +629,7 @@
                         {% for key,sensors in node.items %}
                             {% for sensor in sensors %}
                                 <iframe width="400" height="auto" style="border: none;"
-                                        src="{% url 'sensor:iframe_live_data' selected sensor.node_id sensor.sensor_id %}"></iframe>
+                                        src="{% url 'sensor:iframe_live_data' selected sensor.node_id sensor.sensor_id %}" frameborder="0" allowfullscreen></iframe>
                             {% endfor %}
                         {% endfor %}
                     {% endfor %}

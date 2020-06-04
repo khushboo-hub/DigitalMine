@@ -2,69 +2,68 @@
 
 {% block content %}
 
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h1 class="page-header">Manage Mining Shift</h1>
+                <div class="row text-center">
+                    <div class="col-md-12">
 
+                        <a class="btn btn-primary" href="/employee/add_mining_shift/{{ mine_id }}">Add Shift
+                            to: {{ mine_name }}</a>
+                    </div>
+                </div>
+                <hr>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="content">
+                                <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Shift Name</th>
+                                    <th>Time From</th>
+                                    <th>Time To</th>
+                                    <th class="text-center" colspan="2">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for book in object_list %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ book.shift_name }}</td>
+                                        <td>{{ book.time_from }}</td>
+                                        <td>{{ book.time_to }}</td>
 
+                                        <td class="text-center"><a
+                                                href="{% url 'employee:edit_mining_shift' book.id mine_id %}"
+                                                title="Edit Mining Shift."><span
+                                                class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td class="text-center"><a href="#" class="delete"
+                                                                   data-url="{% url 'employee:delete_mining_shift' book.id mine_id %}"
+                                                                   title="Delete Mining Shift."><span
+                                                class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
 
-<div class="container">
-    <div class="row">
-<section class="col-md-12">
-    <h1 class="page-header">Manage Mining Shift</h1>
-    <div class="row text-center">
-        <div class="col-md-12">
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
 
+                    </div>
+                </div><!--end Table content -->
 
-                <!--{{mine_id}}-->
-
-
-            <a class="btn btn-primary"  href="/employee/add_mining_shift/{{mine_id}}">Add Shift to: {{mine_name}}</a>
-
+            </section>
         </div>
     </div>
-    <hr>
-    <!-- Table content -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="content">
-                    <thead>
-                        <tr>
-                            <th>SL No</th>
-                            <th>Shift Name</th>
-                            <th>Time From</th>
-                            <th>Time To</th>
-                            <th class="text-center" colspan="2">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                            {% for book in object_list %}
-                        <tr>
-                            <td>{{forloop.counter}}</td>
-                            <td>{{ book.shift_name }}</td>
-                            <td>{{ book.time_from}}</td>
-                            <td>{{ book.time_to }}</td>
 
-                            <td class="text-center"><a href="{% url 'employee:edit_mining_shift' book.id mine_id %}" title="Edit Mining Shift."><span class="glyphicon glyphicon-pencil"></span></a></td>
-                            <td class="text-center"><a href="#" class="delete" data-url="{% url 'employee:delete_mining_shift' book.id mine_id %}" title="Delete Mining Shift."><span class="glyphicon glyphicon-trash"></span></a></td>
-                        </tr>
+    <script>
+        $(document.body).on("click", ".delete", function () {
 
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            <ul id="pagination" class="pagination light-theme simple-pagination"><li class="active"><span class="current prev">Prev</span></li><li class="active"><span class="current">1</span></li><li><a class="page-link" href="#page-2">2</a></li><li><a class="page-link" href="#page-3">3</a></li><li><a class="page-link next" href="#page-2">Next</a></li></ul>
-        </div>
-    </div><!--end Table content -->
+            $("#sureDelete").attr("href", $(this).data('url'));
+            $('#update_info').modal('show');
 
-</section>
-        </div>
-</div>
-
-<script>
-    $(document.body).on("click", ".delete", function () {
-
-        $("#sureDelete").attr("href", $(this).data('url'));
-        $('#update_info').modal('show');
-
-    });
-</script>
+        });
+    </script>
 {% endblock %}

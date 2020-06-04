@@ -15,15 +15,11 @@ from .models import profile_extension
 from django.core.mail import EmailMessage
 from theme import views as homeViews
 from django.contrib import messages
-from employee.models import MineDetails
-from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-
 from django.http import HttpResponse, JsonResponse
 
 
 def login(request):
-    print('request',request.GET.get('next'))
     next=request.GET.get('next')
     if next:
         redirect_url=next

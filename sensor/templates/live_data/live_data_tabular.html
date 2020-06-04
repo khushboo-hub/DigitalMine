@@ -4,7 +4,7 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                 <h3 class="page-header"><b>ENVIRONMENT MONITORING : LIVE DATA</b>
+                <h3 class="page-header"><b>ENVIRONMENT MONITORING : LIVE DATA</b>
                 </h3>
 
                 <div class="row">
@@ -70,7 +70,7 @@
     </div>
     <script>
         $(document).ready(function () {
-             $("#id_mine_id").addClass('form-control');
+            $("#id_mine_id").addClass('form-control');
             $('#displayTable').DataTable({
                 retrieve: true,
                 paging: false,
@@ -121,7 +121,6 @@
                                     $("#id_name").empty();
                                 },
                                 success: function (data) {
-
                                     if (data.hasOwnProperty('result')) {
                                         let Sensors = data.result;
                                         fill_sensor_dropdown(Sensors);
@@ -141,7 +140,7 @@
                 $("#id_list").empty();
                 if (!isEmpty(nodes)) {
                     $("#id_list").append($("<option />").val('').text('--Select Node--'));
-                    for (node in nodes) {
+                    for (let node in nodes) {
                         if (nodes.hasOwnProperty(node)) {
                             $("#id_list").append($("<option />").val(nodes[node].id).text(nodes[node].node_name));
                         }
@@ -159,7 +158,7 @@
                 } else {
                     $("#id_list").append($("<option />").val('').text('Select Sensor'));
                 }
-                for (s in Sensors) {
+                for (let s in Sensors) {
                     if (Sensors.hasOwnProperty(s)) {
 
                         $("#id_list").append($("<option />").val(Sensors[s].sensor_name).text(Sensors[s].sensor_name));
@@ -178,9 +177,23 @@
                 let node_or_sensor_id = $("#id_list").val();
                 let node_or_sensor_name = $('#id_list :selected').text();
 
-                if (isEmpty(mine_id)) {alert("Choose Mine");return;}
-                if (isEmpty(mode)) {alert("Choose Mode");return;}
-                if (isEmpty(node_or_sensor_id)) {if (mode == "0") {alert("Choose Node");} else {alert("Choose Sensor");}return;}
+                if (isEmpty(mine_id)) {
+                    alert("Choose Mine");
+                    return;
+                }
+                if (isEmpty(mode)) {
+                    alert("Choose Mode");
+                    return;
+                }
+                if (isEmpty(node_or_sensor_id)) {
+                    if (mode == "0") {
+                        alert("Choose Node");
+                    } else {
+                        alert("Choose Sensor");
+                    }
+                    return;
+                }
+                let warnings;
 
                 $.ajax({
                     type: "get",
@@ -195,8 +208,12 @@
                         $("#btn_show").prop('disabled', true);
                     },
                     success: function (data) {
+
                         if (data.hasOwnProperty('result')) {
-                            fill_table_sensor_heading(data.result, data.condition);
+                            let condition = data.condition;
+                            fill_table_sensor_heading(data.result, condition);
+                            warnings = [];
+                            warnings = condition;
                         }
                         return data;
                     },
@@ -216,7 +233,7 @@
                         },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
-                                fill_table_sensor(data.result, data.time, node_or_sensor_name, mine_name);
+                                fill_table_sensor(data.result, data.time, node_or_sensor_name, mine_name, warnings);
                             }
                             return data;
                         },
@@ -232,8 +249,8 @@
                 let tableHeaders = "";
 
                 for (let h in header) {
-                    if(header.hasOwnProperty(h))
-                    tableHeaders += "<th>" + header[h] + "</th>";
+                    if (header.hasOwnProperty(h))
+                        tableHeaders += "<th>" + header[h] + "</th>";
                 }
                 $("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
                 $('#displayTable').DataTable({
@@ -249,7 +266,7 @@
                                     $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'green');
 
                                 } else if (parseFloat(data[condition[cond].id]) > parseFloat(condition[cond].level2) && parseFloat(data[condition[cond].id]) < parseFloat(condition[cond].level3)) {
-                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'yellow');
+                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', '#ffc107');
 
                                 } else {
                                     $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'red');
@@ -268,9 +285,10 @@
                     ]
                 });
 
+
             }
 
-            function fill_table_sensor(NodeSensor, Time, node_or_sensor_name, mine_name) {
+            function fill_table_sensor(NodeSensor, Time, node_or_sensor_name, mine_name, warnings) {
 
                 let data = [];
                 data.push(Time);
@@ -278,11 +296,72 @@
                 data.push(node_or_sensor_name);
                 for (let node in NodeSensor) {
                     if (NodeSensor.hasOwnProperty(node)) {
-                        data.push(NodeSensor[node].sensor_value)
+                        console.log('warning', warnings[node]);
+                        data.push(NodeSensor[node].sensor_value);
+                        checkAndPlay(NodeSensor[node].sensor_value, warnings[node].level1, warnings[node].level2, warnings[node].level3, warnings[node].audio_type, warnings[node].level1_msg, warnings[node].level2_msg, warnings[node].level3_msg, warnings[node].level1_audio, warnings[node].level1_audio, warnings[node].level1_audio, warnings[node].sensor_name);
                     }
                 }
                 let datatable = $('#displayTable').DataTable();
                 datatable.row.add(data).draw().node();
+            }
+
+            function checkAndPlay(sensorValue, l_value, m_value, h_value, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio, node_or_sensor_name) {
+
+                let loc = window.location;
+                let baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
+
+                if ((parseFloat(sensorValue) > parseFloat(l_value)) && (parseFloat(sensorValue) < parseFloat(m_value))) {//low level
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': First Level Warning</b>',
+                        text: first_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error',
+
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(first_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + first_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
+                if ((parseFloat(sensorValue) > parseFloat(m_value)) && (parseFloat(sensorValue) < parseFloat(h_value))) {//middle level
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': Second Level Warning </b>',
+                        text: second_warning,
+                        showHideTransition: 'fade',
+                        position: 'bottom-right',
+                        icon: 'error',
+                    });
+                    if (audio_type == "text2voice") {
+                        console.log(second_warning)
+                        Speak(second_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + second_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
+
+                if (parseFloat(sensorValue) > parseFloat(h_value)) {//high level
+
+                    $.toast({
+                        heading: '<b>Envrionment Monitoring ' + node_or_sensor_name + ': Third Level Warning</b> ',
+                        text: third_warning,
+                        position: 'bottom-right',
+                        showHideTransition: 'fade',
+                        icon: 'error',
+                    })
+                    if (audio_type == "text2voice") {
+                        Speak(third_warning, 9, 0.5);
+                    } else {
+                        let path = baseUrl + third_audio;
+                        let playNow = new Audio(path);
+                        playNow.play();
+                    }
+                }
             }
         });
 

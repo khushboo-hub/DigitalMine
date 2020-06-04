@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.db import connection
 from django.shortcuts import render
-
 from .models import MineDetails, Node, Sensor_Node, MinerTracking, TrackingRouter, water_level_monitoring_model, \
     Employee
 from Strata.models import Strata_location, Strata_sensor
@@ -11,7 +10,6 @@ from django.shortcuts import get_object_or_404
 import requests
 from django.utils.html import strip_tags
 from django.http import HttpResponse, JsonResponse
-
 import os
 
 
@@ -25,9 +23,12 @@ def dashboard_calling(request):
         mine = get_object_or_404(MineDetails, pk=mine_name)
     else:
         print('calling else')
-        mine = MineDetails.objects.all()[:1].get()
+        try:
+            mine = MineDetails.objects.all()[:1].get()
+        except:
+            return HttpResponse('No mine found. Please add mine')
 
-    print(mine)
+
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     try:

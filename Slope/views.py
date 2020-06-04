@@ -10,7 +10,7 @@ from django.core.serializers import json
 from django.db import connection
 from django.db.models import Max
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404, render_to_response
+from django.shortcuts import render, get_object_or_404
 from django.utils.html import strip_tags
 # from gtts import gTTS
 from matplotlib._cm_listed import data

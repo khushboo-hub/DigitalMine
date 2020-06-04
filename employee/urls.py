@@ -24,9 +24,14 @@ urlpatterns = [
     path('minimum_wage', views.MinimumWage, name='minimum_wage'),#new
     path('manage_minimum_wage', views.ManageMinimumWage, name='manage_minimum_wage'),#new
 
-    path('getsensordata', views.getsensordata, name='getsensordata'),
+    # path('getsensordata', views.getsensordata, name='getsensordata'),
 
-    
+    path('add_mine', views.add_mine, name='add_mine'),
+    path('manage_mine', views.manage_mine, name='manage_mine'),
+    path('edit_mine/<str:pk>', views.edit_mine, name='edit_mine'),
+    path('delete_mine/<str:pk>', views.delete_mine, name='delete_mine'),
+    path('show_role_chart/', views.show_role_chart, name='show_role_chart'),
+    path('fetch_role_ajax/', views.fetch_role_ajax, name='fetch_role_ajax'),
 
     path('add_mining_role', views.add_mining_role, name='add_mining_role'),
     path('manage_mining_role', views.manage_mining_role, name='manage_mining_role'),

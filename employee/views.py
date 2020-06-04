@@ -13,8 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 ###################
-import serial
+
 from background_task import background
+from django.contrib import messages
 from django.core import serializers
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
@@ -23,6 +24,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 from employee.forms import EmployeeForm,RateOfMinimumWageForm
+from sensor.views import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
 from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign,RateOfMinimumWages
 from django.contrib.sites.shortcuts import get_current_site
@@ -33,14 +35,12 @@ from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 from employee.models import Employee
-import re
 from django.db import IntegrityError
-from django.views.decorators.cache import cache_page
 
 
 # Create your views here.
 @login_required
-def employee_manage(request, template_name='employee/employee_manage_.html'):
+def employee_manage(request, template_name='employee/employee_manage.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
 
@@ -89,7 +89,6 @@ def employee_edit(request, pk, template_name='employee/employee_add.html'):
             print("form saved")
             return redirect('employee:employee_manage')
         except Exception as e:
-            print('ERROR')
             print("error msg-->", e)
 
     return render(request, template_name, {'form': form})
@@ -114,7 +113,8 @@ def more_details_ajax(request):
             data['result'] = serializers.serialize('json', employees, fields=('name',
                                                                               'father_name',
                                                                               'dob',
-                                                                              'address',
+                                                                              'present_address',
+                                                                              'permanent_address',
                                                                               'email',
                                                                               'mob',
                                                                               'state',
@@ -122,6 +122,8 @@ def more_details_ajax(request):
                                                                               'pin',
                                                                               'gender',
                                                                               'marital_status',
+                                                                              'spouse_name',
+                                                                              'nationality',
                                                                               'photo',
                                                                               'mine',
                                                                               'rfid',
@@ -267,8 +269,8 @@ def fetch_role_ajax(request):
     return HttpResponse(data)
 
 
-@login_required
-def getsensordata(request):
+# @login_required
+# def getsensordata(request):
     # try:
     #     print("------Reading collection starts now------")
     #     sr = serial.Serial("COM3",9600)
@@ -296,34 +298,36 @@ def getsensordata(request):
 
     #############CONTINUOUS INSERT DATA FROM ARDUINO ##########
 
-    try:
-        while True:
-            sr = serial.Serial("COM4", 9600)
-            st = list(str(sr.readline(), 'utf-8'))
-            sr.close()
-            ard_data = str(''.join(st[:]))
-            f = SensorData()
-            f.data1 = ard_data
-            f.save()
-    except Exception as e:
-        ####################
-        fig, ax = plt.subplots()
-        line, = ax.plot(np.random.rand(10))
-        ax.set_ylim(0, 1)
+    # try:
+    #     while True:
+    #         sr = serial.Serial("COM4", 9600)
+    #         st = list(str(sr.readline(), 'utf-8'))
+    #         sr.close()
+    #         ard_data = str(''.join(st[:]))
+    #         f = SensorData()
+    #         f.data1 = ard_data
+    #         f.save()
+    # except Exception as e:
+    #     ####################
+    #     fig, ax = plt.subplots()
+    #     line, = ax.plot(np.random.rand(10))
+    #     ax.set_ylim(0, 1)
+    #
+    #     def update(data):
+    #         line.set_ydata(data)
+    #         return line,
+    #
+    #     def data_gen():
+    #         while True:
+    #             yield np.random.rand(10)
+    #
+    #     ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
+    #     plt.show()
+    #     ###################
+    #     return HttpResponse(
+    #         "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
 
-        def update(data):
-            line.set_ydata(data)
-            return line,
 
-        def data_gen():
-            while True:
-                yield np.random.rand(10)
-
-        ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
-        plt.show()
-        ###################
-        return HttpResponse(
-            "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
 
 
 @login_required
@@ -350,17 +354,19 @@ def manage_mine(request, template_name='mine/mine_manage.html'):
 
 @login_required
 def edit_mine(request, pk, template_name='mine/mine_add.html'):
+    pk=decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
-    print(book)
     form = MineDetailsForm(request.POST or None, request.FILES or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('employee:manage_mine')
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('employee:manage_mine')
     return render(request, template_name, {'form': form, 'action': 'EDIT', 'mine_name': '(' + str(book.name) + ')'})
 
 
 @login_required
 def delete_mine(request, pk):
+    pk=decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
     book.delete()
     return redirect('employee:manage_mine')
@@ -375,20 +381,27 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     admin_or_not = 0
     if request.user.is_superuser:
         admin_or_not = 1
+        form = MiningRoleForm(None,request.POST or None)  # Passed Mine id as an argument
+        mine_name = "Super User"
     else:
         admin_or_not = 0
+        form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
+        mine_name = MineDetails.objects.get(id=profile.mine_id.id)
 
-    form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
-    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
     if request.method == "POST":
         if request.user.is_superuser:
-            form = MiningRoleForm(request.POST.get('mine'), request.POST or None, instance=book)
+
+            form = MiningRoleForm(request.POST.get('mine'),None, request.POST or None)
+            print('form error',form.errors)
         if form.is_valid():
+            print('form is valid')
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            return redirect('employee:manage_mining_role')
+            #return redirect('employee:manage_mining_role')
+        print(form.errors)
 
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
@@ -425,6 +438,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
                 fs.mine_id = profile.mine_id.id
             fs.save()
             return redirect('employee:manage_mining_role')
+        print(form.errors)
 
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'action': 'EDIT', 'admin': admin_or_not})
@@ -455,16 +469,18 @@ def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
     book = MiningRole.objects.all()
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
-    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
     admin_or_not = 0
     try:
         current_user = request.user
         profile = get_object_or_404(profile_extension, user_id=current_user.id)
         if request.user.is_superuser:
             book = MiningRole.objects.all().order_by('mine_id')
+            mine_name = "Super User"
             admin_or_not = 1
         else:
             book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            mine_name = MineDetails.objects.get(id=profile.mine_id.id)
             admin_or_not = 0
     except:
         pass
@@ -494,38 +510,42 @@ def manage_mining_shift(request, mine_id, template_name='mine/manage_mining_shif
 def add_mining_shift(request, mine_id, template_name='mine/add_mining_shift.html'):
     mine_table = MineDetails.objects.get(id=mine_id)
     mine_name = mine_table.name
-    form = MiningShiftForm(request.POST)
+    mine_id = mine_table.id
+    form = MiningShiftForm()
     # print(form)
     # return HttpResponse("ok")
+    if request.method == "POST":
+        form = MiningShiftForm(request.POST or None)
+        object = MineShift()
+        try:
+            if form.is_valid():
+                object.shift_name = request.POST.get("shift_name")
+                object.description = request.POST.get("description")
+                object.time_from = request.POST.get("time_from")
+                object.time_to = request.POST.get("time_to")
+                object.mine_id = mine_id
 
-    object = MineShift()
-    try:
-        if form.is_valid():
-            object.shift_name = request.POST.get("shift_name")
-            object.description = request.POST.get("description")
-            object.time_from = request.POST.get("time_from")
-            object.time_to = request.POST.get("time_to")
-            object.mine_id = mine_id
-            # print(request.POST)
-            # form.save()
-            object.save()
+                object.save()
 
-            return redirect('/employee/manage_mining_shift/' + str(mine_id))
-        # else:
-        #     return  HttpResponse("some error")
-    except Exception as e:
-        return HttpResponse("Exception mera he " + str(e))
-    return render(request, template_name, {'form': form, 'mine_name': mine_name})
+                return redirect('/employee/manage_mining_shift/' + str(mine_id))
+        except Exception as e:
+            messages.error(request, 'Oops!, Something went wrong!')
+            pass
+    return render(request, template_name, {'form': form, 'mine_name': mine_name,'mine_id':mine_id})
 
 
 @login_required
 def edit_mining_shift(request, pk, mine_id, template_name='mine/add_mining_shift.html'):
     book = get_object_or_404(MineShift, pk=pk)
+    mine_table = MineDetails.objects.get(id=mine_id)
+    mine_name = mine_table.name
+    mine_id = mine_table.id
     form = MiningShiftForm(request.POST or None, instance=book)
-    if form.is_valid():
-        form.save()
-        return redirect('/employee/manage_mining_shift/' + str(mine_id))
-    return render(request, template_name, {'form': form})
+    if request.method == "POST":
+        if form.is_valid():
+            form.save()
+            return redirect('/employee/manage_mining_shift/' + str(mine_id))
+    return render(request, template_name, {'form': form,'mine_name': mine_name,'mine_id':mine_id})
 
 
 @login_required
@@ -760,19 +780,14 @@ def thankyou(request, template='thankyou.html'):
 @login_required
 def checkifuserfieldempty(request):
     data = {}
-    total = 0
     if request.is_ajax():
 
         current_user = request.user
         book = get_object_or_404(User, pk=current_user.id)
-        # print(book.first_name)
-        # print(book.last_name)
         if book.first_name in [None, ''] or book.last_name in [None, '']:
-            # print("Is None")
             data['result'] = 1
         else:
             data['result'] = 0
-            # print('Not Empty')
         return JsonResponse(data)
 
     data['result'] = 0
@@ -788,14 +803,10 @@ def profile_ajax(request):
         profile = profile_extension.objects.get(user_id=book)
         data['profile_avatar'] = str(profile.profile_avatar)
         data['mine'] = str(profile.mine_id)
-        admin_or_not = 0
         if request.user.is_superuser:
-            admin_or_not = 1
+            data['admin'] = 1
         else:
-            admin_or_not = 0
-
-        data['admin'] = admin_or_not
-        print(profile.profile_avatar)
+            data['admin'] = 0
         return JsonResponse(data)
 
     data['error'] = "Something Went Wrong!"
