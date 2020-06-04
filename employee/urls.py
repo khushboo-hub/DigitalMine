@@ -6,6 +6,14 @@ from django.views.decorators.cache import  cache_page
 app_name = 'employee'
 
 urlpatterns = [
+
+    path('add_mine', views.add_mine, name='add_mine'),
+    path('manage_mine', views.manage_mine, name='manage_mine'),
+    path('edit_mine/<int:pk>', views.edit_mine, name='edit_mine'),
+    path('delete_mine/<int:pk>', views.delete_mine, name='delete_mine'),
+    path('show_role_chart/', views.show_role_chart, name='show_role_chart'),
+    path('fetch_role_ajax/', views.fetch_role_ajax, name='fetch_role_ajax'),
+
     path('', views.employee_manage, name='employee_manage'),
     path('new',views.employee_add, name='employee_add'),
     path('edit/<int:pk>', views.employee_edit, name='employee_edit'),
@@ -18,12 +26,7 @@ urlpatterns = [
 
     path('getsensordata', views.getsensordata, name='getsensordata'),
 
-    path('add_mine', views.add_mine, name='add_mine'),
-    path('manage_mine', views.manage_mine, name='manage_mine'),
-    path('edit_mine/<int:pk>', views.edit_mine, name='edit_mine'),
-    path('delete_mine/<int:pk>', views.delete_mine, name='delete_mine'),
-    path('show_role_chart/', views.show_role_chart, name='show_role_chart'),
-    path('fetch_role_ajax/', views.fetch_role_ajax, name='fetch_role_ajax'),
+    
 
     path('add_mining_role', views.add_mining_role, name='add_mining_role'),
     path('manage_mining_role', views.manage_mining_role, name='manage_mining_role'),

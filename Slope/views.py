@@ -896,6 +896,7 @@ def fetch_datafrom_jsonurl(request):
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
 
         sensor_id = request.GET.get('id', None)
+        print(sensor_id)
         # prepared_data=[]
         # with urllib.request.urlopen(sensor_id) as url:
         #     s = url.read()
@@ -1117,3 +1118,6 @@ def fetch_datafrom_jsonurl_dynamic(request):
             data['result'] = "Not Ajax"
     # print(data)
     return JsonResponse(data)
+
+
+
