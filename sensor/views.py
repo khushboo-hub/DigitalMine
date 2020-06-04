@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
-
 from apps import settings
 from .models import Node, Sensor_Node, gasModel_auto
 from .models import MineDetails
@@ -130,7 +129,7 @@ def node_add(request, template_name='node/node_add.html'):
     if request.user.is_superuser:
         form = NodeForm()
     else:
-        form = NodeForm(initial={'mine_id': profile.mine_id_id},readonly={'mine_id':'disabled'})
+        form = NodeForm(initial={'mine_id': profile.mine_id_id}, readonly={'mine_id': 'disabled'})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
 
@@ -1418,12 +1417,20 @@ def fetch_sensor_values_ajax_sensor_table(request):
                     # node_details = Node.objects.get(id=str(r.node_id_id))
                     sensor_data.append(r.sensor_name + " (" + r.sensor_unit + ")")
                     sensor_condition.append({'id': str(i),
+                                             'sensor_name':r.sensor_name,
                                              'level1': r.level_1_warning_unit,
                                              'level2': r.level_2_warning_unit,
                                              'level3': r.level_3_warning_unit,
                                              'level1_color': r.level_1_color,
                                              'level2_color': r.level_2_color,
                                              'level3_color': r.level_3_color,
+                                             'level1_msg': r.level_1_msg,
+                                             'level2_msg': r.level_2_msg,
+                                             'level3_msg': r.level_3_msg,
+                                             'level1_audio': str(r.level_1_audio),
+                                             'level2_audio': str(r.level_2_audio),
+                                             'level3_audio': str(r.level_3_audio),
+                                             'audio_type': r.audio_play_type,
                                              })
                     i += 1
 
@@ -1443,12 +1450,20 @@ def fetch_sensor_values_ajax_sensor_table(request):
                 for r in sensor_details:
                     sensor_data.append(str(r.node_id) + " (" + r.sensor_unit + ")")
                     sensor_condition.append({'id': str(i),
+                                             'sensor_name': r.sensor_name,
                                              'level1': r.level_1_warning_unit,
                                              'level2': r.level_2_warning_unit,
                                              'level3': r.level_3_warning_unit,
                                              'level1_color': r.level_1_color,
                                              'level2_color': r.level_2_color,
                                              'level3_color': r.level_3_color,
+                                             'level1_msg': r.level_1_msg,
+                                             'level2_msg': r.level_2_msg,
+                                             'level3_msg': r.level_3_msg,
+                                             'level1_audio': str(r.level_1_audio),
+                                             'level2_audio': str(r.level_2_audio),
+                                             'level3_audio': str(r.level_3_audio),
+                                             'audio_type': str(r.audio_play_type),
                                              })
                     i += 1
 
