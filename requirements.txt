@@ -39,7 +39,6 @@ django-silk==4.0.1
 django-tables2==2.1.0
 django-tags-input==4.6.0
 django-templated-email==2.3.0
-django-tracking==0.4.1
 django-urlcrypt==0.1.6
 djangorestframework==3.10.2
 djongo==1.3.0
