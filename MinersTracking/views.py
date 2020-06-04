@@ -559,7 +559,7 @@ def get_single_miner_path_data(request):
                 icon = '/static/image/miner_officer.svg'
             miner_detail['icon']=icon
             print(icon)
-            miner_detail_modal={'title': str(miner_details.name), 'content': str(miner_details.address)}
+            miner_detail_modal={'title': str(miner_details.name), 'content': str(miner_details.present_address)}
             miner_detail['modal']=miner_detail_modal
             miner_path[str(mt.id)] =miner_detail
 

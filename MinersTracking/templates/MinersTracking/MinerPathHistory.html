@@ -352,13 +352,13 @@ function BumpMiners(i){
            // console.log(i);
             if(i>=pk-1)clearInterval(BumpAutomate); // Clear the Interval When it reaches the End.
             KBtestmap.mapMarkers[i].show();
-        $('.KBmap__marker.'+i+' img').addClass("anim").delay(1000).queue(function(){
+        $('.KBmap__marker.'+i+' img').addClass("anim").delay(300).queue(function(){
            //  KBtestmap.mapMarkers[i].removeMarker();
             $(this).removeClass("anim").dequeue();
 
 
         });i++;
-        }, 1000);
+        }, 300);
 
 }
 function BumpMiners_new(i){

@@ -1559,7 +1559,7 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
     data = {}
     if request.is_ajax():
         node_id = request.GET.get('id', None)
-        node_id = decrypt(node_id)
+        # node_id = decrypt(node_id)
         date_from = request.GET.get('date_from', None)
         date_from += " 00:00:00"
         date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()

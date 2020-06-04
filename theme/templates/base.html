@@ -82,11 +82,11 @@
         {
         #}#}
         .navbar-nav > li > a > p {
-            font-size: 10px !important;
+            font-size: 13px !important;
         }
 
         .navbar .navbar-nav p {
-            font-size: 11px !important;
+            font-size: 13px !important;
         }
 
         ul.dropdown-menu.dropdown-menu-large.row.navbar-color > li > ul > li > a:hover {
@@ -438,6 +438,7 @@
                                                 class="label label-default">Manual Mode</span></a></li>
                                         <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                                 class="label label-default">Manual Mode</span></a></li>
+                                                <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
                                     </ul>
                                 </li>
 
@@ -518,64 +519,9 @@
                                 </li>
                             </ul>
                         </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="pe-7s-display1"></i>
-                                <p>
-                                    Environment Monitoring
-                                    <span class="caret"></span>
-                                </p>
-                            </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
-                                <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
-                                <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a></li>
-
-                                <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
-                                <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
-                                <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
-
-                                <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf Area<sub></sub></a>
-                                </li>
-                                <li><a href="{% url 'gasmonitoring_wifi:manage_goaf_area' %}">Manage Goaf
-                                    Area<sub></sub></a></li>
-                                <li><a href="{% url 'FireExp:manual_entry' %}">Fire Status and Explosibility(Manual)</a>
-                                </li>
-                                <li><a href="{% url 'FireExp:automatic_entry' %}">Fire Status and
-                                    Explosibility(Automatic)</a></li>
-                                <li><a href="{% url 'gasmonitoring_wifi:show_area' %}">Fire Status and
-                                    Explosibility(Wi-Fi)<sub></sub></a></li>
-                                <!--<li><a href="{% url 'FireExp:line_chart_gas_ratios' %}">Fire Status and Explosibility(Gas Ratio Chart)</a></li>-->
-                                <!--<li><a href="#"></a></li>-->
-                                <li><a href="{% url 'temp_monitoring:index' %}">Mine Air Analysis <span
-                                        class="label label-default">Manual Mode</span></a></li>
-                                <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
-                                        class="label label-default">Manual Mode</span></a></li>
-                                <!-- <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li> -->
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="pe-7s-display1"></i>
-                                <p>Strata Monitoring
-                                    <span class="caret"></span>
-                                </p>
-                            </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
-
-                                <li><a href="{% url 'Strata:convergence_add_location' %}">Add Location</a></li>
-                                <li><a href="{% url 'Strata:convergence_manage_location' %}">Manage Location</a></li>
-
-                                <li><a href="{% url 'Strata:add_sensor_in_location' %}">Add Sensor</a></li>
-                                <li><a href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a></li>
-                                <li><a href="{% url 'Strata:live_data_tabular' %}">Live Data in Tabular</a></li>
-                                <li><a href="{% url 'Strata:show_sensor_graph' %}">Live Data in Graph</a></li>
-                                <li><a href="{% url 'Strata:date_range_tabular' %}">Data b/n Dates</a></li>
-                                <li><a href="{% url 'Strata:show_graph_date_range' %}">Graph b/n Dates</a></li>
-                                <li><a href="{% url 'Strata:strata_average_report' %}">Strata Average Report</a></li>
-                                <li><a href="{% url 'Strata:warning_report' %}">Strata Warning Report</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
+                        
+                        
+                        <!-- <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-display1"></i>
                                 <p>Slope/Landslide Monitoring
@@ -605,7 +551,7 @@
                                 <li><a href="{% url 'Slope:slope_live_table_dynamic' %}">Show Realtime slope
                                     data(Tabular)-Dynamic</a></li>
                             </ul>
-                        </li>
+                        </li> -->
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-paint"></i>
