@@ -35,6 +35,35 @@
             right: 5px;
         }
 
+        .main {
+            padding-top: 100px;
+        }
+
+        @media (max-width: 1577px) {
+            .main {
+                padding-top: 50px;
+            }
+        }
+        @media (min-width: 360px) {
+            .main {
+                padding-top: 100px;
+            }
+
+        }
+          @media (min-width: 320px) {
+            .main {
+                padding-top: 100px;
+            }
+
+        }
+        {#@media (min-width: 768px) {#}
+        {#    .main {#}
+        {#        padding-top: 100px;#}
+        {#    }#}
+        {##}
+        {#}#}
+
+
         .navbar.bg-primary {
             border-radius: 0px;
         !important;
@@ -328,7 +357,7 @@
             height="0" width="0" style="display:none;visibility:hidden"></iframe>
 </noscript>
 <!-- End Google Tag Manager (noscript) -->
-<div id="navbar-full" style="height: 10%;">
+<div id="navbar-full">
     <div id="navbar">
         <!--
          navbar-default can be changed with navbar-ct-blue navbar-ct-azzure navbar-ct-red navbar-ct-green navbar-ct-orange navbar-fixed-top
@@ -372,7 +401,8 @@
                                 <li><a href="{% url 'employee:manage_mine' %}">Manage Mine</a></li>
                                 <li><a href="{% url 'employee:add_mining_role' %}">Add Mining Role</a></li>
                                 <li><a href="{% url 'employee:manage_mining_role' %}">Manage Mining Role</a></li>
-                                <li><a href="{% url 'employee:employee_add' %}"><i class="pe-7s-add-user"></i>Add Employee</a></li>
+                                <li><a href="{% url 'employee:employee_add' %}"><i class="pe-7s-add-user"></i>Add
+                                    Employee</a></li>
                                 <li><a href="{% url 'employee:employee_manage' %}">Manage Employee</a></li>
                                 <li><a href="{% url 'attendance:index' %}">Add Employee Attendance</a></li>
                                 <li><a href="{% url 'attendance:attendance_manage' %}">Manage Employee Attendance</a>
@@ -438,7 +468,8 @@
                                                 class="label label-default">Manual Mode</span></a></li>
                                         <li><a href="{% url 'gasmonitoring:index' %}">Mine Gas Analysis <span
                                                 class="label label-default">Manual Mode</span></a></li>
-                                                <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a></li>
+                                        <li><a href="{% url 'temp_monitoring:live_temp_data' %}">Live Temp Data </a>
+                                        </li>
                                     </ul>
                                 </li>
 
@@ -506,7 +537,7 @@
                                 <i class="pe-7s-map-marker"></i>
                                 <p>Miners Tracking<span class="caret"></span></p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
+                            <ul class="dropdown-menu  navbar-color">
 
                                 <li><a href="{% url 'MinersTracking:init' %}">Router Configuration</a></li>
 
@@ -519,39 +550,6 @@
                                 </li>
                             </ul>
                         </li>
-                        
-                        
-                        <!-- <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <i class="pe-7s-display1"></i>
-                                <p>Slope/Landslide Monitoring
-                                    <span class="caret"></span>
-                                </p>
-                            </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
-
-                                <li><a href="{% url 'Slope:convergence_add_location' %}">Add Slope Zone/Location</a>
-                                </li>
-                                <li><a href="{% url 'Slope:convergence_manage_location' %}">Manage Slope Location</a>
-                                </li>
-
-                                <li><a href="{% url 'Slope:add_sensor_in_location' %}">Add Slope Sensor</a></li>
-                                <li><a href="{% url 'Slope:manage_sensor_in_location' %}">Manage Slope Sensor</a></li>
-                                <li><a href="{% url 'Slope:live_data_tabular' %}">Live Slope Data in Tabular(using
-                                    IP)</a></li>
-                                <li><a href="{% url 'Slope:show_sensor_graph' %}">Live Slope Data in Graph(using IP)</a>
-                                </li>
-                                <li><a href="{% url 'Slope:date_range_tabular' %}">Slope Data b/n Dates</a></li>
-                                <li><a href="{% url 'Slope:show_graph_date_range' %}">Slope Graph b/n Dates</a></li>
-                                <li><a href="{% url 'Slope:daily_report' %}">Slope Daily Average Report</a></li>
-                                <li><a href="{% url 'Slope:warning_report' %}">Slope Warning Report</a></li>
-                                <li><a href="{% url 'Slope:show_json' %}">Show JSON/MQTT data(Test)</a></li>
-                                <li><a href="{% url 'Slope:slope_live_table' %}">Show Realtime slope
-                                    data(Tabular)-Static</a></li>
-                                <li><a href="{% url 'Slope:slope_live_table_dynamic' %}">Show Realtime slope
-                                    data(Tabular)-Dynamic</a></li>
-                            </ul>
-                        </li> -->
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-paint"></i>
@@ -560,9 +558,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
-                                <!--<li><a href="{% url 'Controlling:bulb_on_off_page' %}">Light Controlling</a></li>-->
-                                <!--<li><a href="">Fan Controlling</a></li>-->
+                            <ul class="dropdown-menu  navbar-color">
                                 <li><a href="{% url 'water_level_monitoring:manage_water_sensor' %}">Manage Water Level
                                     Monitoring
                                     Sensor</a></li>
@@ -594,7 +590,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-large row navbar-color dropdown-menu-right ">
+                            <ul class="dropdown-menu dropdown-menu-large row navbar-color">
                                 <li class="col-sm-6">
                                     <ul class="">
                                         <li class="dropdown-header" style="color:white;"><strong>Coal Report</strong>
@@ -682,7 +678,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right ">
+                            <ul class="dropdown-menu  navbar-color">
 
                                 <li><a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a></li>
                                 <li><a href="{% url 'inventory_management:category_add' %}">Add Category</a></li>
@@ -709,7 +705,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-large row navbar-color  dropdown-menu-right">
+                            <ul class="dropdown-menu dropdown-menu-large row navbar-color">
                                 <li class="col-sm-6">
                                     <ul class="">
                                         <li class="dropdown-header" style="color:white;">Sword of Truth</li>
@@ -803,7 +799,7 @@
                                     <span class="caret"></span>
                                 </p>
                             </a>
-                            <ul class="dropdown-menu navbar-color dropdown-menu-right ">
+                            <ul class="dropdown-menu navbar-color">
 
                                 <li class="dropdown-header" style="color:white;">Sensor Management</li>
 
@@ -836,7 +832,7 @@
                                 <i class="pe-7s-more"></i>
                                 <p>More<b class="caret"></b></p>
                             </a>
-                            <ul class="dropdown-menu  navbar-color dropdown-menu-right">
+                            <ul class="dropdown-menu  navbar-color">
                                 <li><a href="{% url 'employee:aboutus' %}">About Us</a></li>
                                 <li><a href="{% url 'employee:aboutiot' %}">About IoT</a></li>
                                 <li><a href="{% url 'employee:aboutdigitalmine' %}">About Digital Mine</a></li>
