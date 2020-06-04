@@ -29,12 +29,13 @@ def init(request, template_name='MinersTracking/create_router.html'):
     err={}
     err['msg']=2
     current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    
 
     if request.user.is_superuser:
         form = TrackingRouterForm()
         book = TrackingRouter.objects.all()
     else:
+        profile = get_object_or_404(profile_extension, user_id=current_user.id)
         form = TrackingRouterForm(initial={'mine_id':profile.mine_id.id})
         book = TrackingRouter.objects.filter(mine_id=profile.mine_id.id)
 
