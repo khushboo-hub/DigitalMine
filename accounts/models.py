@@ -1,10 +1,11 @@
 
 from django import forms
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from employee.models import MineDetails
+from django.contrib.sessions.models import Session
+from django.conf import settings
 
 class SignupForm(UserCreationForm):
     email = forms.EmailField(max_length=200, help_text='Required')
@@ -35,5 +36,16 @@ class profile_extension(models.Model):
 
     class Meta:
         db_table = "profile_extension"
+
+from django.utils.timezone import now
+class UserSession(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    session = models.ForeignKey(Session,on_delete=models.CASCADE)
+    ip = models.CharField(max_length=255, null=True, blank=True)
+    time = models.DateTimeField(default=now)
+    useragent = models.CharField(max_length=255,null=True,blank=True)
+
+    class Meta:
+        db_table = "usersession"
 
 
