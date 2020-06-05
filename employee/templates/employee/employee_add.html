@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
     <style>
-
+        .custom-div {
+            {#width: 24%;#}
+            background-color: white;
+            float: left;
+            margin-right: 5px;
+            min-height: 50px;
+            position: fixed;
+        }
     </style>
-    <ol class="breadcrumb">
+    <ol class="breadcrumb custom-div">
         <li><a href="/">Home</a></li>
         <li><a href="#">Employee</a></li>
         <li class="active">Add</li>

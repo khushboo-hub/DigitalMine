@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% load staticfiles %}
+{% load static %}
 <div class="container">
     <h1>Edit Profile</h1>
     <hr>
@@ -201,6 +201,56 @@
                                         <span></span>
                                         <!--              <input type="reset" class="btn btn-default" value="Cancel">-->
                                     </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    {% endifequal %}
+                {% ifequal active.tasks "active" %}
+                    <div class="profile-content">
+                        <!-- edit form column -->
+                        <div class="form-horizontal">
+                            <div class="col-md-12 personal-info">
+                                <div class="alert alert-info alert-dismissable" style="box-shadow:10px 10px 5px #aaaaaa;">
+                                    <a class="panel-close close" data-dismiss="alert">×</a>
+                                    <i class="fa fa-coffee"></i>
+                                    List of active user sessions
+                                </div>
+                                <div class="form-group">
+                                    <span style="color: blue;">Active sessions</span>
+                                    <table  class="table table-bordered">
+                                        <tr>
+                                            <th>Client IP</th>
+                                            <th>Logged In</th>
+                                            <th>Logged Out</th>
+                                            <th>User Agent</th>
+                                        </tr>
+                                        <tr>
+                                            <td>223.31.123.22</td>
+                                            <td>19 hours ago</td>
+                                            <td></td>
+                                            <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                 <div class="form-group">
+                                    <span style="color: blue;">Inactive sessions</span>
+                                    <table  class="table table-bordered">
+                                        <tr>
+                                            <th>Client IP</th>
+                                            <th>Logged In</th>
+                                            <th>Logged Out</th>
+                                            <th>User Agent</th>
+                                        </tr>
+                                        <tr>
+                                            <td>223.31.123.22</td>
+                                            <td>19 hours ago</td>
+                                            <td></td>
+                                            <td>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0</td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 

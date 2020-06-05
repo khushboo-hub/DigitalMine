@@ -72,7 +72,7 @@ class Employee(models.Model):
         ('OTHERS','OTHERS')
     )
     nationality=models.CharField(max_length=50,choices=NATIONALITY,null=True,blank=True) #new
-    identification_mark=models.CharField(max_length=50,null=True,blank=True)
+    identification_mark=models.CharField(max_length=50,null=True,blank=True) #new
     signature= models.ImageField(upload_to='employee_image/', null=True, blank=True)#new
 
     mob = models.CharField(max_length=100, default='0000000000', blank=True, null=True)
@@ -114,7 +114,7 @@ class Employee(models.Model):
         ('SS', 'Semi Skilled'),
         ('US', 'Under Skilled'),
               )
-    category_address=models.CharField(choices=CATEGORY,max_length=50,null=True,blank=True)
+    category_address=models.CharField(choices=CATEGORY,max_length=50,null=True,blank=True) #new
     mining_role = models.ForeignKey(MiningRole, on_delete=models.CASCADE, null=True, blank=True)
     cat_type = models.TextField(max_length=200, blank=True, null=True)
     immediate_staff = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
@@ -129,9 +129,9 @@ class Employee(models.Model):
     pan_no = models.CharField(max_length=20, blank=True, null=True)
     voter_id_no = models.CharField(max_length=20, blank=True, null=True)
     medical_ins_no = models.CharField(max_length=30, blank=True, null=True)
-    date_of_exit=models.DateField(blank=True, null=True)
-    reason_of_exit=models.CharField(max_length=50,null=True,blank=True)
-    uan = models.CharField(max_length=50, null=True, blank=True)
+    date_of_exit=models.DateField(blank=True, null=True) #new
+    reason_of_exit=models.CharField(max_length=50,null=True,blank=True) # new
+    uan = models.CharField(max_length=50, null=True, blank=True) #new
 
     #########  Bank Details   #################
     bank_name = models.CharField(max_length=50, blank=True, null=True)

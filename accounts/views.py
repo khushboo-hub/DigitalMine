@@ -2,16 +2,17 @@ from email.mime.image import MIMEImage
 
 from background_task import background
 from django.contrib.auth.decorators import login_required
+from django.contrib.sessions.models import Session
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login, authenticate
-from .forms import SignupForm, ProfileForm, LoginForm, ProfileExtensionForm,PasswordChangeCustomForm
+from .forms import SignupForm, ProfileForm, LoginForm, ProfileExtensionForm, PasswordChangeCustomForm
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
-from .models import profile_extension
+from .models import profile_extension, UserSession
 from django.core.mail import EmailMessage
 from theme import views as homeViews
 from django.contrib import messages
@@ -20,9 +21,9 @@ from django.http import HttpResponse, JsonResponse
 
 
 def login(request):
-    next=request.GET.get('next')
+    next = request.GET.get('next')
     if next:
-        redirect_url=next
+        redirect_url = next
     else:
         redirect_url = homeViews.home
 
@@ -33,13 +34,13 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         try:
-            rememberMe=request.POST['rememberme']
+            rememberMe = request.POST['rememberme']
         except:
             rememberMe = "off"
             pass
         if '@' in username:
             try:
-                user=get_object_or_404(User,email=username)
+                user = get_object_or_404(User, email=username)
                 user = authenticate(username=user.username, password=password)
             except:
                 user = authenticate(username=username, password=password)
@@ -71,7 +72,8 @@ def signup(request):
             user.is_active = False
             user.save()
             current_site = get_current_site(request)
-            sendverifyemail(current_site.domain, user.username, user.email, urlsafe_base64_encode(force_bytes(user.pk)), account_activation_token.make_token(user))
+            sendverifyemail(current_site.domain, user.username, user.email, urlsafe_base64_encode(force_bytes(user.pk)),
+                            account_activation_token.make_token(user))
             data['confirm_registration'] = 'Please confirm your email address to complete the registration'
             return render(request, 'acc_or_not.html', {'data': data})
     else:
@@ -81,8 +83,8 @@ def signup(request):
 
 
 @background(schedule=1)
-def sendverifyemail(domain,user,email,uid,token):
-    print('Email Background',domain,user,email,uid,token)
+def sendverifyemail(domain, user, email, uid, token):
+    print('Email Background', domain, user, email, uid, token)
     mail_subject = 'Activate your Miner account.'
     message = render_to_string('acc_active_email.html', {
         'user': user,
@@ -98,8 +100,9 @@ def sendverifyemail(domain,user,email,uid,token):
         email.send()
         return True
     except Exception as e:
-        print('error',e)
+        print('error', e)
         sendverifyemail(domain, user, email, uid, token)
+
 
 def email_embed_image(email, img_content_id, img_data):
     """
@@ -109,6 +112,7 @@ def email_embed_image(email, img_content_id, img_data):
     img.add_header('Content-ID', '<%s>' % img_content_id)
     img.add_header('Content-Disposition', 'inline')
     email.attach(img)
+
 
 def activate(request, uidb64, token):
     # htmlOpen = '<div class="row"><div class="wrapper fadeInDown"><div id="formContent">';
@@ -132,9 +136,9 @@ def activate(request, uidb64, token):
 
 
 @login_required
-def profile(request,action="overview", template_name='profile.html'):
+def profile(request, action="overview", template_name='profile.html'):
     current_user = request.user
-    active={}
+    active = {}
     active['overview'] = ""
     active['setting'] = ""
     active['tasks'] = ""
@@ -144,14 +148,13 @@ def profile(request,action="overview", template_name='profile.html'):
     book_extension, created = profile_extension.objects.get_or_create(user_id=book)
     form_extension = ProfileExtensionForm(request.POST or None, request.FILES, instance=book_extension)
 
-
     if action == 'overview':
         form = ProfileForm(request.POST or None, instance=book)
     elif action == 'setting':
         form = PasswordChangeCustomForm(request.user)
         try:
             if request.method == 'POST':
-                form=PasswordChangeCustomForm(request.user,request.POST)
+                form = PasswordChangeCustomForm(request.user, request.POST)
 
                 if form.is_valid():
 
@@ -160,14 +163,17 @@ def profile(request,action="overview", template_name='profile.html'):
                                   {'form': form, 'form_extension': form_extension, 'active': active})
                 else:
                     print('I am Here')
-                     # form = PasswordChangeCustomForm(request.user)
+                    # form = PasswordChangeCustomForm(request.user)
                     return render(request, template_name,
-                              {'form': form, 'form_extension': form_extension, 'active': active})
+                                  {'form': form, 'form_extension': form_extension, 'active': active})
         except:
             pass
+    elif action == 'tasks':
+        return render(request, template_name,
+                      {'form_extension': form_extension, 'active': active})
+
         # print(form)
     # book_extension = get_object_or_404(profile_extension,user_id=current_user.id)
-
 
     try:
         if request.method == 'POST':
@@ -184,7 +190,7 @@ def profile(request,action="overview", template_name='profile.html'):
     except Exception as e:
         print('Error Message=>', e)
 
-    return render(request, template_name, {'form': form, 'form_extension': form_extension,'active':active})
+    return render(request, template_name, {'form': form, 'form_extension': form_extension, 'active': active})
 
 
 def change_password(request):
@@ -204,10 +210,38 @@ def change_password(request):
     })
 
 
-from sensor.views import decrypt,encrypt
-def In(request,id,tempplate_name='profile.html'):
+from sensor.views import decrypt, encrypt
+
+
+def In(request, id, tempplate_name='profile.html'):
     ids = str(decrypt(id))
-    return HttpResponse('profile'+id+" "+ids)
+    return HttpResponse('profile' + id + " " + ids)
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+from django.contrib.auth.signals import user_logged_in
+
+# from user_agent import generate_user_agent, generate_navigator
+
+def user_logged_in_handler(sender, request, user, **kwargs):
+    UserSession.objects.get_or_create(
+        user = user,
+        session_id = request.session.session_key
+        # ip= get_client_ip(request),
+
+    )
 
 
+user_logged_in.connect(user_logged_in_handler)
 
+
+def delete_user_sessions(user):
+    user_sessions = UserSession.objects.filter(user = user)
+    for user_session in user_sessions:
+        user_session.session.delete()

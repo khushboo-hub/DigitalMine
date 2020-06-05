@@ -47,5 +47,6 @@ urlpatterns = [
     path('fetch_datafrom_jsonurl', views.fetch_datafrom_jsonurl, name='fetch_datafrom_jsonurl'),
     path('slope_live_table_dynamic', views.slope_live_table_dynamic, name='slope_live_table_dynamic'),
     path('fetch_datafrom_jsonurl_dynamic', views.fetch_datafrom_jsonurl_dynamic, name='fetch_datafrom_jsonurl_dynamic'),
+    
 
 ]

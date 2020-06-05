@@ -29,12 +29,13 @@ def init(request, template_name='MinersTracking/create_router.html'):
     err={}
     err['msg']=2
     current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    
 
     if request.user.is_superuser:
         form = TrackingRouterForm()
         book = TrackingRouter.objects.all()
     else:
+        profile = get_object_or_404(profile_extension, user_id=current_user.id)
         form = TrackingRouterForm(initial={'mine_id':profile.mine_id.id})
         book = TrackingRouter.objects.filter(mine_id=profile.mine_id.id)
 
@@ -559,7 +560,7 @@ def get_single_miner_path_data(request):
                 icon = '/static/image/miner_officer.svg'
             miner_detail['icon']=icon
             print(icon)
-            miner_detail_modal={'title': str(miner_details.name), 'content': str(miner_details.address)}
+            miner_detail_modal={'title': str(miner_details.name), 'content': str(miner_details.present_address)}
             miner_detail['modal']=miner_detail_modal
             miner_path[str(mt.id)] =miner_detail
 

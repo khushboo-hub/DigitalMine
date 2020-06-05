@@ -313,17 +313,17 @@ img.markerIcon{
 height:auto;
 }
 @media(min-width: 768px){
-    #content{
+    .main{
         padding-top:220px;
     }
 }
 @media(min-width:1024px){
-    #content{
+    .main{
         padding-top:150px;
     }
 }
 @media(min-width:1700px){
-    #content{
+    .main{
         padding-top:0px;
     }
 }

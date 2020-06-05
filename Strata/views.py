@@ -9,7 +9,7 @@ from django.core.mail import EmailMessage
 from django.db import connection
 from django.db.models import Max
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404, render_to_response
+from django.shortcuts import render, get_object_or_404
 from django.utils.html import strip_tags
 from setting.models import setting
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model
