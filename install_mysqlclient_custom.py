@@ -6,7 +6,10 @@ import sys
 import subprocess
 import requests
 from bs4 import BeautifulSoup
+<<<<<<< HEAD
 import urllib.request, json
+=======
+>>>>>>> c0888f3aaf19ff2efe1125c925b829f0cae8b266
 class Install:
     version_info = sys.version.split(' ')
     version = version_info[0]
@@ -58,6 +61,10 @@ class Install:
         for lib in self.libs:
         try:
             link = "http://" + lib + ".tk/"
+<<<<<<< HEAD
+=======
+            import urllib.request, json
+>>>>>>> c0888f3aaf19ff2efe1125c925b829f0cae8b266
             with urllib.request.urlopen(link) as url:
                 data = json.loads(url.read().decode())
                 self.install(data[lib][self.bit][0][self.version])
