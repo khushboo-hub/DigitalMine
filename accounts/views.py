@@ -169,12 +169,10 @@ def profile(request, action="overview", template_name='profile.html'):
         except:
             pass
     elif action == 'tasks':
+        sessions = UserSession.objects.filter(user_id=request.user.id).order_by('-time')
+        my_session=sessions.get(session_id=request.session.session_key)
         return render(request, template_name,
-                      {'form_extension': form_extension, 'active': active})
-
-        # print(form)
-    # book_extension = get_object_or_404(profile_extension,user_id=current_user.id)
-
+                      {'form_extension': form_extension, 'active': active,'sessions':sessions,'my_session':my_session})
     try:
         if request.method == 'POST':
             if form.is_valid():
@@ -227,14 +225,14 @@ def get_client_ip(request):
 
 from django.contrib.auth.signals import user_logged_in
 
-# from user_agent import generate_user_agent, generate_navigator
+from user_agent import generate_user_agent, generate_navigator
 
 def user_logged_in_handler(sender, request, user, **kwargs):
     UserSession.objects.get_or_create(
         user = user,
-        session_id = request.session.session_key
-        # ip= get_client_ip(request),
-
+        session_id = request.session.session_key,
+        ip = get_client_ip(request),
+        useragent=str(generate_user_agent())
     )
 
 
