@@ -62,7 +62,7 @@
                         </div>
                     </div>
                 </div><!--end Table content -->
-                <div id="map" style="width:100%;height:400px"></div>
+                <div id="map" style="width:50%;height:500px; background-repeat: no-repeat !important;margin:0 auto;"></div>
                 <!--<div id="mine_map" style="width:100%;height:400px"></div>-->
             </section>
         </div>
@@ -85,7 +85,6 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -117,7 +116,7 @@
 
             if (img) {
                 $('#map').css("background-image", "url(/media/" + img + ")");
-                $("#map").html("ok");
+                //$("#map").html("ok");
             } else {
                 $("#map").css("");
                 $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
