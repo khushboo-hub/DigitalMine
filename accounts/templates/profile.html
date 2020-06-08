@@ -241,7 +241,7 @@
                                                     <td>{{ my_session.whenpublished }}</td>
                                                     <td></td>
                                                     <td>{{ my_session.useragent }}</td>
-                                                    <td><a href="#"><span class="label label-danger">Logout</span></a></td>
+                                                    <td><a href="#"></a></td>
                                                 </tr>
                                                 {% for s in sessions %}
                                                     {% ifnotequal s.id my_session.id %}
@@ -291,6 +291,7 @@
     <hr>
 
     <script>
+    $(document).ready(function () {
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -325,7 +326,7 @@
         {#})
         ;
         #}
-
+    });
 
     </script>
     <style>
