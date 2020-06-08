@@ -129,7 +129,7 @@ def node_add(request, template_name='node/node_add.html'):
     if request.user.is_superuser:
         form = NodeForm()
     else:
-        form = NodeForm(initial={'mine_id': profile.mine_id_id}, readonly={'mine_id': 'disabled'})
+        form = NodeForm(initial={'mine_id': profile.mine_id_id})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
 

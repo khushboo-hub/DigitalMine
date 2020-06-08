@@ -3,11 +3,12 @@ from .models import Node, Sensor_Node
 
 
 class NodeForm(forms.ModelForm):
-    def __init__(self,readonly=None, *args, **kwargs):
-        super(NodeForm, self).__init__(*args, **kwargs)
-        if readonly is not None:
-            for key in readonly:
-                self.fields[key].widget.attrs[readonly[key]] = True
+    # def __init__(self,readonly=None, *args, **kwargs):
+    #     super(NodeForm, self).__init__(*args, **kwargs)
+    #     print('readOnly',readonly)
+    #     if readonly is not None and len(readonly)>1:
+    #         for key in readonly:
+    #             self.fields[key].widget.attrs[readonly[key]] = True
     node_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Node ID (Ex: N001)'
