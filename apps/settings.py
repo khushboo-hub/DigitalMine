@@ -49,20 +49,20 @@ INSTALLED_APPS = [
     'DGMS_Forms',
     'Strata',
 
-    'accounts', ###   Barun Module
-    'snippets', ###   Barun Module
-    'gasmonitoring',  ###   amit Module
-    'gasmonitoring_auto',  ###   amit Module
+    'accounts',
+    'snippets',
+    'gasmonitoring',
+    'gasmonitoring_auto',
     'gasmonitoring_live',  
     'temp_monitoring',
-    'background_task', ###   Amits Task (Inbuilt Django Background Services)
-    'gasmonitoring_wifi', ###   Khushboo  Module
+    'background_task',
+    'gasmonitoring_wifi',
     'inventory_management',
-    'attendance', ### barun
-    'Training_Rescue_Accident', ### barun
-    'ProductionMonitoring', ####trainee
+    'attendance',
+    'Training_Rescue_Accident',
+    'ProductionMonitoring',
     'sensor',
-    'water_level_monitoring', #### mishhha ji
+    'water_level_monitoring',
     'SMS', 
     'news',
     'emails',
@@ -121,9 +121,9 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'iot',
-        'USER': 'csir',
-        'PASSWORD': 'tpo4pf9KlQEBGkNo',
+        'NAME': 'digi_mine',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"

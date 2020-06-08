@@ -1,13 +1,21 @@
-if __name__ == '__main__':
-    rows,columns = map(int,(input().split()))
-    width = columns
-    for i in range(0, int(rows / 2)):
-        pattern = ".|." * ((2 * i) + 1)
-        print(pattern.center(width, '-'))
-    print("WELCOME".center(width, '-'))
+def minion_game(string):
+    S_length = len(string)
+    player1, player2 = 0, 0
 
-    i = int(rows / 2)
-    while i > 0:
-        pattern = ".|." * ((2 * i) - 1)
-        print(pattern.center(width, '-'))
-        i = i - 1
+    for i in range(S_length):
+        if string[i] in "AEIOU":
+            player1 += S_length - i
+        else:
+            player2 += S_length - i
+
+    if player1 > player2:
+        print("Kevin", player1)
+    elif player1 < player2:
+        print("Stuart", player2)
+    else:
+        print("Draw")
+
+
+if __name__ == '__main__':
+    s = input()
+    minion_game(s)

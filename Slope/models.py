@@ -1,13 +1,6 @@
-######  Created By: Dewangshu Pandit
-######  Created On: 26/10/2018
-######  Model table for database fields for Slope Monitoring : tables (Slope_location,)
 from datetime import datetime
-
 from django.db import models
-
 from employee.models import MineDetails
-
-
 class Slope_location(models.Model):
     mine_name=models.ForeignKey(MineDetails,on_delete=models.CASCADE,null=True,blank=True)
     location_name = models.CharField(max_length=200)
