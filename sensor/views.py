@@ -132,10 +132,9 @@ def node_add(request, template_name='node/node_add.html'):
         form = NodeForm(initial={'mine_id': profile.mine_id_id})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
-
         if form.is_valid():
             form.save()
-            return redirect(reverse('sensor:node_add'))
+            return redirect(reverse('sensor:node_manage'))
     return render(request, template_name, {'form': form, 'action': "Add", "alert": "added"})
 
 

@@ -1,4 +1,7 @@
+import os
+
 from django.db import models
+from django.dispatch import receiver
 from django.urls import reverse
 from employee.models import MineDetails
 from django.utils import timezone
@@ -159,3 +162,43 @@ class Sensor_Node(models.Model):
 #
 #     def __str__(self):
 #         return self.value
+
+
+@receiver(models.signals.post_delete, sender=Node)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.photo1:
+        if os.path.isfile(instance.photo1.path):
+            os.remove(instance.photo1.path)
+    if instance.photo2:
+        if os.path.isfile(instance.photo2.path):
+            os.remove(instance.photo2.path)
+
+@receiver(models.signals.pre_save, sender=Node)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `MediaFile` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        node = Node.objects.get(pk=instance.pk)
+        old_file1 = node.photo1
+        old_file2 = node.photo2
+    except Node.DoesNotExist:
+        return False
+
+    new_file = instance.photo1
+    if not old_file1 == new_file:
+        if os.path.isfile(old_file1.path):
+            os.remove(old_file1.path)
+    new_file = instance.photo2
+    if not old_file2 == new_file:
+        if os.path.isfile(old_file2.path):
+            os.remove(old_file2.path)
