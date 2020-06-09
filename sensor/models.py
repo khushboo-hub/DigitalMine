@@ -164,6 +164,7 @@ class Sensor_Node(models.Model):
 #         return self.value
 
 
+################# Reciever for_Node #################
 @receiver(models.signals.post_delete, sender=Node)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
     """
@@ -202,3 +203,59 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file2 == new_file:
         if os.path.isfile(old_file2.path):
             os.remove(old_file2.path)
+
+################# Reciever for Node END #################
+
+################# Reciever for Node #################
+@receiver(models.signals.post_delete, sender=Sensor_Node)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance.level_1_audio:
+        if os.path.isfile(instance.level_1_audio.path):
+            os.remove(instance.level_1_audio.path)
+    if instance.level_2_audio:
+        if os.path.isfile(instance.level_2_audio.path):
+            os.remove(instance.level_2_audio.path)
+    if instance.level_3_audio:
+        if os.path.isfile(instance.level_3_audio.path):
+            os.remove(instance.level_3_audio.path)
+
+@receiver(models.signals.pre_save, sender=Sensor_Node)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `MediaFile` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        sensornode = Sensor_Node.objects.get(pk=instance.pk)
+        old_file1 = sensornode.level_1_audio
+        old_file2 = sensornode.level_2_audio
+        old_file3 = sensornode.level_3_audio
+    except Node.DoesNotExist:
+        return False
+
+    new_file = instance.level_1_audio
+    if not old_file1 == new_file:
+        if os.path.isfile(old_file1.path):
+            os.remove(old_file1.path)
+
+    new_file = instance.level_2_audio
+    if not old_file2 == new_file:
+        if os.path.isfile(old_file2.path):
+            os.remove(old_file2.path)
+
+    new_file = instance.level_3_audio
+    if not old_file3 == new_file:
+        if os.path.isfile(old_file3.path):
+            os.remove(old_file3.path)
+
+
+################# Reciever for Sensor Node END #################
+
