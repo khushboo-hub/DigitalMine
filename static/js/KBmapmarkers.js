@@ -1,7 +1,7 @@
 // array storing all currently added maps;
 var addedKBmaps = [];
 flag=0;
-function Map(name){
+function CustomMap(name){
 
 
 	this.name = name;
@@ -452,7 +452,7 @@ function createKBmap(name, mapsrc, mapDataJSON){
 
 	jQuery('#'+name).append(output);
 
-	window[name] = new Map(name, mapDataJSON);
+	window[name] = new CustomMap(name, mapDataJSON);
 
 	addedKBmaps.push(window[name]);
 
