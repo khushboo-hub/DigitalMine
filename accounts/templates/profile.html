@@ -241,7 +241,7 @@
                                                     <td>{{ my_session.whenpublished }}</td>
                                                     <td></td>
                                                     <td>{{ my_session.useragent }}</td>
-                                                    <td><a href="#"><span class="label label-danger">Logout</span></a></td>
+                                                    <td><a href="#"></a></td>
                                                 </tr>
                                                 {% for s in sessions %}
                                                     {% ifnotequal s.id my_session.id %}
@@ -250,7 +250,7 @@
                                                             <td>{{ s.whenpublished }}</td>
                                                             <td></td>
                                                             <td>{{ s.useragent }}</td>
-                                                            <td><a href="#"><span class="glyphicon glyphicon-log-out"></span></a></td>
+                                                            <td><a href="#" class='clearSession' data-url="{% url 'clearsession' s.id|encrypt %}"><span class="glyphicon glyphicon-log-out"></span></a></td>
                                                         </tr>
                                                     {% endifnotequal %}
                                                 {% endfor %}
@@ -287,10 +287,36 @@
 
             </form>
         </div>
+    <div class="modal fade" id="clearSession" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you Sure?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Yes" below to clear session.</div>
+            <div class="modal-footer">
+                <a id="sureDelete">
+                    <button type="button" class="btn btn-danger" id="delete">Yes</button>
+                </a>
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
     <hr>
 
     <script>
+    $(document).ready(function () {
+
+        $(document.body).on("click", ".clearSession", function () {
+            $("#sureDelete").attr("href", $(this).data('url'));
+            $('#clearSession').modal('show');
+        });
         function readURL(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -298,7 +324,6 @@
                 reader.onload = function (e) {
                     $('#profile_avatar_view').attr('src', e.target.result);
                 };
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
@@ -322,10 +347,7 @@
         {#    animated: 'fade',#}
         {#    placement: 'bottom',#}
         {#    html: true#}
-        {#})
-        ;
-        #}
-
+    });
 
     </script>
     <style>
