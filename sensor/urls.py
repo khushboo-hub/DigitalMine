@@ -45,12 +45,14 @@ urlpatterns = [
   path('fetch_sensor_ajax', views.fetch_sensor_ajax, name='fetch_sensor_ajax'),
   path('fetch_sensors_list',views.fetch_sensors_list,name='fetch_sensors_list'),
   path('fetch_sensor_values_ajax', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax'),
+  path('report_fetch_sensor_values_ajax', views.report_fetch_sensor_values_ajax, name='report_fetch_sensor_values_ajax'),
   path('fetch_sensor_ajax_sensor', views.fetch_sensor_ajax_sensor, name='fetch_sensor_ajax_sensor'),
   path('fetch_sensor_values_all_ajax', views.fetch_sensor_values_all_ajax, name='fetch_sensor_values_all_ajax'),
 
   path('sensor_wise_node', views.sensor_wise_node, name='sensor_wise_node'),
   path('sensor_wise_node_header', views.sensor_wise_node_header, name='sensor_wise_node_header'),
   path('live_map', views.live_map, name='live_map'),
+  path('report', views.report, name='report'), #new
   path('fetch_map_ajax', views.fetch_map_ajax, name='fetch_map_ajax'),
   path('sensor_wise_popup', views.sensor_wise_popup, name='sensor_wise_popup'),
   path('fetch_sensor_values_ajax_sensor_table', views.fetch_sensor_values_ajax_sensor_table, name='fetch_sensor_values_ajax_sensor_table'),

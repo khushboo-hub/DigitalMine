@@ -4,6 +4,7 @@
 import traceback
 
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponse, JsonResponse
@@ -734,6 +735,12 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
     return render(request, template_name, {'form': form})
 
 
+@login_required
+def report(request, template_name="live_data/report_data_tabular.html"):
+    form = NodeForm(request.POST or None)
+    return render(request, template_name, {'form': form})
+
+
 import random
 
 
@@ -1072,6 +1079,24 @@ def fetch_sensor_values_ajax(request):
     return JsonResponse(data)
 
 
+def report_fetch_sensor_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        try:
+            data['result'] = serializers.serialize('json',
+                                                   gasModel_auto.objects.filter(sensor_id=sensor_id),
+                                                   fields=('id', 'sensor_value','date_time'))
+            # data['result'] = gasModel_auto.objects.filter(sensor_id=sensor_id)
+        except:
+            data['result'] = {
+                'error': 'Network Error'
+            }
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
 def fetch_sensor_ajax_sensor(request):
     data = {}
     if request.is_ajax():
@@ -1121,26 +1146,26 @@ def fetch_sensor_values_all_ajax(request):
                 sensor_val = str(strip_tags(response.text))
                 sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 sensor_data.append({
-                        'id': id,
-                        'sensor_value': sensor_val,
-                        'sensor_name': sensor_name,
-                        'sensor_unit': unit,
-                        'sensor_warning_color': '#1216f6',
-                        'sensor_warning_msg': 'Gas condition is normal',
-                        'level1': r.level_1_warning_unit,
-                        'level2': r.level_2_warning_unit,
-                        'level3': r.level_3_warning_unit,
-                        'level1_color': r.level_1_color,
-                        'level2_color': r.level_2_color,
-                        'level3_color': r.level_3_color,
-                        'level1_msg': r.level_1_msg,
-                        'level2_msg': r.level_2_msg,
-                        'level3_msg': r.level_3_msg,
-                        'level1_audio': str(r.level_1_audio),
-                        'level2_audio': str(r.level_2_audio),
-                        'level3_audio': str(r.level_3_audio),
-                        'audio_type': r.audio_play_type,
-                    })
+                    'id': id,
+                    'sensor_value': sensor_val,
+                    'sensor_name': sensor_name,
+                    'sensor_unit': unit,
+                    'sensor_warning_color': '#1216f6',
+                    'sensor_warning_msg': 'Gas condition is normal',
+                    'level1': r.level_1_warning_unit,
+                    'level2': r.level_2_warning_unit,
+                    'level3': r.level_3_warning_unit,
+                    'level1_color': r.level_1_color,
+                    'level2_color': r.level_2_color,
+                    'level3_color': r.level_3_color,
+                    'level1_msg': r.level_1_msg,
+                    'level2_msg': r.level_2_msg,
+                    'level3_msg': r.level_3_msg,
+                    'level1_audio': str(r.level_1_audio),
+                    'level2_audio': str(r.level_2_audio),
+                    'level3_audio': str(r.level_3_audio),
+                    'audio_type': r.audio_play_type,
+                })
             except Exception as x:
                 sensor_data.append({'error': "Network Error"})
 
