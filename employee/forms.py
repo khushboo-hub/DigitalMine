@@ -22,7 +22,7 @@ STATE = (
 
 
 class MiningRoleForm(forms.ModelForm):
-    def __init__(self, mine_id, parent=None, *args, **kwargs):
+    def __init__(self,*args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(widget=forms.TextInput(attrs={

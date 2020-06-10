@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        <section class="col-md-12">
+            <h3 class="page-header"><b>ENVIRONMENT MONITORING : TABULAR REPORT</b>
+            </h3>
+            <div class="form-group">
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label for="" class="" id="">Choose Mine:</label>
+                            </div>
+                            <div class="col-md-8">
+                                {{ form.mine_id }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label for="id_mode" class="" id="id_mode_id">Choose Mode:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="id_mode">
+                                    <option value="">--Select Mode--</option>
+                                    <option value="0">Node Wise</option>
+                                    <option value="1">Sensor Wise</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class=" col-md-6">
+                            <div class="col-md-4">
+
+                                <label for="id_list" class="" id="node_id">Choose :</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="id_list">
+                                    <option>----------</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class=" col-md-6">
+                            <div class="col-md-4">
+
+                                <label for="id_sensor_list" class="" id="sensor_id">Choose :</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="id_sensor_list">
+                                    <option>----------</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="" for="id_dob" id="id_dob">From Date</label>
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class='input-group date' id='from_date_time_picker'>
+                                    <input type="text" name="dob" class="form-control datepicker"
+                                           required="" id="from_date" autocomplete="off">
+
+                                    <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label class="" for="id_dob" id="id_dob">To Date</label>
+
+                            </div>
+                            <div class="col-md-8">
+                                <div class='input-group date' id='to_date_time_picker'>
+                                    <input type="text" name="dob" class="form-control datepicker"
+                                           required="" id="to_date" autocomplete="off">
+
+                                    <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-md-12">
+
+                    <div class="text-center">
+                        <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12" style="margin-top:15px;">
+                <div class="loader-container text-center" hidden>
+                    <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                        <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                        <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                        <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                        <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                    </svg>
+                </div>
+                <div id="notfound" hidden>
+                    <div class="notfound">
+                        <div class="notfound-404">
+                            <h1>Oops!</h1>
+                            <h2>404 - Data not found. Please Try Again Later!</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top:15px;">
+                <div class="table-responsive">
+                    <div id="graph"></div>
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top:15px;">
+                <div class="table-responsive" id="table">
+                </div>
+            </div>
+            <div class="col-md-12" style="margin-top:15px;">
+                <div class="table-responsive" id="tableDiv">
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $("#id_mine_id").addClass('form-control');
+            $('#id_sensor_list').hide();
+            $('#sensor_id').hide();
+            $('#from_date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss',
+                useCurrent: false //Important! See issue #1075
+            });
+            $('#to_date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD HH:MM:SS',
+                useCurrent: false //Important! See issue #1075
+            });
+            $("#from_date_time_picker").on("dp.change", function (e) {
+                $('#to_date_time_picker').data("DateTimePicker").minDate(e.date);
+            });
+
+            $("#id_mode").on("change", function () {
+
+                $('table').empty();
+                let mode = $("#id_mode").val();
+                if (!isEmpty(mode)) {
+                    if (mode == "Node Wise" || mode == 0) {
+
+                        let mine_id = $("#id_mine_id").val();
+
+                        $.ajax({
+                            type: "get",
+                            url: "{% url 'sensor:fetch_node_ajax' %}",
+                            data: {
+                                'id': mine_id
+                            },
+                            success: function (data) {
+                                if (data.hasOwnProperty('result')) {
+                                    fill_dropdown(data.result);
+                                }
+                                return data;
+                            },
+                            error: function () {
+                                console.log("Something Went Wrong!");
+                            }
+                        });
+                    } else if (mode == "Sensor Wise" || mode == 1) {
+                        $('#id_sensor_list').hide();
+                        $('#sensor_id').hide();
+                        function_fill_dropdown_sensor_all();
+                    }
+                }
+            });
+
+            function fill_dropdown(nodes) {
+                $("#id_list").empty();
+                if (!isEmpty(nodes)) {
+                    $("#id_list").append($("<option />").val('').text('--Select Node--'));
+                    for (let node in nodes) {
+                        if (nodes.hasOwnProperty(node)) {
+                            $("#id_list").append($("<option />").val(nodes[node].id).text(nodes[node].node_name));
+                        }
+                    }
+                } else {
+                    $("#id_list").append($("<option />").val('').text('No Available Node'));
+                }
+            }
+
+            $("#id_list").on("change", function () {
+
+                let mode = $("#id_mode").val();
+                let node_id = this.value;
+                if (!isEmpty(mode)) {
+                    if (mode == "Node Wise" || mode == 0) {
+                        $("#sensor_id").show();
+                        $("#id_sensor_list").show();
+                    }
+
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:fetch_sensor_ajax' %}",
+                        data: {
+                            'id': node_id
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result')) {
+                                fill_dropdown_sensor(data.result);
+                            }
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                }
+            });
+
+            function fill_dropdown_sensor(Sensor) {
+                $("#id_sensor_list").empty();
+                if (!isEmpty(Sensor)) {
+                    $("#id_sensor_list").append($("<option />").val('').text('--Select Sensor--'));
+                    for (s in Sensor) {
+                        if (Sensor.hasOwnProperty(s)) {
+                            $("#id_sensor_list").append($("<option />").val(Sensor[s].id).text(Sensor[s].sensor_name));
+                        }
+                    }
+
+                } else {
+                    $("#id_sensor_list").append($("<option />").val('').text('No Available Sensor'));
+                }
+            }
+
+
+            function function_fill_dropdown_sensor_all() {
+
+                let mine_id = $('#id_mine_id').val();
+                if (!isEmpty(mine_id)) {
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:fetch_sensors_list' %}",
+                        data: {
+                            'id': mine_id
+                        },
+                        beforeSend: function () {
+                            $("#id_list").empty();
+                        },
+                        success: function (data) {
+                            let Sensors = data.result;
+                            if (data.hasOwnProperty('result')) {
+                                if (isEmpty(Sensors)) {
+                                    $("#id_list").append($("<option />").val('').text('No Available Sensor'));
+                                } else {
+                                    $("#id_list").append($("<option />").val('').text('Select Sensor'));
+                                }
+                                for (let s in Sensors) {
+                                    if (Sensors.hasOwnProperty(s)) {
+                                        $("#id_list").append($("<option />").val(Sensors[s].id).text(Sensors[s].sensor_name));
+                                    }
+                                }
+                            }
+                            return data;
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                        }
+                    });
+                }
+            }
+
+            $("#btn_show").click(function () {
+                let mine = $('#id_mine_id').val();
+                let mode = $("#id_mode").val();
+                if (isEmpty(mine)) {
+                    alert('Select Mine');
+                    return;
+                }
+                if (isEmpty(mode)) {
+                    alert('Select Mode');
+                    return;
+                }
+                if (!isEmpty(mode)) {
+                    if (mode == 'Node Wise' || mode == 0) {
+                        let node_id = $("#id_list").val();
+                        let sensor_id = $("#id_sensor_list").val();
+                        if (isEmpty(node_id)) {
+                            alert('Select Node');
+                            return;
+                        }
+                        if (isEmpty(sensor_id)) {
+                            alert('Select Sensor');
+                            return;
+                        }
+                        fill_graph_sensor_node(sensor_id);
+                    } else if (mode == "Sensor Wise" || mode == 1) {
+                        let sensor_id = $("#id_list").val();
+
+                        if (isEmpty(sensor_id)) {
+                            alert('Select Sensor');
+                            return;
+                        }
+                        fill_graph_sensor_node(sensor_id);
+                    }
+                }
+            });
+
+
+            function fill_graph_sensor_node(sensor_id) {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'sensor:fetch_sensor_ajax_sensor' %}",
+                    data: {
+                        'id': sensor_id
+                    },
+                    beforeSend: function () {
+                        $("#btn_show").val("Please wait...");
+                        $("#btn_show").prop('disabled', true);
+                    },
+                    success: function (data) {
+                        if (data.hasOwnProperty('result')) {
+                            let SensorData = data.result;
+                            let header = []
+                            header.push("Time");
+                            header.push("Mine Name");
+                            header.push("Node Name");
+                            let SensorInit = [];
+                            SensorInit.push(SensorData);
+                            for (let sensor in SensorInit) {
+                                if (SensorInit.hasOwnProperty(sensor)) {
+                                    header.push(SensorInit[sensor].sensor_name + "(" + SensorInit[sensor].sensor_unit + ")");
+                                }
+                            }
+                            fill_table_sensor_heading(header, SensorInit);
+                            fill_table_sensor(sensor_id);
+
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+            }
+
+            function fill_table_sensor(sensor_id) {
+                (function sensorGraph() {
+                    let date_from = $('#from_date').val();
+                    let date_to = $('#to_date').val();
+                    if (isEmpty(date_from)) {
+                        date_from = "1999-01-01 00:00:00";
+                    }
+                    if (isEmpty(date_to)) {
+                        date_to = "2999-01-01 23:59:59";
+                    }
+                    console.log(date_from, date_to);
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
+                        data: {
+                            'id': sensor_id,
+                            'from': date_from,
+                            'to': date_to
+                        },
+                        beforeSend:function(){
+                            $('.loader-container').show();
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result')) {
+                                let SensorValues = JSON.parse(data.result);
+                                ShowWarning(SensorValues);
+                            }
+                        },
+                        complete: function () {
+                            $('.loader-container').hide();
+                        }
+                    });
+                })();
+            }
+
+            function ShowWarning(SensorValues) {
+
+                datatable = $('#displayTable').DataTable();
+                let minename = $('#id_mine_id').find(":selected").text();
+                let nodename = $('#id_list').find(":selected").text();
+
+                for (let values in SensorValues) {
+                    if (SensorValues.hasOwnProperty(values)) {
+                        datatable.row.add([SensorValues[values].fields.date_time, minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
+                    }
+                }
+            }
+
+            function fill_table_sensor_heading(header, condition) {
+                let tableHeaders = "";
+
+                for (let h in header) {
+                    if (header.hasOwnProperty(h))
+                        tableHeaders += "<th>" + header[h] + "</th>";
+                }
+                $("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
+                $('#displayTable').DataTable({
+                    'rowCallback': function (row, data, index) {
+
+                        for (let cond in condition) {
+                            if (condition.hasOwnProperty(cond)) {
+                                if (parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level1)) {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'blue');
+
+                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level1) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level2)) {
+                                    console.log(condition[cond].id, 'green');
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'green');
+
+                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level2) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level3)) {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', '#ffc107');
+
+                                } else {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'red');
+                                }
+                            }
+                        }
+                    },
+
+                    retrieve: true,
+                    paging: false,
+                    searching: true,
+                    "ordering": false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+
+
+            }
+
+        });
+        var temp;
+        var datatable;
+    </script>
+{% endblock %}

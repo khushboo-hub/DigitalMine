@@ -258,18 +258,17 @@
 
                         for (let cond in condition) {
                             if (condition.hasOwnProperty(cond)) {
-                                if (parseFloat(data[condition[cond].id]) < parseFloat(condition[cond].level1)) {
-                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'blue');
+                                if (parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level1)) {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'blue');
 
-                                } else if (parseFloat(data[condition[cond].id]) > parseFloat(condition[cond].level1) && parseFloat(data[condition[cond].id]) < parseFloat(condition[cond].level2)) {
-                                    console.log(condition[cond].id, 'green');
-                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'green');
+                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level1) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level2)) {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'green');
 
-                                } else if (parseFloat(data[condition[cond].id]) > parseFloat(condition[cond].level2) && parseFloat(data[condition[cond].id]) < parseFloat(condition[cond].level3)) {
-                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', '#ffc107');
+                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level2) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level3)) {
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', '#ffc107');
 
                                 } else {
-                                    $(row).find('td:eq(' + condition[cond].id + ')').css('color', 'red');
+                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'red');
                                 }
                             }
                         }
