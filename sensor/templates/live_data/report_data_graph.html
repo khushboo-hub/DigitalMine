@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <section class="col-md-12">
-            <h3 class="page-header"><b>ENVIRONMENT MONITORING : TABULAR REPORT</b>
+            <h3 class="page-header"><b>ENVIRONMENT MONITORING : GRAPHICAL REPORT</b>
             </h3>
             <div class="form-group">
                 <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -111,10 +111,7 @@
                 <div class="table-responsive" id="table">
                 </div>
             </div>
-            <div class="col-md-12" style="margin-top:15px;">
-                <div class="table-responsive" id="tableDiv">
-                </div>
-            </div>
+
         </section>
     </div>
 
@@ -220,7 +217,7 @@
                             $("#id_sensor_list").append($("<option />").val(Sensor[s].id).text(Sensor[s].sensor_name));
                         }
                     }
-
+                    $("#id_sensor_list").append($("<option />").val(0).text('All Sensor'));
                 } else {
                     $("#id_sensor_list").append($("<option />").val('').text('No Available Sensor'));
                 }
@@ -242,6 +239,7 @@
                         },
                         success: function (data) {
                             let Sensors = data.result;
+                            console.log('Ss', Sensors);
                             if (data.hasOwnProperty('result')) {
                                 if (isEmpty(Sensors)) {
                                     $("#id_list").append($("<option />").val('').text('No Available Sensor'));
@@ -249,6 +247,7 @@
                                     $("#id_list").append($("<option />").val('').text('Select Sensor'));
                                 }
                                 for (let s in Sensors) {
+
                                     if (Sensors.hasOwnProperty(s)) {
                                         $("#id_list").append($("<option />").val(Sensors[s].id).text(Sensors[s].sensor_name));
                                     }
@@ -263,7 +262,6 @@
                 }
             }
 
-            let warnings = []
             $("#btn_show").click(function () {
                 let mine = $('#id_mine_id').val();
                 let mode = $("#id_mode").val();
@@ -275,6 +273,7 @@
                     alert('Select Mode');
                     return;
                 }
+
                 let date_from = $('#from_date').val();
                 let date_to = $('#to_date').val();
                 if (isEmpty(date_from)) {
@@ -285,8 +284,8 @@
                 }
                 if (!isEmpty(mode)) {
                     if (mode == 'Node Wise' || mode == 0) {
-                        let node_id = $("#id_list").val();
                         let sensor_id = $("#id_sensor_list").val();
+                        let node_id = $("#id_list").val();
                         if (isEmpty(node_id)) {
                             alert('Select Node');
                             return;
@@ -295,10 +294,34 @@
                             alert('Select Sensor');
                             return;
                         }
-                        fill_graph_sensor_node(sensor_id);
+                        if (sensor_id == '0') {
+                            $.ajax({
+                                type: "get",
+                                url: "{% url 'sensor:fetch_sensor_values_all_ajax' %}",
+                                data: {
+                                    'id': node_id
+                                },
+                                beforeSend: function () {
+                                    $("#btn_show").val("Please wait...");
+                                    $("#btn_show").prop('disabled', true);
+                                },
+                                success: function (data) {
+                                    if (data.hasOwnProperty('result')) {
+                                        fill_all(node_id, data.result);
+                                    }
+                                    return data;
+                                },
+                                error: function () {
+
+                                    console.log("Something Went Wrong!");
+                                }
+                            });
+
+                        } else {
+                            fill_graph_sensor_node(sensor_id);
+                        }
                     } else if (mode == "Sensor Wise" || mode == 1) {
                         let sensor_id = $("#id_list").val();
-
                         if (isEmpty(sensor_id)) {
                             alert('Select Sensor');
                             return;
@@ -307,28 +330,6 @@
                     }
                 }
             });
-
-            function fill_table_sensor(sensor_id) {
-                (function sensorGraph() {
-                    $.ajax({
-                        type: "get",
-                        url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
-                        data: {
-                            'id': sensor_id
-                        },
-                        success: function (data) {
-                            if (data.hasOwnProperty('result')) {
-                                console.log(data.result);
-                                let SensorValues = JSON.parse(data.result);
-                                ShowWarning(SensorValues);
-                            }
-                        },
-                        complete: function () {
-
-                        }
-                    });
-                })();
-            }
 
             function fill_graph_sensor_node(sensor_id) {
                 $.ajax({
@@ -343,21 +344,8 @@
                     },
                     success: function (data) {
                         if (data.hasOwnProperty('result')) {
-                            let SensorData = data.result;
-                            let header = []
-                            header.push("Time");
-                            header.push("Mine Name");
-                            header.push("Node Name");
-                            let SensorInit = [];
-                            SensorInit.push(SensorData);
-                            for (let sensor in SensorInit) {
-                                if (SensorInit.hasOwnProperty(sensor)) {
-                                    header.push(SensorInit[sensor].sensor_name + "(" + SensorInit[sensor].sensor_unit + ")");
-                                }
-                            }
-                            fill_table_sensor_heading(header, SensorInit);
-                            fill_table_sensor(sensor_id);
-
+                            let Sensor = data.result;
+                            fill_graph_sensor(Sensor);
                         }
                         return data;
                     },
@@ -367,64 +355,212 @@
                 });
             }
 
-            function ShowWarning(SensorValues) {
-
-                datatable = $('#displayTable').DataTable();
-                let minename = $('#id_mine_id').find(":selected").text();
-                let nodename = $('#id_list').find(":selected").text();
-
-                for (let values in SensorValues) {
-                    if (SensorValues.hasOwnProperty(values)) {
-                        datatable.row.add([SensorValues[values].fields.date_time, minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
-                    }
+            function fill_graph_sensor(SensorInit) {
+                if (!isEmpty(SensorInit)) {
+                    $('<div>', {id: "X" + SensorInit.id}).appendTo($("#table"));
+                    $('<br><br>').appendTo($("#table"));
                 }
+
+                (function sensorGraph() {
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
+                        data: {
+                            'id': SensorInit.id
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result')) {
+                                data = data.result;
+                                data = JSON.parse(data);
+                                ShowWarning(SensorInit, data);
+
+                            }
+                        },
+                        complete: function () {
+
+                        }
+                    });
+                })();
             }
 
-            function fill_table_sensor_heading(header, condition) {
-                let tableHeaders = "";
+            ////////////////////////////////////////////////////
 
-                for (let h in header) {
-                    if (header.hasOwnProperty(h))
-                        tableHeaders += "<th>" + header[h] + "</th>";
-                }
-                $("#tableDiv").append('<table id="displayTable" class="display table-bordered" cellspacing="0" width="100%"><thead><tr>' + tableHeaders + '</tr></thead><tbody id="tab_1"></tbody></table>');
-                $('#displayTable').DataTable({
-                    'rowCallback': function (row, data, index) {
+            function fill_all(node_id, SensorInitialize) {
 
-                        for (let cond in condition) {
-                            if (condition.hasOwnProperty(cond)) {
-                                if (parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level1)) {
-                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'blue');
 
-                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level1) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level2)) {
-                                    console.log(condition[cond].id, 'green');
-                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'green');
+                for (let SensorInit in SensorInitialize) {
 
-                                } else if (parseFloat(data[condition[cond].index]) > parseFloat(condition[cond].level2) && parseFloat(data[condition[cond].index]) < parseFloat(condition[cond].level3)) {
-                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', '#ffc107');
+                    if (SensorInitialize.hasOwnProperty(SensorInit)) {
+                        $('<div>', {id: "X" + SensorInitialize[SensorInit].id}).appendTo($("#table"));
+                        $('<br><br>').appendTo($("#table"));
+                        (function sensorGraph(SensorInit) {
 
-                                } else {
-                                    $(row).find('td:eq(' + condition[cond].index + ')').css('color', 'red');
+                            $.ajax({
+                                type: "get",
+                                url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
+                                data: {
+                                    'id': SensorInit.id
+                                },
+                                success: function (data) {
+                                    if (data.hasOwnProperty('result')) {
+                                        data = data.result;
+                                        data = JSON.parse(data);
+                                        ShowWarning(SensorInit, data);
+                                    }
+                                },
+                                complete: function () {
                                 }
-                            }
+                            });
+                        })(SensorInitialize[SensorInit]);
+                    }
+                }
+
+            }
+
+            function ShowWarning(SensorInit, SensorValues) {
+                let time = [];
+                let sensor_values = [];
+                let text = [];
+                let color = [];
+                for (let values in SensorValues) {
+                    if (SensorValues.hasOwnProperty(values)) {
+                        if (SensorValues[values].fields.sensor_value < SensorInit.level1) {
+                            text.push('Normal');
+                            color.push('');
+                        } else if (SensorValues[values].fields.sensor_value >= SensorInit.level1 && SensorValues[values].fields.sensor_value < SensorInit.level2) {
+                            text.push(SensorInit.level1_msg);
+                            color.push('#' + SensorInit.level1_color);
+                        } else if (SensorValues[values].fields.sensor_value >= SensorInit.level2 && SensorValues[values].fields.sensor_value < SensorInit.level3) {
+                            text.push(SensorInit.level2_msg);
+                            color.push('#' + SensorInit.level2_color);
+                        } else {
+                            text.push(SensorInit.level3_msg);
+                            color.push('#' + SensorInit.level3_color);
                         }
+                        time.push(SensorValues[values].fields.date_time);
+                        sensor_values.push(parseFloat(SensorValues[values].fields.sensor_value));
+                    }
+                }
+
+                let offset = 0.75;
+                var data = [{
+                    x: time,
+                    y: sensor_values,
+                    text: text,
+                    color: color,
+                    mode: 'lines+markers',
+                    marker: {color: color, size: 8},
+                    line: {width: 4},
+                    name: '<b>' + SensorInit.sensor_name + ' Graph</b>'
+                },
+                    {
+                        x: [time[1], time[1], time[2]],
+                        y: [SensorInit.level1 + offset, SensorInit.level2 - offset, SensorInit.level3 + offset],
+                        mode: 'text',
+                        text: ['<b>First Level Warning</b>', '<b>Second Level Warning</b>', '<b>Third Level Warning</b>'],
+                        showlegend: false,
+                        hoverinfo: 'skip',
+                    }
+
+                ];
+
+                var layout = {
+                    shapes: [
+                        {
+                            type: 'line',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: SensorInit.level1,
+                            x1: 1,
+                            y1: SensorInit.level1,
+                            line: {
+                                color: SensorInit.level1_color,
+                                width: 3,
+                                dash: 'dot'
+                            },
+                            fillcolor: '#0096888a'
+                        },
+                        {
+                            type: 'line',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: SensorInit.level2,
+                            x1: 1,
+                            y1: SensorInit.level2,
+                            line: {
+                                color: SensorInit.level2_color,
+                                width: 3,
+                                dash: 'dot'
+                            },
+                            fillcolor: '#ffeb3b75'
+                        },
+                        {
+                            type: 'line',
+                            xref: 'paper',
+                            x0: 0,
+                            y0: SensorInit.level3,
+                            x1: 1,
+                            y1: SensorInit.level3,
+                            line: {
+                                color: SensorInit.level3_color,
+                                width: 3,
+                                dash: 'dot'
+                            },
+                            fillcolor: '#f443368c'
+                        }
+
+                    ],
+                    annotations: [{
+                        xref: 'paper',
+                        yref: 'paper',
+                        x: time[0],
+                        xanchor: 'right',
+                        y: 200,
+                        yanchor: 'bottom',
+                        text: 'Hello World',
+                        showarrow: true
+                    }],
+                    title: {
+                        text: '<b>Live Graph for Sensor(' + SensorInit.sensor_name + ') in (' + SensorInit.sensor_node_name + ')</b>',
+                        font: {
+                            family: 'Courier New, monospace',
+                            size: 34
+                        },
+                        xref: 'paper',
+                        x: 0.05,
+
                     },
+                    xaxis: {
+                        title: {
+                            text: '<b>Time</b>',
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 22,
+                                color: '#060216'
+                            }
+                        },
+                    },
+                    yaxis: {
+                        title: {
+                            text: '<b>' + SensorInit.sensor_unit + '</b>',
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 22,
+                                color: '#060216'
+                            }
+                        },
 
-                    retrieve: true,
-                    paging: false,
-                    searching: true,
-                    "ordering": false,
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'copy', 'csv', 'excel', 'pdf', 'print'
-                    ]
-                });
-
+                    },
+                    showlegend: true,
+                    legend: {
+                        x: 4,
+                        y: 4
+                    }
+                };
+                Plotly.react('X' + SensorInit.id, data, layout);
 
             }
 
         });
-        var temp;
-        var datatable;
     </script>
 {% endblock %}
