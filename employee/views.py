@@ -382,25 +382,26 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     admin_or_not = 0
     if request.user.is_superuser:
         admin_or_not = 1
-        form = MiningRoleForm(None,request.POST or None)  # Passed Mine id as an argument
+        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
         form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         mine_name = "Super User"
     else:
         admin_or_not = 0
-        form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
+        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
         form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         mine_name = MineDetails.objects.get(id=profile.mine_id.id)
 
 
     if request.method == "POST":
         if request.user.is_superuser:
-            form = MiningRoleForm(request.POST.get('mine'),None, request.POST or None)
+            form = MiningRoleForm(request.POST or None)
         if form.is_valid():
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            messages.add_message(request, messages.SUCCESS, "Data Saved !!!")
+            #messages.add_message(request, messages.SUCCESS, 'Changes successfully saved.')
+            messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
@@ -430,6 +431,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
+            messages.error(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
         print(form.errors)
 

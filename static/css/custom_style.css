@@ -104,7 +104,11 @@ stroke-width:5px;
 
   stroke:rgb(222, 36, 36);
 }
-
+.alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
 body {
 		font-family: 'Varela Round', sans-serif;
 	}
@@ -890,3 +894,4 @@ h1 { text-align: center; margin-top: 150px; }
                 transform: rotate(360deg);
             }
         }
+
