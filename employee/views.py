@@ -338,6 +338,7 @@ def add_mine(request, template_name='mine/mine_add.html'):
         form = MineDetailsForm(request.POST or None, request.FILES)
         if form.is_valid():
             form.save()
+
             return redirect('employee:manage_mine')
         # return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
     return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
@@ -400,6 +401,7 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
+            messages.add_message(request, messages.SUCCESS, "Data Saved !!!")
             #return redirect('employee:manage_mining_role')
         print(form.errors)
 

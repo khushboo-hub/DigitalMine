@@ -883,6 +883,15 @@
     <div id="content">
         {% block content %}
         {% endblock %}
+    <!------------------------------- For Alert Display---------------------------->
+    {% if messages %}
+        {% for message in messages %}
+            <div id="alertId" style="text-align: center"  class="alert alert-{{ message.tags }}">
+                <strong>{{ message }} !!!</strong>
+            </div>
+         {% endfor %}
+    {% endif %}
+    <!-------------------------------------------------------------------------------->
     </div><!-- content -->
 
 </div>
@@ -1247,6 +1256,7 @@
 
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
+<script src="{% static 'js/shyam_js.js' %}"></script>
 <!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>
