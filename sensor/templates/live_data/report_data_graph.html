@@ -111,6 +111,17 @@
                 <div class="table-responsive" id="table">
                 </div>
             </div>
+            <div class="col-md-12" style="margin-top:15px;">
+                <div id="notfound" hidden>
+                    <div class="notfound">
+                        <div class="notfound-404">
+                            <h1>Oops!</h1>
+                            <h2>404 - Data not found. Please Try Again Later!</h2>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
 
         </section>
     </div>
@@ -274,14 +285,6 @@
                     return;
                 }
 
-                let date_from = $('#from_date').val();
-                let date_to = $('#to_date').val();
-                if (isEmpty(date_from)) {
-                    date_from = "1999-01-01 00:00:00";
-                }
-                if (isEmpty(date_to)) {
-                    date_to = "2999-01-01:23:59:59";
-                }
                 if (!isEmpty(mode)) {
                     if (mode == 'Node Wise' || mode == 0) {
                         let sensor_id = $("#id_sensor_list").val();
@@ -307,12 +310,11 @@
                                 },
                                 success: function (data) {
                                     if (data.hasOwnProperty('result')) {
-                                        fill_all(node_id, data.result);
+                                        fill_all(data.result);
                                     }
                                     return data;
                                 },
                                 error: function () {
-
                                     console.log("Something Went Wrong!");
                                 }
                             });
@@ -355,6 +357,16 @@
                 });
             }
 
+            function fill_all(SensorInitialize) {
+                for (let SensorInit in SensorInitialize) {
+
+                    if (SensorInitialize.hasOwnProperty(SensorInit)) {
+                        fill_graph_sensor(SensorInitialize[SensorInit])
+                    }
+
+                }
+            }
+
             function fill_graph_sensor(SensorInit) {
                 if (!isEmpty(SensorInit)) {
                     $('<div>', {id: "X" + SensorInit.id}).appendTo($("#table"));
@@ -362,16 +374,34 @@
                 }
 
                 (function sensorGraph() {
+
+                    let date_from = $('#from_date').val();
+                    let date_to = $('#to_date').val();
+                    if (isEmpty(date_from)) {
+                        date_from = "1999-01-01 00:00:00";
+                    }
+                    if (isEmpty(date_to)) {
+                        date_to = "2999-01-01 23:59:59";
+                    }
                     $.ajax({
                         type: "get",
                         url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
                         data: {
-                            'id': SensorInit.id
+                            'id': SensorInit.id,
+                            'from': date_from,
+                            'to': date_to
+                        },
+                        beforeSend:function(){
+                             $('#notfound').hide();
                         },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
                                 data = data.result;
                                 data = JSON.parse(data);
+                                if(isEmpty(data)){
+                                     $('#notfound').show();
+                                     return;
+                                }
                                 ShowWarning(SensorInit, data);
 
                             }
@@ -385,37 +415,6 @@
 
             ////////////////////////////////////////////////////
 
-            function fill_all(node_id, SensorInitialize) {
-
-
-                for (let SensorInit in SensorInitialize) {
-
-                    if (SensorInitialize.hasOwnProperty(SensorInit)) {
-                        $('<div>', {id: "X" + SensorInitialize[SensorInit].id}).appendTo($("#table"));
-                        $('<br><br>').appendTo($("#table"));
-                        (function sensorGraph(SensorInit) {
-
-                            $.ajax({
-                                type: "get",
-                                url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
-                                data: {
-                                    'id': SensorInit.id
-                                },
-                                success: function (data) {
-                                    if (data.hasOwnProperty('result')) {
-                                        data = data.result;
-                                        data = JSON.parse(data);
-                                        ShowWarning(SensorInit, data);
-                                    }
-                                },
-                                complete: function () {
-                                }
-                            });
-                        })(SensorInitialize[SensorInit]);
-                    }
-                }
-
-            }
 
             function ShowWarning(SensorInit, SensorValues) {
                 let time = [];

@@ -1089,12 +1089,15 @@ def report_fetch_sensor_values_ajax(request):
     data = {}
     if request.is_ajax():
         sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
+
         try:
             data['result'] = serializers.serialize('json',
-                                                   gasModel_auto.objects.filter(sensor_id=sensor_id),
+                                                   gasModel_auto.objects.filter(sensor_id=sensor_id,date_time__range=(date_from,date_to)),
                                                    fields=('id', 'sensor_value', 'date_time'))
         except:
-            data['result'] = {
+            data['error'] = {
                 'error': 'Network Error'
             }
     else:
@@ -1110,7 +1113,6 @@ def report_fetch_node_values_ajax(request):
             sensors = Sensor_Node.objects.filter(node_id=node_id)
             result = []
             for s in sensors:
-                print('sensor id',s.id)
                 result.append(serializers.serialize('json',
                                                     gasModel_auto.objects.filter(sensor_id=s.id),
                                                     fields=('id', 'sensor_value', 'date_time')))
