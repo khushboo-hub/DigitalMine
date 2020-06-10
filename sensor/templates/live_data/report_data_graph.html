@@ -403,6 +403,7 @@
                             $('.loader-container').show();
                         },
                         success: function (data) {
+                            console.log('DATA',data);
                             if (data.hasOwnProperty('result')) {
                                 data = data.result;
                                 data = JSON.parse(data);
