@@ -52,7 +52,7 @@
                 <button id="btn_show" class="btn btn-primary">Show Graph</button>
             </div>
             <div class="loader-container" hidden>
-            <svg class="loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+            <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
                 <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
                 <circle cx="170" cy="170" r="135" stroke="#404041"/>
                 <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
@@ -101,7 +101,7 @@
                         type: "get",
                         url: url,
                         data: {
-                            {{ 'id' }}: id,
+                             'id' : id,
                             'date_from': from,
                             'date_to': to,
                         },
@@ -273,7 +273,6 @@
                 let id = $('#node_id').val();
                 let from = $('#id_date_fr').val();
                 let to = $('#id_date_to').val();
-                console.log(endpoint, id, from, to);
                 if (!isEmpty(from) && !isEmpty(to)) {
                     console.log('clicked in');
                     GRAPH(endpoint, id, from, to)

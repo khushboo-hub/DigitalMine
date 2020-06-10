@@ -101,7 +101,24 @@
                 </div>
             </div>
 
-
+            <div class="col-md-12" style="margin-top:15px;">
+                <div class="loader-container text-center" hidden>
+                    <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                        <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                        <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                        <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                        <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                    </svg>
+                </div>
+                <div id="notfound" hidden>
+                    <div class="notfound">
+                        <div class="notfound-404">
+                            <h1>Oops!</h1>
+                            <h2>404 - Data not found. Please Try Again Later!</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12" style="margin-top:15px;">
                 <div class="table-responsive">
                     <div id="graph"></div>
@@ -348,7 +365,7 @@
                     if (isEmpty(date_to)) {
                         date_to = "2999-01-01 23:59:59";
                     }
-                    console.log(date_from,date_to);
+                    console.log(date_from, date_to);
                     $.ajax({
                         type: "get",
                         url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
@@ -357,6 +374,9 @@
                             'from': date_from,
                             'to': date_to
                         },
+                        beforeSend:function(){
+                            $('.loader-container').show();
+                        },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
                                 let SensorValues = JSON.parse(data.result);
@@ -364,7 +384,7 @@
                             }
                         },
                         complete: function () {
-
+                            $('.loader-container').hide();
                         }
                     });
                 })();

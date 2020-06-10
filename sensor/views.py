@@ -1088,10 +1088,11 @@ def fetch_sensor_values_ajax(request):
 def report_fetch_sensor_values_ajax(request):
     data = {}
     if request.is_ajax():
+        for i in range(1,1000):
+            print(i)
         sensor_id = request.GET.get('id', None)
         date_from = request.GET.get('from', None)
         date_to = request.GET.get('to', None)
-
         try:
             data['result'] = serializers.serialize('json',
                                                    gasModel_auto.objects.filter(sensor_id=sensor_id,date_time__range=(date_from,date_to)),
