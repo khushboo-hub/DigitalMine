@@ -223,9 +223,14 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
 
 @login_required
 def show_database(request, template_name='FireExp/show_database.html'):
-    gases = Gasdb.objects.all()
-    data = {}
-    data['object_list'] = gases
+    data={}
+    if request.method == "POST":
+        date_from = request.POST.get('from_date')
+        date_to = request.POST.get('to_date')
+        print(date_from)
+        print(date_to)
+        gases = Gasdb.objects.filter(date__range=(date_from,date_to))
+        data['object_list'] = gases
     return render(request, template_name, data)
 
 
@@ -488,228 +493,230 @@ def analysis(request, page):
 
 @login_required
 def explosibility(request, page, template_name='FireExp/explosibility.html'):
-    class GraphData:
-        o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-        explos = 5
-        idtest = 0
+    if request.is_ajax():
+        date_from=request.GET.get('from',None)
+        date_to=request.GET.get('to',None)
+        class GraphData:
+            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
+            explos = 5
+            idtest = 0
 
-    graphpoints = []
+        graphpoints = []
 
-    if (page == 0):
-        FireExp = Gasdb.objects.all()
-    elif (page == 1):
-        FireExp = Fire_exp_gases.objects.all()
+        if (page == 0):
+            FireExp = Gasdb.objects.filter(date__range=(date_from,date_to))
+        elif (page == 1):
+            FireExp = Fire_exp_gases.objects.all()
 
-    idn = 1
-    data = {}
-    graph = []
-    dates = []
-    for gas in FireExp:
-        dates.append(gas.date)
-        x = GraphData()
+        idn = 1
+        data = {}
+        graph = []
+        dates = []
+        for gas in FireExp:
+            dates.append(gas.date)
+            x = GraphData()
 
-        try:
-            x.o2 = gas.o2
-            # x.o2 = Gasdb.objects.get(id=idn).o2
-        except Gasdb.DoesNotExist:
-            x.o2 = None
-        try:
-            x.co = gas.co
-        except Gasdb.DoesNotExist:
-            x.co = None
-        try:
-            x.ch4 = gas.ch4
-        except Gasdb.DoesNotExist:
-            x.ch4 = None
+            try:
+                x.o2 = gas.o2
+                # x.o2 = Gasdb.objects.get(id=idn).o2
+            except Gasdb.DoesNotExist:
+                x.o2 = None
+            try:
+                x.co = gas.co
+            except Gasdb.DoesNotExist:
+                x.co = None
+            try:
+                x.ch4 = gas.ch4
+            except Gasdb.DoesNotExist:
+                x.ch4 = None
 
-        try:
-            x.co2 = gas.co2
-        except Gasdb.DoesNotExist:
-            x.co2 = None
+            try:
+                x.co2 = gas.co2
+            except Gasdb.DoesNotExist:
+                x.co2 = None
 
-        try:
-            x.h2 = gas.h2
-        except Gasdb.DoesNotExist:
-            x.h2 = None
+            try:
+                x.h2 = gas.h2
+            except Gasdb.DoesNotExist:
+                x.h2 = None
 
-        try:
-            x.n2 = gas.n2
-        except Gasdb.DoesNotExist:
-            x.n2 = None
+            try:
+                x.n2 = gas.n2
+            except Gasdb.DoesNotExist:
+                x.n2 = None
 
-        try:
-            x.c2h4 = gas.c2h4
-        except Gasdb.DoesNotExist:
-            x.c2h4 = None
+            try:
+                x.c2h4 = gas.c2h4
+            except Gasdb.DoesNotExist:
+                x.c2h4 = None
 
-        try:
-            x.idtest = gas.id
-        except Gasdb.DoesNotExist:
-            x.idtest = None
+            try:
+                x.idtest = gas.id
+            except Gasdb.DoesNotExist:
+                x.idtest = None
 
-        ##explosibility calculation again
-        x.explos = 5
-        pt = x.ch4 + x.co + x.h2
+            ##explosibility calculation again
+            x.explos = 5
+            pt = x.ch4 + x.co + x.h2
 
-        ch4low = 5
-        colow = 12.5
-        h2low = 4
-        ch4high = 14
-        cohigh = 74.2
-        h2high = 74.2
-        ch4nose = 5.9
-        conose = 13.8
-        h2nose = 4.3
-        ch4np = 6.07
-        conp = 4.13
-        h2np = 16.59
+            ch4low = 5
+            colow = 12.5
+            h2low = 4
+            ch4high = 14
+            cohigh = 74.2
+            h2high = 74.2
+            ch4nose = 5.9
+            conose = 13.8
+            h2nose = 4.3
+            ch4np = 6.07
+            conp = 4.13
+            h2np = 16.59
 
-        Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-        Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-        Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-        Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
+            Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
+            Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
+            Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
+            Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
 
-        Oxnose = 0.2093 * (100 - Nex - Lnose)
+            Oxnose = 0.2093 * (100 - Nex - Lnose)
 
-        ##total combustible at extinctive point
-        Le = 20.93 * Lnose / (20.93 - Oxnose)
-        ##oxygen at lower limit
-        Ob = -20.93 * Llow / 100 + 20.93
-        ##oxygen at upper limit
-        Oc = -20.93 * Lhigh / 100 + 20.93
+            ##total combustible at extinctive point
+            Le = 20.93 * Lnose / (20.93 - Oxnose)
+            ##oxygen at lower limit
+            Ob = -20.93 * Llow / 100 + 20.93
+            ##oxygen at upper limit
+            Oc = -20.93 * Lhigh / 100 + 20.93
 
-        if ((x.o2 >= 0) and (pt >= 0)):
-            if (100 * x.o2 + 20.93 * pt >= 2093):
-                x.explos = 4
-            if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-                x.explos = 0
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                x.explos = 2
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 3
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 1
+            if ((x.o2 >= 0) and (pt >= 0)):
+                if (100 * x.o2 + 20.93 * pt >= 2093):
+                    x.explos = 4
+                if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
+                    x.explos = 0
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                    x.explos = 2
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 3
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 1
 
-        ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
+            ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
 
-        ##calculating Ellicott's Extension point
+            ##calculating Ellicott's Extension point
 
-        ##calculating new x,y coordinates after origin shift
-        xx = pt - Lnose
-        yx = x.o2 - Oxnose
+            ##calculating new x,y coordinates after origin shift
+            xx = pt - Lnose
+            yx = x.o2 - Oxnose
 
-        xp = Llow - Lnose
-        yp = Ob - Oxnose
+            xp = Llow - Lnose
+            yp = Ob - Oxnose
 
-        xq = Lhigh - Lnose
-        yq = Oc - Oxnose
+            xq = Lhigh - Lnose
+            yq = Oc - Oxnose
 
-        xs = Le - Lnose
-        ys = -Oxnose
+            xs = Le - Lnose
+            ys = -Oxnose
 
-        # calculating polar coordinates
-        def properarctan(valuex, valuey):
-            if valuex >= 0:
-                if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                    return (360 + np.degrees(np.arctan(valuey / valuex)))
+            # calculating polar coordinates
+            def properarctan(valuex, valuey):
+                if valuex >= 0:
+                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                        return (360 + np.degrees(np.arctan(valuey / valuex)))
+                    else:
+                        return np.degrees(np.arctan(valuey / valuex))
                 else:
-                    return np.degrees(np.arctan(valuey / valuex))
+                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+
+            rx = np.sqrt(xx * xx + yx * yx)
+            thx = properarctan(xx, yx)
+
+            rp = np.sqrt(xp * xp + yp * yp)
+            thp = properarctan(xp, yp)
+
+            rq = np.sqrt(xq * xq + yq * yq)
+            thq = properarctan(xq, yq)
+
+            rs = np.sqrt(xs * xs + ys * ys)
+            ths = properarctan(xs, ys)
+
+            ##calculating r,theta values based on explosibiility
+            if x.explos == 3:
+                rm = rx
+                thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
+            elif (x.explos == 1 or x.explos == 2):
+                rm = rx
+                thm = 270 + (90 * ((thx - ths) / (
+                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+            elif x.explos == 0:
+                rm = rx
+                thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
             else:
-                return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+                rm = 0
+                thm = 0
 
-        rx = np.sqrt(xx * xx + yx * yx)
-        thx = properarctan(xx, yx)
+            x.elx = rm * np.cos(np.radians(thm))
+            x.ely = rm * np.sin(np.radians(thm))
+            print("GPx", x)
 
-        rp = np.sqrt(xp * xp + yp * yp)
-        thp = properarctan(xp, yp)
+            graphpoints.append(x)
+            idn = idn + 1
 
-        rq = np.sqrt(xq * xq + yq * yq)
-        thq = properarctan(xq, yq)
+        ##graph
+        xlist = []
+        ylist = []
+        idn = 0
+        while (idn < len(graphpoints)):
+            xlist.append(graphpoints[idn].elx)
+            ylist.append(graphpoints[idn].ely)
+            idn = idn + 1
 
-        rs = np.sqrt(xs * xs + ys * ys)
-        ths = properarctan(xs, ys)
+        xaxislist = []
+        yaxislist = []
+        for i in range(-12, 13):
+            xaxislist.append(i)
+            yaxislist.append(0)
 
-        ##calculating r,theta values based on explosibiility
-        if x.explos == 3:
-            rm = rx
-            thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-        elif (x.explos == 1 or x.explos == 2):
-            rm = rx
-            thm = 270 + (90 * ((thx - ths) / (
-                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-        elif x.explos == 0:
-            rm = rx
-            thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
-        else:
-            rm = 0
-            thm = 0
+        trialxlist = []
+        trialylist = []
+        idn = 0
 
-        x.elx = rm * np.cos(np.radians(thm))
-        x.ely = rm * np.sin(np.radians(thm))
-        print("GPx", x)
+        def markercrtr(numb):
+            createdstring = '$' + str(numb + 1) + '$'
+            return createdstring
 
-        graphpoints.append(x)
-        idn = idn + 1
+        def markerclr(x,y):
+            colorstring = '#77b5fe'
+            if (x <= 0  and y <= 0):
+                colorstring = '#4caf50'
+            elif (x <= 0 and y>0):
+                colorstring = '#ffc107'
+            elif (x > 0 and y > 0):
+                colorstring = '#ff9800'
+            elif (x> 0 and y<0):
+                colorstring = '#ff5722'
+            return colorstring
 
-    ##graph
-    xlist = []
-    ylist = []
-    idn = 0
-    while (idn < len(graphpoints)):
-        xlist.append(graphpoints[idn].elx)
-        ylist.append(graphpoints[idn].ely)
-        idn = idn + 1
-
-    xaxislist = []
-    yaxislist = []
-    for i in range(-12, 13):
-        xaxislist.append(i)
-        yaxislist.append(0)
-
-    trialxlist = []
-    trialylist = []
-    idn = 0
-
-    def markercrtr(numb):
-        createdstring = '$' + str(numb + 1) + '$'
-        return createdstring
-
-    def markerclr(numb):
-        tot = len(graphpoints)
-        colorstring = '#77b5fe'
-        if (numb < tot / 5):
-            colorstring = '#8a2be2'
-        elif (numb < 2 * tot / 5):
-            colorstring = '#8db600'
-        elif (numb < 3 * tot / 5):
-            colorstring = '#ffff00'
-        elif (numb < 4 * tot / 5):
-            colorstring = '#eaa221'
-        else:
-            colorstring = '#ffc0cb'
-        return colorstring
-
-    while (idn < len(graphpoints)):
-        trialxlist = graphpoints[idn].elx
-        trialylist = graphpoints[idn].ely
-        # print('dates', dates[idn])
-        graph.append({
-            'x': trialxlist,
-            'y': trialylist,
-            'color': markerclr(idn),
-            'dates': dates[idn]
-        })
-        idn = idn + 1
-    data['result'] = graph
+        while (idn < len(graphpoints)):
+            trialxlist = graphpoints[idn].elx
+            trialylist = graphpoints[idn].ely
+            # print('dates', dates[idn])
+            graph.append({
+                'x': trialxlist,
+                'y': trialylist,
+                'color': markerclr(trialxlist,trialylist),
+                'dates': dates[idn]
+            })
+            idn = idn + 1
+        data['result'] = graph
+    else:
+        data['error']="Not Ajax"
     return JsonResponse(data)
 
 

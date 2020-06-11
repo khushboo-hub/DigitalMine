@@ -431,7 +431,7 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            messages.error(request, 'Changes successfully saved.')
+            messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
         print(form.errors)
 

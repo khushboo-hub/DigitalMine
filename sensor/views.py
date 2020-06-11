@@ -742,6 +742,12 @@ def report_table(request, template_name="live_data/report_data_tabular.html"):
 
 
 @login_required
+def avg_report_table(request, template_name="live_data/average_report_data_tabular.html"):
+    form = NodeForm(request.POST or None)
+    return render(request, template_name, {'form': form})
+
+
+@login_required
 def report_graph(request, template_name="live_data/report_data_graph.html"):
     form = NodeForm(request.POST or None)
     return render(request, template_name, {'form': form})
@@ -1088,16 +1094,48 @@ def fetch_sensor_values_ajax(request):
 def report_fetch_sensor_values_ajax(request):
     data = {}
     if request.is_ajax():
-        for i in range(1,1000):
-            print(i)
         sensor_id = request.GET.get('id', None)
         date_from = request.GET.get('from', None)
         date_to = request.GET.get('to', None)
+
         try:
             data['result'] = serializers.serialize('json',
-                                                   gasModel_auto.objects.filter(sensor_id=sensor_id,date_time__range=(date_from,date_to)),
+                                                   gasModel_auto.objects.filter(sensor_id=sensor_id,
+                                                                                date_time__range=(date_from, date_to)),
                                                    fields=('id', 'sensor_value', 'date_time'))
         except:
+            data['error'] = {
+                'error': 'Network Error'
+            }
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
+def avg_report_fetch_sensor_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
+        avg = request.GET.get('avg', None)
+        avg_data = {}
+        try:
+            gas = []
+            # Hourly avg
+            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to))
+
+            avg_data['hourly'] = list(gases.values('sensor_name').annotate(day=TruncHour('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            avg_data['daily'] = list(gases.values('sensor_name').annotate(day=TruncDay('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            avg_data['monthly'] = list(gases.values('sensor_name').annotate(day=TruncMonth('date_time'), avg=Avg(NullIf('sensor_value', Value(0)))))
+
+            avg_data['yearly'] = list(gases.values('sensor_name').annotate(day=TruncYear('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            data['result'] = avg_data
+        except Exception as e:
+            print(e)
             data['error'] = {
                 'error': 'Network Error'
             }
@@ -1575,7 +1613,7 @@ import matplotlib.pyplot as plt
 import io
 import numpy as np
 from django.db.models import Avg
-from django.db.models.functions import NullIf, TruncDay
+from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
 from django.db.models import Value
 
 

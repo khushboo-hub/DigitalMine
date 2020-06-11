@@ -422,6 +422,8 @@
                                         <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
                                         <li><a href="{% url 'sensor:report_table' %}">Tabular Report</a></li>
                                         <li><a href="{% url 'sensor:report_graph' %}">Graphical Report</a></li>
+                                        <li><a href="{% url 'sensor:avg_report_table' %}">Average Tabular Report</a></li>
+
 
                                         <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf
                                             Area<sub></sub></a>
@@ -882,17 +884,18 @@
 </div>
 <div class="spacer"></div>
 <div class="main">
-    <div id="content">
-        {% block content %}
-        {% endblock %}
-    <!------------------------------- For Alert Display---------------------------->
-    {% if messages %}
+{% if messages %}
         {% for message in messages %}
-            <div id="alertId" style="text-align: center"  class="alert alert-{{ message.tags }}">
+            <div id="alertId" style="text-align: center"  class="container alert alert-{{ message.tags }}">
                 <strong>{{ message }} !!!</strong>
             </div>
          {% endfor %}
     {% endif %}
+    <div id="content">
+        {% block content %}
+        {% endblock %}
+    <!------------------------------- For Alert Display---------------------------->
+
 
     <!-------------------------------------------------------------------------------->
     </div><!-- content -->

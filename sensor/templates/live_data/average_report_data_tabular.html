@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <section class="col-md-12">
-            <h3 class="page-header"><b>ENVIRONMENT MONITORING : TABULAR REPORT</b>
+            <h3 class="page-header"><b>ENVIRONMENT MONITORING : AVERGAGE TABULAR REPORT</b>
             </h3>
             <div class="form-group">
                 <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -92,6 +92,44 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-check-label" for="exampleRadios1">Hourly</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"
+                                       value="0" checked>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-check-label" for="exampleRadios1">Daily</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"
+                                       value="1" checked>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-check-label" for="exampleRadios1">Monthly</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"
+                                       value="2" checked>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="col-md-4">
+                                <label class="form-check-label" for="exampleRadios1">Yearly</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"
+                                       value="3" checked>
+                            </div>
+                        </div>
+                    </div>
                 </form>
                 <div class="col-md-12">
 
@@ -129,8 +167,68 @@
                 </div>
             </div>
             <div class="col-md-12" style="margin-top:15px;">
-                <div class="table-responsive" id="tableDiv">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="hourly">
+                        <thead>
+                        <th>Date</th>
+                        <th>0-1</th>
+                        <th>1-2</th>
+                        <th>2-3</th>
+                        <th>3-4</th>
+                        <th>4-5</th>
+                        <th>5-6</th>
+                        <th>6-7</th>
+                        <th>7-8</th>
+                        <th>8-9</th>
+                        <th>9-10</th>
+                        <th>10-11</th>
+                        <th>11-12</th>
+                        <th>12-13</th>
+                        <th>12-14</th>
+                        <th>14-15</th>
+                        <th>15-16</th>
+                        <th>16-17</th>
+                        <th>17-18</th>
+                        <th>18-19</th>
+                        <th>19-20</th>
+                        <th>20-21</th>
+                        <th>21-22</th>
+                        <th>22-23</th>
+                        <th>23-0</th>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <td>12-12-12</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td>10</td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                            <td>14</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>18</td>
+                            <td>19</td>
+                            <td>20</td>
+                            <td>21</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>24</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <div class="table-responsive" id="monthly"></div>
+                <div class="table-responsive" id="yearly"></div>
             </div>
 
         </section>
@@ -365,19 +463,21 @@
                         if (isEmpty(date_to)) {
                             date_to = "2999-01-01 23:59:59";
                         }
-                        console.log(date_from, date_to);
+                        let AvgReport = $("input:radio[name='AvgReport']:checked").val()
                         $.ajax({
                             type: "get",
-                            url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
+                            url: "{% url 'sensor:avg_report_fetch_sensor_values_ajax' %}",
                             data: {
                                 'id': sensor_id,
                                 'from': date_from,
-                                'to': date_to
+                                'to': date_to,
+                                'avg': AvgReport
                             },
                             beforeSend: function () {
                                 $('.loader-container').show();
                             },
                             success: function (data) {
+                                console.log('DATA', data);
                                 if (data.hasOwnProperty('result')) {
                                     let SensorValues = JSON.parse(data.result);
                                     ShowWarning(SensorValues);

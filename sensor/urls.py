@@ -47,10 +47,9 @@ urlpatterns = [
     path('fetch_sensor_ajax', views.fetch_sensor_ajax, name='fetch_sensor_ajax'),
     path('fetch_sensors_list', views.fetch_sensors_list, name='fetch_sensors_list'),
     path('fetch_sensor_values_ajax', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax'),
-    path('report_fetch_sensor_values_ajax', views.report_fetch_sensor_values_ajax,
-         name='report_fetch_sensor_values_ajax'),
-path('report_fetch_node_values_ajax', views.report_fetch_node_values_ajax,
-         name='report_fetch_node_values_ajax'),
+    path('report_fetch_sensor_values_ajax', views.report_fetch_sensor_values_ajax,name='report_fetch_sensor_values_ajax'),
+    path('avg_report_fetch_sensor_values_ajax', views.avg_report_fetch_sensor_values_ajax,name='avg_report_fetch_sensor_values_ajax'),
+    path('report_fetch_node_values_ajax', views.report_fetch_node_values_ajax,name='report_fetch_node_values_ajax'),
 
     path('fetch_sensor_ajax_sensor', views.fetch_sensor_ajax_sensor, name='fetch_sensor_ajax_sensor'),
     path('fetch_sensor_values_all_ajax', views.fetch_sensor_values_all_ajax, name='fetch_sensor_values_all_ajax'),
@@ -60,6 +59,7 @@ path('report_fetch_node_values_ajax', views.report_fetch_node_values_ajax,
     path('live_map', views.live_map, name='live_map'),
     path('report_table', views.report_table, name='report_table'),  # new
     path('report_graph', views.report_graph, name='report_graph'),  # new
+    path('avg_report_table', views.avg_report_table, name='avg_report_table'),
 
     path('fetch_map_ajax', views.fetch_map_ajax, name='fetch_map_ajax'),
     path('sensor_wise_popup', views.sensor_wise_popup, name='sensor_wise_popup'),
