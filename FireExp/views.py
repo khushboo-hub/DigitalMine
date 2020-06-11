@@ -700,7 +700,7 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
             elif (x > 0 and y > 0):
                 colorstring = '#ff9800'
             elif (x> 0 and y<0):
-                colorstring = '#ff5722'
+                colorstring = '#f44336'
             return colorstring
 
         while (idn < len(graphpoints)):

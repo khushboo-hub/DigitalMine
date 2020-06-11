@@ -75,9 +75,9 @@
                 $.ajax({
                     type: "get",
                     url: "{% url 'FireExp:explosibility' 0 %}",
-                    data:{
-                        'from':from,
-                        'to':to,
+                    data: {
+                        'from': from,
+                        'to': to,
                     },
 
                     beforeSend: function (jqXHR) {
@@ -110,42 +110,7 @@
                         var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                         var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                         console.log(lowest, highest);
-                        var trace1 = {
-                            {#x: [-1*((highest*lowest)/2)*.4, ((highest*lowest)/2)*0.5],#}
-                            {#y: [((highest*lowest)/2)*0.8, ((highest*lowest)/2)*0.8],#}
-                            x: [-75, 80],
-                            y: [18, 18],
-                            mode: 'text',
-                            name: 'Lines, Markers and Text',
-                            text: ['<b>CLEAN FUEL NON-EXPLOSIVE</b>', '<b>EXPLOSIVE</b>'],
-                            hoverinfo: 'skip',
-                            textposition: 'center',
-                            textfont: {
-                                {#family: 'sans serif ,bold',#}
-                                size: 13,
-                                color: '#1f77b4'
-                            },
-                            type: 'scatter'
-                        };
-                        var trace2 = {
-                            {#x: [-1*((highest*lowest)/2)*0.5, ((highest*lowest)/2)*0.5],#}
-                            {#y: [-1*((highest*lowest)/2)*0.9, -1*((highest*lowest)/2)*0.9],#}
-                            x: [-70, 80],
-                            y: [-18, -18],
-                            mode: 'text',
-                            name: 'Lines and Text',
-                            text: ['<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>', '<b>POTENTIALLY EXPLOSIVE</b>'],
-                            hoverinfo: 'skip',
-                            textposition: 'bottom center',
-                            textfont: {
-                                {#family: 'sans serif',#}
-                                size: 13,
-                                color: '#ff7f0e'
-                            },
-                            type: 'scatter'
-                        };
-                        console.log(dates)
-                        date = ['1', '2', '3'];
+
                         var trace3 = {
                             x: x_list,
                             y: y_list,
@@ -166,12 +131,11 @@
                             hoveron: 'points',
                             hovertemplate: "<b>%{marker.size}<b><extra></extra>",
 
-
+                            name:'Trace',
                             hoverinfo: 'x+y',
                         };
 
-
-                        var data = [trace1, trace2, trace3];
+                        var data = [trace3];
                         var layout = {
                             title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
                             titlefont: {
@@ -187,7 +151,7 @@
                                 dtick: 10,
                                 autoscale: false,
                                 {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
-                                range: [-100, 100],
+                                range: [-highest * 1.2, highest * 1.2],
                                 ticks: "outside",
                                 showgrid: true,
                                 zeroline: true,
@@ -210,7 +174,7 @@
                                 {#yanchor:'right',#}
                                 ticks: 'inside',
                                 {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
-                                range: [-20, 20],
+                                range: [-highest * 1.2, highest * 1.2],
                                 showgrid: true,
                                 zeroline: true,
                                 showline: true,
@@ -223,13 +187,143 @@
                                 linewidth: 6,
 
                             },
+                            annotations: [{
+                                xref: 'x',
+                                yref: 'y',
+                                x: -highest * 0.5,
+                                y: highest,
+                                xanchor: 'right',
 
-                            showlegend: false
+                                font: {
+                                    family: 'Courier New, monospace',
+                                    size: 16,
+                                    color: '#ff7f0e'
+                                },
+                                yanchor: 'top',
+                                text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                                showarrow: false
+                            },
+                                {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: highest * 0.5,
+                                    y: highest,
+                                    xanchor: 'left',
+
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#ff7f0e'
+                                    },
+                                    yanchor: 'top',
+                                    text: '<b>EXPLOSIVE</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: -highest * 0.5,
+                                    y: -highest,
+                                    xanchor: 'right',
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#ff7f0e'
+                                    },
+
+                                    yanchor: 'bottom',
+                                    text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                                    showarrow: false
+                                }, {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: highest * 0.5,
+                                    y: -highest,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                                    showarrow: false
+                                },
+
+
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 1,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>A</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.9,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>B</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.8,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>C</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.7,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>D</b>',
+                                    showarrow: false
+                                }
+                            ],
+
+                            showlegend: true
                         };
                         Plotly.newPlot('myDiv', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
 
                     },
-                    complete:function(){
+                    complete: function () {
                         $('.loader-container').hide();
                     },
                     error: function () {
