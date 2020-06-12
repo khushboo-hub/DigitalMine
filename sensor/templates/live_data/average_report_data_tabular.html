@@ -1,7 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
+    <style>
+        .max {
+            color: green
+        }
+
+        .min {
+            color: red
+        }
+    .container-custom{
+        width:100%;
+    }
+    </style>
+    <div class="container container-custom">
         <section class="col-md-12">
             <h3 class="page-header"><b>ENVIRONMENT MONITORING : AVERGAGE TABULAR REPORT</b>
             </h3>
@@ -168,69 +180,45 @@
             </div>
             <div class="col-md-12" style="margin-top:15px;">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="hourly">
+                    <table class="table table-bordered table-condensed" id="hourly">
                         <thead>
-                        <th>Date</th>
-                        <th>0-1</th>
-                        <th>1-2</th>
-                        <th>2-3</th>
-                        <th>3-4</th>
-                        <th>4-5</th>
-                        <th>5-6</th>
-                        <th>6-7</th>
-                        <th>7-8</th>
-                        <th>8-9</th>
-                        <th>9-10</th>
-                        <th>10-11</th>
-                        <th>11-12</th>
-                        <th>12-13</th>
-                        <th>12-14</th>
-                        <th>14-15</th>
-                        <th>15-16</th>
-                        <th>16-17</th>
-                        <th>17-18</th>
-                        <th>18-19</th>
-                        <th>19-20</th>
-                        <th>20-21</th>
-                        <th>21-22</th>
-                        <th>22-23</th>
-                        <th>23-0</th>
-                        </thead>
-                        <tbody>
                         <tr>
-                          <td>12-12-12</td>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>6</td>
-                            <td>7</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>10</td>
-                            <td>11</td>
-                            <td>12</td>
-                            <td>13</td>
-                            <td>14</td>
-                            <td>15</td>
-                            <td>16</td>
-                            <td>17</td>
-                            <td>18</td>
-                            <td>19</td>
-                            <td>20</td>
-                            <td>21</td>
-                            <td>22</td>
-                            <td>23</td>
-                            <td>24</td>
+                            <th>Date</th>
+                            <th>0-1</th>
+                            <th>1-2</th>
+                            <th>2-3</th>
+                            <th>3-4</th>
+                            <th>4-5</th>
+                            <th>5-6</th>
+                            <th>6-7</th>
+                            <th>7-8</th>
+                            <th>8-9</th>
+                            <th>9-10</th>
+                            <th>10-11</th>
+                            <th>11-12</th>
+                            <th>12-13</th>
+                            <th>12-14</th>
+                            <th>14-15</th>
+                            <th>15-16</th>
+                            <th>16-17</th>
+                            <th>17-18</th>
+                            <th>18-19</th>
+                            <th>19-20</th>
+                            <th>20-21</th>
+                            <th>21-22</th>
+                            <th>22-23</th>
+                            <th>23-24</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Total</th>
+                            <th>Average</th>
                         </tr>
-                        </tbody>
+                        </thead>
+                        <tbody></tbody>
+
                     </table>
                 </div>
-                <div class="table-responsive" id="monthly"></div>
-                <div class="table-responsive" id="yearly"></div>
             </div>
-
         </section>
     </div>
 
@@ -253,7 +241,7 @@
 
                 $("#id_mode").on("change", function () {
 
-                    $('table').empty();
+
                     let mode = $("#id_mode").val();
                     if (!isEmpty(mode)) {
                         if (mode == "Node Wise" || mode == 0) {
@@ -479,7 +467,7 @@
                             success: function (data) {
                                 console.log('DATA', data);
                                 if (data.hasOwnProperty('result')) {
-                                    let SensorValues = JSON.parse(data.result);
+                                    let SensorValues = data.result;
                                     ShowWarning(SensorValues);
                                 }
                             },
@@ -491,17 +479,159 @@
                 }
 
                 function ShowWarning(SensorValues) {
-
-                    datatable = $('#displayTable').DataTable();
-                    let minename = $('#id_mine_id').find(":selected").text();
-                    let nodename = $('#id_list').find(":selected").text();
-
-                    for (let values in SensorValues) {
-                        if (SensorValues.hasOwnProperty(values)) {
-                            datatable.row.add([new Date(SensorValues[values].fields.date_time), minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
+                    let hourly = SensorValues.hourly;
+                    let daily = SensorValues.daily;
+                    let day = [];
+                    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    for (let d in daily) {
+                        if (daily.hasOwnProperty(d)) {
+                            let date = new Date(daily[d].day);
+                            day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()] = [];
+                            for (i = 0; i < 24; i++) {
+                                day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][i] = 0;
+                            }
                         }
                     }
+
+                    console.log('DAYs', day);
+                    for (let hour in hourly) {
+                        if (hourly.hasOwnProperty(hour)) {
+                            let date = new Date(hourly[hour].day);
+                            day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][date.getHours()] = hourly[hour].avg;
+                        }
+                    }
+                    console.log('DAY', day);
+                    /* let datatable = $('#hourly').DataTable({
+
+                         scrollX: true,
+                         scrollCollapse: true,
+                         paging: true,
+                         columnDefs: [
+                             {width: '200%', targets: 0}
+                         ],
+                         fixedColumns: true,
+                         'createdRow': function (row, data, index) {
+                             var temp = [];
+                             for (d in data) {
+                                 if (data.hasOwnProperty(d)) {
+                                     var isnum = /^\d+$/.test(data[d]);
+                                     if (isnum) {
+                                         temp.push(data[d]);
+                                     }
+                                 }
+                             }
+
+                             console.log('row data' ,Math.max.apply(Math,temp));
+
+                         }
+                     });*/
+
+                    let tableData = "";
+                    for (let d in day) {
+                        if (day.hasOwnProperty(d)) {
+                            let hourlydata = [];
+                            tableData += "<tr>";
+                            tableData += '<td>';
+                            tableData += d.toString();
+                            hourlydata.push(d.toString())
+                            tableData += '</td>';
+                            let hours = day[d];
+                            let min = Math.min.apply(Math, hours);
+                            let max = Math.max.apply(Math, hours);
+                            let total = 0;
+
+                            for (let h in hours) {
+                                if (hours.hasOwnProperty(h)) {
+                                    tableData += '<td>';
+                                    tableData += hours[h].toString();
+                                    tableData += '</td>';
+                                    total += hours[h];
+                                    hourlydata.push(hours[h])
+                                }
+                            }
+                            {#hourlydata.push(min);#}
+                            {#hourlydata.push(max);#}
+                            {#hourlydata.push((total/hours.length).toFixed(2));#}
+                            //datatable.row.add(hourlydata).draw().node();
+                            tableData += '<td style="font-weight:bold">' + min + '</td>';
+                            tableData += '<td style="font-weight:bold">' + max + '</td>';
+                            tableData += '<td style="font-weight:bold">' + (total).toFixed(2) + '</td>';
+                            tableData += '<td style="font-weight:bold">' + (total / hours.length).toFixed(2) + '</td>';
+
+
+                            tableData += '</tr>';
+                        }
+                    }
+
+                    $('#hourly').append(tableData);
+
+                    let colmax=[];
+                    let colmin=[];
+                    let colavg=[];
+                    let coltotal=[]
+                    for(i=2;i<=29;i++) {
+                        let coldata=[];
+                        let col=$('table tr td:nth-child(' + i + ')');
+                        let total=0;
+                        for(j=0;j<col.length;j++){
+                            total+= parseFloat(col[j].innerHTML);
+                            coldata.push(parseFloat(col[j].innerHTML))
+                        }
+                        let max=Math.max.apply(Math,coldata);
+                        let min=Math.min.apply(Math,coldata);
+                        colmin.push(min);
+                        colmax.push(max);
+                        coltotal.push(total);
+                        colavg.push(total/col.length);
+                        console.log(total,col.length)
+                        console.log('col',coldata);
+                    }
+                    tableData = '<tr>';
+                    tableData += '<td>Min</td>';
+                    for(i=0;i<colmin.length;i++){
+                        tableData += '<td style="font-weight:bold">'+colmin[i]+'</td>';
+                    }
+                    tableData += '</tr>';
+
+                    tableData += '<tr>';
+                    tableData += '<td>Max</td>';
+                    for(i=0;i<colmax.length;i++){
+                        tableData += '<td style="font-weight:bold">'+colmax[i]+'</td>';
+                    }
+                    tableData += '</tr>';
+
+                    tableData += '<tr>';
+                    tableData += '<td>Total</td>';
+                    for(i=0;i<coltotal.length;i++){
+                        tableData += '<td style="font-weight:bold">'+coltotal[i].toFixed(2)+'</td>';
+                    }
+                    tableData += '</tr>';
+
+                    tableData += '<tr>';
+                    tableData += '<td>Average</td>';
+                    for(i=0;i<colavg.length;i++){
+                        tableData += '<td style="font-weight:bold">'+colavg[i].toFixed(2)+'</td>';
+                    }
+                    tableData += '</tr>';
+
+                    {#tableData += '<tr>';#}
+                    {#tableData += '<td>Max</td>';#}
+                    {#tableData += '</tr>'#}
+                    {#tableData += '<tr>';#}
+                    {#tableData += '<td>Average</td>';#}
+                    {#tableData += '</tr>';#}
+                     $('#hourly').append(tableData);
+
+                    /* let minename = $('#id_mine_id').find(":selected").text();
+                     let nodename = $('#id_list').find(":selected").text();
+
+                     for (let values in SensorValues) {
+                         if (SensorValues.hasOwnProperty(values)) {
+                             datatable.row.add([new Date(SensorValues[values].fields.date_time), minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
+                         }
+                     }*/
                 }
+
 
                 function fill_table_sensor_heading(header, condition) {
                     let tableHeaders = "";

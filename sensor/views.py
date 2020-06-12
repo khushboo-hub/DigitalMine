@@ -1123,7 +1123,7 @@ def avg_report_fetch_sensor_values_ajax(request):
         try:
             gas = []
             # Hourly avg
-            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to))
+            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to)).order_by('date_time')
 
             avg_data['hourly'] = list(gases.values('sensor_name').annotate(day=TruncHour('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
 
