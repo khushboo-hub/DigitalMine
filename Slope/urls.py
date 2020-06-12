@@ -48,5 +48,7 @@ urlpatterns = [
     path('slope_live_table_dynamic', views.slope_live_table_dynamic, name='slope_live_table_dynamic'),
     path('fetch_datafrom_jsonurl_dynamic', views.fetch_datafrom_jsonurl_dynamic, name='fetch_datafrom_jsonurl_dynamic'),
     
+    path('graph_from_thingspeak', views.graph_from_thingspeak, name='graph_from_thingspeak'),
+    
 
 ]
