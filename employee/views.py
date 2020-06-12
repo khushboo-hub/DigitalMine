@@ -338,6 +338,7 @@ def add_mine(request, template_name='mine/mine_add.html'):
         form = MineDetailsForm(request.POST or None, request.FILES)
         if form.is_valid():
             form.save()
+
             return redirect('employee:manage_mine')
         # return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
     return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
@@ -381,28 +382,27 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     admin_or_not = 0
     if request.user.is_superuser:
         admin_or_not = 1
-        form = MiningRoleForm(None,request.POST or None)  # Passed Mine id as an argument
+        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
+        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         mine_name = "Super User"
     else:
         admin_or_not = 0
-        form = MiningRoleForm(profile.mine_id.id or None, request.POST or None)  # Passed Mine id as an argument
+        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
+        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         mine_name = MineDetails.objects.get(id=profile.mine_id.id)
 
 
     if request.method == "POST":
         if request.user.is_superuser:
-
-            form = MiningRoleForm(request.POST.get('mine'),None, request.POST or None)
-            print('form error',form.errors)
+            form = MiningRoleForm(request.POST or None)
         if form.is_valid():
-            print('form is valid')
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            #return redirect('employee:manage_mining_role')
-        print(form.errors)
-
+            #messages.add_message(request, messages.SUCCESS, 'Changes successfully saved.')
+            messages.success(request, 'Changes successfully saved.')
+            return redirect('employee:manage_mining_role')
     return render(request, template_name,
                   {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
 
@@ -412,31 +412,26 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(MiningRole, pk=pk)
-    form = MiningRoleForm(profile.mine_id.id, None, request.POST or None, instance=book)
-    mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
     admin_or_not = 0
     if request.user.is_superuser:
+        form = MiningRoleForm(request.POST or None, instance=book)
+        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
+        mine_name = "Super User"
         admin_or_not = 1
     else:
+        form = MiningRoleForm(request.POST or None, instance=book)
+        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
+        mine_name = MineDetails.objects.get(id=profile.mine_id.id)
         admin_or_not = 0
 
     if request.method == "POST":
-        if request.user.is_superuser:
-            if request.POST.get('parent'):
-                form = MiningRoleForm(request.POST.get('mine'), request.POST.get('parent'), request.POST or None,
-                                      instance=book)
-            else:
-                form = MiningRoleForm(request.POST.get('mine'), None, request.POST or None, instance=book)
-
-        if request.POST.get('parent'):
-            form = MiningRoleForm(request.POST.get('mine'), request.POST.get('parent'), request.POST or None,
-                                  instance=book)
-
         if form.is_valid():
             fs = form.save(commit=False)
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
+            messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
         print(form.errors)
 

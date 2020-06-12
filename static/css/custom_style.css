@@ -80,7 +80,7 @@ svg:hover path {
 .modal-dialog.addRouter {
   width: 90%;
   height: 100%;
-  margin: 1;
+  margin: 1px;
   padding: 0;
 }
 
@@ -104,7 +104,11 @@ stroke-width:5px;
 
   stroke:rgb(222, 36, 36);
 }
-
+.alert-error {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
 body {
 		font-family: 'Varela Round', sans-serif;
 	}
@@ -352,7 +356,7 @@ height:auto;
 
   #printSection, #printSection, #printThis * {
     visibility:visible;
-    background:transparent !important
+    background:transparent !important;
     color:  #000 !important;
   }
   #printSection {
@@ -468,87 +472,6 @@ body{
     background-size: cover;
     background-position: center center;
 }
-
-$brand-primary: tomato;
-$white: #fff;
-$grey-light: #ededed;
-%remain-steps{
-  &:before {
-    content: counter(stepNum);
-    font-family: inherit;
-    font-weight: 700;
-  }
-  &:after{
-    background-color: $grey-light;
-  }
-}
-.multi-steps{
-  display: table;
-  table-layout: fixed;
-  width: 100%;
-  > li{
-    counter-increment: stepNum;
-    text-align: center;
-    display: table-cell;
-    position: relative;
-    color: $brand-primary;
-
-    &:before{
-      content: '\f00c';
-      content: '\2713;';
-      content: '\10003';
-      content: '\10004';
-      content: '\2713';
-      display: block;
-      margin: 0 auto 4px;
-      background-color: $white;
-      width: 36px;
-      height: 36px;
-      line-height: 32px;
-      text-align: center;
-      font-weight: bold;
-      border:{
-        width: 2px;
-        style: solid;
-        color: $brand-primary;
-        radius: 50%;
-      }
-    }
-    &:after{
-      content: '';
-      height: 2px;
-      width: 100%;
-      background-color: $brand-primary;
-      position: absolute;
-      top: 16px;
-      left: 50%;
-      z-index: -1;
-    }
-    &:last-child{
-      &:after{
-        display: none;
-      }
-    }
-
-    &.is-active{
-      @extend %remain-steps;
-      &:before{
-        background-color: $white;
-        border-color: $brand-primary;
-      }
-
-      ~ li{
-        color: #808080;
-        @extend %remain-steps;
-        &:before{
-          background-color: $grey-light;
-          border-color: $grey-light;
-        }
-      }
-    }
-  }
-}
-
 
 /* Paste this css to your style sheet file or under head tag */
 /* This only works with JavaScript,
@@ -767,4 +690,208 @@ h1 { text-align: center; margin-top: 150px; }
         td:nth-last-child(2) {
             text-align:center;
         }
-        @media(min-width: 768px)
+
+
+        * {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        #notfound {
+            position: relative;
+            height: 30vh;
+        }
+
+        #notfound .notfound {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .notfound {
+            max-width: 520px;
+            width: 100%;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .notfound .notfound-404 {
+            position: relative;
+            height: 200px;
+            margin: 0px auto 20px;
+            z-index: -1;
+        }
+
+        .notfound .notfound-404 h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 236px;
+            font-weight: 200;
+            margin: 0px;
+            color: #211b19;
+            text-transform: uppercase;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
+        .notfound .notfound-404 h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            font-weight: 400;
+            text-transform: uppercase;
+            color: #211b19;
+            background: #fff;
+            padding: 10px 5px;
+            margin: auto;
+            display: inline-block;
+            position: absolute;
+            bottom: 0px;
+            left: 0;
+            right: 0;
+        }
+
+        .notfound a {
+            font-family: 'Montserrat', sans-serif;
+            display: inline-block;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+            text-transform: uppercase;
+            padding: 13px 23px;
+            background: #ff6300;
+            font-size: 18px;
+            -webkit-transition: 0.2s all;
+            transition: 0.2s all;
+        }
+
+        .notfound a:hover {
+            color: #ff6300;
+            background: #211b19;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .notfound .notfound-404 h1 {
+                font-size: 148px;
+            }
+        }
+
+        @media only screen and (max-width: 480px) {
+            .notfound .notfound-404 {
+                height: 148px;
+                margin: 0px auto 10px;
+            }
+
+            .notfound .notfound-404 h1 {
+                font-size: 86px;
+            }
+
+            .notfound .notfound-404 h2 {
+                font-size: 16px;
+            }
+
+            .notfound a {
+                padding: 7px 15px;
+                font-size: 14px;
+            }
+        }
+
+
+        .loader-container {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            min-height: 30vh;
+        }
+
+        .notfound-loader {
+            max-width: 15rem;
+            width: 100%;
+            height: auto;
+            stroke-linecap: round;
+        }
+
+        circle {
+            fill: none;
+            stroke-width: 3.5;
+            -webkit-animation-name: preloader;
+            animation-name: preloader;
+            -webkit-animation-duration: 3s;
+            animation-duration: 3s;
+            -webkit-animation-iteration-count: infinite;
+            animation-iteration-count: infinite;
+            -webkit-animation-timing-function: ease-in-out;
+            animation-timing-function: ease-in-out;
+            -webkit-transform-origin: 170px 170px;
+            transform-origin: 170px 170px;
+            will-change: transform;
+        }
+
+        circle:nth-of-type(1) {
+            stroke-dasharray: 550;
+        }
+
+        circle:nth-of-type(2) {
+            stroke-dasharray: 500;
+        }
+
+        circle:nth-of-type(3) {
+            stroke-dasharray: 450;
+        }
+
+        circle:nth-of-type(4) {
+            stroke-dasharray: 300;
+        }
+
+        circle:nth-of-type(1) {
+            -webkit-animation-delay: -0.15s;
+            animation-delay: -0.15s;
+        }
+
+        circle:nth-of-type(2) {
+            -webkit-animation-delay: -0.3s;
+            animation-delay: -0.3s;
+        }
+
+        circle:nth-of-type(3) {
+            -webkit-animation-delay: -0.45s;
+            -moz-animation-delay: -0.45s;
+            animation-delay: -0.45s;
+        }
+
+        circle:nth-of-type(4) {
+            -webkit-animation-delay: -0.6s;
+            -moz-animation-delay: -0.6s;
+            animation-delay: -0.6s;
+        }
+
+        @-webkit-keyframes preloader {
+            50% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes preloader {
+            50% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+            }
+        }
+

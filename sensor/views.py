@@ -4,6 +4,7 @@
 import traceback
 
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
 from django.http import HttpResponse, JsonResponse
@@ -129,13 +130,12 @@ def node_add(request, template_name='node/node_add.html'):
     if request.user.is_superuser:
         form = NodeForm()
     else:
-        form = NodeForm(initial={'mine_id': profile.mine_id_id}, readonly={'mine_id': 'disabled'})
+        form = NodeForm(initial={'mine_id': profile.mine_id_id})
     if request.method == "POST":
         form = NodeForm(request.POST or None, request.FILES)
-
         if form.is_valid():
             form.save()
-            return redirect(reverse('sensor:node_add'))
+            return redirect(reverse('sensor:node_manage'))
     return render(request, template_name, {'form': form, 'action': "Add", "alert": "added"})
 
 
@@ -735,6 +735,24 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
     return render(request, template_name, {'form': form})
 
 
+@login_required
+def report_table(request, template_name="live_data/report_data_tabular.html"):
+    form = NodeForm(request.POST or None)
+    return render(request, template_name, {'form': form})
+
+
+@login_required
+def avg_report_table(request, template_name="live_data/average_report_data_tabular.html"):
+    form = NodeForm(request.POST or None)
+    return render(request, template_name, {'form': form})
+
+
+@login_required
+def report_graph(request, template_name="live_data/report_data_graph.html"):
+    form = NodeForm(request.POST or None)
+    return render(request, template_name, {'form': form})
+
+
 import random
 
 
@@ -1012,7 +1030,7 @@ def fetch_sensors_list(request):
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         try:
-            sensors = Sensor_Node.objects.filter(mine_id=mine_id).values('sensor_name').distinct()
+            sensors = Sensor_Node.objects.filter(mine_id=mine_id).values('id', 'sensor_name').distinct()
             sensor_list = []
             for s in sensors:
                 print(s)
@@ -1073,6 +1091,81 @@ def fetch_sensor_values_ajax(request):
     return JsonResponse(data)
 
 
+def report_fetch_sensor_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
+
+        try:
+            data['result'] = serializers.serialize('json',
+                                                   gasModel_auto.objects.filter(sensor_id=sensor_id,
+                                                                                date_time__range=(date_from, date_to)),
+                                                   fields=('id', 'sensor_value', 'date_time'))
+        except:
+            data['error'] = {
+                'error': 'Network Error'
+            }
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
+def avg_report_fetch_sensor_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        sensor_id = request.GET.get('id', None)
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
+        avg = request.GET.get('avg', None)
+        avg_data = {}
+        try:
+            gas = []
+            # Hourly avg
+            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to))
+
+            avg_data['hourly'] = list(gases.values('sensor_name').annotate(day=TruncHour('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            avg_data['daily'] = list(gases.values('sensor_name').annotate(day=TruncDay('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            avg_data['monthly'] = list(gases.values('sensor_name').annotate(day=TruncMonth('date_time'), avg=Avg(NullIf('sensor_value', Value(0)))))
+
+            avg_data['yearly'] = list(gases.values('sensor_name').annotate(day=TruncYear('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+
+            data['result'] = avg_data
+        except Exception as e:
+            print(e)
+            data['error'] = {
+                'error': 'Network Error'
+            }
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
+def report_fetch_node_values_ajax(request):
+    data = {}
+    if request.is_ajax():
+        node_id = request.GET.get('id', None)
+        try:
+            sensors = Sensor_Node.objects.filter(node_id=node_id)
+            result = []
+            for s in sensors:
+                result.append(serializers.serialize('json',
+                                                    gasModel_auto.objects.filter(sensor_id=s.id),
+                                                    fields=('id', 'sensor_value', 'date_time')))
+
+            data['result'] = result
+        except:
+            data['result'] = {
+                'error': 'Network Error'
+            }
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
 def fetch_sensor_ajax_sensor(request):
     data = {}
     if request.is_ajax():
@@ -1080,8 +1173,9 @@ def fetch_sensor_ajax_sensor(request):
         try:
             sensor_details = Sensor_Node.objects.get(id=sensor_id)
             data['result'] = {'id': str(sensor_details.id),
+                              'index': 3,
                               'sensor_name': str(sensor_details.sensor_name),
-                              'unit': str(sensor_details.sensor_unit),
+                              'sensor_unit': str(sensor_details.sensor_unit),
                               'color': '#1216f6',
                               'level1': sensor_details.level_1_warning_unit,
                               'level2': sensor_details.level_2_warning_unit,
@@ -1114,34 +1208,34 @@ def fetch_sensor_values_all_ajax(request):
 
         for r in sensor_details:
             id = str(r.id)
-            ip_add = str(r.ip_add)
+            # ip_add = str(r.ip_add)
             sensor_name = str(r.sensor_name)
             unit = str(r.sensor_unit)
             try:
-                response = requests.get('http://' + ip_add)
-                sensor_val = str(strip_tags(response.text))
-                sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
+                # response = requests.get('http://' + ip_add)
+                # sensor_val = str(strip_tags(response.text))
+                # sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 sensor_data.append({
-                        'id': id,
-                        'sensor_value': sensor_val,
-                        'sensor_name': sensor_name,
-                        'sensor_unit': unit,
-                        'sensor_warning_color': '#1216f6',
-                        'sensor_warning_msg': 'Gas condition is normal',
-                        'level1': r.level_1_warning_unit,
-                        'level2': r.level_2_warning_unit,
-                        'level3': r.level_3_warning_unit,
-                        'level1_color': r.level_1_color,
-                        'level2_color': r.level_2_color,
-                        'level3_color': r.level_3_color,
-                        'level1_msg': r.level_1_msg,
-                        'level2_msg': r.level_2_msg,
-                        'level3_msg': r.level_3_msg,
-                        'level1_audio': str(r.level_1_audio),
-                        'level2_audio': str(r.level_2_audio),
-                        'level3_audio': str(r.level_3_audio),
-                        'audio_type': r.audio_play_type,
-                    })
+                    'id': id,
+                    # 'sensor_value': sensor_val,
+                    'sensor_name': sensor_name,
+                    'sensor_unit': unit,
+                    'sensor_warning_color': '#1216f6',
+                    'sensor_warning_msg': 'Gas condition is normal',
+                    'level1': r.level_1_warning_unit,
+                    'level2': r.level_2_warning_unit,
+                    'level3': r.level_3_warning_unit,
+                    'level1_color': r.level_1_color,
+                    'level2_color': r.level_2_color,
+                    'level3_color': r.level_3_color,
+                    'level1_msg': r.level_1_msg,
+                    'level2_msg': r.level_2_msg,
+                    'level3_msg': r.level_3_msg,
+                    'level1_audio': str(r.level_1_audio),
+                    'level2_audio': str(r.level_2_audio),
+                    'level3_audio': str(r.level_3_audio),
+                    'audio_type': r.audio_play_type,
+                })
             except Exception as x:
                 sensor_data.append({'error': "Network Error"})
 
@@ -1314,6 +1408,7 @@ def fetch_sensor_values_ajax_sensor_table(request):
                     # node_details = Node.objects.get(id=str(r.node_id_id))
                     sensor_data.append(r.sensor_name + " (" + r.sensor_unit + ")")
                     sensor_condition.append({'id': str(i),
+                                             'index': str(i),
                                              'sensor_name': r.sensor_name,
                                              'level1': r.level_1_warning_unit,
                                              'level2': r.level_2_warning_unit,
@@ -1518,7 +1613,7 @@ import matplotlib.pyplot as plt
 import io
 import numpy as np
 from django.db.models import Avg
-from django.db.models.functions import NullIf, TruncDay
+from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
 from django.db.models import Value
 
 

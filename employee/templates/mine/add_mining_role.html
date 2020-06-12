@@ -15,21 +15,13 @@
                     </div>
                 </div>
                 <br>
-                <div style="text-align: center;">
-{#                    <h4><b>Mine Name(You are logged & staff under):</b>#}
-{#                        <address style="color:orangered;">{% if admin %}All {% else %}#}
-{#                            {{ mine_name.name }}{% endif %}</address>#}
-{#                    </h4>#}
-                </div>
                 <!-- Table content -->
                 <div class="row">
-                    <div class="form-group">
-                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-
-                            <div class="form-group">
+                    <div class="form-group col-md-12">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+                            {% csrf_token %}
                                 <table class="table table-responsive table-bordered">
                                     <tbody>
-
                                         <tr>
                                             <th><label for="id_mine">Mine:</label></th>
                                             <td>
@@ -80,9 +72,9 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <div class="text-center"><input type="submit" class="btn btn-primary" value="Submit"/>
+                                <div class="text-center"><input type="submit" id="submit" class="btn btn-primary" value="Submit"/>
                                 </div>
-                            </div>
+
                         </form>
                     </div>
                 </div>

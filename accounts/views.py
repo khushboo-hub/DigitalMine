@@ -243,3 +243,11 @@ def delete_user_sessions(user):
     user_sessions = UserSession.objects.filter(user = user)
     for user_session in user_sessions:
         user_session.session.delete()
+
+def clearSession(request,id):
+    id = decrypt(id)
+    user_session = UserSession.objects.filter(id=id)
+    for user_session in user_session:
+        user_session.session.delete()
+
+    return redirect(request.META.get('HTTP_REFERER'))

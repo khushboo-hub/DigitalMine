@@ -2,14 +2,61 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Fire Exp Details</h1>
-            <!-- Table content -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <div class="row">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+
+                            <h3 class="page-header text-center"><b>Fire Exp Details</b></h3>
+                            {% csrf_token %}
+                            <div class="col-md-2">
+                                {#                    <label> Select Mine </label><span id="mine_id_span">{{ form.mine }}</span><br>#}
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group date" id="date_from_time_picker">
+                                    <input type="text" name="from_date" class="form-control" placeholder="From Date" id="id_date_fr" required="" autocomplete="off">
+
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group date" id="date_to_time_picker">
+                                    <input type="text" name="to_date" class="form-control" placeholder="To Date" id="id_date_to" required="" autocomplete="off">
+
+                                    <span class="input-group-addon"><span
+                                            class="glyphicon glyphicon-calendar"></span></span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="text-center">
+                            <button id="btn_show" type="submit" class="btn btn-primary">Show Graph</button>
+                        </div>
+                    </form>
+
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="loader-container text-center" hidden>
+                            <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                                <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                                <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                                <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                                <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
                         <table class="table table-bordered" id="content">
                             <thead>
                             <tr>
@@ -27,24 +74,34 @@
                             </thead>
                             <tbody>
                             {% for book in object_list %}
-                            <tr>
-                                <td>{{forloop.counter}}</td>
-                                <td>{{ book.o2 }}</td>
-                                <td>{{ book.co }}</td>
-                                <td>{{ book.ch4 }}</td>
-                                <td>{{ book.co2 }}</td>
-                                <td>{{ book.h2 }}</td>
-                                <td>{{ book.n2 }}</td>
-                                <td>{{ book.c2h4 }}</td>
-                                <td>{{book.date}}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.o2 }}</td>
+                                    <td>{{ book.co }}</td>
+                                    <td>{{ book.ch4 }}</td>
+                                    <td>{{ book.co2 }}</td>
+                                    <td>{{ book.h2 }}</td>
+                                    <td>{{ book.n2 }}</td>
+                                    <td>{{ book.c2h4 }}</td>
+                                    <td>{{ book.date }}</td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                    </div>
+                    </div><!--end Table content -->
                 </div>
-            </div><!--end Table content -->
-        </section>
+            </section>
+        </div>
     </div>
-</div>
+    <script>
+    $(document).ready(function () {
+        let date_from = $('#date_from_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        let date_to = $('#date_to_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        $('.loader-container').hide();
+    });
+    </script>
 {% endblock %}

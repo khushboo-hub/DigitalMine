@@ -420,6 +420,10 @@
                                         <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
                                         <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
                                         <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
+                                        <li><a href="{% url 'sensor:report_table' %}">Tabular Report</a></li>
+                                        <li><a href="{% url 'sensor:report_graph' %}">Graphical Report</a></li>
+                                        <li><a href="{% url 'sensor:avg_report_table' %}">Average Tabular Report</a></li>
+
 
                                         <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf
                                             Area<sub></sub></a>
@@ -881,9 +885,20 @@
 </div>
 <div class="spacer"></div>
 <div class="main">
+{% if messages %}
+        {% for message in messages %}
+            <div id="alertId" style="text-align: center"  class="container alert alert-{{ message.tags }}">
+                <strong>{{ message }} !!!</strong>
+            </div>
+         {% endfor %}
+    {% endif %}
     <div id="content">
         {% block content %}
         {% endblock %}
+    <!------------------------------- For Alert Display---------------------------->
+
+
+    <!-------------------------------------------------------------------------------->
     </div><!-- content -->
 
 </div>
@@ -940,6 +955,8 @@
 
 <script src="{% static 'js/dataTable.js' %}"></script>
 <script src="{% static 'js/dataTables.buttons.min.js' %}"></script>
+
+
 <script src="{% static 'js/buttons.flash.min.js' %}"></script>
 <script src="{% static 'Js/jszip.min.js' %}"></script>
 <script src="{% static 'js/pdfmake.min.js' %}"></script>
@@ -1246,6 +1263,7 @@
 
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
+<script src="{% static 'js/shyam_js.js' %}"></script>
 <!--<script src="https://code.responsivevoice.org/responsivevoice.js?key=vDqCD9pp"></script>-->
 </body>
 </html>

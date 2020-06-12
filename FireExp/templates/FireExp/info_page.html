@@ -4,177 +4,334 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-{#                <h1 class="page-header">Ellicott's Explosibility Graph(from Manual Entry)</h1>#}
+                <div class="form-group col-md-12">
+                    <h3 class="page-header text-center"><b>Ellicots Extension Graph</b></h3>
+                    {% csrf_token %}
+                    <div class="col-md-2">
+                        {#                    <label> Select Mine </label><span id="mine_id_span">{{ form.mine }}</span><br>#}
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group date" id="date_from_time_picker">
+                            <input type="text" name="date_of_opening" class="form-control" placeholder="From Date"
+                                   id="id_date_fr" required="" autocomplete="off">
+
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group date" id="date_to_time_picker">
+                            <input type="text" name="date_of_opening" class="form-control" placeholder="To Date"
+                                   id="id_date_to" required="" autocomplete="off">
+
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="col-md-12">
+                    <div class="text-center">
+                        <button id="btn_show" class="btn btn-primary">Show Graph</button>
+                    </div>
+                    <div class="loader-container text-center" hidden>
+                        <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                            <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                            <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                            <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                            <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                        </svg>
+                    </div>
+                </div>
                 <!-- Table content -->
-                <div class="container">
-{#                                      <div class="embed-responsive embed-responsive-16by9">#}
-{#                                            <iframe id="strata_monitoring_iframe" class="embed-responsive-item" src="{% url 'FireExp:analysis' 0 %}"></iframe>#}
-{#                                        </div>#}
+                <div class="col-md-12">
                     <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
                 </div>
             </section>
         </div>
     </div>
     <script>
-    var X;
-    $(document).ready(function(){
-        $.ajax({
-                type: "get",
-                url: "{% url 'FireExp:explosibility' 1 %}",
+        var X;
+        $(document).ready(function () {
+            let date_from = $('#date_from_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            let date_to = $('#date_to_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('.loader-container').hide();
+            $('#btn_show').click(function () {
+                let endpoint = $('#node_id').data('url');
+                let from = $('#id_date_fr').val();
+                let to = $('#id_date_to').val();
+                if (!isEmpty(from) && !isEmpty(to)) {
+                    GRAPH(from, to)
+                } else {
+                    let from = "1899-01-01";
+                    let to = "2999-12-12";
+                    GRAPH(from, to)
+                }
+            });
 
-                beforeSend: function (jqXHR) {
-                    $.xhrPool.push(jqXHR);
-                },
-                success: function (data) {
+            function GRAPH(from, to) {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'FireExp:explosibility' 0 %}",
+                    data: {
+                        'from': from,
+                        'to': to,
+                    },
 
-                    result=data.result;
+                    beforeSend: function (jqXHR) {
+                        $.xhrPool.push(jqXHR);
+                        $('.loader-container').show();
+                    },
+                    success: function (data) {
 
-                    console.log(result);
-                    var x_list=[];
-                    var y_list=[];
-                    var text=[];
-                    var color=[];
-                    var dates=[];
-                    for(var i=0;i<result.length;i++){
-                        x_list.push(result[i].x);
-                        y_list.push(result[i].y);
-                        text.push((i+1).toString());
-                        color.push(result[i].color);
-                        dates.push(result[i].dates);
-                    }
-                    var xhighest = Math.max.apply( Math, x_list );
-                    var xlowest = Math.min.apply( Math, x_list );
-                    var yhighest = Math.max.apply( Math, y_list );
-                    var ylowest = Math.min.apply( Math, y_list );
+                        result = data.result;
 
-
-                    var highest = Math.max.apply( Math, [Math.abs(xhighest),Math.abs(xlowest),Math.abs(yhighest),Math.abs(ylowest)] );
-                    var lowest = Math.min.apply( Math, [Math.abs(xhighest),Math.abs(xlowest),Math.abs(yhighest),Math.abs(ylowest)] );
-                    console.log(lowest,highest);
-                    var trace1 = {
-                        {#x: [-1*((highest*lowest)/2)*.4, ((highest*lowest)/2)*0.5],#}
-                        {#y: [((highest*lowest)/2)*0.8, ((highest*lowest)/2)*0.8],#}
-                        x:[-75,80],
-                        y:[18,18],
-                        mode: 'text',
-                        name: 'Lines, Markers and Text',
-                        text: ['<b>CLEAN FUEL NON-EXPLOSIVE</b>', '<b>EXPLOSIVE</b>'],
-                        hoverinfo: 'skip',
-                        textposition: 'center',
-                        textfont: {
-                            {#family: 'sans serif ,bold',#}
-                            size: 13,
-                            color: '#1f77b4'
-                        },
-                        type: 'scatter'
-                    };
-                    var trace2 = {
-                        {#x: [-1*((highest*lowest)/2)*0.5, ((highest*lowest)/2)*0.5],#}
-                        {#y: [-1*((highest*lowest)/2)*0.9, -1*((highest*lowest)/2)*0.9],#}
-                        x:[-70,80],
-                        y:[-18,-18],
-                        mode: 'text',
-                        name: 'Lines and Text',
-                        text: ['<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>', '<b>POTENTIALLY EXPLOSIVE</b>'],
-                        hoverinfo: 'skip',
-                        textposition: 'bottom center',
-                        textfont: {
-                            {#family: 'sans serif',#}
-                            size: 13,
-                            color: '#ff7f0e'
-                        },
-                        type: 'scatter'
-                    };
-                    console.log(dates)
-                    date=['1','2','3'];
-                    var trace3 = {
-                        x: x_list,
-                        y: y_list,
-                        xa:dates,
-                        mode: 'text+dates+markers',
-                        type: 'scatter',
-                        {#name:dates,#}
-                        text: text,
-                        textfont: {
-                            {#family: 'sans serif',#}
-                            size: 20,
-                            color: color,
-                            weight: '900'
-                        },
-                        marker: { size:dates, },
-                        textposition: 'bottom center',
-
-                        hoveron: 'points',
-                        hovertemplate:"<b>%{marker.size}<b><extra></extra>",
+                        console.log(result);
+                        var x_list = [];
+                        var y_list = [];
+                        var text = [];
+                        var color = [];
+                        var dates = [];
+                        for (var i = 0; i < result.length; i++) {
+                            x_list.push(result[i].x);
+                            y_list.push(result[i].y);
+                            text.push((i + 1).toString());
+                            color.push(result[i].color);
+                            dates.push(result[i].dates);
+                        }
+                        var xhighest = Math.max.apply(Math, x_list);
+                        var xlowest = Math.min.apply(Math, x_list);
+                        var yhighest = Math.max.apply(Math, y_list);
+                        var ylowest = Math.min.apply(Math, y_list);
 
 
-                        hoverinfo: 'x+y',
-                    };
+                        var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                        var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                        console.log(lowest, highest);
+
+                        var trace3 = {
+                            x: x_list,
+                            y: y_list,
+                            xa: dates,
+                            mode: 'text+dates+markers',
+                            type: 'scatter',
+                            {#name:dates,#}
+                            text: text,
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 20,
+                                color: color,
+                                weight: '900'
+                            },
+                            marker: {size: dates,},
+                            textposition: 'bottom center',
+
+                            hoveron: 'points',
+                            hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                            name:'Trace',
+                            hoverinfo: 'x+y',
+                        };
+
+                        var data = [trace3];
+                        var layout = {
+                            title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
+                            titlefont: {
+                                size: 32
+                            },
+                            width: 1200,
+                            height: 800,
+
+                            xaxis: {
+                                title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
+                                tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                                tick0: 0,
+                                dtick: 10,
+                                autoscale: false,
+                                {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
+                                range: [-highest * 1.2, highest * 1.2],
+                                ticks: "outside",
+                                showgrid: true,
+                                zeroline: true,
+                                showline: true,
+                                mirror: 'ticks',
+                                gridcolor: '#bdbdbd',
+                                gridwidth: 0.05,
+                                zerolinecolor: '#969696',
+                                zerolinewidth: 3,
+                                linecolor: '#636363',
+                                linewidth: 6,
+                                {#side:'right'#}
+                            },
+                            yaxis: {
+                                title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
+                                tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                                tick0: 0,
+                                dtick: 2,
+                                autoscale: false,
+                                {#yanchor:'right',#}
+                                ticks: 'inside',
+                                {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
+                                range: [-highest * 1.2, highest * 1.2],
+                                showgrid: true,
+                                zeroline: true,
+                                showline: true,
+                                mirror: 'ticks',
+                                gridcolor: '#bdbdbd',
+                                gridwidth: 0.15,
+                                zerolinecolor: '#969696',
+                                zerolinewidth: 3,
+                                linecolor: '#636363',
+                                linewidth: 6,
+
+                            },
+                            annotations: [{
+                                xref: 'x',
+                                yref: 'y',
+                                x: -highest * 0.5,
+                                y: highest,
+                                xanchor: 'right',
+
+                                font: {
+                                    family: 'Courier New, monospace',
+                                    size: 16,
+                                    color: '#ff7f0e'
+                                },
+                                yanchor: 'top',
+                                text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                                showarrow: false
+                            },
+                                {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: highest * 0.5,
+                                    y: highest,
+                                    xanchor: 'left',
+
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#ff7f0e'
+                                    },
+                                    yanchor: 'top',
+                                    text: '<b>EXPLOSIVE</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: -highest * 0.5,
+                                    y: -highest,
+                                    xanchor: 'right',
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#ff7f0e'
+                                    },
+
+                                    yanchor: 'bottom',
+                                    text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                                    showarrow: false
+                                }, {
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x: highest * 0.5,
+                                    y: -highest,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
+
+                                    yanchor: 'bottom',
+                                    text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                                    showarrow: false
+                                },
 
 
-                    var data = [trace1, trace2, trace3];
-                    var layout = {
-                        title:'Ellicott\'s Explosibility Graph(from Manual Entry)',
-                        titlefont:{
-                         size: 32
-                        },
-                        width: 1200,
-                        height: 800,
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 1,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
 
-                        xaxis: {
-                            title:"<b>(EFFECTIVE INSERT GASES IN %)</b>",
-                            tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
-                            tick0: 0,
-                            dtick: 10,
-                            autoscale:false,
-                            {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
-                            range: [-100, 100],
-                            ticks: "outside",
-                            showgrid: true,
-                            zeroline: true,
-                            showline: true,
-                            mirror: 'ticks',
-                            gridcolor: '#bdbdbd',
-                            gridwidth: 0.05,
-                            zerolinecolor: '#969696',
-                            zerolinewidth: 3,
-                            linecolor: '#636363',
-                            linewidth: 6,
-                            {#side:'right'#}
-                        },
-                        yaxis: {
-                            title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
-                            tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
-                            tick0: 0,
-                            dtick: 2,
-                            autoscale:false,
-                            {#yanchor:'right',#}
-                            ticks:'inside',
-                            {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
-                            range: [-20, 20],
-                            showgrid: true,
-                            zeroline: true,
-                            showline: true,
-                            mirror: 'ticks',
-                            gridcolor: '#bdbdbd',
-                            gridwidth: 0.15,
-                            zerolinecolor: '#969696',
-                            zerolinewidth: 3,
-                            linecolor: '#636363',
-                            linewidth: 6,
+                                    yanchor: 'bottom',
+                                    text: '<b>A</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.9,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
 
-                        },
+                                    yanchor: 'bottom',
+                                    text: '<b>B</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.8,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
 
-                        showlegend: false
-                    };
-                    Plotly.newPlot('myDiv', data, layout,{modeBarButtonsToRemove: ['autoScale2d']});
+                                    yanchor: 'bottom',
+                                    text: '<b>C</b>',
+                                    showarrow: false
+                                },
+                                {
+                                    xref: 'paper',
+                                    yref: 'paper',
+                                    x: 1,
+                                    y: 0.7,
+                                    font: {
+                                        family: 'Courier New, monospace',
+                                        size: 16,
+                                        color: '#f44336'
+                                    },
+                                    xanchor: 'left',
 
-            },
-            error:function () {
-                console.log("Something Went Wrong!");
-            },
+                                    yanchor: 'bottom',
+                                    text: '<b>D</b>',
+                                    showarrow: false
+                                }
+                            ],
+
+                            showlegend: true
+                        };
+                        Plotly.newPlot('myDiv', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+
+                    },
+                    complete: function () {
+                        $('.loader-container').hide();
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    },
+                });
+            }
         });
-    });
     </script>
 
 {% endblock %}

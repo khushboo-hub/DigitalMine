@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <div class="container">
         <div class="row">
             <section class="col-md-12">
@@ -62,10 +61,16 @@
                         </div>
                     </div>
                 </div><!--end Table content -->
-                <div id="map" style="width:50%;height:500px; background-repeat: no-repeat !important;margin:0 auto;"></div>
+                <div class="row">
+                    <div id="KBtestmap" style="width:100%;height:600px;position: relative; overflow: hidden;"></div>
+                </div>
+                <div class="row" style="height: 100px">
+                    {#                    <div id="map" style="width:100%;height:400px"></div>#}
+                </div>
                 <!--<div id="mine_map" style="width:100%;height:400px"></div>-->
             </section>
         </div>
+
     </div>
 
     <!-- Map Details Modal -->
@@ -90,51 +95,59 @@
 
 
     <script>
-        $(document.body).on("click", ".delete", function () {
-            $("#sureDelete").attr("href", $(this).data('url'));
-            $('#update_info').modal('show');
+        $(document).ready(function () {
+            $(document.body).on("click", ".delete", function () {
+                $("#sureDelete").attr("href", $(this).data('url'));
+                $('#update_info').modal('show');
+            });
+            FULLSCREEN();
 
-        });
+            $(document.body).on("click", ".map_details", function () {
+                let lat = $(this).data('url');
+                let long = this.id;
+                myMap(lat, long);
+            });
+
+            $(document.body).on("click", ".mine_map", function () {
+                let img = $(this).data('url');
+                $('#KBtestmap').empty();
+                if (img) {
+                    CreateKBtestMap(img)
+                    {#$("#map").append("<img style='' id='theImg' src='/media/" + img + "'/>");#}
+                    {#$('#map').css("background-image", "url(/media/" + img + ")");#}
+                } else {
+                    $("#KBtestmap").css("");
+                    $("#KBtestmap").html("No Mine map(blue print) is added in this mine.please add it.");
+                }
 
 
-        $(document.body).on("click", ".map_details", function () {
+            });
 
-            lat = $(this).data('url');
-            long = this.id;
-            <!--alert(lat);-->
-            <!--alert(long);-->
+            function CreateKBtestMap(data) {
+                var img = data;
+                //console.log(url);
+                if (addedKBmaps.length > 0) {
+                    addedKBmaps.pop();
+                    $('.KBmap__mapContainer').remove();
+                }
+                if (img) {
+                    createKBmap('KBtestmap', '/media/' + img);
+                } else {
+                    $("#KBtestmap").css("");
+                    $("#KBtestmap").html("No Mine map(blue print) is added in this mine.please add it.");
+                }
+            };
 
-            myMap(lat, long);
-            <!--$('#myModal').modal('show');-->
-
-        });
-
-        $(document.body).on("click", ".mine_map", function () {
-
-            img = $(this).data('url');
-            //alert(img);
-
-            if (img) {
-                $('#map').css("background-image", "url(/media/" + img + ")");
-                //$("#map").html("ok");
-            } else {
-                $("#map").css("");
-                $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+            function myMap(lat, long) {
+                $('#KBtestmap').empty();
+                let mapOptions = {
+                    center: new google.maps.LatLng(lat, long),
+                    zoom: 15,
+                    mapTypeId: google.maps.MapTypeId.HYBRID
+                }
+                let map = new google.maps.Map(document.getElementById("KBtestmap"), mapOptions);
             }
-
-
         });
-
-
-        function myMap() {
-            var mapOptions = {
-                center: new google.maps.LatLng(lat, long),
-                zoom: 15,
-                mapTypeId: google.maps.MapTypeId.HYBRID
-            }
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-        }
-
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSCjDrQyZpBPQOEXexNLeOW9RLRWVkw9o"></script>
