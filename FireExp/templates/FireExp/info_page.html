@@ -88,54 +88,139 @@
 
                         result = data.result;
 
-                        console.log(result);
-                        var x_list = [];
-                        var y_list = [];
-                        var text = [];
-                        var color = [];
-                        var dates = [];
-                        for (var i = 0; i < result.length; i++) {
-                            x_list.push(result[i].x);
+                        // console.log(result);
+                        var x_list = [[0], [0], [0], [0]];
+                        var y_list = [[0], [0], [0], [0]];
+                        var text = [[''], [''], [''], ['']];
+                        var color = [[''], [''], [''], ['']];
+                        var dates = [[''], [''], [''], ['']];
+                        let index = 0;
+                        for (let r in result) {
+                            if (result.hasOwnProperty(r)) {
+                                console.log(result[r].quadrant)
+                                x_list[result[r].quadrant].push(result[r].x);
+                                y_list[result[r].quadrant].push(result[r].y);
+                                text[result[r].quadrant].push((index + 1).toString());
+                                color[result[r].quadrant].push(result[r].color);
+                                dates[result[r].quadrant].push(result[r].dates);
+                                index += 1;
+                            }
+                        }
+
+
+                        /*for (var i = 0; i < result.length; i++) {
+                            x_list[result[i].quadrant].push(result[i].x);
                             y_list.push(result[i].y);
                             text.push((i + 1).toString());
                             color.push(result[i].color);
                             dates.push(result[i].dates);
-                        }
-                        var xhighest = Math.max.apply(Math, x_list);
-                        var xlowest = Math.min.apply(Math, x_list);
-                        var yhighest = Math.max.apply(Math, y_list);
-                        var ylowest = Math.min.apply(Math, y_list);
+                        } */
+
+                        var xhighest = Math.max.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
+                        var xlowest = Math.min.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
+                        var yhighest = Math.max.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
+                        var ylowest = Math.min.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
 
 
                         var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
                         var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                        console.log(lowest, highest);
-
-                        var trace3 = {
-                            x: x_list,
-                            y: y_list,
-                            xa: dates,
+                        highest = highest * 1.2;
+                        var trace1 = {
+                            x: x_list[0],
+                            y: y_list[0],
+                            xa: dates[0],
                             mode: 'text+dates+markers',
                             type: 'scatter',
                             {#name:dates,#}
-                            text: text,
+                            text: text[0],
                             textfont: {
                                 {#family: 'sans serif',#}
-                                size: 20,
-                                color: color,
+                                size: 16,
+                                color: color[0],
                                 weight: '900'
                             },
-                            marker: {size: dates,},
+                            marker: {size: dates[0],},
                             textposition: 'bottom center',
 
                             hoveron: 'points',
                             hovertemplate: "<b>%{marker.size}<b><extra></extra>",
 
-                            name:'Trace',
+                            name: '<b>Non Combustible Non-Explosive(' + (x_list[0].length - 1) + ')</b>',
                             hoverinfo: 'x+y',
                         };
 
-                        var data = [trace3];
+                        var trace2 = {
+                            x: x_list[1],
+                            y: y_list[1],
+                            xa: dates[1],
+                            mode: 'text+dates+markers',
+                            type: 'scatter',
+                            {#name:dates,#}
+                            text: text[1],
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 16,
+                                color: color[1],
+                                weight: '900'
+                            },
+                            marker: {size: dates[1],},
+                            textposition: 'bottom center',
+
+                            hoveron: 'points',
+                            hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                            name: '<b>Clean Fuel Non-Explosive(' + (x_list[1].length - 1) + ')</b>',
+                            hoverinfo: 'x+y',
+                            showlegend: true
+                        };
+                        var trace3 = {
+                            x: x_list[2],
+                            y: y_list[2],
+                            xa: dates[2],
+                            mode: 'text+dates+markers',
+                            type: 'scatter',
+                            {#name:dates,#}
+                            text: text[2],
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 16,
+                                color: color[2],
+                                weight: '900'
+                            },
+                            marker: {size: dates[2],},
+                            textposition: 'bottom center',
+
+                            hoveron: 'points',
+                            hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                            name: '<b>Explosive(' + (x_list[2].length - 1) + ')</b>',
+                            hoverinfo: 'x+y',
+                        };
+                        var trace4 = {
+                            x: x_list[3],
+                            y: y_list[3],
+                            xa: dates[3],
+                            mode: 'text+dates+markers',
+                            type: 'scatter',
+                            {#name:dates,#}
+                            text: text[3],
+                            textfont: {
+                                {#family: 'sans serif',#}
+                                size: 16,
+                                color: color[3],
+                                weight: '900'
+                            },
+                            marker: {size: dates[3],},
+                            textposition: 'bottom center',
+
+                            hoveron: 'points',
+                            hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                            name: '<b>Potentialy Explosive(' + (x_list[3].length - 1) + ')</b>',
+                            hoverinfo: 'x+y',
+                        };
+
+                        var data = [trace1, trace2, trace3, trace4];
                         var layout = {
                             title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
                             titlefont: {
@@ -250,77 +335,25 @@
                                     text: '<b>POTENTIALLY EXPLOSIVE</b>',
                                     showarrow: false
                                 },
-
-
-                                {
-                                    xref: 'paper',
-                                    yref: 'paper',
-                                    x: 1,
-                                    y: 1,
-                                    font: {
-                                        family: 'Courier New, monospace',
-                                        size: 16,
-                                        color: '#f44336'
-                                    },
-                                    xanchor: 'left',
-
-                                    yanchor: 'bottom',
-                                    text: '<b>A</b>',
-                                    showarrow: false
-                                },
-                                {
-                                    xref: 'paper',
-                                    yref: 'paper',
-                                    x: 1,
-                                    y: 0.9,
-                                    font: {
-                                        family: 'Courier New, monospace',
-                                        size: 16,
-                                        color: '#f44336'
-                                    },
-                                    xanchor: 'left',
-
-                                    yanchor: 'bottom',
-                                    text: '<b>B</b>',
-                                    showarrow: false
-                                },
-                                {
-                                    xref: 'paper',
-                                    yref: 'paper',
-                                    x: 1,
-                                    y: 0.8,
-                                    font: {
-                                        family: 'Courier New, monospace',
-                                        size: 16,
-                                        color: '#f44336'
-                                    },
-                                    xanchor: 'left',
-
-                                    yanchor: 'bottom',
-                                    text: '<b>C</b>',
-                                    showarrow: false
-                                },
-                                {
-                                    xref: 'paper',
-                                    yref: 'paper',
-                                    x: 1,
-                                    y: 0.7,
-                                    font: {
-                                        family: 'Courier New, monospace',
-                                        size: 16,
-                                        color: '#f44336'
-                                    },
-                                    xanchor: 'left',
-
-                                    yanchor: 'bottom',
-                                    text: '<b>D</b>',
-                                    showarrow: false
-                                }
                             ],
 
-                            showlegend: true
+                            showlegend: true,
+                            legend: {
+                                y: 1,
+                                x: 0,
+                                "orientation": "h",
+                                font: {
+                                    family: 'sans-serif',
+                                    size: 11,
+                                    color: '#000'
+                                },
+                                bgcolor: '#E2E2E2',
+                                bordercolor: '#FFFFFF',
+                                borderwidth: 2
+                            }
                         };
                         Plotly.newPlot('myDiv', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+
 
                     },
                     complete: function () {

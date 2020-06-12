@@ -703,6 +703,18 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
                 colorstring = '#f44336'
             return colorstring
 
+        def quadrant(x,y):
+            quad = 0
+            if (x <= 0  and y <= 0):
+                quad = 0
+            elif (x <= 0 and y>0):
+                quad = 1
+            elif (x > 0 and y > 0):
+                quad = 2
+            elif (x> 0 and y<0):
+                quad = 3
+            return quad
+
         while (idn < len(graphpoints)):
             trialxlist = graphpoints[idn].elx
             trialylist = graphpoints[idn].ely
@@ -711,6 +723,7 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
                 'x': trialxlist,
                 'y': trialylist,
                 'color': markerclr(trialxlist,trialylist),
+                'quadrant':quadrant(trialxlist,trialylist),
                 'dates': dates[idn]
             })
             idn = idn + 1
