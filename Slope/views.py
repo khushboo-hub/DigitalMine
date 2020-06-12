@@ -1120,4 +1120,9 @@ def fetch_datafrom_jsonurl_dynamic(request):
     return JsonResponse(data)
 
 
+@login_required
+def graph_from_thingspeak(request, template_name='Convergence1/graph_from_thingspeak.html'):
+    
+    return render(request, template_name)
+
 
