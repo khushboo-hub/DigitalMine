@@ -220,6 +220,138 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
                   'explosm': explosm, 'a1flag': a1flag, 'a2flag': a2flag}
     return render(request, template_name, resultdict)
 
+from django.template.defaulttags import register
+
+@register.filter(name='exlookup')
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+def findExplosibility(o2,co,ch4,co2,h2,n2,c2h4):
+    print('After Entering',o2,co)
+    #ratio calculation
+    graham = (100 * co / (0.265 * n2 - o2))
+    young = (100 * co2 / (0.265 * n2 - o2))
+    coco2 = 100 * co / co2
+    jtr = (co2 + 0.75 * co - 0.25 * h2) / (0.265 * n2 - o2)
+    if (c2h4 == 0):
+        chra = 0
+    else:
+        chra = 3 * (co2 + co + ch4 + 2 * c2h4) / (0.2468 * n2 - o2 - co2 - 0.5 * h2 + ch4 + c2h4 + h2 - co)
+
+    ##message calculation
+    ##graham
+    if (graham <= 0.4):
+        grahamm = "Normal"
+    elif (graham <= 0.5):
+        grahamm = "Checkup required"
+    elif (graham <= 1):
+        grahamm = "Heating"
+    elif (graham <= 2):
+        grahamm = "Serious heating"
+    elif (graham <= 7):
+        grahamm = "FIRE with certainty"
+    else:
+        grahamm = "BLAZING FIRE"
+    ##young
+    if (young <= 25):
+        youngm = "Superficial heating"
+    elif (young <= 50):
+        youngm = "FIRE present"
+    else:
+        youngm = "BLAZING FIRE"
+    ##coco2
+    if (coco2 <= 2):
+        coco2m = "Normal"
+    elif (coco2 <= 13):
+        coco2m = "ACTIVE FIRE"
+    else:
+        coco2m = "BLAZING FIRE"
+    ##jtr
+    if (jtr <= 0.4):
+        jtrm = "Indicative of no fire"
+    elif (jtr <= 0.5):
+        jtrm = "Indicative of methane fire"
+    elif (jtr <= 1):
+        jtrm = "Indicative of coal/oil/conveyor fire"
+    else:
+        jtrm = "Indicative of timber fire"
+    ##chra
+    if (chra <= 5):
+        chram = "Superficial heating"
+    elif (chra <= 20):
+        chram = "ACTIVE FIRE"
+    else:
+        chram = "BLAZING FIRE"
+
+    ##explosibility
+    explos = 5
+    pt = ch4 + co + h2
+
+    ch4low = 5
+    colow = 12.5
+    h2low = 4
+    ch4high = 14
+    cohigh = 74.2
+    h2high = 74.2
+    ch4nose = 5.9
+    conose = 13.8
+    h2nose = 4.3
+    ch4np = 6.07
+    conp = 4.13
+    h2np = 16.59
+
+    Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
+    Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
+    Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
+    Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+
+    Oxnose = 0.2093 * (100 - Nex - Lnose)
+
+    ##total combustible at extinctive point
+    Le = 20.93 * Lnose / (20.93 - Oxnose)
+    ##oxygen at lower limit
+    Ob = -20.93 * Llow / 100 + 20.93
+    ##oxygen at upper limit
+    Oc = -20.93 * Lhigh / 100 + 20.93
+
+    if ((o2 >= 0) and (pt >= 0)):
+        if (100 * o2 + 20.93 * pt >= 2093):
+            explos = 4
+        if (Le * o2 + 20.93 * pt <= Le * 20.93):
+            explos = 0
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+            explos = 2
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                (Lnose - Lhigh) * o2 + (
+                Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+            explos = 3
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                (Lnose - Lhigh) * o2 + (
+                Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+            explos = 1
+
+    ##explosibility message
+    if (explos == 0):
+        explosm = "Not explosive"
+    elif (explos == 1):
+        explosm = "Potentially explosive(if air is added)"
+    elif (explos == 2):
+        explosm = "Potentially explosive(if combustible gas is added)"
+    elif (explos == 3):
+        explosm = "Explosive"
+    elif (explos == 4):
+        explosm = "Impossible mixture"
+    else:
+        explosm = "Unidentified"
+
+    return explosm
 
 @login_required
 def show_database(request, template_name='FireExp/show_database.html'):
@@ -227,11 +359,22 @@ def show_database(request, template_name='FireExp/show_database.html'):
     if request.method == "POST":
         date_from = request.POST.get('from_date')
         date_to = request.POST.get('to_date')
-        print(date_from)
-        print(date_to)
         gases = Gasdb.objects.filter(date__range=(date_from,date_to))
         data['object_list'] = gases
+        explosibility={}
+        for g in gases:
+            try:
+                explosibility[g.id]=findExplosibility(g.o2,g.co,g.ch4,g.co2,g.h2,g.n2,g.c2h4)
+
+
+            except Exception as e:
+                print(e)
+                explosibility[g.id]='Failure'
+                pass
+
+        data['explosibility']=explosibility
     return render(request, template_name, data)
+
 
 
 @login_required

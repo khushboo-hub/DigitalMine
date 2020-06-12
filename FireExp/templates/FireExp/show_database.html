@@ -55,9 +55,10 @@
                     </div>
                 </div>
                 <br>
+
                 <div class="row">
                     <div class="col-md-12">
-                        <table class="table table-bordered" id="content">
+                        <table class="table table-bordered table-condensed" id="content">
                             <thead>
                             <tr>
                                 <th>SL No</th>
@@ -69,10 +70,12 @@
                                 <th>N2</th>
                                 <th>C2H4</th>
                                 <th>Date</th>
+                                <th>Explosibility status</th>
 
                             </tr>
                             </thead>
                             <tbody>
+
                             {% for book in object_list %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
@@ -84,6 +87,7 @@
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
                                     <td>{{ book.date }}</td>
+                                    <td>{{ explosibility|exlookup:book.id}}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
