@@ -1826,14 +1826,16 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
 
             # calculating polar coordinates
             def properarctan(valuex, valuey):
-                print('x y', valuex, valuey)
-                if valuex >= 0:
-                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                        return (360 + np.degrees(np.arctan(valuey / valuex)))
+                try:
+                    if valuex >= 0:
+                        if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                            return (360 + np.degrees(np.arctan(valuey / valuex)))
+                        else:
+                            return np.degrees(np.arctan(valuey / valuex))
                     else:
-                        return np.degrees(np.arctan(valuey / valuex))
-                else:
-                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+                        return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+                except:
+                    return 0
 
             rx = np.sqrt(xx * xx + yx * yx)
             thx = properarctan(xx, yx)
@@ -1872,26 +1874,36 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
                 createdstring = '$' + str(numb + 1) + '$'
                 return createdstring
 
-            def markerclr(numb):
-                print('numb', numb)
-                tot = 10  # len(graphpoints) #10
+            def markerclr(x, y):
                 colorstring = '#77b5fe'
-                if (numb < tot / 5):  # 2
-                    colorstring = '#8a2be2'
-                elif (numb < 2 * tot / 5):  # 4
-                    colorstring = '#8db600'
-                elif (numb < 3 * tot / 5):  # 6
-                    colorstring = '#ffff00'
-                elif (numb < 4 * tot / 5):  # 8
-                    colorstring = '#eaa221'
-                else:
-                    colorstring = '#ffc0cb'
+                if (x <= 0 and y <= 0):
+                    colorstring = '#4caf50'
+                elif (x <= 0 and y > 0):
+                    colorstring = '#ffc107'
+                elif (x > 0 and y > 0):
+                    colorstring = '#ff9800'
+                elif (x > 0 and y < 0):
+                    colorstring = '#f44336'
                 return colorstring
+
+            def quadrant(x, y):
+                quad = 0
+                if (x <= 0 and y <= 0):
+                    quad = 0
+                elif (x <= 0 and y > 0):
+                    quad = 1
+                elif (x > 0 and y > 0):
+                    quad = 2
+                elif (x > 0 and y < 0):
+                    quad = 3
+                return quad
+
 
             graph.append({
                 'x': x.elx,
                 'y': x.ely,
-                'color': markerclr(i),
+                'color': markerclr(x.elx,x.ely),
+                'quadrant':quadrant(x.elx,x.ely),
                 'dates': str(DateWise)
             })
 
