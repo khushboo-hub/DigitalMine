@@ -16,7 +16,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="input-group date" id="date_from_time_picker">
-                                    <input type="text" name="from_date" class="form-control" placeholder="From Date" id="id_date_fr" required="" autocomplete="off">
+                                    <input type="text" name="from_date" class="form-control" placeholder="From Date"
+                                           id="id_date_fr" required="" autocomplete="off">
 
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
@@ -24,7 +25,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="input-group date" id="date_to_time_picker">
-                                    <input type="text" name="to_date" class="form-control" placeholder="To Date" id="id_date_to" required="" autocomplete="off">
+                                    <input type="text" name="to_date" class="form-control" placeholder="To Date"
+                                           id="id_date_to" required="" autocomplete="off">
 
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
@@ -62,6 +64,7 @@
                             <thead>
                             <tr>
                                 <th>SL No</th>
+                                <th>Date</th>
                                 <th>O2</th>
                                 <th>CO</th>
                                 <th>CH4</th>
@@ -69,8 +72,7 @@
                                 <th>H2</th>
                                 <th>N2</th>
                                 <th>C2H4</th>
-                                <th>Date</th>
-                                <th>Explosibility status</th>
+                                <th style="color: red;">Explosibility status</th>
 
                             </tr>
                             </thead>
@@ -79,6 +81,7 @@
                             {% for book in object_list %}
                                 <tr>
                                     <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.date }}</td>
                                     <td>{{ book.o2 }}</td>
                                     <td>{{ book.co }}</td>
                                     <td>{{ book.ch4 }}</td>
@@ -86,8 +89,7 @@
                                     <td>{{ book.h2 }}</td>
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
-                                    <td>{{ book.date }}</td>
-                                    <td>{{ explosibility|exlookup:book.id}}</td>
+                                    <td>{{ explosibility|exlookup:book.id }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -98,14 +100,14 @@
         </div>
     </div>
     <script>
-    $(document).ready(function () {
-        let date_from = $('#date_from_time_picker').datetimepicker({
-            format: 'YYYY-MM-DD'
+        $(document).ready(function () {
+            let date_from = $('#date_from_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            let date_to = $('#date_to_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('.loader-container').hide();
         });
-        let date_to = $('#date_to_time_picker').datetimepicker({
-            format: 'YYYY-MM-DD'
-        });
-        $('.loader-container').hide();
-    });
     </script>
 {% endblock %}
