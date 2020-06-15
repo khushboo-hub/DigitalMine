@@ -210,7 +210,7 @@
                             <th>23-24</th>
                             <th>Min</th>
                             <th>Max</th>
-                            <th>Total</th>
+{#                            <th>Total</th>#}
                             <th>Average</th>
                         </tr>
                         </thead>
@@ -470,7 +470,7 @@
                                 console.log('DATA', data);
                                 if (data.hasOwnProperty('result')) {
                                     let SensorValues = data.result;
-                                    ShowWarning(SensorValues);
+                                    ShowWarning(SensorValues,date_from,date_to);
                                 }
                             },
                             complete: function () {
@@ -480,7 +480,7 @@
                     })();
                 }
 
-                function ShowWarning(SensorValues) {
+                function ShowWarning(SensorValues,date_from,date_to) {
                     let hourly = SensorValues.hourly;
                     let daily = SensorValues.daily;
                     let day = [];
@@ -494,15 +494,12 @@
                             }
                         }
                     }
-
-                    console.log('DAYs', day);
                     for (let hour in hourly) {
                         if (hourly.hasOwnProperty(hour)) {
                             let date = new Date(hourly[hour].day);
                             day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][date.getHours()] = hourly[hour].avg;
                         }
                     }
-                    console.log('DAY', day);
                     /* let datatable = $('#hourly').DataTable({
 
                          scrollX: true,
@@ -557,7 +554,7 @@
                             //datatable.row.add(hourlydata).draw().node();
                             tableData += '<td style="font-weight:bold">' + min + '</td>';
                             tableData += '<td style="font-weight:bold">' + max + '</td>';
-                            tableData += '<td style="font-weight:bold">' + (total).toFixed(2) + '</td>';
+                            {#tableData += '<td style="font-weight:bold">' + (total).toFixed(2) + '</td>';#}
                             tableData += '<td style="font-weight:bold">' + (total / hours.length).toFixed(2) + '</td>';
 
 
@@ -571,7 +568,7 @@
                     let colmin=[];
                     let colavg=[];
                     let coltotal=[]
-                    for(i=2;i<=29;i++) {
+                    for(i=2;i<=28;i++) {
                         let coldata=[];
                         let col=$('table tr td:nth-child(' + i + ')');
                         let total=0;
@@ -602,12 +599,6 @@
                     }
                     tableData += '</tr>';
 
-                    tableData += '<tr>';
-                    tableData += '<td>Total</td>';
-                    for(i=0;i<coltotal.length;i++){
-                        tableData += '<td style="font-weight:bold">'+coltotal[i].toFixed(2)+'</td>';
-                    }
-                    tableData += '</tr>';
 
                     tableData += '<tr>';
                     tableData += '<td>Average</td>';
@@ -616,22 +607,17 @@
                     }
                     tableData += '</tr>';
 
-                    {#tableData += '<tr>';#}
-                    {#tableData += '<td>Max</td>';#}
-                    {#tableData += '</tr>'#}
-                    {#tableData += '<tr>';#}
-                    {#tableData += '<td>Average</td>';#}
-                    {#tableData += '</tr>';#}
                      $('#hourly').append(tableData);
-
-                    /* let minename = $('#id_mine_id').find(":selected").text();
-                     let nodename = $('#id_list').find(":selected").text();
-
-                     for (let values in SensorValues) {
-                         if (SensorValues.hasOwnProperty(values)) {
-                             datatable.row.add([new Date(SensorValues[values].fields.date_time), minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
-                         }
-                     }*/
+                        let hourfrom=(new Date(date_from)).getHours();
+                        let hourto=(new Date(date_to)).getHours();
+                        console.log('hourto',hourto);
+                        console.log('hourfrom',hourfrom);
+                        hourto=(hourto==0)?24:hourto;
+                        console.log('hourto',hourto);
+                    for(i=hourfrom+2;i<=hourto+2;i++) {
+                        $('table tr td:nth-child(' + i + ')').css('background-color', '#00bcd44d');
+                        $('table tr th:nth-child(' + i + ')').css('background-color', '#00bcd44d');
+                    }
                 }
 
 
