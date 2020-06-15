@@ -6,12 +6,12 @@
 ###     Last Modified:
 ###     Modified function,any:
 ##################################################################################
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
-import io
+import io, csv
 import datetime
 from datetime import timedelta
 import serial
@@ -220,16 +220,18 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
                   'explosm': explosm, 'a1flag': a1flag, 'a2flag': a2flag}
     return render(request, template_name, resultdict)
 
+
 from django.template.defaulttags import register
+
 
 @register.filter(name='exlookup')
 def get_item(dictionary, key):
     return dictionary.get(key)
 
 
-def findExplosibility(o2,co,ch4,co2,h2,n2,c2h4):
-    print('After Entering',o2,co)
-    #ratio calculation
+def findExplosibility(o2, co, ch4, co2, h2, n2, c2h4):
+    print('After Entering', o2, co)
+    # ratio calculation
     graham = (100 * co / (0.265 * n2 - o2))
     young = (100 * co2 / (0.265 * n2 - o2))
     coco2 = 100 * co / co2
@@ -353,28 +355,109 @@ def findExplosibility(o2,co,ch4,co2,h2,n2,c2h4):
 
     return explosm
 
+
 @login_required
 def show_database(request, template_name='FireExp/show_database.html'):
-    data={}
+    data = {}
     if request.method == "POST":
         date_from = request.POST.get('from_date')
         date_to = request.POST.get('to_date')
-        gases = Gasdb.objects.filter(date__range=(date_from,date_to))
+        gases = Gasdb.objects.filter(date__range=(date_from, date_to))
         data['object_list'] = gases
-        explosibility={}
+        explosibility = {}
         for g in gases:
             try:
-                explosibility[g.id]=findExplosibility(g.o2,g.co,g.ch4,g.co2,g.h2,g.n2,g.c2h4)
+                explosibility[g.id] = findExplosibility(g.o2, g.co, g.ch4, g.co2, g.h2, g.n2, g.c2h4)
 
 
             except Exception as e:
                 print(e)
-                explosibility[g.id]='Failure'
+                explosibility[g.id] = 'Failure'
                 pass
 
-        data['explosibility']=explosibility
+        data['explosibility'] = explosibility
     return render(request, template_name, data)
 
+
+@login_required
+def import_from_file(request, template_name='FireExp/import_from_file.html'):
+    data = {}
+    flag = 1
+    if request.method == "POST" and request.FILES['file'] and "show" in request.POST:
+        csv_file = request.FILES['file']
+        try:
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, 'Please select a csv file')
+                return render(request, template_name, data)
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            next(io_string)
+            file = []
+            explosibility = {}
+            for column in csv.reader(io_string, delimiter=','):
+
+                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
+                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
+                try:
+                    print(column[0])
+                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
+                                                                 float(column[4]), float(column[5]), float(column[6]),
+                                                                 float(column[7]))
+                except Exception as e:
+                    explosibility[column[0]] = 'Failure'
+                    pass
+
+            data['object_list'] = file
+            data['explosibility'] = explosibility
+
+        except Exception as e:
+            flag = 0
+            pass
+        if flag == 1:
+            messages.success(request, "Data tabulated successfully")
+        else:
+            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
+    elif request.method == "POST" and request.FILES['file'] and "save" in request.POST:
+        csv_file = request.FILES['file']
+        try:
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, 'Please select a csv file')
+                return render(request, template_name, data)
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            next(io_string)
+            file = []
+            GASES = []
+            explosibility = {}
+            for column in csv.reader(io_string, delimiter=','):
+                GASES.append(Gasdb(o2=column[1], co = column[2], ch4=column[3], co2=column[4], h2=column[5],n2=column[6],
+                                   c2h4=column[7], date=column[8]))
+                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
+                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
+                try:
+                    print(column[0])
+                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
+                                                                 float(column[4]), float(column[5]), float(column[6]),
+                                                                 float(column[7]))
+                except Exception as e:
+                    explosibility[column[0]] = 'Failure'
+                    pass
+            try:
+                Gasdb.objects.bulk_create(GASES)
+            except:
+                flag=0
+                pass
+            data['object_list'] = file
+            data['explosibility'] = explosibility
+
+        except Exception as e:
+            flag = 0
+            pass
+        if flag == 1:
+            messages.success(request, "Data saved and tabulated successfully")
+        else:
+            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
+    return render(request, template_name, data)
 
 
 @login_required
@@ -637,8 +720,9 @@ def analysis(request, page):
 @login_required
 def explosibility(request, page, template_name='FireExp/explosibility.html'):
     if request.is_ajax():
-        date_from=request.GET.get('from',None)
-        date_to=request.GET.get('to',None)
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
+
         class GraphData:
             o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
             explos = 5
@@ -647,7 +731,7 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
         graphpoints = []
 
         if (page == 0):
-            FireExp = Gasdb.objects.filter(date__range=(date_from,date_to))
+            FireExp = Gasdb.objects.filter(date__range=(date_from, date_to))
         elif (page == 1):
             FireExp = Fire_exp_gases.objects.all()
 
@@ -735,7 +819,8 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
                 if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
                     x.explos = 0
                 if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                        (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
                     x.explos = 2
                 if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
                         (Lnose - Llow) * x.o2 + (
@@ -834,27 +919,27 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
             createdstring = '$' + str(numb + 1) + '$'
             return createdstring
 
-        def markerclr(x,y):
+        def markerclr(x, y):
             colorstring = '#77b5fe'
-            if (x <= 0  and y <= 0):
+            if (x <= 0 and y <= 0):
                 colorstring = '#4caf50'
-            elif (x <= 0 and y>0):
-                colorstring = '#ffc107'
+            elif (x <= 0 and y > 0):
+                colorstring = '#8bc34a'
             elif (x > 0 and y > 0):
                 colorstring = '#ff9800'
-            elif (x> 0 and y<0):
+            elif (x > 0 and y < 0):
                 colorstring = '#f44336'
             return colorstring
 
-        def quadrant(x,y):
+        def quadrant(x, y):
             quad = 0
-            if (x <= 0  and y <= 0):
+            if (x <= 0 and y <= 0):
                 quad = 0
-            elif (x <= 0 and y>0):
+            elif (x <= 0 and y > 0):
                 quad = 1
             elif (x > 0 and y > 0):
                 quad = 2
-            elif (x> 0 and y<0):
+            elif (x > 0 and y < 0):
                 quad = 3
             return quad
 
@@ -865,14 +950,14 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
             graph.append({
                 'x': trialxlist,
                 'y': trialylist,
-                'color': markerclr(trialxlist,trialylist),
-                'quadrant':quadrant(trialxlist,trialylist),
+                'color': markerclr(trialxlist, trialylist),
+                'quadrant': quadrant(trialxlist, trialylist),
                 'dates': dates[idn]
             })
             idn = idn + 1
         data['result'] = graph
     else:
-        data['error']="Not Ajax"
+        data['error'] = "Not Ajax"
     return JsonResponse(data)
 
 

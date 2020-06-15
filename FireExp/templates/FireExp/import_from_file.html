@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header text-center"><b>Fire Explosibility File Import</b></h3>
+                <div class="row">
+                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-4">
+                                <span class="control-fileupload">
+                                  <label for="fileInput">Choose a file :</label>
+                                  <input type="file" required name="file" id="fileInput">
+                                </span>
+                                </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-4"></div>
+                            <div class="col-md-2">
+                            <button id="btn_show" name="save" type="submit" class="btn btn-primary">Save Data</button>
+                            </div>
+                            <div class="col-md-2">
+                            <button id="btn_show" name="show" type="submit" class="btn btn-primary">Show Data</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row">
+
+                    <div class="col-md-12">
+
+                        <div class="loader-container text-center" hidden>
+                            <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                                <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                                <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                                <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                                <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <br>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <table class="table table-bordered table-condensed" id="content">
+                            <thead>
+                            <tr>
+                                <th>SL No</th>
+                                <th>Date</th>
+                                <th>O2</th>
+                                <th>CO</th>
+                                <th>CH4</th>
+                                <th>CO2</th>
+                                <th>H2</th>
+                                <th>N2</th>
+                                <th>C2H4</th>
+                                <th style="color: red;">Explosibility status</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {% for book in object_list %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ book.date }}</td>
+                                    <td>{{ book.o2 }}</td>
+                                    <td>{{ book.co }}</td>
+                                    <td>{{ book.ch4 }}</td>
+                                    <td>{{ book.co2 }}</td>
+                                    <td>{{ book.h2 }}</td>
+                                    <td>{{ book.n2 }}</td>
+                                    <td>{{ book.c2h4 }}</td>
+                                    <td>{{ explosibility|exlookup:book.id }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div><!--end Table content -->
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            let date_from = $('#date_from_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            let date_to = $('#date_to_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+            $('.loader-container').hide();
+        });
+    </script>
+{% endblock %}

@@ -1879,7 +1879,7 @@ def ellicots_ajax(request, template_name='sensor/test.html'):
                 if (x <= 0 and y <= 0):
                     colorstring = '#4caf50'
                 elif (x <= 0 and y > 0):
-                    colorstring = '#ffc107'
+                    colorstring = '#8bc34a'
                 elif (x > 0 and y > 0):
                     colorstring = '#ff9800'
                 elif (x > 0 and y < 0):
