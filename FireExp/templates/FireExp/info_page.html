@@ -86,7 +86,7 @@
                     },
                     success: function (data) {
 
-                        result = data.result;
+                        let result = data.result;
 
                         // console.log(result);
                         var x_list = [[0], [0], [0], [0]];
@@ -95,9 +95,12 @@
                         var color = [[''], [''], [''], ['']];
                         var dates = [[''], [''], [''], ['']];
                         let index = 0;
+                        let xhighest = -1;
+                        let yhighest = -1;
                         for (let r in result) {
                             if (result.hasOwnProperty(r)) {
-                                console.log(result[r].quadrant)
+                                xhighest = (parseFloat(result[r].x) > xhighest) ? parseFloat(result[r].x) : xhighest;
+                                yhighest = (parseFloat(result[r].y) > xhighest) ? parseFloat(result[r].y) : xhighest;
                                 x_list[result[r].quadrant].push(result[r].x);
                                 y_list[result[r].quadrant].push(result[r].y);
                                 text[result[r].quadrant].push((index + 1).toString());
@@ -108,22 +111,7 @@
                         }
 
 
-                        /*for (var i = 0; i < result.length; i++) {
-                            x_list[result[i].quadrant].push(result[i].x);
-                            y_list.push(result[i].y);
-                            text.push((i + 1).toString());
-                            color.push(result[i].color);
-                            dates.push(result[i].dates);
-                        } */
-
-                        var xhighest = Math.max.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
-                        var xlowest = Math.min.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
-                        var yhighest = Math.max.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
-                        var ylowest = Math.min.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
-
-
-                        var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                        var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                        var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
                         highest = highest * 1.2;
                         var trace1 = {
                             x: x_list[0],
@@ -131,7 +119,7 @@
                             xa: dates[0],
                             mode: 'text+dates+markers',
                             type: 'scatter',
-                            name:dates,
+                            name: dates,
                             text: text[0],
                             textfont: {
                                 {#family: 'sans serif',#}

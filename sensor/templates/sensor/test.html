@@ -83,6 +83,7 @@
 <script src="{% static 'js/plotly-latest.min.js' %}"></script>
 <script src="{% static 'js/customJS.js' %}"></script>
 <script>
+    var temp;
     $(document).ready(function () {
         let date_from = $('#date_from_time_picker').datetimepicker({
             format: 'YYYY-MM-DD'
@@ -122,9 +123,12 @@
                                 let color = [[''], [''], [''], ['']];
                                 let dates = [[''], [''], [''], ['']];
                                 let index=0;
+                                let xhighest=-1;
+                                let yhighest=-1;
                                 for (let r in result) {
                                     if (result.hasOwnProperty(r)) {
-                                        console.log(result[r].quadrant)
+                                        xhighest=(parseFloat(result[r].x)>xhighest)?parseFloat(result[r].x):xhighest;
+                                        yhighest=(parseFloat(result[r].y)>xhighest)?parseFloat(result[r].y):xhighest;
                                         x_list[result[r].quadrant].push(result[r].x);
                                         y_list[result[r].quadrant].push(result[r].y);
                                         text[result[r].quadrant].push((index + 1).toString());
@@ -133,15 +137,12 @@
                                         index += 1;
                                     }
                                 }
-                                var xhighest = Math.max.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
-                                var xlowest = Math.min.apply(Math, x_list[0], x_list[1], x_list[2], x_list[3]);
-                                var yhighest = Math.max.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
-                                var ylowest = Math.min.apply(Math, y_list[0], y_list[1], y_list[2], y_list[3]);
 
 
-                                var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                                var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
+                                var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
+
                                 highest = highest * 1.2;
+                                console.log('highest',highest)
                                 var trace1 = {
                                     x: x_list[0],
                                     y: y_list[0],
