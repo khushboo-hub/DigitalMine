@@ -701,7 +701,7 @@ $(document).ready(function () {
             },
             success: function (data) {
                 if (data.hasOwnProperty('result')) {
-                    let water=data.result;
+                    let water = data.result;
                     let value = water_t_height - water.sensor_value;
                     time = new Date();
                     //console.log('Generate', water_l_value, water_m_value, water_h_value);
@@ -748,105 +748,153 @@ $(document).ready(function () {
         $.ajax({
             type: "get",
             url: fire_exp_url,
+            data: {
+                'from': "1899-01-01",
+                'to': "2999-12-12"
+            },
             beforeSend: function (jqXHR) {
                 $.xhrPool.push(jqXHR);
             },
             success: function (data) {
                 // console.log('fire', data);
 
-                result = data.result;
+                let result = data.result;
 
-                //console.log(result);
-                var x_list = [];
-                var y_list = [];
-                var text = [];
-                var color = [];
-                var dates = [];
-                for (var i = 0; i < result.length; i++) {
-                    x_list.push(result[i].x);
-                    y_list.push(result[i].y);
-                    text.push((i + 1).toString());
-                    color.push(result[i].color);
-                    dates.push(result[i].dates);
+                // console.log(result);
+                var x_list = [[0], [0], [0], [0]];
+                var y_list = [[0], [0], [0], [0]];
+                var text = [[''], [''], [''], ['']];
+                var color = [[''], [''], [''], ['']];
+                var dates = [[''], [''], [''], ['']];
+                let index = 0;
+                let xhighest = -1;
+                let yhighest = -1;
+                for (let r in result) {
+                    if (result.hasOwnProperty(r)) {
+                        xhighest = (parseFloat(result[r].x) > xhighest) ? parseFloat(result[r].x) : xhighest;
+                        yhighest = (parseFloat(result[r].y) > xhighest) ? parseFloat(result[r].y) : xhighest;
+                        x_list[result[r].quadrant].push(result[r].x);
+                        y_list[result[r].quadrant].push(result[r].y);
+                        text[result[r].quadrant].push((index + 1).toString());
+                        color[result[r].quadrant].push(result[r].color);
+                        dates[result[r].quadrant].push(result[r].dates);
+                        index += 1;
+                    }
                 }
-                var xhighest = Math.max.apply(Math, x_list);
-                var xlowest = Math.min.apply(Math, x_list);
-                var yhighest = Math.max.apply(Math, y_list);
-                var ylowest = Math.min.apply(Math, y_list);
 
 
-                var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                var lowest = Math.min.apply(Math, [Math.abs(xhighest), Math.abs(xlowest), Math.abs(yhighest), Math.abs(ylowest)]);
-                console.log('HL', lowest, highest);
+                var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
+                highest = highest * 1.2;
+
                 var trace1 = {
-                    x: [-65, 80],
-                    y: [18, 18],
-                    mode: 'text',
-                    name: 'Lines, Markers and Text',
-                    text: ['<b>CLEAN FUEL NON-EXPLOSIVE</b>', '<b>EXPLOSIVE</b>'],
-                    hoverinfo: 'skip',
-                    textposition: 'center',
-                    textfont: {
-                        //  {#family: 'sans serif ,bold',#}
-                        size: 10,
-                        color: '#1f77b4'
-                    },
-                    type: 'scatter'
-                };
-                var trace2 = {
-                    x: [-65, 75],
-                    y: [-18, -18],
-                    mode: 'text',
-                    name: 'Lines and Text',
-                    text: ['<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>', '<b>POTENTIALLY EXPLOSIVE</b>'],
-                    hoverinfo: 'skip',
-                    textposition: 'bottom center',
-                    textfont: {
-                        //   {#family: 'sans serif',#}
-                        size: 10,
-                        color: '#ff7f0e'
-                    },
-                    type: 'scatter'
-                };
-                // console.log(dates)
-                date = ['1', '2', '3'];
-                var trace3 = {
-                    x: x_list,
-                    y: y_list,
-                    xa: dates,
+                    x: x_list[0],
+                    y: y_list[0],
+                    xa: dates[0],
                     mode: 'text+dates+markers',
                     type: 'scatter',
-                    text: text,
+                    name: dates,
+                    text: text[0],
                     textfont: {
-                        size: 20,
-                        color: color,
+
+                        size: 11,
+                        color: color[0],
                         weight: '900'
                     },
-                    marker: {size: dates,},
+                    marker: {size: dates[0],},
                     textposition: 'bottom center',
 
                     hoveron: 'points',
                     hovertemplate: "<b>%{marker.size}<b><extra></extra>",
 
+                    name: '<b>Non Combustible Non-Explosive(' + (x_list[0].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                };
+                var trace2 = {
+                    x: x_list[1],
+                    y: y_list[1],
+                    xa: dates[1],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
 
+                    text: text[1],
+                    textfont: {
+
+                        size: 11,
+                        color: color[1],
+                        weight: '900'
+                    },
+                    marker: {size: dates[1],},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Clean Fuel Non-Explosive(' + (x_list[1].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                    showlegend: true
+                };
+                var trace3 = {
+                    x: x_list[2],
+                    y: y_list[2],
+                    xa: dates[2],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+
+                    text: text[2],
+                    textfont: {
+
+                        size: 11,
+                        color: color[2],
+                        weight: '900'
+                    },
+                    marker: {size: dates[2],},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Explosive(' + (x_list[2].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                };
+                var trace4 = {
+                    x: x_list[3],
+                    y: y_list[3],
+                    xa: dates[3],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+
+                    text: text[3],
+                    textfont: {
+
+                        size: 11,
+                        color: color[3],
+                        weight: '900'
+                    },
+                    marker: {size: dates[3],},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Potentialy Explosive(' + (x_list[3].length - 1) + ')</b>',
                     hoverinfo: 'x+y',
                 };
 
-
-                var data = [trace3];
+                var data = [trace1, trace2, trace3, trace4];
                 var layout = {
                     title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
                     titlefont: {
-                        size: 25
+                        size: 16
                     },
+
+
                     xaxis: {
                         title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
                         tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
                         tick0: 0,
                         dtick: 10,
                         autoscale: false,
-
-                        range: [-highest * 2, highest * 2],
+                        range: [-highest * 1.2, highest * 1.2],
                         ticks: "outside",
                         showgrid: true,
                         zeroline: true,
@@ -858,7 +906,6 @@ $(document).ready(function () {
                         zerolinewidth: 3,
                         linecolor: '#636363',
                         linewidth: 6,
-                        //{#side:'right'#}
                     },
                     yaxis: {
                         title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
@@ -867,7 +914,7 @@ $(document).ready(function () {
                         dtick: 2,
                         autoscale: false,
                         ticks: 'inside',
-                        range: [-highest * 2, highest * 2],
+                        range: [-highest * 1.2, highest * 1.2],
                         showgrid: true,
                         zeroline: true,
                         showline: true,
@@ -880,58 +927,85 @@ $(document).ready(function () {
                         linewidth: 6,
 
                     },
-                    annotations: [
-                        {
-                            x: -highest * 1.2,
-                            y: highest * 1.8,
-                            xref: 'x',
-                            yref: 'y',
-                            text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
-                            bgcolor: "#ff7f0e",
-                            showarrow: false,
-                            arrowhead: 7,
-                            ax: 0,
-                            ay: -40
+                    annotations: [{
+                        xref: 'x',
+                        yref: 'y',
+                        x: -highest * 0.5,
+                        y: highest,
+                        xanchor: 'right',
+
+                        font: {
+                            family: 'Courier New, monospace',
+                            size: 10,
+                            color: '#8bc34a'
                         },
+                        yanchor: 'top',
+                        text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                        showarrow: false
+                    },
                         {
-                            x: highest * 1.2,
-                            y: highest * 1.8,
                             xref: 'x',
                             yref: 'y',
+                            x: highest * 0.5,
+                            y: highest,
+                            xanchor: 'left',
+
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 10,
+                                color: '#ff9800'
+                            },
+                            yanchor: 'top',
                             text: '<b>EXPLOSIVE</b>',
-                            bgcolor: "#ff7f0e",
-                            showarrow: false,
-                            arrowhead: 7,
-                            ax: 0,
-                            ay: -40
+                            showarrow: false
                         },
                         {
-                            x: -highest * 1.2,
-                            y: -highest * 1.8,
                             xref: 'x',
                             yref: 'y',
+                            x: -highest * 0.45,
+                            y: -highest,
+                            xanchor: 'right',
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 10,
+                                color: '#4caf50'
+                            },
+
+                            yanchor: 'bottom',
                             text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
-                            bgcolor: "#ff7f0e",
-                            showarrow: false,
-                            arrowhead: 7,
-                            ax: 0,
-                            ay: -40
-                        },
-                        {
-                            x: highest * 1.2,
-                            y: -highest * 1.8,
+                            showarrow: false
+                        }, {
                             xref: 'x',
                             yref: 'y',
+                            x: highest * 0.5,
+                            y: -highest,
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 10,
+                                color: '#f44336'
+                            },
+                            xanchor: 'left',
+
+                            yanchor: 'bottom',
                             text: '<b>POTENTIALLY EXPLOSIVE</b>',
-                            bgcolor: "#ff7f0e",
-                            showarrow: false,
-                            arrowhead: 7,
-                            ax: 0,
-                            ay: -40
-                        }
+                            showarrow: false
+                        },
                     ],
 
-                    showlegend: false
+                    showlegend: true,
+                    legend: {
+                        y: 1,
+                        x: 0,
+                        "orientation": "h",
+                        font: {
+                            family: 'sans-serif',
+                            size: 8,
+                            color: '#000'
+                        },
+                        bgcolor: '#E2E2E2',
+                        bordercolor: '#FFFFFF',
+                        borderwidth: 2
+                    }
                 };
                 var config = {responsive: true};
                 Plotly.newPlot('fireExp', data, layout, config, {modeBarButtonsToRemove: ['autoScale2d']});
@@ -1013,7 +1087,6 @@ $(document).ready(function () {
         })
         ;
     })
-    (notification_url);
 
 })
 ;
