@@ -3,32 +3,30 @@
 {% load staticfiles %}
 
 <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h3 class="page-header">Employee Training Record Management</h3>
-                        <form method="post" enctype="multipart/form-data">{% csrf_token %}
-                            <div class="col-md-4">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="page-header">Employee Training Attendance Management<small>  Here we can save training attendance of employee</small></h3>
+            <form method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="col-md-3">
                                 <label> Select Mine </label><span id="mine_id_span">{{form.mine}}</span><br>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label> Choose Shift </label> <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option value="0">  --------- </option></select></span><br>
                             </div>
-
-                            <div class="col-md-4">
-                                <div class="col-md-12">
-                                     <div class="col-md-8">
-                                         <label >Date</label>
-                                         <div class="form-group">
-                                            <div class='input-group date' id='datetimepicker'>
-                                                <input type='text' class="form-control" />
-                                                <span class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-calendar"></span>
-                                                </span>
-                                            </div>
-                                         </div>
-                                     </div>
+                            <div class="col-md-3">
+                                 <label >Date</label>
+                                 <div class="form-group">
+                                    <div class='input-group date' id='datetimepicker'>
+                                        <input type='text' class="form-control" />
+                                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                    </div>
                                  </div>
-<!--                                <label>Date</label> {{form.date_parent}}&lt;!&ndash;-<input type="text" id="date_parent" placeholder=" -&#45;&#45; Select Date -&#45;&#45;" class="form-control"/>&#45;&#45;&ndash;&gt;<br><br>-->
+                            </div>
+                            <div class="col-md-3">
+                                <label> Action </label><br>
+                                <input type="button" id="show_emp"  class="btn btn-primary" value="show employee"/>
                             </div>
                         </form>
                     </div>
@@ -40,8 +38,8 @@
                                 <thead>
                                  <tr>
                                     <th>SL No.</th>
-                                    <th>Mine</th>
-                                    <th>Shift</th>
+<!--                                    <th>Mine</th>-->
+<!--                                    <th>Shift</th>-->
                                     <th>Employee Name</th>
                                     <th>Training Type</th>
                                     <th>Training Date</th>
@@ -57,10 +55,7 @@
                                 </tbody>
                                 </table>
                                 </div>
-                                <hr>
-                                <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Records"/>
-                                &nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Training_Rescue_Accident_Manage' %}" class="btn btn-primary" role="button">Show Records</a>
-                                <hr>
+                                <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Attendance"/>
                             </form>
                         </div>
                     </div>
@@ -105,14 +100,12 @@
     function fill_dropdown_shift(result){
         $("#shift_id").html("<option value='0'>--Choose Shift--</option>");
         for (index = 0; index < result.length; index++) {
-            //alert(result[index]);
-            var str_array = result[index].split(',');
-            $("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "("+str_array[3]+" - "+str_array[4]+")"));
+            $("#shift_id").append($("<option />").val(result[index].id).text(result[index].shift_name));
         }
     }
 
     //POPULATE TABLE ON SHIFT SELECT - JQUERY
-    $("#shift_id").change(function(){
+    $("#show_emp").click(function(){
         shift_id=$("#shift_id").val();
         //alert(shift_id);
         $.ajax({
@@ -137,10 +130,24 @@
         $("#details_table").html("<div></div>");
         sl=1;
         for (index = 0; index < result.length; index++) {
-            //alert(result[index]);
-            var str_array = result[index].split(',');
-            $("#table_att").append("<tr><td>"+sl+"</td><td><input type='hidden' name='mine_id' value="+str_array[2]+">"+str_array[3]+"</td><td><input type='hidden' name='shift_id' value="+str_array[2]+">"+str_array[7]+"</td><td><input type='hidden' name='emp_id' value="+str_array[1]+">"+str_array[4]+"</td><td><input type='text' name='training_type' class='form-control'></td><td><input type='text' name='training_date' class='form-control date_fill'></td><td><select  name='is_ab_pr' class='form-control is_ab_pr'><option class='form-control' value='Present'>Present</option><option value='Absent'>Absent</option></select></td><td><input type='text' class='form-control training_ab_pr_from' name='training_ab_pr_from'></td><td><input type='text' class='form-control training_ab_pr_to' name='training_ab_pr_to'></td><td><input type='number' class='form-control' name='training_count'></td><td><input type='text' class='form-control' name='training_remarks'></td></tr>");
-                //alert(str_array[0] + "," +str_array[1] + "," +str_array[2] + "," +str_array[3] + "," +str_array[4] + "," +str_array[5]);
+            $("#table_att").append("<tr>" +
+                "<td>"+sl+"</td>" +
+                // "<td><input type='hidden' name='mine_id' value="+ result[index].mine_id+">"+result[index].mine_name+"</td>" +
+                // "<td><input type='hidden' name='shift_id' value="+result[index].shift_id+">"+result[index].shift_name+"</td>" +
+                "<td><input type='hidden' name='emp_id' value="+result[index].emp_id+">"+result[index].emp_name+"</td>" +
+                "<td><input type='text' name='training_type' class='form-control'></td>"+
+                "<td><input type='text' name='training_date' class='form-control date_fill'></td>"+
+                "<td>" +
+                    "<select  name='is_ab_pr' class='form-control is_ab_pr'>" +
+                        "<option class='form-control' value='Present'>Present</option>" +
+                        "<option value='Absent'>Absent</option>" +
+                    "</select>" +
+                "</td>" +
+                "<td><input type='text' class='form-control training_ab_pr_from' name='training_ab_pr_from'></td>" +
+                "<td><input type='text' class='form-control training_ab_pr_to' name='training_ab_pr_to'></td>" +
+                "<td><input type='number' class='form-control' name='training_count'></td>" +
+                "<td><input type='text' class='form-control' name='training_remarks'></td>" +
+                "</tr>");
             sl++;
             $('.is_ab_pr').parent('td').next('td').find('.training_ab_pr_from').attr('readonly', true);
             $('.is_ab_pr').parent('td').next('td').next('td').find('.training_ab_pr_to').attr('readonly', true);
