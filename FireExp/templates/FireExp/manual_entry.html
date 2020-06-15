@@ -1,157 +1,124 @@
 {% extends "base.html" %}
-
 {% block content %}
-{% load staticfiles %}
-
-<div class="container">
+    {% load static %}
+    <div class="container">
     <div class="row">
         <section class="col-md-12">
-            <h2 class="page-header">Determine Fire Status and Explosibility in Sealed Off Areas in Mines(Manual Entry)</h2>
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
 
+            <h2 class="page-header">Determine Fire Status and Explosibility in Sealed Off Areas in Mines(Manual
+                Entry)</h2>
 
-                        <div class="form-group">
-                            <table class="table table-responsive table-bordered">
-                                <tbody>
-                                <tr>
-                                    <th>
-                                        <label for="id_o2"> O2%:</label>
-                                    </th>
-                                    <td>
-                                        {{ form.o2 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_co"> CO%:</label>
-                                    </th>
-                                    <td>
-                                        {{ form.co }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_ch4"> CH4%:</label>
-                                    </th>
-                                    <td>
-                                        {{ form.ch4 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_co2"> CO2%:</label>
-                                    </th>
-                                    <td>
-                                       {{ form.co2 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_h2"> H2%:</label>
-                                    </th>
-                                    <td>
-                                       {{ form.h2 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_n2"> N2%:</label>
-                                    </th>
-                                    <td>
-                                       {{ form.n2 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_c2h4"> C2H4%:</label>
-                                    </th>
-                                    <td>
-                                       {{ form.c2h4 }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        <label for="id_date">Entry Date:</label>
-                                    </th>
-                                    <td>
-                                        <div class="input-group date" id="entry_date_time_picker">
-                                            {{ form.date }}
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-{#                                {{ form.as_table }}#}
-
-
-                            </table>
-                            <input type="submit" name="showbutton" class="btn btn-primary"
-                                   value="         Show         "/>
-                            <input type="submit" name="addbutton" class="btn btn-success" value="Add To Database"/>
-                            <a href="/FireExp/show_database" title="Display Database."><span class="btn btn-warning">Show Table</span></a>
-                            <a href="/FireExp/analysis_button" title="Ellicott's Extension."><span class="btn btn-danger">Ellicott's Extension</span></a>
-                            <a target="_blank" href="{% static '/image/Sealed_off_formula.pdf' %}" title="Explosibility Formulae"><span class="btn btn-primary disabled">Explosibility Formulae</span></a>
+                <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                    <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_o2"> O2%:</label></div>
+                            <div class="col-md-10">{{ form.o2 }}</div>
                         </div>
-                    </form>
-                </div>
-            </div><!--end Table content -->
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_co"> CO%:</label></div>
+                            <div class="col-md-10">{{ form.co }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_ch4"> CH4%:</label></div>
+                            <div class="col-md-10">{{ form.ch4 }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_co2"> CO2%:</label></div>
+                            <div class="col-md-10">{{ form.co2 }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_h2"> H2%:</label></div>
+                            <div class="col-md-10">{{ form.h2 }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_n2"> N2%:</label></div>
+                            <div class="col-md-10">{{ form.n2 }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_c2h4"> C2H4%:</label>
+                            </div>
+                            <div class="col-md-10">{{ form.c2h4 }}</div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <div class="col-md-2"><label for="id_date">Entry Date:</label></div>
+                            <div class="col-md-10">
+                                <div class="input-group date" id="entry_date_time_picker">
+                                    {{ form.date }}
+                                    <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="form-group col-md-12">
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <input type="submit" name="showbutton" class="btn btn-primary" value="Show"/>
+                            </div>
+                            <div class="col-md-6">
+                                <input type="submit" name="addbutton" class="btn btn-success" value="Add To Database"/>
+                            </div>
+
+                        </div>
+                        <div class="col-md-4">
+                             <div class="col-md-6">
+                                <a href="/FireExp/import" title="Ellicott's Extension."><span
+                                        class="btn btn-danger">Import</span></a>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="/FireExp/show_database" title="Display Database."><span
+                                        class="btn btn-warning">Show Table</span></a>
+                            </div>
 
 
-            <div class="row">
-                <br>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="col-md-6">
+                                <a href="/FireExp/analysis_button" title="Ellicott's Extension."><span
+                                        class="btn btn-danger">Ellicott's Extension</span></a>
+                            </div>
+                           <div class="col-md-6">
+                                <a target="_blank" href="{% static '/image/Sealed_off_formula.pdf' %}"
+                                   title="Explosibility Formulae"><span class="btn btn-primary disabled">Explosibility Formulae</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-                <div class="boxed">
-                    <table class="table table-responsive table-bordered">
-                        <thead>
-                        <tr>
-                            <th> Graham's Ratio</th>
-                            <th> Young's Ratio</th>
-                            <th> CO/CO2 Ratio</th>
-                            <th> JTR Ratio</th>
-                            <th> C/H Ratio</th>
-                            <th style="color:red;"> Explosibility</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{% if graham %}{{graham}}{% endif %}</td>
-                            <td>{% if young %}{{young}}{% endif %}</td>
-                            <td>{% if coco2 %}{{coco2}}{% endif %}</td>
-                            <td>{% if jtr %}{{jtr}}{% endif %}</td>
-                            <td>{% if chra %}{{chra}}{% endif %}</td>
-                            <td>{{explosm}}</td>
-                        </tr>
-                        <tr>
-                            <td>{% if graham %}{{grahamm}}{% endif %}</td>
-                            <td>{% if young %}{{youngm}}{% endif %}</td>
-                            <td>{% if coco2 %}{{coco2m}}{% endif %}</td>
-                            <td>{% if jtr %}{{jtrm}}{% endif %}</td>
-                            <td>{% if chra %}{{chram}}{% endif %}</td>
-                            <td></td>
-                        </tr>
-                        </tbody>
-                    </table>
+            <br>
 
-                    <br>
-                </div>
-            </div>
+{#            <div class="col-md-12">#}
+{#                <table class="table table-responsive table-bordered">#}
+{#                    <thead>#}
+{#                    <th> Graham's Ratio</th>#}
+{#                    <th> Young's Ratio</th>#}
+{#                    <th> CO/CO2 Ratio</th>#}
+{#                    <th> JTR Ratio</th>#}
+{#                    <th> C/H Ratio</th>#}
+{#                    <th style="color:red;"> Explosibility</th>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    <tr>#}
+{#                        <td>{% if graham %}{{ graham }}{% endif %}</td>#}
+{#                        <td>{% if young %}{{ young }}{% endif %}</td>#}
+{#                        <td>{% if coco2 %}{{ coco2 }}{% endif %}</td>#}
+{#                        <td>{% if jtr %}{{ jtr }}{% endif %}</td>#}
+{#                        <td>{% if chra %}{{ chra }}{% endif %}</td>#}
+{#                        <td>{{ explosm }}</td>#}
+{#                    </tr>#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            </div>#}
+
         </section>
     </div>
-</div>
-<script>
-    $(document).ready(function(){
-        $('#entry_date_time_picker').datetimepicker({
-                     format: 'YYYY-MM-DD'
-                });
-    });
+    <script>
+        $(document).ready(function () {
+            $('#entry_date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+        });
 
-</script>
+    </script>
 
 {% endblock %}
 

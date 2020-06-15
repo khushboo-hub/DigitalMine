@@ -6,12 +6,12 @@
 ###     Last Modified:
 ###     Modified function,any:
 ##################################################################################
-
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # mpl.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
-import io
+import io, csv
 import datetime
 from datetime import timedelta
 import serial
@@ -221,11 +221,242 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
     return render(request, template_name, resultdict)
 
 
+from django.template.defaulttags import register
+
+
+@register.filter(name='exlookup')
+def get_item(dictionary, key):
+    return dictionary.get(key)
+
+
+def findExplosibility(o2, co, ch4, co2, h2, n2, c2h4):
+    print('After Entering', o2, co)
+    # ratio calculation
+    graham = (100 * co / (0.265 * n2 - o2))
+    young = (100 * co2 / (0.265 * n2 - o2))
+    coco2 = 100 * co / co2
+    jtr = (co2 + 0.75 * co - 0.25 * h2) / (0.265 * n2 - o2)
+    if (c2h4 == 0):
+        chra = 0
+    else:
+        chra = 3 * (co2 + co + ch4 + 2 * c2h4) / (0.2468 * n2 - o2 - co2 - 0.5 * h2 + ch4 + c2h4 + h2 - co)
+
+    ##message calculation
+    ##graham
+    if (graham <= 0.4):
+        grahamm = "Normal"
+    elif (graham <= 0.5):
+        grahamm = "Checkup required"
+    elif (graham <= 1):
+        grahamm = "Heating"
+    elif (graham <= 2):
+        grahamm = "Serious heating"
+    elif (graham <= 7):
+        grahamm = "FIRE with certainty"
+    else:
+        grahamm = "BLAZING FIRE"
+    ##young
+    if (young <= 25):
+        youngm = "Superficial heating"
+    elif (young <= 50):
+        youngm = "FIRE present"
+    else:
+        youngm = "BLAZING FIRE"
+    ##coco2
+    if (coco2 <= 2):
+        coco2m = "Normal"
+    elif (coco2 <= 13):
+        coco2m = "ACTIVE FIRE"
+    else:
+        coco2m = "BLAZING FIRE"
+    ##jtr
+    if (jtr <= 0.4):
+        jtrm = "Indicative of no fire"
+    elif (jtr <= 0.5):
+        jtrm = "Indicative of methane fire"
+    elif (jtr <= 1):
+        jtrm = "Indicative of coal/oil/conveyor fire"
+    else:
+        jtrm = "Indicative of timber fire"
+    ##chra
+    if (chra <= 5):
+        chram = "Superficial heating"
+    elif (chra <= 20):
+        chram = "ACTIVE FIRE"
+    else:
+        chram = "BLAZING FIRE"
+
+    ##explosibility
+    explos = 5
+    pt = ch4 + co + h2
+
+    ch4low = 5
+    colow = 12.5
+    h2low = 4
+    ch4high = 14
+    cohigh = 74.2
+    h2high = 74.2
+    ch4nose = 5.9
+    conose = 13.8
+    h2nose = 4.3
+    ch4np = 6.07
+    conp = 4.13
+    h2np = 16.59
+
+    Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
+    Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
+    Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
+    Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+
+    Oxnose = 0.2093 * (100 - Nex - Lnose)
+
+    ##total combustible at extinctive point
+    Le = 20.93 * Lnose / (20.93 - Oxnose)
+    ##oxygen at lower limit
+    Ob = -20.93 * Llow / 100 + 20.93
+    ##oxygen at upper limit
+    Oc = -20.93 * Lhigh / 100 + 20.93
+
+    if ((o2 >= 0) and (pt >= 0)):
+        if (100 * o2 + 20.93 * pt >= 2093):
+            explos = 4
+        if (Le * o2 + 20.93 * pt <= Le * 20.93):
+            explos = 0
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+            explos = 2
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                (Lnose - Lhigh) * o2 + (
+                Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+            explos = 3
+        if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
+                (Lnose - Llow) * o2 + (
+                Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                (Lnose - Lhigh) * o2 + (
+                Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+            explos = 1
+
+    ##explosibility message
+    if (explos == 0):
+        explosm = "Not explosive"
+    elif (explos == 1):
+        explosm = "Potentially explosive(if air is added)"
+    elif (explos == 2):
+        explosm = "Potentially explosive(if combustible gas is added)"
+    elif (explos == 3):
+        explosm = "Explosive"
+    elif (explos == 4):
+        explosm = "Impossible mixture"
+    else:
+        explosm = "Unidentified"
+
+    return explosm
+
+
 @login_required
 def show_database(request, template_name='FireExp/show_database.html'):
-    gases = Gasdb.objects.all()
     data = {}
-    data['object_list'] = gases
+    if request.method == "POST":
+        date_from = request.POST.get('from_date')
+        date_to = request.POST.get('to_date')
+        gases = Gasdb.objects.filter(date__range=(date_from, date_to))
+        data['object_list'] = gases
+        explosibility = {}
+        for g in gases:
+            try:
+                explosibility[g.id] = findExplosibility(g.o2, g.co, g.ch4, g.co2, g.h2, g.n2, g.c2h4)
+
+
+            except Exception as e:
+                print(e)
+                explosibility[g.id] = 'Failure'
+                pass
+
+        data['explosibility'] = explosibility
+    return render(request, template_name, data)
+
+
+@login_required
+def import_from_file(request, template_name='FireExp/import_from_file.html'):
+    data = {}
+    flag = 1
+    if request.method == "POST" and request.FILES['file'] and "show" in request.POST:
+        csv_file = request.FILES['file']
+        try:
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, 'Please select a csv file')
+                return render(request, template_name, data)
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            next(io_string)
+            file = []
+            explosibility = {}
+            for column in csv.reader(io_string, delimiter=','):
+
+                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
+                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
+                try:
+                    print(column[0])
+                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
+                                                                 float(column[4]), float(column[5]), float(column[6]),
+                                                                 float(column[7]))
+                except Exception as e:
+                    explosibility[column[0]] = 'Failure'
+                    pass
+
+            data['object_list'] = file
+            data['explosibility'] = explosibility
+
+        except Exception as e:
+            flag = 0
+            pass
+        if flag == 1:
+            messages.success(request, "Data tabulated successfully")
+        else:
+            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
+    elif request.method == "POST" and request.FILES['file'] and "save" in request.POST:
+        csv_file = request.FILES['file']
+        try:
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, 'Please select a csv file')
+                return render(request, template_name, data)
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+            next(io_string)
+            file = []
+            GASES = []
+            explosibility = {}
+            for column in csv.reader(io_string, delimiter=','):
+                GASES.append(Gasdb(o2=column[1], co = column[2], ch4=column[3], co2=column[4], h2=column[5],n2=column[6],
+                                   c2h4=column[7], date=column[8]))
+                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
+                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
+                try:
+                    print(column[0])
+                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
+                                                                 float(column[4]), float(column[5]), float(column[6]),
+                                                                 float(column[7]))
+                except Exception as e:
+                    explosibility[column[0]] = 'Failure'
+                    pass
+            try:
+                Gasdb.objects.bulk_create(GASES)
+            except:
+                flag=0
+                pass
+            data['object_list'] = file
+            data['explosibility'] = explosibility
+
+        except Exception as e:
+            flag = 0
+            pass
+        if flag == 1:
+            messages.success(request, "Data saved and tabulated successfully")
+        else:
+            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
     return render(request, template_name, data)
 
 
@@ -488,228 +719,245 @@ def analysis(request, page):
 
 @login_required
 def explosibility(request, page, template_name='FireExp/explosibility.html'):
-    class GraphData:
-        o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-        explos = 5
-        idtest = 0
+    if request.is_ajax():
+        date_from = request.GET.get('from', None)
+        date_to = request.GET.get('to', None)
 
-    graphpoints = []
+        class GraphData:
+            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
+            explos = 5
+            idtest = 0
 
-    if (page == 0):
-        FireExp = Gasdb.objects.all()
-    elif (page == 1):
-        FireExp = Fire_exp_gases.objects.all()
+        graphpoints = []
 
-    idn = 1
-    data = {}
-    graph = []
-    dates = []
-    for gas in FireExp:
-        dates.append(gas.date)
-        x = GraphData()
+        if (page == 0):
+            FireExp = Gasdb.objects.filter(date__range=(date_from, date_to))
+        elif (page == 1):
+            FireExp = Fire_exp_gases.objects.all()
 
-        try:
-            x.o2 = gas.o2
-            # x.o2 = Gasdb.objects.get(id=idn).o2
-        except Gasdb.DoesNotExist:
-            x.o2 = None
-        try:
-            x.co = gas.co
-        except Gasdb.DoesNotExist:
-            x.co = None
-        try:
-            x.ch4 = gas.ch4
-        except Gasdb.DoesNotExist:
-            x.ch4 = None
+        idn = 1
+        data = {}
+        graph = []
+        dates = []
+        for gas in FireExp:
+            dates.append(gas.date)
+            x = GraphData()
 
-        try:
-            x.co2 = gas.co2
-        except Gasdb.DoesNotExist:
-            x.co2 = None
+            try:
+                x.o2 = gas.o2
+                # x.o2 = Gasdb.objects.get(id=idn).o2
+            except Gasdb.DoesNotExist:
+                x.o2 = None
+            try:
+                x.co = gas.co
+            except Gasdb.DoesNotExist:
+                x.co = None
+            try:
+                x.ch4 = gas.ch4
+            except Gasdb.DoesNotExist:
+                x.ch4 = None
 
-        try:
-            x.h2 = gas.h2
-        except Gasdb.DoesNotExist:
-            x.h2 = None
+            try:
+                x.co2 = gas.co2
+            except Gasdb.DoesNotExist:
+                x.co2 = None
 
-        try:
-            x.n2 = gas.n2
-        except Gasdb.DoesNotExist:
-            x.n2 = None
+            try:
+                x.h2 = gas.h2
+            except Gasdb.DoesNotExist:
+                x.h2 = None
 
-        try:
-            x.c2h4 = gas.c2h4
-        except Gasdb.DoesNotExist:
-            x.c2h4 = None
+            try:
+                x.n2 = gas.n2
+            except Gasdb.DoesNotExist:
+                x.n2 = None
 
-        try:
-            x.idtest = gas.id
-        except Gasdb.DoesNotExist:
-            x.idtest = None
+            try:
+                x.c2h4 = gas.c2h4
+            except Gasdb.DoesNotExist:
+                x.c2h4 = None
 
-        ##explosibility calculation again
-        x.explos = 5
-        pt = x.ch4 + x.co + x.h2
+            try:
+                x.idtest = gas.id
+            except Gasdb.DoesNotExist:
+                x.idtest = None
 
-        ch4low = 5
-        colow = 12.5
-        h2low = 4
-        ch4high = 14
-        cohigh = 74.2
-        h2high = 74.2
-        ch4nose = 5.9
-        conose = 13.8
-        h2nose = 4.3
-        ch4np = 6.07
-        conp = 4.13
-        h2np = 16.59
+            ##explosibility calculation again
+            x.explos = 5
+            pt = x.ch4 + x.co + x.h2
 
-        Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-        Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-        Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-        Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
+            ch4low = 5
+            colow = 12.5
+            h2low = 4
+            ch4high = 14
+            cohigh = 74.2
+            h2high = 74.2
+            ch4nose = 5.9
+            conose = 13.8
+            h2nose = 4.3
+            ch4np = 6.07
+            conp = 4.13
+            h2np = 16.59
 
-        Oxnose = 0.2093 * (100 - Nex - Lnose)
+            Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
+            Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
+            Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
+            Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
 
-        ##total combustible at extinctive point
-        Le = 20.93 * Lnose / (20.93 - Oxnose)
-        ##oxygen at lower limit
-        Ob = -20.93 * Llow / 100 + 20.93
-        ##oxygen at upper limit
-        Oc = -20.93 * Lhigh / 100 + 20.93
+            Oxnose = 0.2093 * (100 - Nex - Lnose)
 
-        if ((x.o2 >= 0) and (pt >= 0)):
-            if (100 * x.o2 + 20.93 * pt >= 2093):
-                x.explos = 4
-            if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-                x.explos = 0
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                x.explos = 2
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 3
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 1
+            ##total combustible at extinctive point
+            Le = 20.93 * Lnose / (20.93 - Oxnose)
+            ##oxygen at lower limit
+            Ob = -20.93 * Llow / 100 + 20.93
+            ##oxygen at upper limit
+            Oc = -20.93 * Lhigh / 100 + 20.93
 
-        ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
+            if ((x.o2 >= 0) and (pt >= 0)):
+                if (100 * x.o2 + 20.93 * pt >= 2093):
+                    x.explos = 4
+                if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
+                    x.explos = 0
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
+                    x.explos = 2
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 3
+                if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
+                        (Lnose - Llow) * x.o2 + (
+                        Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
+                        (Lnose - Lhigh) * x.o2 + (
+                        Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
+                    x.explos = 1
 
-        ##calculating Ellicott's Extension point
+            ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
 
-        ##calculating new x,y coordinates after origin shift
-        xx = pt - Lnose
-        yx = x.o2 - Oxnose
+            ##calculating Ellicott's Extension point
 
-        xp = Llow - Lnose
-        yp = Ob - Oxnose
+            ##calculating new x,y coordinates after origin shift
+            xx = pt - Lnose
+            yx = x.o2 - Oxnose
 
-        xq = Lhigh - Lnose
-        yq = Oc - Oxnose
+            xp = Llow - Lnose
+            yp = Ob - Oxnose
 
-        xs = Le - Lnose
-        ys = -Oxnose
+            xq = Lhigh - Lnose
+            yq = Oc - Oxnose
 
-        # calculating polar coordinates
-        def properarctan(valuex, valuey):
-            if valuex >= 0:
-                if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                    return (360 + np.degrees(np.arctan(valuey / valuex)))
+            xs = Le - Lnose
+            ys = -Oxnose
+
+            # calculating polar coordinates
+            def properarctan(valuex, valuey):
+                if valuex >= 0:
+                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                        return (360 + np.degrees(np.arctan(valuey / valuex)))
+                    else:
+                        return np.degrees(np.arctan(valuey / valuex))
                 else:
-                    return np.degrees(np.arctan(valuey / valuex))
+                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+
+            rx = np.sqrt(xx * xx + yx * yx)
+            thx = properarctan(xx, yx)
+
+            rp = np.sqrt(xp * xp + yp * yp)
+            thp = properarctan(xp, yp)
+
+            rq = np.sqrt(xq * xq + yq * yq)
+            thq = properarctan(xq, yq)
+
+            rs = np.sqrt(xs * xs + ys * ys)
+            ths = properarctan(xs, ys)
+
+            ##calculating r,theta values based on explosibiility
+            if x.explos == 3:
+                rm = rx
+                thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
+            elif (x.explos == 1 or x.explos == 2):
+                rm = rx
+                thm = 270 + (90 * ((thx - ths) / (
+                        thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
+            elif x.explos == 0:
+                rm = rx
+                thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
             else:
-                return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+                rm = 0
+                thm = 0
 
-        rx = np.sqrt(xx * xx + yx * yx)
-        thx = properarctan(xx, yx)
+            x.elx = rm * np.cos(np.radians(thm))
+            x.ely = rm * np.sin(np.radians(thm))
+            print("GPx", x)
 
-        rp = np.sqrt(xp * xp + yp * yp)
-        thp = properarctan(xp, yp)
+            graphpoints.append(x)
+            idn = idn + 1
 
-        rq = np.sqrt(xq * xq + yq * yq)
-        thq = properarctan(xq, yq)
+        ##graph
+        xlist = []
+        ylist = []
+        idn = 0
+        while (idn < len(graphpoints)):
+            xlist.append(graphpoints[idn].elx)
+            ylist.append(graphpoints[idn].ely)
+            idn = idn + 1
 
-        rs = np.sqrt(xs * xs + ys * ys)
-        ths = properarctan(xs, ys)
+        xaxislist = []
+        yaxislist = []
+        for i in range(-12, 13):
+            xaxislist.append(i)
+            yaxislist.append(0)
 
-        ##calculating r,theta values based on explosibiility
-        if x.explos == 3:
-            rm = rx
-            thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-        elif (x.explos == 1 or x.explos == 2):
-            rm = rx
-            thm = 270 + (90 * ((thx - ths) / (
-                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-        elif x.explos == 0:
-            rm = rx
-            thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
-        else:
-            rm = 0
-            thm = 0
+        trialxlist = []
+        trialylist = []
+        idn = 0
 
-        x.elx = rm * np.cos(np.radians(thm))
-        x.ely = rm * np.sin(np.radians(thm))
-        print("GPx", x)
+        def markercrtr(numb):
+            createdstring = '$' + str(numb + 1) + '$'
+            return createdstring
 
-        graphpoints.append(x)
-        idn = idn + 1
+        def markerclr(x, y):
+            colorstring = '#77b5fe'
+            if (x <= 0 and y <= 0):
+                colorstring = '#4caf50'
+            elif (x <= 0 and y > 0):
+                colorstring = '#8bc34a'
+            elif (x > 0 and y > 0):
+                colorstring = '#ff9800'
+            elif (x > 0 and y < 0):
+                colorstring = '#f44336'
+            return colorstring
 
-    ##graph
-    xlist = []
-    ylist = []
-    idn = 0
-    while (idn < len(graphpoints)):
-        xlist.append(graphpoints[idn].elx)
-        ylist.append(graphpoints[idn].ely)
-        idn = idn + 1
+        def quadrant(x, y):
+            quad = 0
+            if (x <= 0 and y <= 0):
+                quad = 0
+            elif (x <= 0 and y > 0):
+                quad = 1
+            elif (x > 0 and y > 0):
+                quad = 2
+            elif (x > 0 and y < 0):
+                quad = 3
+            return quad
 
-    xaxislist = []
-    yaxislist = []
-    for i in range(-12, 13):
-        xaxislist.append(i)
-        yaxislist.append(0)
-
-    trialxlist = []
-    trialylist = []
-    idn = 0
-
-    def markercrtr(numb):
-        createdstring = '$' + str(numb + 1) + '$'
-        return createdstring
-
-    def markerclr(numb):
-        tot = len(graphpoints)
-        colorstring = '#77b5fe'
-        if (numb < tot / 5):
-            colorstring = '#8a2be2'
-        elif (numb < 2 * tot / 5):
-            colorstring = '#8db600'
-        elif (numb < 3 * tot / 5):
-            colorstring = '#ffff00'
-        elif (numb < 4 * tot / 5):
-            colorstring = '#eaa221'
-        else:
-            colorstring = '#ffc0cb'
-        return colorstring
-
-    while (idn < len(graphpoints)):
-        trialxlist = graphpoints[idn].elx
-        trialylist = graphpoints[idn].ely
-        # print('dates', dates[idn])
-        graph.append({
-            'x': trialxlist,
-            'y': trialylist,
-            'color': markerclr(idn),
-            'dates': dates[idn]
-        })
-        idn = idn + 1
-    data['result'] = graph
+        while (idn < len(graphpoints)):
+            trialxlist = graphpoints[idn].elx
+            trialylist = graphpoints[idn].ely
+            # print('dates', dates[idn])
+            graph.append({
+                'x': trialxlist,
+                'y': trialylist,
+                'color': markerclr(trialxlist, trialylist),
+                'quadrant': quadrant(trialxlist, trialylist),
+                'dates': dates[idn]
+            })
+            idn = idn + 1
+        data['result'] = graph
+    else:
+        data['error'] = "Not Ajax"
     return JsonResponse(data)
 
 

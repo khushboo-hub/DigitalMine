@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header" style="text-align: left;"><b>All Sensor Graph</b>
+                    
+                </h3>
+                
+               
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Tiltmeter&type=step&xaxis=Datetime&yaxis=Tiltmeter+%28in+degree%29"></iframe>
+                        </div>
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Inclinometer&type=line&xaxis=Datetime&yaxis=degree"></iframe>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Rainguage&type=line&xaxis=Datetime&yaxis=Rainguage%28mm%2Fhr%29"></iframe>
+                        </div>
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Pizometer&type=line&xaxis=Datetime&yaxis=pizometer%28in+KSC%29"></iframe>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/charts/5?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&title=Crack-o-meter&type=line&xaxis=Datetime&yaxis=crackometer%28in+mm%29"></iframe>
+
+                        </div>
+                        <div class="col-md-6">
+                            <iframe width="450" height="260" style="border: 1px solid #cccccc;" src="https://thingspeak.com/channels/1072767/widgets/190143"></iframe>
+                            
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+       
+    </script>
+{% endblock %}
