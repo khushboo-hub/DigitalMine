@@ -144,6 +144,7 @@ def fetch_shift(request):
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         employee_shift = MineShift.objects.filter(mine_id=mine_id)
+        print(employee_shift.query)
         emp_data = []
         for r in employee_shift:
             emp_data.append({'id': r.id, 'shift_name': r.shift_name + "(" + r.time_from + "-" + r.time_to + ")"})

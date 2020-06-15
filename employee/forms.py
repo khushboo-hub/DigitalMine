@@ -198,7 +198,7 @@ class EmployeeForm(forms.ModelForm):
         'class': 'form-control datepicker',
         'value': date.today()
     }))
-    reason_of_exit = forms.CharField(required=True, widget=forms.TextInput(attrs={
+    reason_of_exit = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Reason of Exit '
     }))
@@ -345,12 +345,12 @@ class MineDetailsForm(forms.ModelForm):
     }))
     latitude = forms.FloatField(required=False, min_value=0, widget=forms.NumberInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Latitude (ex:23.7413105) '
+        'placeholder': 'Latitude (ex:23.7413105)'
     }))
 
     longitude = forms.FloatField(required=False, widget=forms.NumberInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Logitude (ex:86.4067042) '
+        'placeholder': 'Logitude (ex:86.4067042)'
     }))
 
     mine_map_unit = forms.FloatField(required=False, widget=forms.NumberInput(attrs={
