@@ -1,7 +1,7 @@
 from datetime import date
 
 from django import forms
-from employee.models import Employee
+from employee.models import Employee, MedicalReport
 from .models import Employee
 from .models import SensorData, MineDetails, MineShift, MiningRole, RateOfMinimumWages
 
@@ -22,7 +22,7 @@ STATE = (
 
 
 class MiningRoleForm(forms.ModelForm):
-    def __init__(self,*args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
 
     name = forms.CharField(widget=forms.TextInput(attrs={
@@ -446,3 +446,23 @@ class RateOfMinimumWageForm(forms.ModelForm):
     class Meta():
         model = RateOfMinimumWages
         fields = ['mine_id', 'category', 'minimum_basic', 'dearness_allowance', 'overtime']
+
+
+class MedicalReportForm(forms.ModelForm):
+    # employee_id = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
+    #     'class': 'form-control',
+    # }))
+    # mine_id = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
+    #     'class': 'form-control',
+    # }))
+
+    report = forms.CharField(widget=forms.Textarea(attrs={
+        'class': 'form-control',
+        'placeholder': 'Medical Report'
+    }))
+
+    file = forms.FileField()
+
+    class Meta():
+        model = MedicalReport
+        fields = ['report', 'file']

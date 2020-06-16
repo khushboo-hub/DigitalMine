@@ -1,8 +1,12 @@
+import os
+
 from django.db import models
 
 # Create your models here.
 from django.db import models
-from datetime import date, datetime
+from datetime import date, datetime,timedelta
+from django.dispatch import receiver
+from django.utils import timezone
 
 
 class MineDetails(models.Model):
@@ -67,13 +71,13 @@ class Employee(models.Model):
     present_address = models.CharField(max_length=200, null=True, blank=True)
     permanent_address = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField()
-    NATIONALITY=(
-        ('INDIAN','INDIAN'),
-        ('OTHERS','OTHERS')
+    NATIONALITY = (
+        ('INDIAN', 'INDIAN'),
+        ('OTHERS', 'OTHERS')
     )
-    nationality=models.CharField(max_length=50,choices=NATIONALITY,null=True,blank=True) #new
-    identification_mark=models.CharField(max_length=50,null=True,blank=True) #new
-    signature= models.ImageField(upload_to='employee_image/', null=True, blank=True)#new
+    nationality = models.CharField(max_length=50, choices=NATIONALITY, null=True, blank=True)  # new
+    identification_mark = models.CharField(max_length=50, null=True, blank=True)  # new
+    signature = models.ImageField(upload_to='employee_image/', null=True, blank=True)  # new
 
     mob = models.CharField(max_length=100, default='0000000000', blank=True, null=True)
     state = models.CharField(max_length=100, blank=True)
@@ -95,7 +99,7 @@ class Employee(models.Model):
         ('Contractor', 'Contractor'),
     )
     marital_status = models.CharField(choices=MARITAL_STATUS, max_length=128, null=True, blank=True)
-    spouse_name=models.CharField(max_length=50,null=True,blank=True) #new
+    spouse_name = models.CharField(max_length=50, null=True, blank=True)  # new
 
     # photo=models.TextField(max_length=255,blank=True,null=True)
     photo = models.ImageField(upload_to='employee_image/', null=True, blank=True)
@@ -108,13 +112,13 @@ class Employee(models.Model):
     date_of_joining = models.DateField(blank=True, null=True, default=date.today)
     retirement_date = models.DateField(blank=True, null=True)
     job_type = models.CharField(choices=JOB_TYPE, max_length=128, null=True, blank=True)
-    CATEGORY=(
-        ('HS','Highly Skilled'),
-        ('S','Skilled'),
+    CATEGORY = (
+        ('HS', 'Highly Skilled'),
+        ('S', 'Skilled'),
         ('SS', 'Semi Skilled'),
         ('US', 'Under Skilled'),
-              )
-    category_address=models.CharField(choices=CATEGORY,max_length=50,null=True,blank=True) #new
+    )
+    category_address = models.CharField(choices=CATEGORY, max_length=50, null=True, blank=True)  # new
     mining_role = models.ForeignKey(MiningRole, on_delete=models.CASCADE, null=True, blank=True)
     cat_type = models.TextField(max_length=200, blank=True, null=True)
     immediate_staff = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
@@ -123,24 +127,23 @@ class Employee(models.Model):
     medical_status = models.TextField(default="")
 
     #########   Additional Info   #################
-    esic_ip=models.CharField(max_length=50,blank=True,null=True) #new
-    lwf=models.CharField(max_length=50,blank=True,null=True) #new
+    esic_ip = models.CharField(max_length=50, blank=True, null=True)  # new
+    lwf = models.CharField(max_length=50, blank=True, null=True)  # new
     aadhaar_no = models.CharField(max_length=20, blank=True, null=True)
     pan_no = models.CharField(max_length=20, blank=True, null=True)
     voter_id_no = models.CharField(max_length=20, blank=True, null=True)
     medical_ins_no = models.CharField(max_length=30, blank=True, null=True)
-    date_of_exit=models.DateField(blank=True, null=True) #new
-    reason_of_exit=models.CharField(max_length=50,null=True,blank=True) # new
-    uan = models.CharField(max_length=50, null=True, blank=True) #new
+    date_of_exit = models.DateField(blank=True, null=True)  # new
+    reason_of_exit = models.CharField(max_length=50, null=True, blank=True)  # new
+    uan = models.CharField(max_length=50, null=True, blank=True)  # new
 
     #########  Bank Details   #################
     bank_name = models.CharField(max_length=50, blank=True, null=True)
     bank_ac_no = models.CharField(max_length=30, blank=True, null=True)
     bank_ifsc = models.CharField(max_length=20, blank=True, null=True)
     bank_pf_no = models.CharField(max_length=20, blank=True, null=True)
-    service_book_no=models.CharField(max_length=50,null=True,blank=True) #new
-    remarks=models.CharField(max_length=50,null=True,blank=True)#new
-
+    service_book_no = models.CharField(max_length=50, null=True, blank=True)  # new
+    remarks = models.CharField(max_length=50, null=True, blank=True)  # new
 
     #########  Last Qualification Details   #################
 
@@ -154,6 +157,9 @@ class Employee(models.Model):
 
     def __str__(self):
         return str(self.pk) + "-" + self.name
+
+    def mine_name(self):
+        return "Hello"
 
     class Meta:
         db_table = "employee"
@@ -198,6 +204,7 @@ class EmployeeShiftAssign(models.Model):
     class Meta:
         db_table = "EmployeeShiftAssign"
 
+
 class RateOfMinimumWages(models.Model):
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
     CATEGORY = (
@@ -206,11 +213,95 @@ class RateOfMinimumWages(models.Model):
         ('SS', 'Semi Skilled'),
         ('US', 'Under Skilled'),
     )
-    category = models.CharField(choices=CATEGORY,max_length=50,null=True,blank=True)
-    minimum_basic = models.FloatField(null=True,blank=True)
-    dearness_allowance = models.FloatField(null=True,blank=True)
-    overtime = models.FloatField(null=True,blank=True)
+    category = models.CharField(choices=CATEGORY, max_length=50, null=True, blank=True)
+    minimum_basic = models.FloatField(null=True, blank=True)
+    dearness_allowance = models.FloatField(null=True, blank=True)
+    overtime = models.FloatField(null=True, blank=True)
 
     class Meta:
         db_table = "rate_of_minimum_wage"
-        unique_together = ('mine_id','category')
+        unique_together = ('mine_id', 'category')
+
+
+class MedicalReport(models.Model):
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=False, blank=False)
+    employee_id = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, blank=False)
+    date = models.DateField(default=datetime.now, null=False, blank=False)
+    report = models.CharField(max_length=200, null=True)
+    file = models.FileField(upload_to='medical')
+
+
+
+    def age(self,id):
+        dob = self.dob(self,str(id))
+        dob_year = str(dob[:4])
+        now = datetime.now()
+        curr_date = now.strftime("%Y-%m-%d")
+        curr_date_year = str(curr_date[:4])
+        age = (int(curr_date_year) - int(dob_year))
+        return age
+
+    def dob(self,id):
+        emp_table = Employee.objects.get(id=id)
+        dob = str(emp_table.dob)
+        return dob
+    def nextdate(self,id):
+        age = self.age(self,id)
+        try:
+            medical=MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            now=medical.date
+        except:
+            now=-1
+
+        if age >=45:
+            return "" if(now == -1) else (now.replace(year = now.year + 1)).strftime("%Y-%m-%d")
+        else:
+            return "" if(now == -1) else now.replace(year = now.year + 5).strftime("%Y-%m-%d")
+
+    def lastdate(self,id):
+        try:
+            medical=MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            now=medical.date
+            now=now.strftime("%Y-%m-%d")
+        except:
+            now=""
+
+        return now
+
+    class Meta:
+        db_table = "medical_report"
+
+
+################# Reciever for Node #################
+@receiver(models.signals.post_delete, sender=MedicalReport)
+def auto_delete_file_on_delete(sender, instance, **kwargs):
+    """
+    Deletes file from filesystem
+    when corresponding `MediaFile` object is deleted.
+    """
+    if instance:
+        if os.path.isfile(instance.file):
+            os.remove(instance.file.path)
+
+@receiver(models.signals.pre_save, sender=MedicalReport)
+def auto_delete_file_on_change(sender, instance, **kwargs):
+    """
+    Deletes old file from filesystem
+    when corresponding `MediaFile` object is updated
+    with new file.
+    """
+    if not instance.pk:
+        return False
+
+    try:
+        report = MedicalReport.objects.get(pk=instance.pk)
+        old_file = report.file
+    except MedicalReport.DoesNotExist:
+        return False
+
+    new_file = instance.file
+    if not old_file == new_file:
+        if os.path.isfile(old_file.path):
+            os.remove(old_file.path)
+
+################# Reciever for Sensor Node END #################

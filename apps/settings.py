@@ -241,7 +241,7 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 def show_toolbar(request):
-    return True
+    return False
 
 DEBUG_TOOLBAR_CONFIG={
     'INTERCEPT_REDIRECTS':True,
