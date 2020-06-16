@@ -23,10 +23,11 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
-from employee.forms import EmployeeForm,RateOfMinimumWageForm
+from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm
 from sensor.views import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
-from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign,RateOfMinimumWages
+from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
+    MedicalReport
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from accounts.tokens import account_activation_token
@@ -703,29 +704,42 @@ def details_employee_shift_assign(request, emp_id):
     # print(final_data1)
     # return HttpResponse(final_data1)
     return render(request, "employee/shift_assign_report.html", final_data1)
+from django.template.defaulttags import register
 
+@register.filter(name='calculateage')
+def related_deltas(obj,pk):
+    if obj == "age":
+        return MedicalReport.age(MedicalReport,pk)
+    elif obj=="nextdate":
+        return MedicalReport.nextdate(MedicalReport, pk)
+    elif obj=="lastdate":
+        return MedicalReport.lastdate(MedicalReport,pk)
 
 @login_required
-def update_medical(request, emp_id):
+def update_medical(request,emp_id,template_name='employee/update_medical.html'):
     emp_table = Employee.objects.get(id=emp_id)
-    emp_name = emp_table.name
-    mine_name = emp_table.mine
-    ################ FIND AGE ################
-    dob = emp_table.dob
-    dob1 = str(dob)
-    dob_year = str(dob1[:4])
-    now = datetime.datetime.now()
-    curr_date = now.strftime("%Y-%m-%d")
-    curr_date_year = str(curr_date[:4])
-    age = (int(curr_date_year) - int(dob_year))
-    #########################################
+    data={}
+    form = MedicalReportForm(initial={'employee_id':emp_table.id})
+    data['form'] = form
+    data['employee_name'] = emp_table.name
+    data['mine_name'] = emp_table.mine.name
+    data['emp_id']=emp_id
+    data['medical_history']=MedicalReport.objects.filter(employee_id=emp_id)
+    try:
+        data['medical'] = MedicalReport.objects.filter(employee_id=emp_id).order_by('-id')[0]
+    except:
+        pass
+    if request.method == "POST":
+        form = MedicalReportForm(request.POST or None,request.FILES or None)
+        print('FORM ERRORS',form.errors)
+        if form.is_valid():
+            fs = form.save(commit=False)
+            fs.mine_id = emp_table.mine
+            fs.employee_id = emp_table
+            fs.save()
+            messages.success(request,'Successfully')
 
-    data = {}
-    data['emp_id'] = emp_id
-    data['emp_name'] = emp_name
-    data['mine_name'] = mine_name
-    data['age'] = age
-    return render(request, "employee/update_medical.html", data)
+    return render(request, template_name, data)
 
 
 ######################################################################

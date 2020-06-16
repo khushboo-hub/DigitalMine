@@ -1,57 +1,61 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% load staticfiles %}
-<!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
-<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
-<!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" xmlns="http://www.w3.org/1999/html">
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h1 class="page-header">Update Medical<small>&nbsp&nbsp&nbspHere you can update/change medical chekup date</small></h1>
-
-
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data" action="">{% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="well well-sm" style="background: hsl(0, 100%, 90%);">
-                                <font color="red" >Note: If the Miner's age is greater than the 45 years old then, they must checkup their medical every year
-                                and if the age is below 45 years then they have to checkup their medical each 5 years.</font>
+    {% load staticfiles %}
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1">-->
+    <!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">-->
+    <!--<link rel="stylesheet" href="{% static '/css/w3.css' %}">-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" xmlns="http://www.w3.org/1999/html">
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header">Update Medical
+                    <small>&nbsp&nbsp&nbspHere you can update/change medical chekup date</small>
+                </h3>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data"
+                              action="">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="well well-sm" style="background: hsl(0, 100%, 90%);">
+                                    <span style="color: red; ">Note: If the Miner's age is greater than the 45 years old then,
+                                        they must checkup their medical every year
+                                        and if the age is below 45 years then they have to checkup their medical each 5
+                                        years.</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group col-md-12">
+                            <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <input type="hidden" name="employee_id" value="{{emp_id}}">
+                                        <input type="hidden" name="employee_id" value="{{ emp_id }}">
                                         <label for="" class="" id="">Miner's/Employee Name
                                         </label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" value="{{emp_name}}" class="form-control" readonly id="">
+                                        <input readonly name="employee_id" class="form-control"
+                                               value="{{ employee_name }}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="" class="" id="">Mine Name </label>
-                                        </label>
+                                        <label for="" class="" id="">Mine Name </label></label>
                                     </div>
                                     <div class="col-md-8">
-                                         <input type="text" value="{{mine_name}}" class="form-control" readonly id="">
+                                        <input readonly name="employee_id" class="form-control" value="{{ mine_name }}">
                                     </div>
                                 </div>
-                        </div>
+                            </div>
 
-                        <div class="form-group col-md-12">
+                            <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label for="" class="" id="">Last Medical
                                         </label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" id="last_medical" value="{% now 'jS F Y' %}" name="last_medical" class="form-control" readonly id="">
+                                        <input type="text" id="last_medical" name="last_medical" class="form-control"
+                                               value="{{ "lastdate"|calculateage:emp_id }}" readonly id="">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -60,56 +64,87 @@
                                         </label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" id="next_medical"  name="next_medical" class="form-control" readonly id="">
+                                        <input type="text" id="next_medical" name="next_medical" class="form-control"
+                                               value="{{ "nextdate"|calculateage:emp_id }}"
+                                               readonly id="">
                                     </div>
                                 </div>
-                        </div>
-                        <div class="form-group col-md-12">
+                            </div>
+                            <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label for="" class="" id="">Age
                                         </label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text" value="{{ age }} Years"  class="form-control" readonly id="">
+                                        <input type="text" value="{{ "age"|calculateage:emp_id }} Years"
+                                               class="form-control" readonly id="">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label for="" class="" id="">Files</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.file }}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label for="" class="" id="">Remarks:</label>
                                         </label>
                                     </div>
                                     <div class="col-md-8">
-                                        <input type="text"  name="remarks" class="form-control"  >
+                                        {{ form.report }}
                                     </div>
                                 </div>
-                        </div>
-                        <div class="form-group text-center">
-                            <input type="submit" class="btn btn-primary" value="Update"/>
-                        </div>
-                    </form>
+
+                            </div>
+                            <div class="form-group text-center">
+                                <input type="submit" class="btn btn-primary" value="Update"/>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </section>
+                <hr>
+                <div class="row">
+                    <div class="form-group">
+                        <h4 class="text-center" style="font-weight: bold">MEDICAL HISTORY</h4>
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Remarks</th>
+                                <th scope="col">Files</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for medical in medical_history %}
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>{{ medical.date }}</td>
+                                    <td class="more">{{ medical.report }}</td>
+                                    <td><a href="/media/{{ medical.file }}" target="_blank"><span
+                                            class="glyphicon glyphicon-save-file"></span></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                    <br>
+            </section>
+        </div>
     </div>
-</div>
-<style>
-    ul {list-style:none}
-</style>
-<script>
-<!--    $(document).ready(function(){-->
-<!--        age={{age}}-->
-<!--        //alert(age);-->
-<!--        if(age>45)-->
-<!--        {-->
 
-<!--        }-->
-<!--        else if(age<=45)-->
-<!--        {-->
-<!--            last_medical=$("#last_medical").val();-->
-<!--            alert(last_medical);-->
+    <script>
+        $(document).ready(function () {
 
-<!--        }-->
-<!--    });-->
-</script>
+        })
+    </script>
 {% endblock %}
