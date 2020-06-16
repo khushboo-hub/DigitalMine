@@ -164,7 +164,7 @@ def fetch_employee_list(request):
         shift_table = MineShift.objects.get(id=mine_shift_id)
         mine_table = MineDetails.objects.get(id=shift_table.mine_id)
         employee_shift_assign = EmployeeShiftAssign.objects.filter(mine_shift_id=mine_shift_id).distinct()
-
+        #print(employee_shift_assign.query)
         # print("mine shift id:" + employee_shift_assign[0].mine_shift_id)
         # print("Employee id:" + employee_shift_assign[0] .employee_id)
         data = {}
@@ -179,6 +179,10 @@ def fetch_employee_list(request):
                                   'shift_name': shift_table.shift_name + "(" + shift_table.time_from + " - " + shift_table.time_to + ")",
                                   'emp_id':emp_table.id,
                                   'emp_name':emp_table.name,
+                                  'emp_father_name':emp_table.father_name,
+                                  'emp_mob':emp_table.mob,
+                                  'emp_email':emp_table.email,
+                                  'emp_designation':emp_table.designation,
                                   })
             # assigned_data.append(str(r[0]) + ',' + str(r[1]) + ',' + str(r[2]) + ',' + str(mine_table.name)+','+str(emp_table.name) + ',' + str(emp_table.id) + ',' + str(mine_table.id) + ','+ str(shift_table.shift_name) + '('+ str(shift_table.time_from) + '--'+ str(shift_table.time_to)+')')  # 0-mine_shift_id 1-employee_id,2-shift_name
             # i = i + 1
