@@ -122,13 +122,13 @@
                                 let text = [[''], [''], [''], ['']];
                                 let color = [[''], [''], [''], ['']];
                                 let dates = [[''], [''], [''], ['']];
-                                let index=0;
-                                let xhighest=-1;
-                                let yhighest=-1;
+                                let index = 0;
+                                let xhighest = -1;
+                                let yhighest = -1;
                                 for (let r in result) {
                                     if (result.hasOwnProperty(r)) {
-                                        xhighest=(parseFloat(result[r].x)>xhighest)?parseFloat(result[r].x):xhighest;
-                                        yhighest=(parseFloat(result[r].y)>xhighest)?parseFloat(result[r].y):xhighest;
+                                        xhighest = (Math.abs(parseFloat(result[r].x)) > Math.abs(xhighest)) ? Math.abs(parseFloat(result[r].x)) : Math.abs(xhighest);
+                                        yhighest = (Math.abs(parseFloat(result[r].y)) > Math.abs(yhighest)) ? Math.abs(parseFloat(result[r].y)) : Math.abs(yhighest);
                                         x_list[result[r].quadrant].push(result[r].x);
                                         y_list[result[r].quadrant].push(result[r].y);
                                         text[result[r].quadrant].push((index + 1).toString());
@@ -142,7 +142,7 @@
                                 var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
 
                                 highest = highest * 1.2;
-                                console.log('highest',highest)
+                                console.log('highest', highest)
                                 var trace1 = {
                                     x: x_list[0],
                                     y: y_list[0],
@@ -157,7 +157,7 @@
                                         color: color[0],
                                         weight: '900'
                                     },
-                                    marker: {size: dates[0],},
+                                    marker: {size: dates[0],color: '#4caf50'},
                                     textposition: 'bottom center',
 
                                     hoveron: 'points',
@@ -181,7 +181,7 @@
                                         color: color[1],
                                         weight: '900'
                                     },
-                                    marker: {size: dates[1],},
+                                    marker: {size: dates[1],color:'#8bc34a'},
                                     textposition: 'bottom center',
 
                                     hoveron: 'points',
@@ -205,7 +205,7 @@
                                         color: color[2],
                                         weight: '900'
                                     },
-                                    marker: {size: dates[2],},
+                                    marker: {size: dates[2],color:'#ff9800'},
                                     textposition: 'bottom center',
 
                                     hoveron: 'points',
@@ -228,7 +228,7 @@
                                         color: color[3],
                                         weight: '900'
                                     },
-                                    marker: {size: dates[3],},
+                                    marker: {size: dates[3],color:'#f44336'},
                                     textposition: 'bottom center',
 
                                     hoveron: 'points',

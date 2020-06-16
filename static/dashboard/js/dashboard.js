@@ -79,9 +79,10 @@ $(document).ready(function () {
         return string.substring(0, index) + replace + string.substring(index + 1);
     }
 
-    //WATER();
+    WATER();
 
     function WATER() {
+        console.log('water.............');
         (function waterlevel() {
             $.ajax({
                 type: "get",
@@ -90,12 +91,13 @@ $(document).ready(function () {
                     $.xhrPool.push(jqXHR);
                 },
                 success: function (data) {
-                    GasMonitoring(data.result, 208, "waterLevel");
+                    console.log('water level',data)
+                     GasMonitoring(data.result, 208, "waterLevel");
 
-                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
-                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
-                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
-                    // GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
+                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "oxygen");
+                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "methane");
+                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "hydrogen");
+                     GasMonitoring(getRandomIntInclusive(1, 100), 100, "nodeprogress");
                 },
                 error: function () {
                     console.log("something is not right.please contact admin - 1");
@@ -125,7 +127,7 @@ $(document).ready(function () {
 
     //alert(img);
     function GasMonitoring(waterLevel, UpperLimit, Id) {
-        waterLevelPercentage = parseFloat(waterLevel);
+        let waterLevelPercentage = parseFloat(waterLevel);
         if (waterLevelPercentage < 0.00) {
             document.getElementById("overlay").style.display = "block";
         } else {
@@ -771,8 +773,8 @@ $(document).ready(function () {
                 let yhighest = -1;
                 for (let r in result) {
                     if (result.hasOwnProperty(r)) {
-                        xhighest = (parseFloat(result[r].x) > xhighest) ? parseFloat(result[r].x) : xhighest;
-                        yhighest = (parseFloat(result[r].y) > xhighest) ? parseFloat(result[r].y) : xhighest;
+                        xhighest = (Math.abs(parseFloat(result[r].x)) > Math.abs(xhighest)) ? Math.abs(parseFloat(result[r].x)) : Math.abs(xhighest);
+                        yhighest = (Math.abs(parseFloat(result[r].y)) > Math.abs(yhighest)) ? Math.abs(parseFloat(result[r].y)) : Math.abs(yhighest);
                         x_list[result[r].quadrant].push(result[r].x);
                         y_list[result[r].quadrant].push(result[r].y);
                         text[result[r].quadrant].push((index + 1).toString());
@@ -785,7 +787,7 @@ $(document).ready(function () {
 
                 var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
                 highest = highest * 1.2;
-
+                console.log(xhighest,yhighest);
                 var trace1 = {
                     x: x_list[0],
                     y: y_list[0],
@@ -800,7 +802,7 @@ $(document).ready(function () {
                         color: color[0],
                         weight: '900'
                     },
-                    marker: {size: dates[0],},
+                    marker: {size: dates[0],color: '#4caf50'},
                     textposition: 'bottom center',
 
                     hoveron: 'points',
@@ -823,7 +825,7 @@ $(document).ready(function () {
                         color: color[1],
                         weight: '900'
                     },
-                    marker: {size: dates[1],},
+                    marker: {size: dates[1],color:'#8bc34a'},
                     textposition: 'bottom center',
 
                     hoveron: 'points',
@@ -847,7 +849,7 @@ $(document).ready(function () {
                         color: color[2],
                         weight: '900'
                     },
-                    marker: {size: dates[2],},
+                    marker: {size: dates[2],color:'#ff9800'},
                     textposition: 'bottom center',
 
                     hoveron: 'points',
@@ -870,7 +872,7 @@ $(document).ready(function () {
                         color: color[3],
                         weight: '900'
                     },
-                    marker: {size: dates[3],},
+                    marker: {size: dates[3],color:'#f44336'},
                     textposition: 'bottom center',
 
                     hoveron: 'points',
