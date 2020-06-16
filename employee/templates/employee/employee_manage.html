@@ -335,7 +335,7 @@
                                         </tr>
                                         <tr class="table-data">
                                             <td><span id="cat_type">Name</span></td>
-                                            <td><span id="immediate_staff">Name</span></td>
+                                            <td><span id="immediate_staff">-------</span></td>
                                         </tr>
 
                                     </table>
@@ -378,7 +378,7 @@
 
                                         </tr>
                                         <tr class="table-data">
-                                            <td><span id="aadhaar_no">Name</span></td>
+                                            <td><span id="aadhaar_no">-------</span></td>
                                             <td><span id="pan_no">Name</span></td>
                                             <td><span id="voter_id_no">Father's Name</span></td>
                                             <td><span id="medical_ins_no">Gender</span></td>
@@ -509,8 +509,6 @@
                         obj['mine'] = data['mine_name'];
                         obj['mining_role'] = data['mining_role'];
                         FillDataToModel(obj);
-
-                        <!--              $("#more_details_data").html(data.name);-->
                         $('#myModal').modal('show');
                     }
                 });
@@ -521,11 +519,13 @@
             });
 
             function FillDataToModel(obj) {
-                for (ob in obj) {
+                console.log('Moda Object',obj);
+                for (let ob in obj) {
+
                     if (ob == 'photo' && !isEmpty(obj['photo'])) {
                         $('img#photo').attr("src", '/media/' + obj[ob]);
                     } else {
-                        $("span#" + ob).html(" " + obj[ob]);
+                        $("span#" + ob).html((isEmpty(obj[ob]))?"-------":obj[ob]);
                     }
                 }
             }
@@ -632,7 +632,7 @@
                         } else {
                             employee_name = "Shift Not Updated Yet"
                         }
-                        $('#UpdateEmployeeTitle').text('Update Employee Shift' + employee_name);
+                        $('#UpdateEmployeeTitle').text('Employee shift update' + employee_name);
                         $("#radio" + Y.assigned_shift).prop("checked", true);
                         $('#UpdateShiftModal').modal('show')
                     }
