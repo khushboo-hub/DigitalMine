@@ -72,6 +72,11 @@
                                 <th>H2</th>
                                 <th>N2</th>
                                 <th>C2H4</th>
+                                <th>Graham</th>
+                                <th>Young</th>
+                                <th>CO/CO2</th>
+                                <th>JTR</th>
+                                <th>CH</th>
                                 <th style="color: red;">Explosibility status</th>
 
                             </tr>
@@ -89,7 +94,12 @@
                                     <td>{{ book.h2 }}</td>
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
-                                    <td>{{ explosibility|exlookup:book.id }}</td>
+                                    <td>{{ book.findExplosibility.graham }}</td>
+                                    <td>{{ book.findExplosibility.young }}</td>
+                                    <td>{{ book.findExplosibility.coco2 }}</td>
+                                    <td>{{ book.findExplosibility.jtr }}</td>
+                                    <td>{{ book.findExplosibility.chra }}</td>
+                                    <td>{{ book.findExplosibility.explosibility }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -108,6 +118,10 @@
                 format: 'YYYY-MM-DD'
             });
             $('.loader-container').hide();
+            $('table#content').DataTable({
+                dom: 'Bflrtip',
+
+            })
         });
     </script>
 {% endblock %}

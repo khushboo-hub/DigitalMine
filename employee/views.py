@@ -580,15 +580,12 @@ def update_shift_link_ajax(request):
         if mode == '0':
             try:
                 emp_table = Employee.objects.get(id=miner_id)
-
                 emp_name = emp_table.name
                 data['employee_name'] = str(emp_name)
                 mine_id = emp_table.mine_id
-                mine_name = emp_table.mine
-                # print(str(emp_name)+" "+str(mine_id)+" "+str(mine_name))
-                # mine_shift_table = MineShift.objects.values_list().filter(mine_id=mine_id)
                 data['result'] = serializers.serialize('json', MineShift.objects.filter(mine_id=mine_id), fields=('id',
                                                                                                                   'shift_name',
+                                                                                                                  'shift',
                                                                                                                   'time_from',
                                                                                                                   'time_to',
                                                                                                                   'mine_id',
@@ -596,14 +593,6 @@ def update_shift_link_ajax(request):
                                                                                                                   'created_date'))
 
                 EmployeeShift = EmployeeShiftAssign.objects.filter(employee_id=miner_id).order_by('-id')[0]
-                print(EmployeeShift.employee_id)
-
-                # mine_shift.append({'id':mine_row.id,'shift_name':mine_row.shift_name,'time_from':mine_row.time_from,'time_to':mine_row.time_to})  # 3rd attribute
-
-                # data['emp_id'] = emp_table.id
-                # data['emp_name'] = emp_name
-                # data['mine_id'] = mine_id
-                # data['mine_name'] = mine_name
                 data['assigned_shift'] = str(EmployeeShift.mine_shift_id)
 
                 return JsonResponse(data)
@@ -612,19 +601,8 @@ def update_shift_link_ajax(request):
                 data['error'] = "Something Went Wrong!"
                 return JsonResponse(data)
         elif mode == '1':
-            print('Mode 2')
-            print(mine_shift_id)
-            # try:
-            #     obj = EmployeeShiftAssign.objects.get(employee_id=miner_id)
-            #     now = datetime.datetime.now()
-            #     curr_date = now.strftime("%Y-%m-%d")
-            #     obj.modified_date = curr_date
-            #     obj.mine_shift_id = str(mine_shift_id)
-            #     obj.save()
-            # except EmployeeShiftAssign.DoesNotExist:
             obj = EmployeeShiftAssign()
             obj.employee_id = miner_id
-            print(mine_shift_id)
             obj.mine_shift_id = mine_shift_id
             now = datetime.datetime.now()
             curr_date = now.strftime("%Y-%m-%d")
@@ -827,15 +805,23 @@ def validate_token(request):
     data={}
     available = 0
     if request.is_ajax():
+        print(request)
         token=request.GET.get('token')
 
         try:
             check = get_object_or_404(Employee,token_no=token)
-            token = get_random_string()
-            available = 1
+            print('check user',check.id,request.user.id)
+            if not check.id == request.user.id:
+                token = get_random_string()
+                available = 1
         except :
             pass
         data['result'] = {"token":token,"available":available}
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+@background(schedule=60)
+def notify_user():
+    # lookup user by id and send them a message
+    print('NOTIFTY USER')

@@ -51,7 +51,7 @@
                 }
 
                 .header {
-                    {#background-color: #f1e6d6 !important;#}
+                {#background-color: #f1e6d6 !important;#}
 
                 }
 
@@ -149,23 +149,25 @@
                                         </td>
                                         <!--                                "{% url 'employee:update_shift_link' book.id %}-->
                                         <td class="text-center">
-                                    <span
-                                            class="btn btn-success btn-sm update_shift" data-toggle="tooltip"
-                                            data-url="{% url 'employee:update_shift_link_ajax' %}" id="{{ book.id }}"
-                                            mode="0"
-                                            title="Click here to update shift">Update Shift</span><br><br><a
-                                                data-toggle="tooltip"
-                                                href="{% url 'employee:details_employee_shift_assign' book.id %}"
-                                                title="Click here to Check Shift History of an Employee">
-                                            <small>Shift History</small>
-                                        </a></td>
+                                            <span class="btn btn-success btn-sm update_shift" data-toggle="tooltip"
+                                                  data-url="{% url 'employee:update_shift_link_ajax' %}"
+                                                  id="{{ book.id }}"
+                                                  mode="0"
+                                                  title="Click here to update shift">Update Shift
+                                            </span>
+                                            <br><br>
+                                            <a data-toggle="tooltip"
+                                               href="{% url 'employee:details_employee_shift_assign' book.id %}"
+                                               title="Click here to Check Shift History of an Employee">
+                                                <small>Shift History</small>
+                                            </a>
+                                        </td>
                                         <td class="text-center"><a href="{% url 'employee:update_medical' book.id %}">
-                                    <span
-                                            class="glyphicon glyphicon-plus-sign"
-                                            data-toggle="tooltip"
-                                            title="Click here to update Medical Info">
+                                            <span class="glyphicon glyphicon-plus-sign"
+                                                  data-toggle="tooltip"
+                                                  title="Click here to update Medical Info">
 
-                                    </span></a></td>
+                                            </span></a></td>
                                         <td class="text-center"><a href="{% url 'employee:employee_edit' book.id %}"
                                                                    title="Edit Employee."><span
                                                 class="glyphicon glyphicon-pencil"
@@ -429,7 +431,7 @@
                     <button class="close" data-dismiss="modal" type="button">&times;</button>
                     <h4 class="modal-title" id="UpdateEmployeeTitle">Update Employee Shift</h4>
                 </div>
-                <div id="status_msg"></div>
+                <div id="status_msg" style="font-size: large"></div>
                 <input id="MinerIdUpdateShift" type="hidden" value="">
                 <div class="modal-body" id="UpdateShiftOptions">
 
@@ -519,13 +521,13 @@
             });
 
             function FillDataToModel(obj) {
-                console.log('Moda Object',obj);
+                console.log('Moda Object', obj);
                 for (let ob in obj) {
 
                     if (ob == 'photo' && !isEmpty(obj['photo'])) {
                         $('img#photo').attr("src", '/media/' + obj[ob]);
                     } else {
-                        $("span#" + ob).html((isEmpty(obj[ob]))?"-------":obj[ob]);
+                        $("span#" + ob).html((isEmpty(obj[ob])) ? "-------" : obj[ob]);
                     }
                 }
             }
@@ -605,9 +607,9 @@
 
             $(document.body).on("click", ".update_shift", function () {
                 $('#status_msg').empty();
-                url = $(this).data('url');
-                id = this.id;
-                mode = $(this).attr('mode');
+                let url = $(this).data('url');
+                let id = this.id;
+                let mode = $(this).attr('mode');
                 $.ajax({
                     type: 'get',
                     url: url,
@@ -616,24 +618,29 @@
                         'miner_id': id,
                         'mode': mode,
                     },
-                    success: function (data) {
-                        Y = data;
+                    beforeSend: function () {
                         $('#UpdateShiftOptions').empty();
-                        data = JSON.parse(data.result)
-                        for (i = 0; i < data.length; i++) {
-                            console.log(data[i].pk);
-                            $('#UpdateShiftOptions').append('<span><input type="radio" name="mine_shift_id" id="radio' + data[i].pk + '" required="true" value="' + data[i].pk + '">' + data[i].fields.shift_name + '(' + data[i].fields.time_from + '-' + data[i].fields.time_to + ')</span><br>');
+                    },
+                    success: function (data) {
+                        console.log('DATA', data);
+                        let Y = data;
+                        data = JSON.parse(data.result);
+
+                        for (let d in data) {
+                            if (data.hasOwnProperty(d)) {
+                                $('#UpdateShiftOptions').append('<span><input type="radio" name="mine_shift_id" id="radio' + data[d].pk + '" required="true" value="' + data[d].pk + '">' + data[d].fields.shift_name + '(' + data[d].fields.time_from + '-' + data[d].fields.time_to + ')</span><br>');
+                            }
                         }
-                        $('input#MinerIdUpdateShift').val(id)
-                        console.log(Y.employee_name);
-                        var employee_name = "";
-                        if (!isEmpty(Y.employee_name)) {
-                            employee_name = ' | ' + Y.employee_name
-                        } else {
-                            employee_name = "Shift Not Updated Yet"
+                        $('input#MinerIdUpdateShift').val(id);
+
+                        if (isEmpty(Y.assigned_shift)) {
+                            $('#status_msg').html('<div class="alert alert-warning">Shift not assigned yet!</div>');
                         }
-                        $('#UpdateEmployeeTitle').text('Employee shift update' + employee_name);
+                        $('#UpdateEmployeeTitle').text('Employee shift update' + Y.employee_name);
                         $("#radio" + Y.assigned_shift).prop("checked", true);
+
+                    },
+                    complete: function () {
                         $('#UpdateShiftModal').modal('show')
                     }
                 });
@@ -643,9 +650,10 @@
 
                 $('#UpdateShift').on('click', function (e) {
 
-                    url = $('.update_shift').data('url');
-                    mode = $(this).attr('mode');
-                    mine_shift_id = $('input[name=mine_shift_id]:checked').val()
+                    let url = $('.update_shift').data('url');
+                    let mode = $(this).attr('mode');
+                    let mine_shift_id = $('input[name=mine_shift_id]:checked').val();
+                    var $btn = $(this);
                     e.preventDefault();
                     $.ajax({
                         type: "GET",
@@ -656,16 +664,26 @@
                             'mine_shift_id': mine_shift_id,
 
                         },
+                        beforeSend: function () {
+                            $btn.button('loading');
+                        },
                         success: function (response) {
-                            console.log(response);
-
-                            $('#status_msg').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;Shift updated successfully!</span>');
-                            <!--            $('#UpdateShiftModal').modal('hide')-->
+                            if (response.hasOwnProperty('success')) {
+                                $('#status_msg').html('<div class="alert alert-success">Shift updated successfully!</div>');
+                                return response
+                            }
+                            $('#status_msg').html('<div class="alert alert-danger">Something Went Wrong!!</div>');
 
                         },
                         error: function () {
-                            $('#status_msg').html('<span style="color:green;">&nbsp;&nbsp;&nbsp;&nbsp;Something Went Wrong!!</span>');
+                            $('#status_msg').html('<div class="alert alert-danger">Something Went Wrong!!</div>');
                             console.log('Something Went Wrong!')
+                        },
+                        complete: function () {
+                            $btn.button('reset');
+                            setTimeout(function () {
+                                $('#UpdateShiftModal').modal('toggle');
+                            },1000)
                         }
                     });
                     return false;

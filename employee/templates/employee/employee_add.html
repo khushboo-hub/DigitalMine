@@ -742,7 +742,7 @@
                         'token': token
                     },
                     success: function (data) {
-                        console.log('token', data);
+
                         if (data.hasOwnProperty('result')) {
                             data = data.result;
                             if (data.available) {
@@ -761,7 +761,7 @@
             var doneTypingInterval = 5000;
             var $input = $('#id_token_no');
             let token = $input.val()
-            Token_generate(token);
+            if(isEmpty(token)){Token_generate(token);}
 
             $input.on('keyup', function () {
                 clearTimeout(typingTimer);

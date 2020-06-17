@@ -60,3 +60,6 @@ if settings.DEBUG:
 
 
 handler404 = 'apps.views.error_404_view'
+
+from employee.views import notify_user
+notify_user()
