@@ -10,8 +10,8 @@
 import datetime
 
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+#import matplotlib.pyplot as plt
+#import matplotlib.animation as animation
 ###################
 
 from background_task import background

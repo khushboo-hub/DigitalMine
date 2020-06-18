@@ -2,12 +2,12 @@
 from __future__ import unicode_literals
 from django.contrib.auth.decorators import login_required
 import math
-from django_tables2 import RequestConfig
+#from django_tables2 import RequestConfig
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from typing import Any
 from django.template import Template,Context
-from .tables import gasTable
+#from .tables import gasTable
 from django.shortcuts import get_object_or_404
 from . models import gasModel_auto
 from .forms import gasForm
@@ -15,7 +15,7 @@ from .forms import EraseForm
 from .forms import DisplayForm
 import serial
 import matplotlib.pyplot as plt
-from drawnow import *
+#from drawnow import *
 from background_task import background
 
 

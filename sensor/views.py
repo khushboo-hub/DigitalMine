@@ -1609,7 +1609,7 @@ def node_sensor_data(request):
     return JsonResponse(data)
 
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import io
 import numpy as np
 from django.db.models import Avg
