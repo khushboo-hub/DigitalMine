@@ -309,8 +309,8 @@ class Gasdb(models.Model):
         return quad
 
 
-class Meta:
-    db_table = "Fire_Exp_Manual"
+    class Meta:
+        db_table = "Fire_Exp_Manual"
 
 
 class Fire_exp_gases(models.Model):

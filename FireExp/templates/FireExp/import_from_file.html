@@ -1,22 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <style>
-        .modal-dialog {
-            width: 80%;
-            height: 80%;
-            margin: 0;
-            padding: 0;
-        }
-
-        .modal-content {
-            height: auto;
-            min-height: 100%;
-            border: 0 none;
-            border-radius: 0;
-            box-shadow: none;
-        }
-    </style>
     <div class="container">
         <div class="row">
             <section class="col-md-12">
@@ -120,19 +104,18 @@
                 </div>
             </section>
         </div>
-        <div class="modal fade" id="myModal" role="dialog">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Explosibility Graph</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
+
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center">Explosibility Graph</h4>
+                </div>
+                <div class="modal-body">
+                    <div id='myDiv' class=“plotly” align=“center”>
+                        <!-- Plotly chart will be drawn inside this DIV --></div>
                 </div>
             </div>
         </div>
@@ -163,7 +146,7 @@
                 },
                 "columnDefs": [
                     {
-                        "targets": [15,16,17,18],
+                        "targets": [15, 16, 17, 18],
                         "visible": false
                     }
                 ]
@@ -214,7 +197,7 @@
                     text: text[0],
                     textfont: {
                         {#family: 'sans serif',#}
-                        size: 16,
+                        size: 12,
                         color: colors[0],
                         weight: '900'
                     },
@@ -238,7 +221,7 @@
                     text: text[1],
                     textfont: {
                         {#family: 'sans serif',#}
-                        size: 16,
+                        size: 12,
                         color: colors[1],
                         weight: '900'
                     },
@@ -262,7 +245,7 @@
                     text: text[2],
                     textfont: {
                         {#family: 'sans serif',#}
-                        size: 16,
+                        size: 12,
                         color: colors[2],
                         weight: '900'
                     },
@@ -285,7 +268,7 @@
                     text: text[3],
                     textfont: {
                         {#family: 'sans serif',#}
-                        size: 16,
+                        size: 12,
                         color: colors[3],
                         weight: '900'
                     },
@@ -301,12 +284,9 @@
 
                 var data = [trace1, trace2, trace3, trace4];
                 var layout = {
+                    autosize: true,
 
-                    titlefont: {
-                        size: 32
-                    },
-                    width: 1200,
-                    height: 800,
+                    width: 860,
                     xaxis: {
                         title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
                         tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
@@ -359,7 +339,7 @@
 
                         font: {
                             family: 'Courier New, monospace',
-                            size: 16,
+                            size: 11,
                             color: '#8bc34a'
                         },
                         yanchor: 'top',
@@ -375,7 +355,7 @@
 
                             font: {
                                 family: 'Courier New, monospace',
-                                size: 16,
+                                size: 11,
                                 color: '#ff9800'
                             },
                             yanchor: 'top',
@@ -385,12 +365,12 @@
                         {
                             xref: 'x',
                             yref: 'y',
-                            x: -highest * 0.5,
+                            x: -highest * 0.45,
                             y: -highest,
                             xanchor: 'right',
                             font: {
                                 family: 'Courier New, monospace',
-                                size: 16,
+                                size: 11,
                                 color: '#4caf50'
                             },
 
@@ -404,7 +384,7 @@
                             y: -highest,
                             font: {
                                 family: 'Courier New, monospace',
-                                size: 16,
+                                size: 11,
                                 color: '#f44336'
                             },
                             xanchor: 'left',
@@ -422,7 +402,7 @@
                         "orientation": "h",
                         font: {
                             family: 'sans-serif',
-                            size: 11,
+                            size: 10,
                             color: '#000'
                         },
                         bgcolor: '#E2E2E2',
@@ -430,8 +410,10 @@
                         borderwidth: 2
                     }
                 };
-                Plotly.newPlot('myDiv', data, layout, {modeBarButtonsToRemove: ['autoScale2d']});
+                var config = {responsive: true}
+                Plotly.newPlot('myDiv', data, layout, config, {modeBarButtonsToRemove: ['autoScale2d']});
             }
+
         });
         var temp;
     </script>
