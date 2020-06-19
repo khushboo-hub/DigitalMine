@@ -157,7 +157,7 @@ class Employee(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.pk) + "-" + self.name
+        return self.name
 
     def mine_name(self):
         return "Hello"

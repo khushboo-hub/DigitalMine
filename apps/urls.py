@@ -1,15 +1,9 @@
 from django.conf import settings
-from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
-from django.conf.urls import handler404
 from theme import views
-# from temp_monitoring import views
-# from gasmonitoring import views
-# from gasmonitoring_auto import views
-# from gasmonitoring_live import views
-# from gasmonitoring_auto.views import index
+from employee.views import notify_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,6 +42,8 @@ urlpatterns = [
     path('Slope/', include('Slope.urls', namespace='Slope')),
 ]
 
+notify_user()
+
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
@@ -61,5 +57,3 @@ if settings.DEBUG:
 
 handler404 = 'apps.views.error_404_view'
 
-from employee.views import notify_user
-notify_user()

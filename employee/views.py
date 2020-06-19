@@ -59,13 +59,26 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
     profile = get_object_or_404(profile_extension, user_id=request.user.id)
-    if profile.mine_id is not None:
-        form = EmployeeForm(profile.mine_id.id, initial={'mine': profile.mine_id.id})
+    if request.user.is_superuser:
+        form = EmployeeForm()
+        form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
+        form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
     else:
-        form = EmployeeForm(1)
+        if profile.mine_id is not None:
+            form = EmployeeForm(initial={'mine': profile.mine_id})
+            form.fields['mine'].widget.attrs['readonly']=True
+            form.fields['mining_role'].queryset=MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            form.fields['immediate_staff'].queryset=Employee.objects.filter(mine_id=profile.mine_id.id)
+            # form.fields['mine'].queryset=MineDetails.objects.all()
+        else:
+            form = EmployeeForm()
+            form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
+            form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
+
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST.get('mine'),request.POST or None, request.FILES or None)
+        form = EmployeeForm(request.POST or None, request.FILES or None)
+        # form.fields['mine'].widget.attrs['disabled'] = False
         if form.is_valid():
             employee=form.save()
             # fs=profile_extension()
@@ -77,17 +90,28 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
     return render(request, template_name, {'form': form})
 
+@login_required
+def get_dropdownlist(request):
+    data={}
+    if request.is_ajax():
+        mine=request.GET.get('id',None)
+        data['result']={'role':serializers.serialize('json',MiningRole.objects.filter(mine_id=mine),fields=('id','name')),
+                        'immediate_staff':serializers.serialize('json',Employee.objects.filter(mine_id=mine),fields=('id','name'))
+                        }
+    else:
+        data['error']='Something went wrong!'
+    return JsonResponse(data)
 
 @login_required
 def employee_edit(request, pk, template_name='employee/employee_add.html'):
     book = get_object_or_404(Employee, pk=pk)
-    form = EmployeeForm(book.mine_id, request.POST or None, request.FILES or None, instance=book)
-    print('Form Errors', form.errors)
+    form = EmployeeForm(request.POST or None, request.FILES or None, instance=book)
+    form.fields['mine'].widget.attrs['readonly'] = True
+    form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
+    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id)
     if form.is_valid():
-        print('form is valid')
         try:
             form.save()
-            print("form saved")
             return redirect('employee:employee_manage')
         except Exception as e:
             print("error msg-->", e)
@@ -821,7 +845,7 @@ def validate_token(request):
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
-@background(schedule=60)
+@background(schedule=10)
 def notify_user():
     # lookup user by id and send them a message
     print('NOTIFTY USER')
