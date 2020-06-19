@@ -103,7 +103,7 @@
                                     <div class="col-md-4">
                                         <label>Image 1</label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" id="CurrentPhoto1Check">
                                         {{ form.photo1 }}
                                         <span style="color:red">{{ form.photo1.errors|striptags }}</span>
                                     </div>
@@ -112,7 +112,7 @@
                                     <div class="col-md-4">
                                         <label>Image 2</label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" id="CurrentPhoto2Check">
                                         {{ form.photo2 }}
                                         <span style="color:red">{{ form.photo2.errors|striptags }}</span>
                                     </div>
@@ -172,7 +172,39 @@
             $("#id_mine_id").addClass('form-control');
             $('#KBtestmap').hide();
 
-            parameters = getUrlVars();
+
+            if ($('div#CurrentPhoto1Check').children('a').length > 0) {
+                $("div#CurrentPhoto1Check").has("a").children('a').attr('id', 'CurrentPhoto1CheckOnHover')
+                $('<img id="CurrentPhoto1CheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhoto1CheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhoto1CheckOnHover');
+
+                $('img#CurrentPhoto1CheckOnHover').attr('data-toggle', 'tooltip');
+
+                $('img#CurrentPhoto1CheckOnHover').attr('class', 'red-tooltip');
+                $('img#CurrentPhoto1CheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentPhoto1CheckOnHover').attr("href") + "' />");
+                $("a#CurrentPhoto1CheckOnHover").remove();
+                $('img[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'bottom',
+                    html: true
+                });
+            };
+            if ($('div#CurrentPhoto2Check').children('a').length > 0) {
+                $("div#CurrentPhoto2Check").has("a").children('a').attr('id', 'CurrentPhoto2CheckOnHover')
+                $('<img id="CurrentPhoto2CheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhoto2CheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhoto2CheckOnHover');
+
+                $('img#CurrentPhoto2CheckOnHover').attr('data-toggle', 'tooltip');
+
+                $('img#CurrentPhoto2CheckOnHover').attr('class', 'red-tooltip');
+                $('img#CurrentPhoto2CheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentPhoto2CheckOnHover').attr("href") + "' />");
+                $("a#CurrentPhoto2CheckOnHover").remove();
+                $('img[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'bottom',
+                    html: true
+                });
+            };
+
+            let parameters = getUrlVars();
             if (parameters.hasOwnProperty('result')) {
                 toastr.success('Node Created Successfully!')
             }
@@ -234,23 +266,6 @@
                 }
             });
 
-            $("#CurrentPhotoCheck1").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover1')
-            $("#CurrentPhotoCheck2").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover2')
-
-            $('#CurrentPhotoCheckOnHover1').attr('data-toggle', 'tooltip');
-            $('#CurrentPhotoCheckOnHover2').attr('data-toggle', 'tooltip');
-
-            $('#CurrentPhotoCheckOnHover1').attr('class', 'red-tooltip');
-            $('#CurrentPhotoCheckOnHover2').attr('class', 'red-tooltip');
-
-            $('#CurrentPhotoCheckOnHover2').attr('title', "<img src='" + $('#CurrentPhotoCheckOnHover2').attr("href") + "' />");
-            $('#CurrentPhotoCheckOnHover1').attr('title', "<img src='" + $('#CurrentPhotoCheckOnHover1').attr("href") + "' />");
-
-            $('a[data-toggle="tooltip"]').tooltip({
-                animated: 'fade',
-                placement: 'bottom',
-                html: true
-            });
 
             Delete_Node();
             PointInitialization();

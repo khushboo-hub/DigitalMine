@@ -21,6 +21,8 @@ STATE = (
 )
 
 
+
+
 class MiningRoleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
@@ -138,10 +140,17 @@ class EmployeeForm(forms.ModelForm):
         'placeholder': 'Please Enter Permanent Address here / स्थायी पता '
     }))
 
-    state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+    # state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+    #     'name': 'myState',
+    #     'id': 'mystate',
+    #     'placeholder': 'State /राज्य'
+    # }))
+
+    state = forms.CharField(label='Name', widget=forms.Select(choices=STATE,attrs={
         'name': 'myState',
         'id': 'mystate',
-        'placeholder': 'State /राज्य'
+        'placeholder': 'State /राज्य',
+        'class':'form-control'
     }))
 
     # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
@@ -189,7 +198,7 @@ class EmployeeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'UAN '
     }))
-    date_of_exit = forms.DateField(required=False,widget=forms.TextInput(attrs=
+    date_of_exit = forms.DateField(required=False, widget=forms.TextInput(attrs=
     {
         'class': 'form-control datepicker',
     }))
@@ -240,7 +249,8 @@ class EmployeeForm(forms.ModelForm):
     job_type = forms.CharField(widget=forms.Select(choices=JOB_TYPE, attrs={'class': 'form-control', }), )
     is_rescue = forms.CharField(widget=forms.Select(choices=IS_RESCUE, attrs={'class': 'form-control', }), )
     cat_type = forms.CharField(widget=forms.Select(choices=MINING_TYPE, attrs={'class': 'form-control', }), )
-    blood_group = forms.ChoiceField(required=True,choices=BLOOD_GROUP,widget=forms.Select(attrs={'class': 'form-control', }))
+    blood_group = forms.ChoiceField(required=True, choices=BLOOD_GROUP,
+                                    widget=forms.Select(attrs={'class': 'form-control', }))
     medical_status = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Medical Health status or any Description'

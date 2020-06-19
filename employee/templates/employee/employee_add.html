@@ -175,7 +175,7 @@
                                             <label class="" for="id_photo" id="id_photo">Nationality /
                                                 राष्ट्रीयता </label>
                                         </div>
-                                        <div class="col-md-8" >
+                                        <div class="col-md-8">
                                             {{ form.nationality }}
                                             <span style="color:red">{{ form.nationality.errors|striptags }}</span>
                                         </div>
@@ -378,7 +378,7 @@
                                             <span style="color:red">{{ form.job_type.errors|striptags }}</span>
                                         </div>
                                     </div>
-                                      <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_medical_status" id="id_medical_status">Category
                                                 Address</label>
@@ -424,7 +424,7 @@
                                             <span style="color:red">{{ form.designation.errors|striptags }}</span>
                                         </div>
                                     </div>
-                                     <div class="col-md-6">
+                                    <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue </label>
                                         </div>
@@ -550,7 +550,7 @@
                                 <legend class="scheduler-border"><span style="color: blue; ">Exit</span>
                                 </legend>
                                 <div class="form-group col-md-12">
-                                     <div class="col-md-6">
+                                    <div class="col-md-6">
 
                                         <div class="col-md-4">
                                             <label class="" for="id_date_of_exit">Date of Exit</label>
@@ -719,7 +719,7 @@
                     html: true
                 });
             };
-             if ($('div#CurrentSignatureCheck').children('a').length > 0) {
+            if ($('div#CurrentSignatureCheck').children('a').length > 0) {
                 $("div#CurrentSignatureCheck").has("a").children('a').attr('id', 'CurrentSignatureCheckOnHover')
                 $('<img id="CurrentSignatureCheckOnHover" width="40px" height="40px" src="' + $('#CurrentSignatureCheckOnHover').attr("href") + '" />').insertAfter('#CurrentSignatureCheckOnHover');
 
@@ -733,7 +733,8 @@
                     placement: 'bottom',
                     html: true
                 });
-            };
+            }
+            ;
 
             $('#id_present_address').on('input', function () {
                 let checked = $('#same_address').prop('checked');
@@ -755,7 +756,8 @@
                 $.ajax({
                     url: "{% url 'employee:get_dropdownlist' %}",
                     data: {
-                        'id': mine
+                        'id': mine,
+                        'args': 'role,immediate_staff'
                     },
                     beforeSend: function () {
                         $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
@@ -764,19 +766,25 @@
                     success: function (data) {
                         if (data.hasOwnProperty('result')) {
                             data = data.result;
-                            let roles = data.role;
-                            let immediate_staffs = data.immediate_staff;
-                            roles = JSON.parse(roles);
-                            immediate_staffs = JSON.parse(immediate_staffs);
-                            for (let role in roles) {
-                                if (roles.hasOwnProperty(role)) {
-                                    $("select#id_mining_role").append($("<option />").val(roles[role].pk).text(roles[role].fields.name));
+                            if(data.hasOwnProperty('role')) {
+                                let roles = data.role;
+                                roles = JSON.parse(roles);
+                                for (let role in roles) {
+                                    if (roles.hasOwnProperty(role)) {
+                                        $("select#id_mining_role").append($("<option />").val(roles[role].pk).text(roles[role].fields.name));
+                                    }
                                 }
                             }
-                            for (let immediate_staff in immediate_staffs) {
-                                if (immediate_staffs.hasOwnProperty(immediate_staff)) {
-                                    $("select#id_immediate_staff").append($("<option />").val(immediate_staffs[immediate_staff].pk).text(immediate_staffs[immediate_staff].fields.name));
+                            if(data.hasOwnProperty('immediate_staff')) {
+                                let immediate_staffs = data.immediate_staff;
 
+                                immediate_staffs = JSON.parse(immediate_staffs);
+
+                                for (let immediate_staff in immediate_staffs) {
+                                    if (immediate_staffs.hasOwnProperty(immediate_staff)) {
+                                        $("select#id_immediate_staff").append($("<option />").val(immediate_staffs[immediate_staff].pk).text(immediate_staffs[immediate_staff].fields.name));
+
+                                    }
                                 }
                             }
                         }

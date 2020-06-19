@@ -63,7 +63,7 @@
                                         <label for="id_mob" class="" id="">Mine Map Image / खान का नक्शा छवि </label>
                                         </label>
                                     </div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-8" id="CurrentPhotoCheck">
                                         {{form.mine_map_image}}
                                         <span style="color:red">{{form.mine_map_image.errors|striptags}}</span>
                                     </div>
@@ -236,19 +236,20 @@ $(document).ready(function(){
     $("#id_mine").addClass('form-control');
     $("#id_mining_role").addClass('form-control');
     $("#id_immediate_staff").addClass('form-control')
-
-    $("#CurrentPhotoCheck" ).has( "a" ).children('a').attr('id','CurrentPhotoCheckOnHover')
-    $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="'+$('#CurrentPhotoCheckOnHover').attr("href")+'" />').insertAfter('#CurrentPhotoCheckOnHover');
-    $('img#CurrentPhotoCheckOnHover').attr('data-toggle','tooltip');
-    $('img#CurrentPhotoCheckOnHover').attr('class','red-tooltip');
-    $('img#CurrentPhotoCheckOnHover').attr('title',"<img width='250px' src='"+$('#CurrentPhotoCheckOnHover').attr("href")+"' />");
-    $("a#CurrentPhotoCheckOnHover").hide();
-    $('input#photo-clear_id').hide();
-    $('img[data-toggle="tooltip"]').tooltip({
-        animated: 'fade',
-        placement: 'bottom',
-        html: true
-    });
+     if ($('div#CurrentPhotoCheck').children('a').length > 0) {
+         $("div#CurrentPhotoCheck").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover')
+         $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover');
+         $('img#CurrentPhotoCheckOnHover').attr('data-toggle', 'tooltip');
+         $('img#CurrentPhotoCheckOnHover').attr('class', 'red-tooltip');
+         $('img#CurrentPhotoCheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentPhotoCheckOnHover').attr("href") + "' />");
+         $("a#CurrentPhotoCheckOnHover").hide();
+         $('input#photo-clear_id').hide();
+         $('img[data-toggle="tooltip"]').tooltip({
+             animated: 'fade',
+             placement: 'bottom',
+             html: true
+         });
+     }
     });
 
 
