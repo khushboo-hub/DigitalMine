@@ -9,10 +9,6 @@
 
 import datetime
 
-import numpy as np
-# import matplotlib.pyplot as plt
-# import matplotlib.animation as animation
-###################
 import requests
 
 from background_task import background
@@ -302,64 +298,6 @@ def fetch_role_ajax(request):
     data.append({'error': "Something Went Wrong!"})
     return HttpResponse(data)
 
-
-# @login_required
-# def getsensordata(request):
-# try:
-#     print("------Reading collection starts now------")
-#     sr = serial.Serial("COM3",9600)
-#     st = list(str(sr.readline(),'utf-8'))
-#     sr.close()
-#     print("------Reading collection ends successfully------")
-#     #return  str(''.join(st[:]))
-#     return HttpResponse(str(''.join(st[:])))
-# except Exception as e:
-#     return HttpResponse("<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>"+str(e)+"</small>")
-
-################################Testing for insert data continue##############
-# i=1
-# while True:
-#     f = SensorData()
-#     f.data1=340+i
-#     f.save()
-#     # i+=1
-#
-# # f.data1="3545"
-# # f.save()
-# return HttpResponse("Data Inserted Success")
-
-#################################################################################
-
-#############CONTINUOUS INSERT DATA FROM ARDUINO ##########
-
-# try:
-#     while True:
-#         sr = serial.Serial("COM4", 9600)
-#         st = list(str(sr.readline(), 'utf-8'))
-#         sr.close()
-#         ard_data = str(''.join(st[:]))
-#         f = SensorData()
-#         f.data1 = ard_data
-#         f.save()
-# except Exception as e:
-#     ####################
-#     fig, ax = plt.subplots()
-#     line, = ax.plot(np.random.rand(10))
-#     ax.set_ylim(0, 1)
-#
-#     def update(data):
-#         line.set_ydata(data)
-#         return line,
-#
-#     def data_gen():
-#         while True:
-#             yield np.random.rand(10)
-#
-#     ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
-#     plt.show()
-#     ###################
-#     return HttpResponse(
-#         "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
 
 
 @login_required
@@ -778,21 +716,6 @@ class ContactUsPageView(TemplateView):
 
 def contactview(request):
     pass
-    # subject = request.POST.get('topic', '')
-    # message = request.POST.get('message', '')
-    # from_email = request.POST.get('email', '')
-    #
-    # if subject and message and from_email:
-    #     try:
-    #         # send_mail(subject, message, from_email, ['change@this.com'])
-    #     except BadHeaderError:
-    #         return HttpResponse('Invalid header found.')
-    #     return HttpResponseRedirect('/contact/thankyou/')
-    # else:
-    #     return render_to_response('contactsus.html', {'form': ContactForm()})
-    #
-    # return render_to_response('contactsus.html', {'form': ContactForm()},
-    #                           RequestContext(request))
 
 
 def thankyou(request, template='thankyou.html'):

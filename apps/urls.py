@@ -3,7 +3,7 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
 from theme import views
-from employee.views import notify_user
+# from employee.views import notify_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -21,8 +21,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('snippets/', include('snippets.urls')),
     path('gasmonitoring/', include('gasmonitoring.urls', namespace='gasmonitoring')),
-    path('gasmonitoring_auto/', include('gasmonitoring_auto.urls', namespace='gasmonitoring_auto')),
-    path('gasmonitoring_live/', include('gasmonitoring_live.urls', namespace='gasmonitoring_live')),
     path('temp_monitoring', include('temp_monitoring.urls', namespace='temp_monitoring')),
     path('gasmonitoring_wifi/', include('gasmonitoring_wifi.urls', namespace='gasmonitoring_wifi')),
     path('inventory_management/', include('inventory_management.urls', namespace='inventory_management')),
@@ -42,7 +40,7 @@ urlpatterns = [
     path('Slope/', include('Slope.urls', namespace='Slope')),
 ]
 
-notify_user()
+# notify_user()
 
 if settings.DEBUG:
     import debug_toolbar

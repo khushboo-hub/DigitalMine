@@ -1,12 +1,10 @@
 from django.contrib.auth.decorators import login_required
 import math
-from django_tables2 import RequestConfig
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from typing import Any
 from django.template import Template,Context
-from .tables import homeTable
 from . models import homeModel,temp_monitoring_automatic
 from .forms import homeForm
 from .forms import EraseForm
@@ -107,11 +105,12 @@ def index(request):
 
 
 def tables(request):
+    pass
 
-    table = homeTable(homeModel.objects.all())
-    RequestConfig(request).configure(table)
-    print(table)
-    return render(request, 'main/table1.html', {'table': table})
+    # table = homeTable(homeModel.objects.all())
+    # RequestConfig(request).configure(table)
+    # print(table)
+    # return render(request, 'main/table1.html', {'table': table})
 
 def delete(request):
 

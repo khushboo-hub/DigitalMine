@@ -5,7 +5,6 @@ from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, HttpResponse, get_object_or_404
 from accounts.models import profile_extension, User
 from django.shortcuts import render, redirect, get_object_or_404
-from SMS import views as sms
 from .forms import CarousalPhotoUploadForm
 from .models import Carousal
 from django.core import serializers
@@ -14,8 +13,6 @@ from accounts.models import profile_extension
 import datetime
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
-from django.core.mail import EmailMessage
-from django.core.mail import send_mail, get_connection
 from django.core.cache import cache
 
 @login_required
