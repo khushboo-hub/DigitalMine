@@ -13,9 +13,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.html import strip_tags
 # from gtts import gTTS
-from matplotlib._cm_listed import data
+
 # from past.builtins import apply
-from pyparsing import Group
 from apps.settings import MEDIA_ROOT
 from setting.models import setting
 from water_level_monitoring.models import water_level_monitoring_model, water_level_monitoring_data_acquisition_model

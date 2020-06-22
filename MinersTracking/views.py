@@ -17,7 +17,7 @@ from .forms import TrackingRouterForm
 from .models import TrackingRouter, MineDetails, MinerTracking, Employee, MiningRole
 from accounts.models import profile_extension
 # ===============For matplotlib================
-import numpy as np
+
 import json
 #import matplotlib.pyplot as plt
 import datetime

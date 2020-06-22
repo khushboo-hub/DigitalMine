@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.db import connection
-from django.db.models import Max
+from django.db.models import Max,Avg,Min
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.html import strip_tags
@@ -18,7 +18,6 @@ from .models import Strata_location, MineDetails, Strata_sensor, Strata_sensor_d
 from background_task import background
 from django.shortcuts import render, redirect
 from background_task.models import Task
-from django.db.models import Avg,Min
 
 
 
