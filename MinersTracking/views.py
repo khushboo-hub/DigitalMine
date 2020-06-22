@@ -627,12 +627,7 @@ def get_all_miners_data(request):
                     single_miner_data['id']=hash_object.hexdigest()
                     single_miner_data['iconClass']=iconClass
                     single_miner_data['router_id']=str(router_details.router_id)
-                    current_time=datetime.datetime.now()
-                    last_record_time=tracking_table.created_date
-                    # print("Prev Time",last_record_time)
-                    # print("Current Time",current_time)
-                    timediff=current_time-last_record_time
-                    # print(timediff)
+                    timediff = tracking_table.whenpublished()
                     single_miner_data_model_data = {'title': str(miner_details.name)+"||"+router_id, 'content': "<small><strong>Address :</strong> "+str(router_details.address)+"</br><strong>Location : </strong>"+str(router_details.location)+"</br></small><small>"+str(timediff)+" ago</small>"}
                     single_miner_data['modal'] = single_miner_data_model_data
                     data[miner_id] = single_miner_data
