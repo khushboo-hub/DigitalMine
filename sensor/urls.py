@@ -19,6 +19,11 @@ urlpatterns = [
     path('node_edit/<str:pk>', views.node_edit, name='node_edit'),
     path('node_delete/', views.node_delete, name='node_delete'),
     path('ellicots/<str:pk>', views.ellicots, name='ellicots'),
+    path('line_chart_ratio_graph/<str:pk>', views.line_chart_ratio_graph, name='line_chart_ratio_graph'),
+    path('line_chart_ratio_graph_ajax', views.line_chart_ratio_graph_ajax, name='line_chart_ratio_graph_ajax'),
+
+    path('youngs_ratio_graph/<str:pk>', views.youngs_ratio_graph, name='youngs_ratio_graph'),
+    path('youngs_ratio_graph_ajax', views.youngs_ratio_graph_ajax, name='youngs_ratio_graph_ajax'),
     path('ellicots_ajax', views.ellicots_ajax, name='ellicots_ajax'),
 
     path('locate_node/<str:mine_id>/<str:node_id>', views.locate_node, name='locate_node'),
@@ -47,9 +52,11 @@ urlpatterns = [
     path('fetch_sensor_ajax', views.fetch_sensor_ajax, name='fetch_sensor_ajax'),
     path('fetch_sensors_list', views.fetch_sensors_list, name='fetch_sensors_list'),
     path('fetch_sensor_values_ajax', views.fetch_sensor_values_ajax, name='fetch_sensor_values_ajax'),
-    path('report_fetch_sensor_values_ajax', views.report_fetch_sensor_values_ajax,name='report_fetch_sensor_values_ajax'),
-    path('avg_report_fetch_sensor_values_ajax', views.avg_report_fetch_sensor_values_ajax,name='avg_report_fetch_sensor_values_ajax'),
-    path('report_fetch_node_values_ajax', views.report_fetch_node_values_ajax,name='report_fetch_node_values_ajax'),
+    path('report_fetch_sensor_values_ajax', views.report_fetch_sensor_values_ajax,
+         name='report_fetch_sensor_values_ajax'),
+    path('avg_report_fetch_sensor_values_ajax', views.avg_report_fetch_sensor_values_ajax,
+         name='avg_report_fetch_sensor_values_ajax'),
+    path('report_fetch_node_values_ajax', views.report_fetch_node_values_ajax, name='report_fetch_node_values_ajax'),
 
     path('fetch_sensor_ajax_sensor', views.fetch_sensor_ajax_sensor, name='fetch_sensor_ajax_sensor'),
     path('fetch_sensor_values_all_ajax', views.fetch_sensor_values_all_ajax, name='fetch_sensor_values_all_ajax'),

@@ -84,22 +84,22 @@
                                         <br>
                                         {% if book.isgoaf %}
                                             <a href="#"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1300, height=900','title=Hello'); return false;"
                                                title="Generate Ellicots Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
                                             <br>
                                             <br>
                                             <a href="#"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
-                                               title="Generate Ellicots Graph.">
+                                               onclick="window.open('{% url 'sensor:line_chart_ratio_graph' book.id|encrypt %}', 'Line Chart Graph', 'width=1300, height=900','title=Hello'); return false;"
+                                               title="Line Chart Ratio Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
                                             <br>
                                             <br>
                                             <a href="#"
-                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
-                                               title="Generate Ellicots Graph.">
+                                               onclick="window.open('{% url 'sensor:youngs_ratio_graph' book.id|encrypt %}', 'Youngs Ratio Graph.', 'width=1300, height=900','title=Hello'); return false;"
+                                               title="Youngs Ratio Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
                                             <br>

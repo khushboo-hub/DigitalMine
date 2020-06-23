@@ -1,0 +1,184 @@
+<html>
+<head>
+    <title>Youngs Ratio Graph</title>
+    {% load staticfiles %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
+    <link rel="shortcut icon" href="{% static 'image/favicon.ico' %}" type="image/icon type">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom_style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datetimepicker.min.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <section class="col-md-12">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" value="{{ node_id|encrypt }}" id="node_id" data-url="{% url 'sensor:line_chart_ratio_graph_ajax' %}">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-header text-center"><b>Youngs Ratio Graph</b></h3>
+                    {% csrf_token %}
+                    <div class="col-md-2">
+                        {#                    <label> Select Mine </label><span id="mine_id_span">{{ form.mine }}</span><br>#}
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group date" id="date_from_time_picker">
+                            <input type="text" name="date_of_opening" class="form-control" placeholder="From Date"
+                                   id="id_date_fr" required="" autocomplete="off">
+
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group date" id="date_to_time_picker">
+                            <input type="text" name="date_of_opening" class="form-control" placeholder="To Date"
+                                   id="id_date_to" required="" autocomplete="off">
+
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="text-center">
+                <button id="btn_show" class="btn btn-primary">Show Graph</button>
+            </div>
+            <div class="loader-container" hidden>
+                <svg class="notfound-loader" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 340">
+                    <circle cx="170" cy="170" r="160" stroke="#E2007C"/>
+                    <circle cx="170" cy="170" r="135" stroke="#404041"/>
+                    <circle cx="170" cy="170" r="110" stroke="#E2007C"/>
+                    <circle cx="170" cy="170" r="85" stroke="#404041"/>
+                </svg>
+            </div>
+        </div>
+        <div id="linechart"></div>
+        <div id="notfound" hidden>
+            <div class="notfound">
+                <div class="notfound-404">
+                    <h1>Oops!</h1>
+                    <h2>404 - Data not found. Please Try Again Later!</h2>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+</div>
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'datetime/js/moment.js' %}"></script>
+<script src="{% static 'datetime/js/moment-with-locales.js' %}"></script>
+<script src="{% static 'datetime/js/collapse.js' %}"></script>
+<script src="{% static 'datetime/js/transition.min.js' %}"></script>
+<script src="{% static 'datetime/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'js/plotly-latest.min.js' %}"></script>
+<script src="{% static 'js/customJS.js' %}"></script>
+<script>
+    var temp;
+    $(document).ready(function () {
+        let date_from = $('#date_from_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        let date_to = $('#date_to_time_picker').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+        $('.loader-container').hide();
+        EEllicots();
+
+        function EEllicots() {
+
+
+            function GRAPH(url, id, from, to) {
+                $.ajax({
+                        type: "get",
+                        url: url,
+                        data: {
+                            'id': id,
+                            'date_from': from,
+                            'date_to': to,
+                        },
+                        beforeSend: function () {
+
+                            Plotly.purge('linechart');
+
+                            $('#notfound').hide();
+                            $('.loader-container').show();
+                            $('#btn_show').prop('disabled', true);
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result') && !isEmpty(data.result)) {
+                                let result = data.result;
+                                let date = [];
+                                let co = [];
+                                let young_ratio = [];
+                                for (let r in result) {
+                                    if (result.hasOwnProperty(r)) {
+                                        date.push(result[r].date);
+                                        co.push(result[r].co);
+                                        young_ratio.push(result[r].young_ratio);
+                                    }
+                                }
+                                let co_trace = {
+                                    x: date,
+                                    y: co,
+                                    type: 'scatter',
+                                    name: 'CO',
+                                    'line': {'shape': 'spline', 'smoothing': 1.3}
+
+                                };
+
+                                let young_ratio_trace = {
+                                    x: date,
+                                    y: young_ratio,
+                                    type: 'scatter',
+                                    name: 'Young Ratio',
+                                    'line': {'shape': 'spline', 'smoothing': 1.3}
+                                };
+                                data = [co_trace,young_ratio_trace];
+                                Plotly.newPlot('linechart', data, {modeBarButtonsToRemove: ['autoScale2d']});
+                            } else {
+                                $('#notfound').show();
+                            }
+                        },
+                        complete: function () {
+                            $('.loader-container').hide();
+                            $('#btn_show').prop('disabled', false);
+                        },
+                        error: function () {
+                            console.log("Something Went Wrong!");
+                            {#alert("Please select Mine and location to see graph")#}
+                        }
+                        ,
+                    }
+                );
+            }
+
+            $('#btn_show').click(function () {
+                let endpoint = $('#node_id').data('url');
+                let id = $('#node_id').val();
+                let from = $('#id_date_fr').val();
+                let to = $('#id_date_to').val();
+                if (!isEmpty(from) && !isEmpty(to)) {
+                    console.log('clicked in');
+                    GRAPH(endpoint, id, from, to)
+                } else {
+                    let from = "1899-01-01";
+                    let to = "2999-12-12";
+                    GRAPH(endpoint, id, from, to)
+                }
+            });
+        }
+
+    });
+</script>
+</body>
+</html>

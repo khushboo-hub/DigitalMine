@@ -12,7 +12,7 @@ class gasModel_auto(models.Model):
     node_id = models.IntegerField()
     sensor_name = models.CharField(max_length=10, default='Null')
     sensor_id = models.IntegerField()
-    sensor_value = models.CharField(max_length=50, default='Null')
+    sensor_value = models.FloatField(null=True)
     date_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
