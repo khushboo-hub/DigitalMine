@@ -1,10 +1,72 @@
+from dateutil.utils import today
+
 from employee.models import MineDetails
 from employee.models import Employee
-from .models import Training_Rescue_Accident
+from .models import training_attendance,training_attendance_details
 from .models import Rescue_Records, Accident_Records
 from django import forms
 from datetime import date
 
+
+class Training_Form(forms.ModelForm):
+
+    mine_id = forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                    'class': 'form-control'}),
+                                    empty_label="Select Mine")
+
+    shift_id = forms.CharField(widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'required':False
+                       }))
+
+    training_date = forms.DateField(widget=forms.TextInput(attrs={
+        'class': 'form-control datepicker',
+        'value': date.today()
+    }))
+
+    training_date = forms.DateField(initial=today,widget=forms.TextInput(attrs={"class":"form-control"}))
+
+    training_type = forms.CharField(widget=forms.TextInput(attrs=
+    {
+        'class': 'form-control',
+        'required': 'true'
+    }))
+    training_tittle = forms.CharField(widget=forms.TextInput(attrs=
+    {
+        'class': 'form-control',
+        'required': 'true'
+    }))
+    training_desc = forms.CharField(widget=forms.TextInput(attrs=
+    {
+        'class': 'form-control',
+        'required': 'true'
+    }))
+
+
+    class Meta():
+        model = training_attendance
+        fields = "__all__"
+
+class training_attendance_details_form(forms.ModelForm):
+
+    training_attendance_id = forms.CharField(widget=forms.Select(attrs={
+            'class': 'form-control',
+            'required':False
+        }))
+
+
+    emp_id = forms.CharField(widget=forms.TextInput(attrs={
+                           'class': 'form-control',
+                           'required':False
+                       }))
+    is_present = forms.BooleanField(widget=forms.CheckboxInput(attrs={
+        'class': 'form-control',
+        'required': False
+    }))
+    class Meta():
+        model = training_attendance_details
+        fields = "__all__"
 
 class Training_Rescue_Accident_Form(forms.ModelForm):
     date_parent = forms.DateField(widget=forms.TextInput(attrs=

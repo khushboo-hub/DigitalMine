@@ -4,20 +4,24 @@ from django.db import models
 from employee.models import MineDetails, EmployeeShiftAssign, Employee, MineShift
 
 
-class Training_Rescue_Accident(models.Model):
-    mine_id = models.IntegerField(null=True, blank=True)
+class training_attendance(models.Model):
+    mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
     shift_id = models.IntegerField(null=True, blank=True)
-    emp_id = models.IntegerField(null=True, blank=True)
-    training_type = models.CharField(max_length=255, null=True, blank=True)
     training_date = models.CharField(max_length=255, null=True, blank=True)
-    is_ab_pr = models.CharField(max_length=255, null=True, blank=True)
-    training_ab_pr_from = models.CharField(max_length=255, null=True, blank=True)
-    training_ab_pr_to = models.CharField(max_length=255, null=True,blank=True)
-    training_remarks = models.CharField(max_length=255, null=True, blank=True)
-    training_count = models.IntegerField(null=True, blank=True)
+    training_type = models.CharField(max_length=255, null=True, blank=True)
+    training_tittle = models.CharField(max_length=255, null=True, blank=True)
+    training_desc = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
-        db_table = "training_rescue_accident"
+        db_table = "training_attendance"
+
+class training_attendance_details(models.Model):
+    training_attendance_id = models.IntegerField(null=True, blank=True)
+    emp_id = models.IntegerField(null=True, blank=True)
+    is_present = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "training_attendance_details"
 
 class Rescue_Records(models.Model):
     mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)

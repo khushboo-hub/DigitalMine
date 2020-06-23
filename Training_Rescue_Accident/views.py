@@ -1,94 +1,118 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Training_Rescue_Accident, Rescue_Records, Accident_Records, Employee, MineShift, \
+from .models import training_attendance,training_attendance_details, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
-from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form
+from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
+    training_attendance_details_form
 import datetime
 
 
 # MM
 @login_required
-def index(request, template_name='Training_Rescue_Accident_index.html'):
-    form = Training_Rescue_Accident_Form(request.POST)
+def index(request, template_name='Training_Attendance.html'):
+    if request.POST:
+        form = Training_Form(request.POST)
+        print(request.POST.getlist('is_present'))
+        # if form.is_valid():
+        #     my_id = form.save()
+        #
+        #     for key_value in range(len(request.POST.getlist('is_present'))):
+        #         spem_list = {
+        #             'emp_id': request.POST.getlist("emp_id")[key_value],
+        #             'is_present': request.POST.getlist("is_present")[key_value],
+        #             'training_attendance_id': my_id.id
+        #
+        #         }
+        #         sub_form_1 = training_attendance_details_form(spem_list)
+        #         if sub_form_1.is_valid():
+        #             print('')
+        #             # sub_form_1.save()
+        #         else:
+        #             print(sub_form_1.errors)
+        #             print("Sub Part Invalid")
+        # else:
+        #     print("Invalid")
+    else:
+         form = Training_Form()
     return render(request, template_name, {'form': form})
 
 
-@login_required
-def add_Training_Rescue_Accident(request):
-    t_length = len(request.POST.getlist('mine_id'))
-    mine_id_list = request.POST.getlist('mine_id')
-    shift_id_list = request.POST.getlist('shift_id')
-    emp_id_list = request.POST.getlist('emp_id')
-    training_type_id_list = request.POST.getlist('training_type')
-    training_date_id_list = request.POST.getlist('training_date')
-    is_ab_pr_id_list = request.POST.getlist('is_ab_pr')
-    training_ab_pr_from_id_list = request.POST.getlist('training_ab_pr_from')
-    training_ab_pr_to_id_list = request.POST.getlist('training_ab_pr_to')
-    training_count_id_list = request.POST.getlist('training_count')
-    training_remarks_id_list = request.POST.getlist('training_remarks')
-
-    for key_value in range(t_length):
-        inst = Training_Rescue_Accident()
-        t_list = {
-            'mine_id': mine_id_list[key_value],
-            'shift_id': shift_id_list[key_value],
-            'emp_id': emp_id_list[key_value],
-            'training_type': training_type_id_list[key_value],
-            'training_date': training_date_id_list[key_value],
-            'is_ab_pr': is_ab_pr_id_list[key_value],
-            'training_ab_pr_from': training_ab_pr_from_id_list[key_value],
-            'training_ab_pr_to': training_ab_pr_to_id_list[key_value],
-            'training_count': training_count_id_list[key_value],
-            'training_remarks': training_remarks_id_list[key_value],
-        }
-        inst.mine_id = t_list['mine_id']
-        inst.shift_id = t_list['shift_id']
-        inst.emp_id = t_list['emp_id']
-        inst.training_type = t_list['training_type']
-        inst.training_date = t_list['training_date']
-        inst.is_ab_pr = t_list['is_ab_pr']
-        inst.training_ab_pr_from = t_list['training_ab_pr_from']
-        inst.training_ab_pr_to = t_list['training_ab_pr_to']
-        inst.training_count = t_list['training_count']
-        inst.training_remarks = t_list['training_remarks']
-        inst.save()
-
-    return redirect('Training_Rescue_Accident:Training_Rescue_Accident_Manage')
-
-
-@login_required
-def Training_Rescue_Accident_Manage(request, template_name='Training_Rescue_Accident_Manage.html'):
-    emp_show = Training_Rescue_Accident.objects.all()
-    emp_data = {}
-    employee_data = {}
-
-    for emp in emp_show:
-        employee = {}
-        emp_details = Employee.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
-        mine_details = MineDetails.objects.filter(id=emp.mine_id)
-        for ob in emp_details:
-            employee['emp_name'] = str(ob.name)
-
-        for mine in mine_details:
-            employee['mine_name'] = str(mine.name)
-
-        employee['shift_id'] = str(emp.shift_id)
-        shift_table = MineShift.objects.get(id=emp.shift_id)
-        employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
-            shift_table.time_to) + ')'
-        employee['training_date'] = str(emp.training_date)
-        employee['training_type'] = str(emp.training_type)
-        employee['ab_pr'] = str(emp.is_ab_pr)
-        employee['training_ab_pr_from'] = str(emp.training_ab_pr_from)
-        employee['training_ab_pr_to'] = str(emp.training_ab_pr_to)
-        employee['training_remarks'] = str(emp.training_remarks)
-        employee['training_count'] = str(emp.training_count)
-
-        employee_data[str(emp.id)] = employee
-    emp_data['dt_store'] = employee_data
-    print(employee_data)
-    return render(request, template_name, emp_data)
+# @login_required
+# def add_Training_Rescue_Accident(request):# delete function
+#     t_length = len(request.POST.getlist('mine_id'))
+#     mine_id_list = request.POST.getlist('mine_id')
+#     shift_id_list = request.POST.getlist('shift_id')
+#     emp_id_list = request.POST.getlist('emp_id')
+#     training_type_id_list = request.POST.getlist('training_type')
+#     training_date_id_list = request.POST.getlist('training_date')
+#     is_ab_pr_id_list = request.POST.getlist('is_ab_pr')
+#     training_ab_pr_from_id_list = request.POST.getlist('training_ab_pr_from')
+#     training_ab_pr_to_id_list = request.POST.getlist('training_ab_pr_to')
+#     training_count_id_list = request.POST.getlist('training_count')
+#     training_remarks_id_list = request.POST.getlist('training_remarks')
+#
+#     for key_value in range(t_length):
+#         inst = Training_Rescue_Accident()
+#         t_list = {
+#             'mine_id': mine_id_list[key_value],
+#             'shift_id': shift_id_list[key_value],
+#             'emp_id': emp_id_list[key_value],
+#             'training_type': training_type_id_list[key_value],
+#             'training_date': training_date_id_list[key_value],
+#             'is_ab_pr': is_ab_pr_id_list[key_value],
+#             'training_ab_pr_from': training_ab_pr_from_id_list[key_value],
+#             'training_ab_pr_to': training_ab_pr_to_id_list[key_value],
+#             'training_count': training_count_id_list[key_value],
+#             'training_remarks': training_remarks_id_list[key_value],
+#         }
+#         inst.mine_id = t_list['mine_id']
+#         inst.shift_id = t_list['shift_id']
+#         inst.emp_id = t_list['emp_id']
+#         inst.training_type = t_list['training_type']
+#         inst.training_date = t_list['training_date']
+#         inst.is_ab_pr = t_list['is_ab_pr']
+#         inst.training_ab_pr_from = t_list['training_ab_pr_from']
+#         inst.training_ab_pr_to = t_list['training_ab_pr_to']
+#         inst.training_count = t_list['training_count']
+#         inst.training_remarks = t_list['training_remarks']
+#         inst.save()
+#
+#     return redirect('Training_Rescue_Accident:Training_Rescue_Accident_Manage')
+#
+#
+# @login_required
+# def Training_Rescue_Accident_Manage(request, template_name='Training_Rescue_Accident_Manage.html'):
+#     emp_show = Training_Rescue_Accident.objects.all()
+#     emp_data = {}
+#     employee_data = {}
+#
+#     for emp in emp_show:
+#         employee = {}
+#         emp_details = Employee.objects.filter(mine_id=emp.mine_id, id=emp.emp_id)
+#         mine_details = MineDetails.objects.filter(id=emp.mine_id)
+#         for ob in emp_details:
+#             employee['emp_name'] = str(ob.name)
+#
+#         for mine in mine_details:
+#             employee['mine_name'] = str(mine.name)
+#
+#         employee['shift_id'] = str(emp.shift_id)
+#         shift_table = MineShift.objects.get(id=emp.shift_id)
+#         employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
+#             shift_table.time_to) + ')'
+#         employee['training_date'] = str(emp.training_date)
+#         employee['training_type'] = str(emp.training_type)
+#         employee['ab_pr'] = str(emp.is_ab_pr)
+#         employee['training_ab_pr_from'] = str(emp.training_ab_pr_from)
+#         employee['training_ab_pr_to'] = str(emp.training_ab_pr_to)
+#         employee['training_remarks'] = str(emp.training_remarks)
+#         employee['training_count'] = str(emp.training_count)
+#
+#         employee_data[str(emp.id)] = employee
+#     emp_data['dt_store'] = employee_data
+#     print(employee_data)
+#     return render(request, template_name, emp_data)
 
 
 @login_required
