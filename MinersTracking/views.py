@@ -66,7 +66,7 @@ def update_router(request, pk, template_name='MinersTracking/update_router.html'
     return render(request, template_name, {'form': form, 'object_list': books,'pk':pk})
 
 
-def test(request,template_name="MinersTracking/test.html"):
+def test(request,template_name="MinersTracking/ellicots_graph.html"):
     data={}
     Mines=get_object_or_404(MineDetails,id=1)
     data['image']=Mines.mine_map_image

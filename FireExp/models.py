@@ -147,7 +147,12 @@ class Gasdb(models.Model):
             'young': youngm,
             'coco2': coco2m,
             'jtr': jtrm,
-            'chra': chram
+            'chra': chram,
+            'graham_ratio': graham,
+            'young_ratio': young,
+            'coco2_ratio': coco2,
+            'jtr_ratio': jtr,
+            'chra_ratio': chra
         }
         return data
 
@@ -178,11 +183,27 @@ class Gasdb(models.Model):
         ch4np = 6.07
         conp = 4.13
         h2np = 16.59
+        try:
+            Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
+        except ZeroDivisionError:
+            Llow = 1
+            pass
+        try:
+            Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
+        except ZeroDivisionError:
+            Lhigh = 1
+            pass
+        try:
+            Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
+        except ZeroDivisionError:
+            Lnose = 1
+            pass
 
-        Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
-        Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
-        Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
-        Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+        try:
+            Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+        except ZeroDivisionError:
+            Nex = 1
+            pass
 
         Oxnose = 0.2093 * (100 - Nex - Lnose)
 
@@ -234,13 +255,16 @@ class Gasdb(models.Model):
 
         # calculating polar coordinates
         def properarctan(valuex, valuey):
-            if valuex >= 0:
-                if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                    return (360 + np.degrees(np.arctan(valuey / valuex)))
+            try:
+                if valuex >= 0:
+                    if (np.degrees(np.arctan(valuey / valuex) < 0)):
+                        return (360 + np.degrees(np.arctan(valuey / valuex)))
+                    else:
+                        return np.degrees(np.arctan(valuey / valuex))
                 else:
-                    return np.degrees(np.arctan(valuey / valuex))
-            else:
-                return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+                    return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
+            except:
+                return 0
 
         rx = np.sqrt(xx * xx + yx * yx)
         thx = properarctan(xx, yx)
@@ -276,7 +300,7 @@ class Gasdb(models.Model):
             'y': ely,
             'color': self.markerclr(elx, ely),
             'quadrant': self.quadrant(elx, ely),
-            'dates': self.date}
+            'dates': self.date.strftime('%Y-%m-%d %H:%M:%S')}
 
         return graph
 
