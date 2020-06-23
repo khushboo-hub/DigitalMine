@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
     <div class="container">
 
@@ -179,8 +178,6 @@
                 })();
             }
 
-            var set = 0;
-
             function Fill_Node(mine_id, NODE) {
                 let contents = "";  //contents = "";
                 for (let node in NODE) {
@@ -199,8 +196,6 @@
                             progressBarColor = "#FB2E1D";
                         }
                         content += '<div id="' + gases + '"><strong>' + gas.name + ':</strong> <span>' + gas.value + '</span> ' + gas.unit + '<div class="progress mb-4"><div class="progress-bar" role="progressbar" id="nitrogen" style="background-color:' + progressBarColor + ' !important; width: ' + Number(gas.value) + '%" aria-valuenow="' + Number(gas.value) + '" aria-valuemin="0" aria-valuemax="100"></div> </div></div>';
-
-                        //contents += '<div id="' + gases + '"><strong>' + gases + ':</strong> ' + gas.value + ' ' + gas.unit + '<div class="progress"><div class="progress-bar"  role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="background-color=' + progressBarColor + ' width:' + gas.value + '%"><span class="sr-only">70% Complete</span></div></div></div>';
                     }
                     $('#Content' + node.replace(/\s+/g, '')).html(content);
                     contents += content + '</div>';
@@ -222,8 +217,8 @@
                 } else if (warning == 3) {
                     progressBarColor = "#FB2E1D";
                 }
-                html = KBtestmap.mapMarkers[sensor.node].modal.content;
-                var tree = $("<div>" + html + "</div>");
+                let html = KBtestmap.mapMarkers[sensor.node].modal.content;
+                let tree = $("<div>" + html + "</div>");
 
                 tree.find('div[id='+sensor.sensor+'] > span')
                     .replaceWith(sensor.value);
@@ -234,9 +229,9 @@
                 tree.find('div[id='+sensor.sensor+'] > div.progress > div.progress-bar')
                     .css('width', sensor.value + "%");
 
-                htmlSource = tree.html();
-                value = 'div#Content' + sensor.node + " > div#" + sensor.sensor + ">span";
-                progress = 'div#Content' + sensor.node + " > div#" + sensor.sensor + "> div.progress > div.progress-bar";
+                let htmlSource = tree.html();
+                let value = 'div#Content' + sensor.node + " > div#" + sensor.sensor + ">span";
+                let progress = 'div#Content' + sensor.node + " > div#" + sensor.sensor + "> div.progress > div.progress-bar";
 
                 $(value).text(sensor.value);
                 $(progress).css('background-color', progressBarColor);
@@ -246,7 +241,7 @@
 
             }
         });
-        var temp, progress, value, html, doc;
+
     </script>
 
 
