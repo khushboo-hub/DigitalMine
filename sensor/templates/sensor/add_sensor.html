@@ -13,7 +13,7 @@
                 </h3>
                 <div class="row text-center">
                     <div class="col-md-12">
-                        <a class="btn btn-primary" href="{% url 'sensor:manage_sensor' mine node_id %}">Manage
+                        <a class="btn btn-primary" href="{% url 'sensor:manage_sensor' mine|encrypt node_id|encrypt %}">Manage
                             Sensor</a>
                     </div>
                 </div>

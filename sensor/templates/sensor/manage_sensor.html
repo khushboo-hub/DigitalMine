@@ -11,7 +11,7 @@
                 </h3>
                 <div class="row text-center">
                     <div class="col-md-12">
-                        <a class="btn btn-primary" href="{% url 'sensor:add_sensor' mine node_id %}">Add Sensor</a>
+                        <a class="btn btn-primary" href="{% url 'sensor:add_sensor' mine|encrypt node_id|encrypt %}">Add Sensor</a>
                     </div>
                 </div>
         <hr>
@@ -44,11 +44,6 @@
                                 <td class="text-center">{{ wireless.ip }}</td>
                                 <td class="text-center">{{ wireless.unit }}</td>
                                 <td class="text-center">{{ wireless.thresholdlimit }}</td>
-{#                                <td class="text-center"><a#}
-{#                                        href="{% url 'sensor:start_save_sensor' wireless.id %}"#}
-{#                                        title="{% if wireless.background %}Stop {% else %}Start {% endif %}sensor data acquisition"#}
-{#                                        style="color:{% if wireless.background %}green {% endif %}"><span#}
-{#                                        class="glyphicon glyphicon-record"></span></a></td>#}
                                 <td class="text-center"><input {% if wireless.background %}checked {% endif %}
                                                                        data-url="{% url 'sensor:start_save_sensor' wireless.id %}"
                                                                        id="isAcquire{{ wireless.id }}"

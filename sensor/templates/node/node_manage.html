@@ -107,11 +107,11 @@
 
                                         {% endif %}
 
-{#                                        <a href="{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}"#}
-{#                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"#}
-{#                                           title="Show Node Location">#}
-{#                                            <span class="glyphicon glyphicon-map-marker"></span>#}
-{#                                        </a>#}
+                                        <a href="{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}"
+                                           onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
+                                           title="Show Node Location">
+                                            <span class="glyphicon glyphicon-map-marker"></span>
+                                        </a>
 {#                                        <br>#}
 {#                                        <br>#}
 {#                                        <a href="{% url 'sensor:node_edit' book.id|encrypt %}"#}
