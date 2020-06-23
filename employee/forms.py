@@ -21,6 +21,8 @@ STATE = (
 )
 
 
+
+
 class MiningRoleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
@@ -57,12 +59,8 @@ u'rRXVe68NO7m3mHoBS488KdHaqQPD6Ofv'
 
 
 class EmployeeForm(forms.ModelForm):
-    def __init__(self, mine_id, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
-        self.fields['mining_role'] = forms.ModelChoiceField(
-            queryset=MiningRole.objects.filter(mine_id=mine_id)
-        )
-        self.fields['token_no'].initial = "T00001"
         # Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
 
     # =================for Personal Details======================
@@ -80,12 +78,13 @@ class EmployeeForm(forms.ModelForm):
         ('opencast', 'OPENCAST')
     )
     BLOOD_GROUP = (
+        ('', '------'),
         ('A+', 'A+'),
         ('A-', 'A-'),
         ('B+', 'B+'),
         ('B-', 'B-'),
-        ('O+', '0+'),
-        ('O-', '0-'),
+        ('O+', 'O+'),
+        ('O-', 'O-'),
         ('AB+', 'AB+'),
         ('AB-', 'AB-'),
     )
@@ -141,22 +140,28 @@ class EmployeeForm(forms.ModelForm):
         'placeholder': 'Please Enter Permanent Address here / स्थायी पता '
     }))
 
-    state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+    # state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
+    #     'name': 'myState',
+    #     'id': 'mystate',
+    #     'placeholder': 'State /राज्य'
+    # }))
+
+    state = forms.CharField(label='Name', widget=forms.Select(choices=STATE,attrs={
         'name': 'myState',
         'id': 'mystate',
-        'placeholder': 'State /राज्य'
+        'placeholder': 'State /राज्य',
+        'class':'form-control'
     }))
 
     # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
 
-    # mine = forms.CharField(required=False,
-    #                        widget=forms.Select(choices=MineDetails.objects.all().values_list('id', 'name'),
-    #                                            attrs={'class': 'form-control',
-    #                                                   'disabled': 'true',
-    #
-    #                                                   }))
-    # mining_role = forms.CharField(required=False, widget=forms.Select(choices=MiningRole.objects.all().values_list('id','name'),attrs={'class': 'form-control', }), )
-    # immediate_staff=forms.CharField(required=False,widget=forms.Select(choices=Employee.objects.all().values_list('id','name'),attrs={'class': 'form-control', }))
+    mine = forms.ModelChoiceField(required=False, queryset=MineDetails.objects.all(),
+                                  widget=forms.Select(attrs={'class': 'form-control', }))
+    mining_role = forms.ModelChoiceField(required=False, queryset=MiningRole.objects.all(),
+                                         widget=forms.Select(attrs={'class': 'form-control', }))
+
+    immediate_staff = forms.ModelChoiceField(required=False, queryset=Employee.objects.all(),
+                                             widget=forms.Select(attrs={'class': 'form-control'}))
     city = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'name': 'myCity',
         'id': 'mycity',
@@ -193,10 +198,9 @@ class EmployeeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'UAN '
     }))
-    date_of_exit = forms.DateField(widget=forms.TextInput(attrs=
+    date_of_exit = forms.DateField(required=False, widget=forms.TextInput(attrs=
     {
         'class': 'form-control datepicker',
-        'value': date.today()
     }))
     reason_of_exit = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -245,7 +249,8 @@ class EmployeeForm(forms.ModelForm):
     job_type = forms.CharField(widget=forms.Select(choices=JOB_TYPE, attrs={'class': 'form-control', }), )
     is_rescue = forms.CharField(widget=forms.Select(choices=IS_RESCUE, attrs={'class': 'form-control', }), )
     cat_type = forms.CharField(widget=forms.Select(choices=MINING_TYPE, attrs={'class': 'form-control', }), )
-    blood_group = forms.CharField(widget=forms.Select(choices=BLOOD_GROUP, attrs={'class': 'form-control', }), )
+    blood_group = forms.ChoiceField(required=True, choices=BLOOD_GROUP,
+                                    widget=forms.Select(attrs={'class': 'form-control', }))
     medical_status = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Medical Health status or any Description'
@@ -309,14 +314,15 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         fields = ['empid', 'name', 'father_name', 'dob', 'present_address', 'permanent_address', 'email', 'mob',
-                  'state', 'city', 'pin', 'gender',
-                  'marital_status', 'photo', 'mine', 'rfid', 'designation'
-            , 'token_no', 'retirement_date', 'mining_role', 'job_type', 'is_rescue', 'date_of_joining', 'cat_type',
-                  'immediate_staff', 'blood_group', 'medical_status'
-            , 'aadhaar_no', 'pan_no', 'voter_id_no', 'medical_ins_no', 'bank_name', 'bank_ac_no', 'bank_ifsc',
-                  'bank_pf_no',
-                  'edu_course_name', 'edu_board_name', 'edu_year', 'edu_percent', 'spouse_name', 'nationality',
-                  'identification_mark', 'signature', 'category_address', 'esic_ip', 'lwf', 'date_of_exit',
+                  'state', 'city', 'pin', 'gender', 'marital_status', 'photo', 'mine', 'rfid', 'designation',
+                  'token_no',
+                  'retirement_date', 'mining_role', 'job_type', 'is_rescue', 'date_of_joining', 'cat_type',
+                  'immediate_staff', 'blood_group', 'medical_status', 'aadhaar_no', 'pan_no', 'voter_id_no',
+                  'medical_ins_no',
+                  'bank_name', 'bank_ac_no', 'bank_ifsc', 'bank_pf_no', 'edu_course_name', 'edu_board_name', 'edu_year',
+                  'edu_percent',
+                  'spouse_name', 'nationality', 'identification_mark', 'signature', 'category_address', 'esic_ip',
+                  'lwf', 'date_of_exit',
                   'reason_of_exit', 'service_book_no', 'remarks']
         widgets = {
             'date_of_joining': forms.DateInput(attrs={'class': 'datepicker'}),

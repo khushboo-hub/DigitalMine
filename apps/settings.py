@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'gdstorage',
-    'debug_toolbar',
+    # 'debug_toolbar',
 
     'theme',
     'employee',
@@ -52,8 +52,6 @@ INSTALLED_APPS = [
     'accounts',
     'snippets',
     'gasmonitoring',
-    'gasmonitoring_auto',
-    'gasmonitoring_live',  
     'temp_monitoring',
     'background_task',
     'gasmonitoring_wifi',
@@ -121,9 +119,9 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'digi_mine',
-        'USER': 'root',
-        'PASSWORD': 'root',
+        'NAME': 'iot',
+        'USER': 'csir',
+        'PASSWORD': 'tpo4pf9KlQEBGkNo',
         'HOST': '127.0.0.1',
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
@@ -149,36 +147,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# TAGS_INPUT_MAPPINGS = {
-#     'some_app.SomeKeyword': {
-#         'field': 'some_field',
-#     },
-#     'some_app.SomeOtherKeyword': {
-#         'fields': ('some_field', 'some_other_field'),
-#     },
-#     'some_app.SomeSortedKeyword': {
-#         'field': 'some_field',
-#         'ordering': [
-#             'some_field',
-#             'some_other_field',
-#         ],
-#         'filters': {
-#             'some_field__istartswith': 'a',
-#         },
-#         'excludes': {
-#             'some_field__iexact': 'foobar',
-#         },
-#     },
-#     'some_app.SomeCreateableKeyword': {
-#         'field': 'some_field',
-#         'create_missing': True,
-#     },
-# }
-# ADMIN_VIEW_PERMISSION_MODELS = [
-#     'auth.User',
-# ]
-
-# Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 # LANGUAGE_CODE = 'hi-IN'

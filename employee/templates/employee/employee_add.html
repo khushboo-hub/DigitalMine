@@ -2,8 +2,7 @@
 {% block content %}
     <style>
         .custom-div {
-            {#width: 24%;#}
-            background-color: white;
+        {#width: 24%;#} background-color: white;
             float: left;
             margin-right: 5px;
             min-height: 50px;
@@ -118,6 +117,27 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
+                                            <label class="" for="id_blood_group" id="id_blood_group">Blood Group</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.blood_group }}
+                                            <span style="color:red">{{ form.blood_group.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_photo" id="id_photo">Identification Mark / पहचान
+                                                चिन्ह</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.identification_mark }}
+                                            <span style="color:red">{{ form.identification_mark.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label class="" for="id_gender" id="id_gender">Gender / लिंग </label>
 
                                         </div>
@@ -145,16 +165,17 @@
                                         <div class="col-md-4">
                                             <label class="" for="id_photo" id="id_photo">Spouse / पति या पत्नी </label>
                                         </div>
-                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                        <div class="col-md-8">
                                             {{ form.spouse_name }}
                                             <span style="color:red">{{ form.photo.errors|striptags }}</span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Nationality / राष्ट्रीयता </label>
+                                            <label class="" for="id_photo" id="id_photo">Nationality /
+                                                राष्ट्रीयता </label>
                                         </div>
-                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                        <div class="col-md-8">
                                             {{ form.nationality }}
                                             <span style="color:red">{{ form.nationality.errors|striptags }}</span>
                                         </div>
@@ -175,7 +196,7 @@
                                         <div class="col-md-4">
                                             <label class="" for="id_photo" id="id_photo">Signature / हस्ताक्षर</label>
                                         </div>
-                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                        <div class="col-md-8" id="CurrentSignatureCheck">
                                             {{ form.signature }}
                                             <span style="color:red">{{ form.signature.errors|striptags }}</span>
                                         </div>
@@ -250,15 +271,7 @@
                                             <span style="color:red">{{ form.pin.errors|striptags }}</span>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Identification Mark / पहचान चिन्ह</label>
-                                        </div>
-                                        <div class="col-md-8" id="CurrentPhotoCheck">
-                                            {{ form.identification_mark }}
-                                            <span style="color:red">{{ form.identification_mark.errors|striptags }}</span>
-                                        </div>
-                                    </div>
+
                                 </div>
                                 <div class="form-group col-md-12">
 
@@ -292,6 +305,28 @@
                                         <div class="col-md-8">
                                             {{ form.rfid }}
                                             <span style="color:red">{{ form.rfid.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_mining_role" id="id_mining_role">Mining
+                                                Role </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.mining_role }}
+                                            <span style="color:red">{{ form.mining_role.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_immediate_staff" id="id_immediate_staff">Immediate
+                                                Staff</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.immediate_staff }}
+                                            <span style="color:red">{{ form.immediate_staff.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -345,36 +380,17 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue </label>
+                                            <label class="" for="id_medical_status" id="id_medical_status">Category
+                                                Address</label>
                                         </div>
                                         <div class="col-md-8">
-                                            {{ form.is_rescue }}
-                                            <span style="color:red">{{ form.is_rescue.errors|striptags }}</span>
+                                            {{ form.category_address }}
+                                            <span style="color:red">{{ form.category_address.errors|striptags }}</span>
                                         </div>
                                     </div>
+
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_mining_role" id="id_mining_role">Mining
-                                                Role </label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ form.mining_role }}
-                                            <span style="color:red">{{ form.mining_role.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_immediate_staff" id="id_immediate_staff">Immediate
-                                                Staff</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ form.immediate_staff }}
-                                            <span style="color:red">{{ form.immediate_staff.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
@@ -410,38 +426,14 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_blood_group" id="id_blood_group">Blood Group</label>
+                                            <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue </label>
                                         </div>
                                         <div class="col-md-8">
-                                            {{ form.blood_group }}
-                                            <span style="color:red">{{ form.blood_group.errors|striptags }}</span>
+                                            {{ form.is_rescue }}
+                                            <span style="color:red">{{ form.is_rescue.errors|striptags }}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_medical_status" id="id_medical_status">Medical
-                                                Status/Description</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ form.medical_status }}
-                                            <span style="color:red">{{ form.medical_status.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_medical_status" id="id_medical_status">Category
-                                                Address</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ form.category_address }}
-                                            <span style="color:red">{{ form.category_address.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
                             </fieldset>
                             <br/><br/>
                             <fieldset class="scheduler-border">
@@ -471,13 +463,15 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_votar_id_no" id="id_votar_id_no">Votar ID No</label>
+                                            <label class="" for="id_medical_status" id="id_medical_status">Medical
+                                                Status/Description</label>
                                         </div>
                                         <div class="col-md-8">
-                                            {{ form.voter_id_no }}
-                                            <span style="color:red">{{ form.voter_id_no.errors|striptags }}</span>
+                                            {{ form.medical_status }}
+                                            <span style="color:red">{{ form.medical_status.errors|striptags }}</span>
                                         </div>
                                     </div>
+
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_medical_ins_no" id="id_medical_ins_no">Medical Ins.
@@ -511,36 +505,6 @@
                                 </div>
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
-
-                                        <div class="col-md-4">
-                                            <label class="" for="id_date_of_joining" id="id_date_of_exit">Date of
-                                                Exit
-                                            </label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class='input-group date' id='doe_date_time_picker'>
-                                                {{ form.date_of_exit }}
-                                                <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
-                                                <!--                                        {{form.date_of_joining}}-->
-                                            </div>
-                                            <span style="color:red">{{ form.date_of_joining.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">Reason of Exit</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            {{ form.reason_of_exit }}
-                                            <span style="color:red">{{ form.reason_of_exit.errors|striptags }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group col-md-12">
-                                    <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_pan_no" id="id_pan_no">Service Book No</label>
                                         </div>
@@ -562,6 +526,15 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
+                                            <label class="" for="id_votar_id_no" id="id_votar_id_no">Votar ID No</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.voter_id_no }}
+                                            <span style="color:red">{{ form.voter_id_no.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label class="" for="id_pan_no" id="id_pan_no">Remarks</label>
                                         </div>
                                         <div class="col-md-8">
@@ -572,7 +545,38 @@
                                 </div>
                             </fieldset>
 
-                            <br/><br/>
+                            <br><br>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; ">Exit</span>
+                                </legend>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-6">
+
+                                        <div class="col-md-4">
+                                            <label class="" for="id_date_of_exit">Date of Exit</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class='input-group date' id='doe_date_time_picker'>
+                                                {{ form.date_of_exit }}
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                            <span style="color:red">{{ form.date_of_exit.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label class="" for="id_pan_no" id="id_pan_no">Reason of Exit</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form.reason_of_exit }}
+                                            <span style="color:red">{{ form.reason_of_exit.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <br><br>
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Last Qualification</span>
                                 </legend>
@@ -700,11 +704,8 @@
     </style>
     <script>
         $(document).ready(function () {
-            $('select#id_mine').addClass('form-control');
-            $('select#id_immediate_staff').addClass('form-control');
-            $('select#id_mining_role').addClass('form-control');
             if ($('div#CurrentPhotoCheck').children('a').length > 0) {
-                $("#CurrentPhotoCheck").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover')
+                $("div#CurrentPhotoCheck").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover')
                 $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover');
 
                 $('img#CurrentPhotoCheckOnHover').attr('data-toggle', 'tooltip');
@@ -717,7 +718,23 @@
                     placement: 'bottom',
                     html: true
                 });
+            };
+            if ($('div#CurrentSignatureCheck').children('a').length > 0) {
+                $("div#CurrentSignatureCheck").has("a").children('a').attr('id', 'CurrentSignatureCheckOnHover')
+                $('<img id="CurrentSignatureCheckOnHover" width="40px" height="40px" src="' + $('#CurrentSignatureCheckOnHover').attr("href") + '" />').insertAfter('#CurrentSignatureCheckOnHover');
+
+                $('img#CurrentSignatureCheckOnHover').attr('data-toggle', 'tooltip');
+
+                $('img#CurrentSignatureCheckOnHover').attr('class', 'red-tooltip');
+                $('img#CurrentSignatureCheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentSignatureCheckOnHover').attr("href") + "' />");
+                $("a#CurrentSignatureCheckOnHover").remove();
+                $('img[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'bottom',
+                    html: true
+                });
             }
+            ;
 
             $('#id_present_address').on('input', function () {
                 let checked = $('#same_address').prop('checked');
@@ -734,6 +751,49 @@
                     $('#id_permanent_address').val('');
                 }
             });
+            $('select#id_mine').change(function () {
+                let mine = $(this).val();
+                $.ajax({
+                    url: "{% url 'employee:get_dropdownlist' %}",
+                    data: {
+                        'id': mine,
+                        'args': 'role,immediate_staff'
+                    },
+                    beforeSend: function () {
+                        $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
+                        $('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
+                    },
+                    success: function (data) {
+                        if (data.hasOwnProperty('result')) {
+                            data = data.result;
+                            if(data.hasOwnProperty('role')) {
+                                let roles = data.role;
+                                roles = JSON.parse(roles);
+                                for (let role in roles) {
+                                    if (roles.hasOwnProperty(role)) {
+                                        $("select#id_mining_role").append($("<option />").val(roles[role].pk).text(roles[role].fields.name));
+                                    }
+                                }
+                            }
+                            if(data.hasOwnProperty('immediate_staff')) {
+                                let immediate_staffs = data.immediate_staff;
+
+                                immediate_staffs = JSON.parse(immediate_staffs);
+
+                                for (let immediate_staff in immediate_staffs) {
+                                    if (immediate_staffs.hasOwnProperty(immediate_staff)) {
+                                        $("select#id_immediate_staff").append($("<option />").val(immediate_staffs[immediate_staff].pk).text(immediate_staffs[immediate_staff].fields.name));
+
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    error: function () {
+                        console.log('Something Went Wrong!');
+                    }
+                });
+            });
 
             function Token_generate(token) {
                 $.ajax({
@@ -742,7 +802,7 @@
                         'token': token
                     },
                     success: function (data) {
-                        console.log('token', data);
+
                         if (data.hasOwnProperty('result')) {
                             data = data.result;
                             if (data.available) {
@@ -761,7 +821,9 @@
             var doneTypingInterval = 5000;
             var $input = $('#id_token_no');
             let token = $input.val()
-            Token_generate(token);
+            if (isEmpty(token)) {
+                Token_generate(token);
+            }
 
             $input.on('keyup', function () {
                 clearTimeout(typingTimer);

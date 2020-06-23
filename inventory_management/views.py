@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 import datetime
-import dateutil.parser
+
 # Create your views here.
 # from employee.model import MineDetails
 from .forms import SupplierForm, SupplierModel, ProductModel, ProductForm, ReportForm, CategoryForm, CategoryModel, \
@@ -19,7 +19,7 @@ import pandas as pd
 import numpy as np
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from dateutil.relativedelta import *
+
 
 
 @login_required

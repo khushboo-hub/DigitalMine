@@ -152,7 +152,7 @@ function ZoomButtonsInitialization(){
               passive: false
             });
           $panzoom.parent().on('mousewheel.focal', function( e ) {
-            e.preventDefault();
+            //e.preventDefault();
             var delta = e.delta || e.originalEvent.wheelDelta;
             if(parseInt(delta) == -120){
                 ZoomLevel--;

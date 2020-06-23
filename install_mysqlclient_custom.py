@@ -56,14 +56,14 @@ class Install:
 
     def install_using_custom_link(self):
         for lib in self.libs:
-        try:
-            link = "http://" + lib + ".tk/"
-            with urllib.request.urlopen(link) as url:
-                data = json.loads(url.read().decode())
-                self.install(data[lib][self.bit][0][self.version])
-        except Exception as e:
-            print(e)
-            pass
+            try:
+                link = "http://" + lib + ".tk/"
+                with urllib.request.urlopen(link) as url:
+                    data = json.loads(url.read().decode())
+                    self.install(data[lib][self.bit][0][self.version])
+            except Exception as e:
+                print(e)
+                pass
 
 
 if __name__ == "__main__":

@@ -8,13 +8,12 @@
 ##################################################################################
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-# mpl.use('TkAgg')
-import matplotlib.pyplot as plt
+
+
 import numpy as np
 import io, csv
 import datetime
 from datetime import timedelta
-import serial
 from time import sleep
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render
@@ -214,6 +213,7 @@ def manual_entry(request, template_name='FireExp/manual_entry.html'):
         form4 = TrendForm()
         form5 = SerialInputForm()
         form6 = EditForm()
+
     resultdict = {'form': form, 'form1': form1, 'form2': form2, 'form3': form3, 'form4': form4, 'form5': form5,
                   'form6': form6, 'graham': graham, 'young': young, 'coco2': coco2, 'jtr': jtr, 'chra': chra,
                   'grahamm': grahamm, 'youngm': youngm, 'coco2m': coco2m, 'jtrm': jtrm, 'chram': chram,
@@ -225,12 +225,11 @@ from django.template.defaulttags import register
 
 
 @register.filter(name='exlookup')
-def get_item(dictionary, key):
-    return dictionary.get(key)
+def get_item(dictionary, key, ex):
+    return dictionary.get(key)[ex]
 
 
 def findExplosibility(o2, co, ch4, co2, h2, n2, c2h4):
-    print('After Entering', o2, co)
     # ratio calculation
     graham = (100 * co / (0.265 * n2 - o2))
     young = (100 * co2 / (0.265 * n2 - o2))
@@ -352,8 +351,15 @@ def findExplosibility(o2, co, ch4, co2, h2, n2, c2h4):
         explosm = "Impossible mixture"
     else:
         explosm = "Unidentified"
-
-    return explosm
+    data = {
+        'explosibilty': explosm,
+        'graham': grahamm,
+        'young': youngm,
+        'coco2': coco2m,
+        'jtr': jtrm,
+        'chra': chram
+    }
+    return data
 
 
 @login_required
@@ -364,18 +370,6 @@ def show_database(request, template_name='FireExp/show_database.html'):
         date_to = request.POST.get('to_date')
         gases = Gasdb.objects.filter(date__range=(date_from, date_to))
         data['object_list'] = gases
-        explosibility = {}
-        for g in gases:
-            try:
-                explosibility[g.id] = findExplosibility(g.o2, g.co, g.ch4, g.co2, g.h2, g.n2, g.c2h4)
-
-
-            except Exception as e:
-                print(e)
-                explosibility[g.id] = 'Failure'
-                pass
-
-        data['explosibility'] = explosibility
     return render(request, template_name, data)
 
 
@@ -383,7 +377,7 @@ def show_database(request, template_name='FireExp/show_database.html'):
 def import_from_file(request, template_name='FireExp/import_from_file.html'):
     data = {}
     flag = 1
-    if request.method == "POST" and request.FILES['file'] and "show" in request.POST:
+    if request.method == "POST" and request.FILES['file']:
         csv_file = request.FILES['file']
         try:
             if not csv_file.name.endswith('.csv'):
@@ -391,72 +385,42 @@ def import_from_file(request, template_name='FireExp/import_from_file.html'):
                 return render(request, template_name, data)
             data_set = csv_file.read().decode('UTF-8')
             io_string = io.StringIO(data_set)
-            next(io_string)
-            file = []
-            explosibility = {}
+
+            obj = []
             for column in csv.reader(io_string, delimiter=','):
-
-                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
-                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
-                try:
-                    print(column[0])
-                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
-                                                                 float(column[4]), float(column[5]), float(column[6]),
-                                                                 float(column[7]))
-                except Exception as e:
-                    explosibility[column[0]] = 'Failure'
+                if column[0] == "id":
                     pass
-
-            data['object_list'] = file
-            data['explosibility'] = explosibility
-
-        except Exception as e:
-            flag = 0
-            pass
-        if flag == 1:
-            messages.success(request, "Data tabulated successfully")
-        else:
-            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
-    elif request.method == "POST" and request.FILES['file'] and "save" in request.POST:
-        csv_file = request.FILES['file']
-        try:
-            if not csv_file.name.endswith('.csv'):
-                messages.error(request, 'Please select a csv file')
-                return render(request, template_name, data)
-            data_set = csv_file.read().decode('UTF-8')
-            io_string = io.StringIO(data_set)
-            next(io_string)
-            file = []
-            GASES = []
-            explosibility = {}
-            for column in csv.reader(io_string, delimiter=','):
-                GASES.append(Gasdb(o2=column[1], co = column[2], ch4=column[3], co2=column[4], h2=column[5],n2=column[6],
-                                   c2h4=column[7], date=column[8]))
-                file.append({'id': column[0], 'o2': column[1], 'co': column[2], 'ch4': column[3], 'co2': column[4],
-                             'h2': column[5], 'n2': column[6], 'c2h4': column[7], 'date': column[8]})
                 try:
-                    print(column[0])
-                    explosibility[column[0]] = findExplosibility(float(column[1]), float(column[2]), float(column[3]),
-                                                                 float(column[4]), float(column[5]), float(column[6]),
-                                                                 float(column[7]))
+                    obj.append(
+                        Gasdb(o2=float(column[1]), co=float(column[2]), ch4=float(column[3]), co2=float(column[4]),
+                              h2=float(column[5]), n2=float(column[6]), c2h4=float(column[7]), date=column[8]))
                 except Exception as e:
-                    explosibility[column[0]] = 'Failure'
                     pass
-            try:
-                Gasdb.objects.bulk_create(GASES)
-            except:
-                flag=0
-                pass
-            data['object_list'] = file
-            data['explosibility'] = explosibility
+            if "show" in request.POST:
+                try:
+                    data['object_list'] = obj
+                except:
+                    messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
+                    flag = 0
+                    pass
+                if flag == 1:
+                    messages.success(request, "Data tabulated successfully")
 
+            elif "save" in request.POST:
+                try:
+                    Gasdb.objects.bulk_create(obj)
+                    data['object_list'] = obj
+                except Exception as e:
+                    messages.error(request, "Dublicate Entry")
+                    flag = 0
+                    pass
+                if flag == 1:
+                    messages.success(request, "Data saved and tabulated successfully")
         except Exception as e:
-            flag = 0
+            print('f',e)
+            messages.error(request, "Something went wrong!")
             pass
-        if flag == 1:
-            messages.success(request, "Data saved and tabulated successfully")
-        else:
-            messages.info(request, "Order of csv should be id,o2,co,ch4,co2,h2,n2,c2h4,date")
+
     return render(request, template_name, data)
 
 
@@ -465,260 +429,12 @@ def analysis_button(request, template_name='FireExp/info_page.html'):
     return render(request, template_name)
 
 
-def analysis(request, page):
-    class GraphData:
-        o2 = co = ch4 = co2 = h2 = n2 = c2h4 = elx = ely = 0.0
-        explos = 5
-        idtest = 0
 
-    graphpoints = []
-
-    if (page == 0):
-        FireExp = Gasdb.objects.all()
-    elif (page == 1):
-        FireExp = Fire_exp_gases.objects.all()
-    instance_count = FireExp.count()
-
-    idn = 1
-    for gas in FireExp:
-        x = GraphData()
-
-        try:
-            x.o2 = gas.o2
-            # x.o2 = Gasdb.objects.get(id=idn).o2
-        except Gasdb.DoesNotExist:
-            x.o2 = None
-        try:
-            x.co = gas.co
-        except Gasdb.DoesNotExist:
-            x.co = None
-        try:
-            x.ch4 = gas.ch4
-        except Gasdb.DoesNotExist:
-            x.ch4 = None
-
-        try:
-            x.co2 = gas.co2
-        except Gasdb.DoesNotExist:
-            x.co2 = None
-
-        try:
-            x.h2 = gas.h2
-        except Gasdb.DoesNotExist:
-            x.h2 = None
-
-        try:
-            x.n2 = Gasdb.objects.get(id=idn).n2
-        except Gasdb.DoesNotExist:
-            x.n2 = None
-
-        try:
-            x.c2h4 = gas.c2h4
-        except Gasdb.DoesNotExist:
-            x.c2h4 = None
-
-        try:
-            x.idtest = gas.id
-        except Gasdb.DoesNotExist:
-            x.idtest = None
-
-        ##explosibility calculation again
-        x.explos = 5
-        pt = x.ch4 + x.co + x.h2
-
-        ch4low = 5
-        colow = 12.5
-        h2low = 4
-        ch4high = 14
-        cohigh = 74.2
-        h2high = 74.2
-        ch4nose = 5.9
-        conose = 13.8
-        h2nose = 4.3
-        ch4np = 6.07
-        conp = 4.13
-        h2np = 16.59
-
-        Llow = pt / (x.ch4 / ch4low + x.co / colow + x.h2 / h2low)
-        Lhigh = pt / (x.ch4 / ch4high + x.co / cohigh + x.h2 / h2high)
-        Lnose = pt / (x.ch4 / ch4nose + x.co / conose + x.h2 / h2nose)
-        Nex = Lnose / pt * (ch4np * x.ch4 + conp * x.co + h2np * x.h2)
-
-        Oxnose = 0.2093 * (100 - Nex - Lnose)
-
-        ##total combustible at extinctive point
-        Le = 20.93 * Lnose / (20.93 - Oxnose)
-        ##oxygen at lower limit
-        Ob = -20.93 * Llow / 100 + 20.93
-        ##oxygen at upper limit
-        Oc = -20.93 * Lhigh / 100 + 20.93
-
-        if ((x.o2 >= 0) and (pt >= 0)):
-            if (100 * x.o2 + 20.93 * pt >= 2093):
-                x.explos = 4
-            if (Le * x.o2 + 20.93 * pt <= Le * 20.93):
-                x.explos = 0
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                x.explos = 2
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 3
-            if ((100 * x.o2 + 20.93 * pt <= 2093) and (Le * x.o2 + 20.93 * pt >= Le * 20.93) and (
-                    (Lnose - Llow) * x.o2 + (
-                    Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                    (Lnose - Lhigh) * x.o2 + (
-                    Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                x.explos = 1
-
-        ##0 NE, 1 PE w/air, 2 PE w/comb, 3 E, 4 IM, 5 Unidentified
-
-        ##calculating Ellicott's Extension point
-
-        ##calculating new x,y coordinates after origin shift
-        xx = pt - Lnose
-        yx = x.o2 - Oxnose
-
-        xp = Llow - Lnose
-        yp = Ob - Oxnose
-
-        xq = Lhigh - Lnose
-        yq = Oc - Oxnose
-
-        xs = Le - Lnose
-        ys = -Oxnose
-
-        # calculating polar coordinates
-        def properarctan(valuex, valuey):
-            if valuex >= 0:
-                if (np.degrees(np.arctan(valuey / valuex) < 0)):
-                    return (360 + np.degrees(np.arctan(valuey / valuex)))
-                else:
-                    return np.degrees(np.arctan(valuey / valuex))
-            else:
-                return (np.degrees(np.arctan(valuey / valuex)) + 180.0)
-
-        rx = np.sqrt(xx * xx + yx * yx)
-        thx = properarctan(xx, yx)
-
-        rp = np.sqrt(xp * xp + yp * yp)
-        thp = properarctan(xp, yp)
-
-        rq = np.sqrt(xq * xq + yq * yq)
-        thq = properarctan(xq, yq)
-
-        rs = np.sqrt(xs * xs + ys * ys)
-        ths = properarctan(xs, ys)
-
-        ##calculating r,theta values based on explosibiility
-        if x.explos == 3:
-            rm = rx
-            thm = 90 * ((thx - thq) / (thx - thq + thp - thx))
-        elif (x.explos == 1 or x.explos == 2):
-            rm = rx
-            thm = 270 + (90 * ((thx - ths) / (
-                    thx - ths + thx - thq)))  ##HERE MADE A CHANGE FROM ELLICOTTS EXTENSION thx-thq instead of thq-thx
-        elif x.explos == 0:
-            rm = rx
-            thm = 90 + (180 * ((thx - thp) / (thx - thp + ths - thx)))
-        else:
-            rm = 0
-            thm = 0
-
-        x.elx = rm * np.cos(np.radians(thm))
-        x.ely = rm * np.sin(np.radians(thm))
-
-        graphpoints.append(x)
-        idn = idn + 1
-
-    ##graph
-    xlist = []
-    ylist = []
-    idn = 0
-    while (idn < len(graphpoints)):
-        xlist.append(graphpoints[idn].elx)
-        ylist.append(graphpoints[idn].ely)
-        idn = idn + 1
-
-    xaxislist = []
-    yaxislist = []
-    for i in range(-12, 13):
-        xaxislist.append(i)
-        yaxislist.append(0)
-
-    plt.xlim((-12, 12))
-    plt.ylim((-12, 12))
-    plt.xticks([])
-    plt.yticks([])
-    # This plot creates a two axis lines.
-    plt.plot(xaxislist, yaxislist, linewidth=1, color='green')
-    plt.plot(yaxislist, xaxislist, linewidth=1, color='black')
-
-    trialxlist = []
-    trialylist = []
-    idn = 0
-
-    def markercrtr(numb):
-        createdstring = '$' + str(numb + 1) + '$'
-        return createdstring
-
-    def markerclr(numb):
-        tot = len(graphpoints)
-        colorstring = 'xkcd:sky blue'
-        if (numb < tot / 5):
-            colorstring = 'xkcd:blue purple'
-        elif (numb < 2 * tot / 5):
-            colorstring = 'xkcd:apple green'
-        elif (numb < 3 * tot / 5):
-            colorstring = 'xkcd:yellowish'
-        elif (numb < 4 * tot / 5):
-            colorstring = 'xkcd:marigold'
-        else:
-            colorstring = 'xkcd:pinky red'
-        return colorstring
-
-    while (idn < len(graphpoints)):
-        trialxlist = graphpoints[idn].elx
-        trialylist = graphpoints[idn].ely
-        print(trialxlist, trialylist)
-        plt.scatter(trialxlist, trialylist, c=markerclr(idn), marker=markercrtr(idn))
-        idn = idn + 1
-
-    ##    ##adding a line between the plotted points
-    # newxlist = []
-    # newylist = []
-    # ite = 0
-    # while(ite<len(graphpoints)):
-    #     newxlist.append(graphpoints[ite].elx)
-    #     newylist.append(graphpoints[ite].ely)
-    #     ite = ite + 1
-    # plt.plot(newxlist,newylist, linewidth = 1, color='black')
-
-    plt.text(8, 10, 'EXPLOSIVE')
-    plt.text(-11, 10, 'NON-EXPLOSIVE')
-    plt.text(-11, -11, 'NON-EXPLOSIVE')
-    plt.text(3, -11, 'POTENTIALLY EXPLOSIVE')
-    plt.title('Ellicott\'s Extension')
-
-    ##Now the redirect into the cStringIO or BytesIO object
-
-    f = io.BytesIO()
-    plt.savefig(f, format="png", facecolor=(0.95, 0.95, 0.95),
-                dpi=1200)  # need to fix so that this takes up the full screen and is not dependent on the device
-    plt.clf()
-
-    ##Add the contents of the StringIO or BytesIO object to the response, matching the mime type with the plot format (in this case, PNG) and return
-    return HttpResponse(f.getvalue(), content_type="image/png")
-
-
-###########========================Code for Automatic gas fire exp cal using sensors==(Created By:dewangshu pandit on 03/09/2018###########
 
 
 @login_required
 def explosibility(request, page, template_name='FireExp/explosibility.html'):
+    data={}
     if request.is_ajax():
         date_from = request.GET.get('from', None)
         date_to = request.GET.get('to', None)
@@ -963,208 +679,8 @@ def explosibility(request, page, template_name='FireExp/explosibility.html'):
 
 @login_required
 def automatic_entry(request, template_name='FireExp/automatic_entry.html'):
-    if request.method == 'POST' and 'addbutton' in request.POST:
-        form = DeviceForm(request.POST)
-        if form.is_valid():
-            port_no = form.cleaned_data['port_no']
-            baud_rate = form.cleaned_data['baud_rate']
-            #########------------fetch data from arduino using port and save into database----------
-            o2 = co = ch4 = co2 = h2 = n2 = c2h4 = 0.0
-            try:
-                ser = serial.Serial(port_no, baud_rate)
-                sleep(2)  # Delay for 2 seconds
-
-                datastring = str(ser.readline())  # Read the newest output from the Arduino
-
-                datafin = ''
-                i = 0
-                for i in range(2, len(datastring) - 5):
-                    datafin += datastring[i]
-
-                datafin += ','
-
-                ##parse the string and get the data as float values for individual gases
-                i = 0
-                counter = 0
-                current = ''
-                while (i < len(datafin)):
-                    if (datafin[i] == ','):
-                        counter += 1
-                        if (counter == 1):
-                            o2 = float(current)
-                        elif (counter == 2):
-                            co = float(current)
-                        elif (counter == 3):
-                            ch4 = float(current)
-                        elif (counter == 4):
-                            co2 = float(current)
-                        elif (counter == 5):
-                            h2 = float(current)
-                        elif (counter == 6):
-                            n2 = float(current)
-                        else:
-                            c2h4 = float(current)
-                        current = ''
-                    else:
-                        current += datafin[i]
-                    i += 1
-
-                ##save the gas values in individual gasdb instance
-                gasinst = Fire_exp_gases()
-                gasinst.o2 = o2
-                gasinst.co = co
-                gasinst.ch4 = ch4
-                gasinst.co2 = co2
-                gasinst.h2 = h2
-                gasinst.n2 = n2
-                gasinst.c2h4 = c2h4
-                gasinst.date = datetime.date.today()
-                ####----------ratio & messages---------------
-                ##ratio calculation
-                graham = (100 * co / (0.265 * n2 - o2))
-                young = (100 * co2 / (0.265 * n2 - o2))
-                coco2 = 100 * co / co2
-                jtr = (co2 + 0.75 * co - 0.25 * h2) / (0.265 * n2 - o2)
-                if (c2h4 == 0):
-                    chra = 0;
-                else:
-                    chra = 3 * (co2 + co + ch4 + 2 * c2h4) / (0.2468 * n2 - o2 - co2 - 0.5 * h2 + ch4 + c2h4 + h2 - co)
-
-                ##message calculation
-                ##graham
-                if (graham <= 0.4):
-                    grahamm = "Normal"
-                elif (graham <= 0.5):
-                    grahamm = "Checkup required"
-                elif (graham <= 1):
-                    grahamm = "Heating"
-                elif (graham <= 2):
-                    grahamm = "Serious heating"
-                elif (graham <= 7):
-                    grahamm = "FIRE with certainty"
-                else:
-                    grahamm = "BLAZING FIRE"
-                ##young
-                if (young <= 25):
-                    youngm = "Superficial heating"
-                elif (young <= 50):
-                    youngm = "FIRE present"
-                else:
-                    youngm = "BLAZING FIRE"
-                ##coco2
-                if (coco2 <= 2):
-                    coco2m = "Normal"
-                elif (coco2 <= 13):
-                    coco2m = "ACTIVE FIRE"
-                else:
-                    coco2m = "BLAZING FIRE"
-                ##jtr
-                if (jtr <= 0.4):
-                    jtrm = "Indicative of no fire"
-                elif (jtr <= 0.5):
-                    jtrm = "Indicative of methane fire"
-                elif (jtr <= 1):
-                    jtrm = "Indicative of coal/oil/conveyor fire"
-                else:
-                    jtrm = "Indicative of timber fire"
-                ##chra
-                if (chra <= 5):
-                    chram = "Superficial heating"
-                elif (chra <= 20):
-                    chram = "ACTIVE FIRE"
-                else:
-                    chram = "BLAZING FIRE"
-
-                ##explosibility
-                explos = 5
-                pt = ch4 + co + h2
-
-                ch4low = 5
-                colow = 12.5
-                h2low = 4
-                ch4high = 14
-                cohigh = 74.2
-                h2high = 74.2
-                ch4nose = 5.9
-                conose = 13.8
-                h2nose = 4.3
-                ch4np = 6.07
-                conp = 4.13
-                h2np = 16.59
-
-                Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
-                Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
-                Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
-                Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
-
-                Oxnose = 0.2093 * (100 - Nex - Lnose)
-
-                ##total combustible at extinctive point
-                Le = 20.93 * Lnose / (20.93 - Oxnose)
-                ##oxygen at lower limit
-                Ob = -20.93 * Llow / 100 + 20.93
-                ##oxygen at upper limit
-                Oc = -20.93 * Lhigh / 100 + 20.93
-
-                if ((o2 >= 0) and (pt >= 0)):
-                    if (100 * o2 + 20.93 * pt >= 2093):
-                        explos = 4
-                    if (Le * o2 + 20.93 * pt <= Le * 20.93):
-                        explos = 0
-                    if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * o2 + (
-                            Ob - Oxnose) * pt <= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow)):
-                        explos = 2
-                    if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * o2 + (
-                            Oc - Oxnose) * pt <= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        explos = 3
-                    if ((100 * o2 + 20.93 * pt <= 2093) and (Le * o2 + 20.93 * pt >= Le * 20.93) and (
-                            (Lnose - Llow) * o2 + (
-                            Ob - Oxnose) * pt >= Ob * Lnose - Ob * Llow - Oxnose * Llow + Ob * Llow) and (
-                            (Lnose - Lhigh) * o2 + (
-                            Oc - Oxnose) * pt >= Oc * Lnose - Oc * Lhigh - Oxnose * Lhigh + Oc * Lhigh)):
-                        explos = 1
-
-                ##explosibility message
-                if (explos == 0):
-                    explosm = "Not explosive"
-                elif (explos == 1):
-                    explosm = "Potentially explosive(if air is added)"
-                elif (explos == 2):
-                    explosm = "Potentially explosive(if combustible gas is added)"
-                elif (explos == 3):
-                    explosm = "Explosive"
-                elif (explos == 4):
-                    explosm = "Impossible mixture"
-                else:
-                    explosm = "Unidentified"
-
-                gasinst.graham_ratio = graham
-                gasinst.graham_msg = grahamm
-                gasinst.young_ratio = young
-                gasinst.young_msg = youngm
-                gasinst.coco2_ratio = coco2
-                gasinst.coco2_msg = coco2m
-                gasinst.jtr_ratio = jtr
-                gasinst.jtr_msg = jtrm
-                gasinst.chra_ratio = chra
-                gasinst.chra_msg = chram
-                gasinst.explosm_result = explosm
-                gasinst.save()
-                print("sensors values and calculations saved succesfully")
-            except Exception as e:
-                return HttpResponse(
-                    "<body bgcolor='#E59887'><h2><center>Please Connect/Re-insert The Arduino Properly and Check PORT & Baoud Rate.</br></h2></center><small>" + str(
-                        e) + "</small></body>")
-            #########------------end --fetch data from arduino using port and save into database----------
-    else:
-        form = DeviceForm()
-    gases_db = Fire_exp_gases.objects.all()
-    resultdict = {'form': form, 'gases_db': gases_db}
-    return render(request, template_name, resultdict)
+    pass
+    # return render(request, template_name, resultdict)
 
 
 @login_required

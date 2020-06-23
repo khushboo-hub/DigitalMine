@@ -72,7 +72,16 @@
                                 <th>H2</th>
                                 <th>N2</th>
                                 <th>C2H4</th>
+                                <th>Graham</th>
+                                <th>Young</th>
+                                <th>CO/CO2</th>
+                                <th>JTR</th>
+                                <th>CH</th>
                                 <th style="color: red;">Explosibility status</th>
+                                <th>x</th>
+                                <th>y</th>
+                                <th>quadrant</th>
+                                <th>color</th>
 
                             </tr>
                             </thead>
@@ -89,7 +98,16 @@
                                     <td>{{ book.h2 }}</td>
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
-                                    <td>{{ explosibility|exlookup:book.id }}</td>
+                                    <td>{{ book.findExplosibility.graham }}</td>
+                                    <td>{{ book.findExplosibility.young }}</td>
+                                    <td>{{ book.findExplosibility.coco2 }}</td>
+                                    <td>{{ book.findExplosibility.jtr }}</td>
+                                    <td>{{ book.findExplosibility.chra }}</td>
+                                    <td>{{ book.findExplosibility.explosibility }}</td>
+                                <td>{{ book.graph.x }}</td>
+                                    <td>{{ book.graph.y }}</td>
+                                    <td>{{ book.graph.quadrant }}</td>
+                                    <td>{{ book.graph.color }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -97,6 +115,20 @@
                     </div><!--end Table content -->
                 </div>
             </section>
+        </div>
+    </div>
+      <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-center">Explosibility Graph</h4>
+                </div>
+                <div class="modal-body">
+                    <div id='myDiv' class=“plotly” align=“center”>
+                        <!-- Plotly chart will be drawn inside this DIV --></div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -108,6 +140,290 @@
                 format: 'YYYY-MM-DD'
             });
             $('.loader-container').hide();
+            $('table#content').DataTable({
+                dom: 'Bflrtip',
+                buttons: [
+                    'copy', 'excel', 'pdf', 'csv', {
+                        text: 'Graph',
+                        action: function (e, dt, node, config) {
+
+                            $('#myModal').modal('toggle');
+                        }
+                    }
+                ], "initComplete": function (settings, json) {
+
+                    let tabledata = settings.aoData;
+                    GenerateGraph(tabledata);
+                },
+                 "columnDefs": [
+                    {
+                        "targets": [15, 16, 17, 18],
+                        "visible": false
+                    }
+                ]
+
+            })
+            function GenerateGraph(tabledata) {
+
+                var x_list = [[0], [0], [0], [0]];
+                var y_list = [[0], [0], [0], [0]];
+                var text = [[''], [''], [''], ['']];
+                var colors = [[''], [''], [''], ['']];
+                var dates = [[''], [''], [''], ['']];
+                let index = 0;
+                let xhighest = -1;
+                let yhighest = -1;
+
+                for (let data in tabledata) {
+                    if (tabledata.hasOwnProperty(data)) {
+                        if (tabledata[data].hasOwnProperty('_aData')) {
+                            let row = tabledata[data]._aData;
+                            let x = row[15];
+                            let y = row[16];
+                            let quadrant = row[17];
+                            let color = row[18];
+                            let date = row[1];
+
+                            xhighest = (Math.abs(parseFloat(x)) > Math.abs(xhighest)) ? Math.abs(parseFloat(x)) : Math.abs(xhighest);
+                            yhighest = (Math.abs(parseFloat(y)) > Math.abs(yhighest)) ? Math.abs(parseFloat(y)) : Math.abs(yhighest);
+                            x_list[quadrant].push(x);
+                            y_list[quadrant].push(y);
+                            text[quadrant].push((index + 1).toString());
+                            colors[quadrant].push(color);
+                            dates[quadrant].push(date);
+                            index += 1;
+                        }
+                    }
+                }
+                var highest = Math.max.apply(Math, [Math.abs(xhighest), Math.abs(yhighest)]);
+                highest = highest * 1.2;
+                console.log(highest);
+                var trace1 = {
+                    x: x_list[0],
+                    y: y_list[0],
+                    xa: dates[0],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+                    name: dates,
+                    text: text[0],
+                    textfont: {
+                        {#family: 'sans serif',#}
+                        size: 12,
+                        color: colors[0],
+                        weight: '900'
+                    },
+                    marker: {size: dates[0], color: '#4caf50'},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Non Combustible Non-Explosive(' + (x_list[0].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                };
+
+                var trace2 = {
+                    x: x_list[1],
+                    y: y_list[1],
+                    xa: dates[1],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+                    {#name:dates,#}
+                    text: text[1],
+                    textfont: {
+                        {#family: 'sans serif',#}
+                        size: 12,
+                        color: colors[1],
+                        weight: '900'
+                    },
+                    marker: {size: dates[1], color: '#8bc34a'},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Clean Fuel Non-Explosive(' + (x_list[1].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                    showlegend: true
+                };
+                var trace3 = {
+                    x: x_list[2],
+                    y: y_list[2],
+                    xa: dates[2],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+                    {#name:dates,#}
+                    text: text[2],
+                    textfont: {
+                        {#family: 'sans serif',#}
+                        size: 12,
+                        color: colors[2],
+                        weight: '900'
+                    },
+                    marker: {size: dates[2], color: '#ff9800'},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Explosive(' + (x_list[2].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                };
+                var trace4 = {
+                    x: x_list[3],
+                    y: y_list[3],
+                    xa: dates[3],
+                    mode: 'text+dates+markers',
+                    type: 'scatter',
+                    {#name:dates,#}
+                    text: text[3],
+                    textfont: {
+                        {#family: 'sans serif',#}
+                        size: 12,
+                        color: colors[3],
+                        weight: '900'
+                    },
+                    marker: {size: dates[3], color: '#f44336'},
+                    textposition: 'bottom center',
+
+                    hoveron: 'points',
+                    hovertemplate: "<b>%{marker.size}<b><extra></extra>",
+
+                    name: '<b>Potentialy Explosive(' + (x_list[3].length - 1) + ')</b>',
+                    hoverinfo: 'x+y',
+                };
+
+                var data = [trace1, trace2, trace3, trace4];
+                var layout = {
+                    autosize: true,
+
+                    width: 860,
+                    xaxis: {
+                        title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",
+                        tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                        tick0: 0,
+                        dtick: 10,
+                        autoscale: false,
+                        {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
+                        range: [-highest * 1.2, highest * 1.2],
+                        ticks: "outside",
+                        showgrid: true,
+                        zeroline: true,
+                        showline: true,
+                        mirror: 'ticks',
+                        gridcolor: '#bdbdbd',
+                        gridwidth: 0.05,
+                        zerolinecolor: '#969696',
+                        zerolinewidth: 3,
+                        linecolor: '#636363',
+                        linewidth: 6,
+                        {#side:'right'#}
+                    },
+                    yaxis: {
+                        title: "<b>(TOTAL EFFECTIVE COMBUSTIBLE IN %)</b>",
+                        tickmode: "linear", //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+                        tick0: 0,
+                        dtick: 2,
+                        autoscale: false,
+                        {#yanchor:'right',#}
+                        ticks: 'inside',
+                        {#range: [-1*((highest*lowest)/2), ((highest*lowest)/2)],#}
+                        range: [-highest * 1.2, highest * 1.2],
+                        showgrid: true,
+                        zeroline: true,
+                        showline: true,
+                        mirror: 'ticks',
+                        gridcolor: '#bdbdbd',
+                        gridwidth: 0.15,
+                        zerolinecolor: '#969696',
+                        zerolinewidth: 3,
+                        linecolor: '#636363',
+                        linewidth: 6,
+
+                    },
+                    annotations: [{
+                        xref: 'x',
+                        yref: 'y',
+                        x: -highest * 0.5,
+                        y: highest,
+                        xanchor: 'right',
+
+                        font: {
+                            family: 'Courier New, monospace',
+                            size: 11,
+                            color: '#8bc34a'
+                        },
+                        yanchor: 'top',
+                        text: '<b>CLEAN FUEL NON-EXPLOSIVE</b>',
+                        showarrow: false
+                    },
+                        {
+                            xref: 'x',
+                            yref: 'y',
+                            x: highest * 0.5,
+                            y: highest,
+                            xanchor: 'left',
+
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 11,
+                                color: '#ff9800'
+                            },
+                            yanchor: 'top',
+                            text: '<b>EXPLOSIVE</b>',
+                            showarrow: false
+                        },
+                        {
+                            xref: 'x',
+                            yref: 'y',
+                            x: -highest * 0.45,
+                            y: -highest,
+                            xanchor: 'right',
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 11,
+                                color: '#4caf50'
+                            },
+
+                            yanchor: 'bottom',
+                            text: '<b>NON COMBUSTIBLE NON-EXPLOSIVE</b>',
+                            showarrow: false
+                        }, {
+                            xref: 'x',
+                            yref: 'y',
+                            x: highest * 0.5,
+                            y: -highest,
+                            font: {
+                                family: 'Courier New, monospace',
+                                size: 11,
+                                color: '#f44336'
+                            },
+                            xanchor: 'left',
+
+                            yanchor: 'bottom',
+                            text: '<b>POTENTIALLY EXPLOSIVE</b>',
+                            showarrow: false
+                        },
+                    ],
+
+                    showlegend: true,
+                    legend: {
+                        y: 1,
+                        x: 0,
+                        "orientation": "h",
+                        font: {
+                            family: 'sans-serif',
+                            size: 10,
+                            color: '#000'
+                        },
+                        bgcolor: '#E2E2E2',
+                        bordercolor: '#FFFFFF',
+                        borderwidth: 2
+                    }
+                };
+                var config = {responsive: true}
+                Plotly.newPlot('myDiv', data, layout, config, {modeBarButtonsToRemove: ['autoScale2d']});
+            }
         });
     </script>
 {% endblock %}

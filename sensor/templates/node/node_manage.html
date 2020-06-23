@@ -83,7 +83,21 @@
                                         <br>
                                         <br>
                                         {% if book.isgoaf %}
-                                            <a href="{% url 'sensor:ellicots' book.id|encrypt %}"
+                                            <a href="#"
+                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                               title="Generate Ellicots Graph.">
+                                                <span class="glyphicon glyphicon-picture"></span>
+                                            </a>
+                                            <br>
+                                            <br>
+                                            <a href="#"
+                                               onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
+                                               title="Generate Ellicots Graph.">
+                                                <span class="glyphicon glyphicon-picture"></span>
+                                            </a>
+                                            <br>
+                                            <br>
+                                            <a href="#"
                                                onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1600, height=1000','title=Hello'); return false;"
                                                title="Generate Ellicots Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>

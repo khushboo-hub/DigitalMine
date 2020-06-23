@@ -9,10 +9,7 @@
 
 import datetime
 
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-###################
+import requests
 
 from background_task import background
 from django.contrib import messages
@@ -56,18 +53,33 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
     return render(request, template_name, data)
 
 
+import json
+
+
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
     profile = get_object_or_404(profile_extension, user_id=request.user.id)
-    if profile.mine_id is not None:
-        form = EmployeeForm(profile.mine_id.id, initial={'mine': profile.mine_id.id})
+    if request.user.is_superuser:
+        form = EmployeeForm()
+        form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
+        form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
     else:
-        form = EmployeeForm(1)
+        if profile.mine_id is not None:
+            form = EmployeeForm(initial={'mine': profile.mine_id})
+            form.fields['mine'].widget.attrs['readonly'] = True
+            form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=profile.mine_id.id)
+            form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=profile.mine_id.id)
+            # form.fields['mine'].queryset=MineDetails.objects.all()
+        else:
+            form = EmployeeForm()
+            form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
+            form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
 
     if request.method == 'POST':
-        form = EmployeeForm(request.POST.get('mine'),request.POST or None, request.FILES or None)
+        form = EmployeeForm(request.POST or None, request.FILES or None)
+        # form.fields['mine'].widget.attrs['disabled'] = False
         if form.is_valid():
-            employee=form.save()
+            employee = form.save()
             # fs=profile_extension()
             # fs.mine_id=employee.mine
             # fs.user_id=employee.id
@@ -79,15 +91,35 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
 
 @login_required
+def get_dropdownlist(request):
+    data = {}
+    if request.is_ajax():
+
+        result = {}
+        id = request.GET.get('id', None)
+        args = request.GET.get('args', None)
+        args = args.split(',')
+
+        if 'role' in args:
+            result['role'] = serializers.serialize('json', MiningRole.objects.filter(mine_id=id), fields=('id', 'name'))
+        if 'immediate_staff' in args:
+            result['immediate_staff'] = serializers.serialize('json', Employee.objects.filter(mine_id=id),fields=('id', 'name'))
+        data['result']=result
+    else:
+        data['error'] = 'Something went wrong!'
+    return JsonResponse(data)
+
+
+@login_required
 def employee_edit(request, pk, template_name='employee/employee_add.html'):
     book = get_object_or_404(Employee, pk=pk)
-    form = EmployeeForm(book.mine_id, request.POST or None, request.FILES or None, instance=book)
-    print('Form Errors', form.errors)
+    form = EmployeeForm(request.POST or None, request.FILES or None, instance=book)
+    form.fields['mine'].widget.attrs['readonly'] = True
+    form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
+    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id)
     if form.is_valid():
-        print('form is valid')
         try:
             form.save()
-            print("form saved")
             return redirect('employee:employee_manage')
         except Exception as e:
             print("error msg-->", e)
@@ -170,9 +202,6 @@ def more_details_ajax(request):
     return JsonResponse(data)
 
 
-
-
-
 @login_required
 def generate_login_details_ajax(request):
     data = {}
@@ -191,16 +220,16 @@ def generate_login_details_ajax(request):
                                                 email=email,
                                                 password=password)
 
-
                 current_site = get_current_site(request)
-                sendverifyemail(current_site.domain,user.username,email,urlsafe_base64_encode(force_bytes(user.pk)),account_activation_token.make_token(user))
+                sendverifyemail(current_site.domain, user.username, email, urlsafe_base64_encode(force_bytes(user.pk)),
+                                account_activation_token.make_token(user))
                 user.is_active = False
                 user.save()
                 employee = get_object_or_404(Employee, email=email)
                 fs = profile_extension()
                 fs.user_id = user
                 fs.mine_id = employee.mine
-                fs.profile_avatar=employee.photo
+                fs.profile_avatar = employee.photo
                 fs.save()
 
                 data['confirm_registration'] = 'Please confirm your email address to complete the registration'
@@ -224,8 +253,8 @@ def generate_login_details_ajax(request):
 
 
 @background(schedule=1)
-def sendverifyemail(domain,user,email,uid,token):
-    print('Email Background',domain,user,email,uid,token)
+def sendverifyemail(domain, user, email, uid, token):
+    print('Email Background', domain, user, email, uid, token)
     mail_subject = 'Activate your Miner account.'
     message = render_to_string('acc_active_email.html', {
         'user': user,
@@ -241,7 +270,7 @@ def sendverifyemail(domain,user,email,uid,token):
         email.send()
         return True
     except Exception as e:
-        print('error',e)
+        print('error', e)
         sendverifyemail(domain, user, email, uid, token)
 
 
@@ -270,66 +299,6 @@ def fetch_role_ajax(request):
     return HttpResponse(data)
 
 
-# @login_required
-# def getsensordata(request):
-    # try:
-    #     print("------Reading collection starts now------")
-    #     sr = serial.Serial("COM3",9600)
-    #     st = list(str(sr.readline(),'utf-8'))
-    #     sr.close()
-    #     print("------Reading collection ends successfully------")
-    #     #return  str(''.join(st[:]))
-    #     return HttpResponse(str(''.join(st[:])))
-    # except Exception as e:
-    #     return HttpResponse("<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>"+str(e)+"</small>")
-
-    ################################Testing for insert data continue##############
-    # i=1
-    # while True:
-    #     f = SensorData()
-    #     f.data1=340+i
-    #     f.save()
-    #     # i+=1
-    #
-    # # f.data1="3545"
-    # # f.save()
-    # return HttpResponse("Data Inserted Success")
-
-    #################################################################################
-
-    #############CONTINUOUS INSERT DATA FROM ARDUINO ##########
-
-    # try:
-    #     while True:
-    #         sr = serial.Serial("COM4", 9600)
-    #         st = list(str(sr.readline(), 'utf-8'))
-    #         sr.close()
-    #         ard_data = str(''.join(st[:]))
-    #         f = SensorData()
-    #         f.data1 = ard_data
-    #         f.save()
-    # except Exception as e:
-    #     ####################
-    #     fig, ax = plt.subplots()
-    #     line, = ax.plot(np.random.rand(10))
-    #     ax.set_ylim(0, 1)
-    #
-    #     def update(data):
-    #         line.set_ydata(data)
-    #         return line,
-    #
-    #     def data_gen():
-    #         while True:
-    #             yield np.random.rand(10)
-    #
-    #     ani = animation.FuncAnimation(fig, update, data_gen, interval=1000)
-    #     plt.show()
-    #     ###################
-    #     return HttpResponse(
-    #         "<h2>Please Connect The Arduino Properly and Check PORT.</br></h2><small>" + str(e) + "</small>")
-
-
-
 
 @login_required
 def add_mine(request, template_name='mine/mine_add.html'):
@@ -356,7 +325,7 @@ def manage_mine(request, template_name='mine/mine_manage.html'):
 
 @login_required
 def edit_mine(request, pk, template_name='mine/mine_add.html'):
-    pk=decrypt(pk)
+    pk = decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
     form = MineDetailsForm(request.POST or None, request.FILES or None, instance=book)
     if request.method == "POST":
@@ -368,7 +337,7 @@ def edit_mine(request, pk, template_name='mine/mine_add.html'):
 
 @login_required
 def delete_mine(request, pk):
-    pk=decrypt(pk)
+    pk = decrypt(pk)
     book = get_object_or_404(MineDetails, pk=pk)
     book.delete()
     return redirect('employee:manage_mine')
@@ -392,7 +361,6 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
         form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         mine_name = MineDetails.objects.get(id=profile.mine_id.id)
 
-
     if request.method == "POST":
         if request.user.is_superuser:
             form = MiningRoleForm(request.POST or None)
@@ -401,7 +369,7 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
             if not request.user.is_superuser:
                 fs.mine_id = profile.mine_id.id
             fs.save()
-            #messages.add_message(request, messages.SUCCESS, 'Changes successfully saved.')
+            # messages.add_message(request, messages.SUCCESS, 'Changes successfully saved.')
             messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
     return render(request, template_name,
@@ -527,7 +495,7 @@ def add_mining_shift(request, mine_id, template_name='mine/add_mining_shift.html
         except Exception as e:
             messages.error(request, 'Oops!, Something went wrong!')
             pass
-    return render(request, template_name, {'form': form, 'mine_name': mine_name,'mine_id':mine_id})
+    return render(request, template_name, {'form': form, 'mine_name': mine_name, 'mine_id': mine_id})
 
 
 @login_required
@@ -541,7 +509,7 @@ def edit_mining_shift(request, pk, mine_id, template_name='mine/add_mining_shift
         if form.is_valid():
             form.save()
             return redirect('/employee/manage_mining_shift/' + str(mine_id))
-    return render(request, template_name, {'form': form,'mine_name': mine_name,'mine_id':mine_id})
+    return render(request, template_name, {'form': form, 'mine_name': mine_name, 'mine_id': mine_id})
 
 
 @login_required
@@ -580,15 +548,12 @@ def update_shift_link_ajax(request):
         if mode == '0':
             try:
                 emp_table = Employee.objects.get(id=miner_id)
-
                 emp_name = emp_table.name
                 data['employee_name'] = str(emp_name)
                 mine_id = emp_table.mine_id
-                mine_name = emp_table.mine
-                # print(str(emp_name)+" "+str(mine_id)+" "+str(mine_name))
-                # mine_shift_table = MineShift.objects.values_list().filter(mine_id=mine_id)
                 data['result'] = serializers.serialize('json', MineShift.objects.filter(mine_id=mine_id), fields=('id',
                                                                                                                   'shift_name',
+                                                                                                                  'shift',
                                                                                                                   'time_from',
                                                                                                                   'time_to',
                                                                                                                   'mine_id',
@@ -596,14 +561,6 @@ def update_shift_link_ajax(request):
                                                                                                                   'created_date'))
 
                 EmployeeShift = EmployeeShiftAssign.objects.filter(employee_id=miner_id).order_by('-id')[0]
-                print(EmployeeShift.employee_id)
-
-                # mine_shift.append({'id':mine_row.id,'shift_name':mine_row.shift_name,'time_from':mine_row.time_from,'time_to':mine_row.time_to})  # 3rd attribute
-
-                # data['emp_id'] = emp_table.id
-                # data['emp_name'] = emp_name
-                # data['mine_id'] = mine_id
-                # data['mine_name'] = mine_name
                 data['assigned_shift'] = str(EmployeeShift.mine_shift_id)
 
                 return JsonResponse(data)
@@ -612,19 +569,8 @@ def update_shift_link_ajax(request):
                 data['error'] = "Something Went Wrong!"
                 return JsonResponse(data)
         elif mode == '1':
-            print('Mode 2')
-            print(mine_shift_id)
-            # try:
-            #     obj = EmployeeShiftAssign.objects.get(employee_id=miner_id)
-            #     now = datetime.datetime.now()
-            #     curr_date = now.strftime("%Y-%m-%d")
-            #     obj.modified_date = curr_date
-            #     obj.mine_shift_id = str(mine_shift_id)
-            #     obj.save()
-            # except EmployeeShiftAssign.DoesNotExist:
             obj = EmployeeShiftAssign()
             obj.employee_id = miner_id
-            print(mine_shift_id)
             obj.mine_shift_id = mine_shift_id
             now = datetime.datetime.now()
             curr_date = now.strftime("%Y-%m-%d")
@@ -641,28 +587,29 @@ def update_shift_link_ajax(request):
 
 
 @login_required
-def MinimumWage(request,template_name='employee/minimum_wage.html'):
-    form=RateOfMinimumWageForm()
-    if request.method=="POST":
-        form=RateOfMinimumWageForm(request.POST or None)
-        print('form errors',form.errors)
+def MinimumWage(request, template_name='employee/minimum_wage.html'):
+    form = RateOfMinimumWageForm()
+    if request.method == "POST":
+        form = RateOfMinimumWageForm(request.POST or None)
+        print('form errors', form.errors)
         if form.is_valid():
             form.save()
             return redirect('employee:manage_minimum_wage')
-    return render(request,template_name,{'form':form})
+    return render(request, template_name, {'form': form})
+
 
 @login_required
-def ManageMinimumWage(request,template_name='employee/manage_minimum_wage.html'):
-    minimum_wage=RateOfMinimumWages.objects.filter(mine_id=1)
-    form=RateOfMinimumWageForm()
+def ManageMinimumWage(request, template_name='employee/manage_minimum_wage.html'):
+    minimum_wage = RateOfMinimumWages.objects.filter(mine_id=1)
+    form = RateOfMinimumWageForm()
     mine_table = MineDetails.objects.all()
-    selected=0
+    selected = 0
     if request.method == "POST":
-        selected=request.POST.get('mine_id')
+        selected = request.POST.get('mine_id')
         minimum_wage = RateOfMinimumWages.objects.filter(mine_id=selected)
-        selected=int(selected)
+        selected = int(selected)
 
-    return render(request,template_name,{'data':minimum_wage,'mine':mine_table,'selected':selected})
+    return render(request, template_name, {'data': minimum_wage, 'mine': mine_table, 'selected': selected})
 
 
 @login_required
@@ -704,40 +651,44 @@ def details_employee_shift_assign(request, emp_id):
     # print(final_data1)
     # return HttpResponse(final_data1)
     return render(request, "employee/shift_assign_report.html", final_data1)
+
+
 from django.template.defaulttags import register
 
+
 @register.filter(name='calculateage')
-def related_deltas(obj,pk):
+def related_deltas(obj, pk):
     if obj == "age":
-        return MedicalReport.age(MedicalReport,pk)
-    elif obj=="nextdate":
+        return MedicalReport.age(MedicalReport, pk)
+    elif obj == "nextdate":
         return MedicalReport.nextdate(MedicalReport, pk)
-    elif obj=="lastdate":
-        return MedicalReport.lastdate(MedicalReport,pk)
+    elif obj == "lastdate":
+        return MedicalReport.lastdate(MedicalReport, pk)
+
 
 @login_required
-def update_medical(request,emp_id,template_name='employee/update_medical.html'):
+def update_medical(request, emp_id, template_name='employee/update_medical.html'):
     emp_table = Employee.objects.get(id=emp_id)
-    data={}
-    form = MedicalReportForm(initial={'employee_id':emp_table.id})
+    data = {}
+    form = MedicalReportForm(initial={'employee_id': emp_table.id})
     data['form'] = form
     data['employee_name'] = emp_table.name
     data['mine_name'] = emp_table.mine.name
-    data['emp_id']=emp_id
-    data['medical_history']=MedicalReport.objects.filter(employee_id=emp_id)
+    data['emp_id'] = emp_id
+    data['medical_history'] = MedicalReport.objects.filter(employee_id=emp_id)
     try:
         data['medical'] = MedicalReport.objects.filter(employee_id=emp_id).order_by('-id')[0]
     except:
         pass
     if request.method == "POST":
-        form = MedicalReportForm(request.POST or None,request.FILES or None)
-        print('FORM ERRORS',form.errors)
+        form = MedicalReportForm(request.POST or None, request.FILES or None)
+        print('FORM ERRORS', form.errors)
         if form.is_valid():
             fs = form.save(commit=False)
             fs.mine_id = emp_table.mine
             fs.employee_id = emp_table
             fs.save()
-            messages.success(request,'Successfully')
+            messages.success(request, 'Successfully')
 
     return render(request, template_name, data)
 
@@ -765,21 +716,6 @@ class ContactUsPageView(TemplateView):
 
 def contactview(request):
     pass
-    # subject = request.POST.get('topic', '')
-    # message = request.POST.get('message', '')
-    # from_email = request.POST.get('email', '')
-    #
-    # if subject and message and from_email:
-    #     try:
-    #         # send_mail(subject, message, from_email, ['change@this.com'])
-    #     except BadHeaderError:
-    #         return HttpResponse('Invalid header found.')
-    #     return HttpResponseRedirect('/contact/thankyou/')
-    # else:
-    #     return render_to_response('contactsus.html', {'form': ContactForm()})
-    #
-    # return render_to_response('contactsus.html', {'form': ContactForm()},
-    #                           RequestContext(request))
 
 
 def thankyou(request, template='thankyou.html'):
@@ -821,21 +757,33 @@ def profile_ajax(request):
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
 
+
 from django.utils.crypto import get_random_string
+
+
 @login_required
 def validate_token(request):
-    data={}
+    data = {}
     available = 0
     if request.is_ajax():
-        token=request.GET.get('token')
+        print(request)
+        token = request.GET.get('token')
 
         try:
-            check = get_object_or_404(Employee,token_no=token)
-            token = get_random_string()
-            available = 1
-        except :
+            check = get_object_or_404(Employee, token_no=token)
+            print('check user', check.id, request.user.id)
+            if not check.id == request.user.id:
+                token = get_random_string()
+                available = 1
+        except:
             pass
-        data['result'] = {"token":token,"available":available}
+        data['result'] = {"token": token, "available": available}
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
+
+@background(schedule=10)
+def notify_user():
+    # lookup user by id and send them a message
+    print('NOTIFTY USER')

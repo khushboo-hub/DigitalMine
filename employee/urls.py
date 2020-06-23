@@ -13,6 +13,7 @@ urlpatterns = [
     path('delete_mine/<int:pk>', views.delete_mine, name='delete_mine'),
     path('show_role_chart/', views.show_role_chart, name='show_role_chart'),
     path('fetch_role_ajax/', views.fetch_role_ajax, name='fetch_role_ajax'),
+    path('get_dropdownlist',views.get_dropdownlist,name='get_dropdownlist'),
 
     path('', views.employee_manage, name='employee_manage'),
     path('new',views.employee_add, name='employee_add'),

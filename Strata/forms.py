@@ -23,9 +23,8 @@ class Strata_location_Form(forms.ModelForm):
         fields = ['mine_name','location_name' ,'tag_no','x_axis','y_axis','description','created_date']
 
 class Strata_sensor_Form(forms.ModelForm):
-    def __init__(self, mine=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(Strata_sensor_Form, self).__init__(*args, **kwargs)  # populates the post
-        self.fields['location_id'].queryset = Strata_location.objects.filter(mine_name_id=mine)
 
 
     sensor_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder': 'ex: Convergence Indicator'}))

@@ -1,5 +1,6 @@
 import os
 
+from django.core import serializers
 from django.db import models
 
 # Create your models here.
@@ -156,7 +157,7 @@ class Employee(models.Model):
     modified_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.pk) + "-" + self.name
+        return self.name
 
     def mine_name(self):
         return "Hello"
@@ -186,6 +187,9 @@ class MineShift(models.Model):
     def __str__(self):
         return str(self.pk) + "-" + self.shift_name
 
+    @property
+    def shift(self):
+        return self.shift_name+"("+self.time_from+"-"+self.time_to+")"
     class Meta:
         db_table = "MineShift"
 
