@@ -512,6 +512,8 @@ def fetch_sensor_values_ajax(request):
 def report_fetch_sensor_values_ajax(request):
     data = {}
     if request.is_ajax():
+        for i in range(1,1000):
+            print(i)
         sensor_id = request.GET.get('id', None)
         date_from = request.GET.get('from', None)
         date_to = request.GET.get('to', None)

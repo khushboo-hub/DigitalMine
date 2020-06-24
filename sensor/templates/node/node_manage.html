@@ -54,17 +54,16 @@
                                         {% endif %}
                                     </h4>
                                     </td>
-                                    <td><img title="Image 1" class="image image-responsive"
+                                    <td class="text-center"><img data-toggle="tooltip" data-original-title="Image 1" class="image image-responsive"
                                              src="/media/{{ book.photo1 }}"
                                              height="60" width="60"/>
-                                        <img title="Image 2" class="image image-responsive"
+                                        <img data-toggle="tooltip" data-original-title="Image 2" class="image image-responsive"
                                              src="/media/{{ book.photo2 }}"
                                              height="60" width="60"/>
                                     </td>
 
                                     <td class="text-center"><input
                                             {% if background|lookup:book.id %}checked {% endif %}
-                                            {#                                            {% if not book.isgoaf %}disabled {% endif %}#}
                                             data-url="{% url 'sensor:start_save_multiple_sensor' book.mine_id_id book.id %}"
                                             id="isAcquire{{ book.id }}"
                                             data-val="{{ book.id }}" class="DataAcquisition"
@@ -77,7 +76,7 @@
                                         <a href="{% url 'sensor:manage_sensor' book.mine_id.id|encrypt book.id|encrypt %}"
                                            class="manageSensor"
                                            data-url="{% url 'sensor:manage_sensor' book.mine_id.id book.id %}" 0
-                                           title="Manage Sensor">
+                                           data-toggle="tooltip" data-original-title="Manage Sensor">
                                             <span class="glyphicon glyphicon-plus"></span>
                                         </a>
                                         <br>
@@ -85,21 +84,19 @@
                                         {% if book.isgoaf %}
                                             <a href="#"
                                                onclick="window.open('{% url 'sensor:ellicots' book.id|encrypt %}', 'Ellicots Graph', 'width=1300, height=900','title=Hello'); return false;"
-                                               title="Generate Ellicots Graph.">
+                                               data-toggle="tooltip" data-original-title="Generate Ellicots Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
-                                            <br>
-                                            <br>
+                                            &nbsp;&nbsp;
                                             <a href="#"
                                                onclick="window.open('{% url 'sensor:line_chart_ratio_graph' book.id|encrypt %}', 'Line Chart Graph', 'width=1300, height=900','title=Hello'); return false;"
-                                               title="Line Chart Ratio Graph.">
+                                               data-toggle="tooltip" data-original-title="Line Chart Ratio Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
-                                            <br>
-                                            <br>
+                                            &nbsp;&nbsp;
                                             <a href="#"
                                                onclick="window.open('{% url 'sensor:youngs_ratio_graph' book.id|encrypt %}', 'Youngs Ratio Graph.', 'width=1300, height=900','title=Hello'); return false;"
-                                               title="Youngs Ratio Graph.">
+                                               data-toggle="tooltip" data-original-title="Youngs Ratio Graph.">
                                                 <span class="glyphicon glyphicon-picture"></span>
                                             </a>
                                             <br>
@@ -109,36 +106,20 @@
 
                                         <a href="{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}"
                                            onclick="window.open('{% url 'sensor:locate_node' book.mine_id.id|encrypt book.id|encrypt %}', 'Node Location', 'width=1000, height=800','title=Hello'); return false;"
-                                           title="Show Node Location">
+                                           data-toggle="tooltip" data-original-title="Show Node Location">
                                             <span class="glyphicon glyphicon-map-marker"></span>
                                         </a>
-{#                                        <br>#}
-{#                                        <br>#}
-{#                                        <a href="{% url 'sensor:node_edit' book.id|encrypt %}"#}
-{#                                           class="editRouter"#}
-{#                                           data-url="{% url 'sensor:node_edit' book.id|encrypt %}"#}
-{#                                           title="Edit Router."><span#}
-{#                                                class="glyphicon glyphicon-pencil"></span></a>#}
-{#                                        <br>#}
-{#                                    <br>#}
-{#                                        <a href="#" class="delete"#}
-{#                                           data-url="{% url 'sensor:node_delete' %}"#}
-{#                                           id="{{ book.id }}"#}
-{#                                           title="Delete Router."><span#}
-{#                                                class="glyphicon glyphicon-trash"></span></a>#}
-
-
                                     </td>
 
                                     <td class="text-center"><a href="{% url 'sensor:node_edit' book.id|encrypt %}"
                                                                class="editRouter"
                                                                data-url="{% url 'sensor:node_edit' book.id|encrypt %}"
-                                                               title="Edit Router."><span
+                                                               data-toggle="tooltip" data-original-title="Edit Router."><span
                                             class="glyphicon glyphicon-pencil"></span></a></td>
                                     <td class="text-center"><a href="#" class="delete"
                                                                data-url="{% url 'sensor:node_delete' %}"
                                                                id="{{ book.id }}"
-                                                               title="Delete Router."><span
+                                                               data-toggle="tooltip" data-original-title="Delete Router."><span
                                             class="glyphicon glyphicon-trash"></span></a></td>
                                 </tr>
                             {% endfor %}

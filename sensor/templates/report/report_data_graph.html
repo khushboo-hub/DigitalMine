@@ -96,7 +96,7 @@
                 <div class="col-md-12">
 
                     <div class="text-center">
-                        <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                        <button type="button" id="btn_show" class="btn btn-primary" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Graph">Show Graph</button>
                     </div>
                 </div>
             </div>
@@ -257,7 +257,6 @@
                         },
                         success: function (data) {
                             let Sensors = data.result;
-                            console.log('Ss', Sensors);
                             if (data.hasOwnProperty('result')) {
                                 if (isEmpty(Sensors)) {
                                     $("#id_list").append($("<option />").val('').text('No Available Sensor'));
@@ -312,14 +311,16 @@
                                     'id': node_id
                                 },
                                 beforeSend: function () {
-                                    $("#btn_show").val("Please wait...");
-                                    $("#btn_show").prop('disabled', true);
+                                    $("#btn_show").button("loading");
                                 },
                                 success: function (data) {
                                     if (data.hasOwnProperty('result')) {
                                         fill_all(data.result);
                                     }
                                     return data;
+                                },
+                                complete:function(){
+
                                 },
                                 error: function () {
                                     console.log("Something Went Wrong!");
@@ -348,8 +349,7 @@
                         'id': sensor_id
                     },
                     beforeSend: function () {
-                        $("#btn_show").val("Please wait...");
-                        $("#btn_show").prop('disabled', true);
+                       $('#btn_show').button('loading');
                     },
                     success: function (data) {
                         if (data.hasOwnProperty('result')) {
@@ -357,6 +357,9 @@
                             fill_graph_sensor(Sensor);
                         }
                         return data;
+                    },
+                    complete:function(){
+
                     },
                     error: function () {
                         console.log("Something Went Wrong!");
@@ -376,8 +379,13 @@
 
             function fill_graph_sensor(SensorInit) {
                 if (!isEmpty(SensorInit)) {
-                    $('<div>', {id: "X" + SensorInit.id}).appendTo($("#table"));
-                    $('<br><br>').appendTo($("#table"));
+                    if (! $("#X"+SensorInit.id).length) {
+                        $('<div>', {id: "X" + SensorInit.id}).appendTo($("#table"));
+                        $('<br><br>').appendTo($("#table"));
+                    }
+                    else{
+
+                    }
                 }
 
                 (function sensorGraph() {
@@ -403,7 +411,6 @@
                             $('.loader-container').show();
                         },
                         success: function (data) {
-                            console.log('DATA',data);
                             if (data.hasOwnProperty('result')) {
                                 data = data.result;
                                 data = JSON.parse(data);
@@ -417,6 +424,7 @@
                         },
                         complete: function () {
                             $('.loader-container').hide();
+                            $("#btn_show").button('reset');
                         }
                     });
                 })();
@@ -426,6 +434,7 @@
 
 
             function ShowWarning(SensorInit, SensorValues) {
+
                 let time = [];
                 let sensor_values = [];
                 let text = [];
@@ -461,14 +470,14 @@
                     line: {width: 4},
                     name: '<b>' + SensorInit.sensor_name + ' Graph</b>'
                 },
-                    {
-                        x: [time[1], time[1], time[2]],
-                        y: [SensorInit.level1 + offset, SensorInit.level2 - offset, SensorInit.level3 + offset],
-                        mode: 'text',
-                        text: ['<b>First Level Warning</b>', '<b>Second Level Warning</b>', '<b>Third Level Warning</b>'],
-                        showlegend: false,
-                        hoverinfo: 'skip',
-                    }
+                    {#{#}
+                    {#    x: [1, 1, 1],#}
+                    {#    y: [SensorInit.level1, SensorInit.level2, SensorInit.level3],#}
+                    {#    mode: 'text',#}
+                    {#    text: ['<b>First Level Warning</b>', '<b>Second Level Warning</b>', '<b>Third Level Warning</b>'],#}
+                    {#    showlegend: false,#}
+                    {#    hoverinfo: 'skip',#}
+                    {#}#}
 
                 ];
 
@@ -529,7 +538,7 @@
                         showarrow: true
                     }],
                     title: {
-                        text: '<b>Live Graph for Sensor(' + SensorInit.sensor_name + ') in (' + SensorInit.sensor_node_name + ')</b>',
+                        text: '<b>Live Graph for Sensor(' + SensorInit.sensor_name + ')</b>',
                         font: {
                             family: 'Courier New, monospace',
                             size: 34
@@ -565,6 +574,7 @@
                         y: 4
                     }
                 };
+                Plotly.purge('X' + SensorInit.id);
                 Plotly.react('X' + SensorInit.id, data, layout);
 
             }

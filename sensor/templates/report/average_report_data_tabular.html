@@ -2,16 +2,9 @@
 
 {% block content %}
     <style>
-        .max {
-            color: green
+        .container-custom {
+            width: 100%;
         }
-
-        .min {
-            color: red
-        }
-    .container-custom{
-        width:100%;
-    }
     </style>
     <div class="container container-custom">
         <section class="col-md-12">
@@ -71,82 +64,39 @@
                         <div class="col-md-6">
                             <div class="col-md-4">
                                 <label class="" for="id_dob" id="id_dob">From Date</label>
-
                             </div>
                             <div class="col-md-8">
                                 <div class='input-group date' id='from_date_time_picker'>
                                     <input type="text" name="dob" class="form-control datepicker"
                                            required="" id="from_date" autocomplete="off">
-
                                     <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="col-md-4">
                                 <label class="" for="id_dob" id="id_dob">To Date</label>
-
                             </div>
                             <div class="col-md-8">
                                 <div class='input-group date' id='to_date_time_picker'>
                                     <input type="text" name="dob" class="form-control datepicker"
                                            required="" id="to_date" autocomplete="off">
-
                                     <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-{#                    <div class="form-group col-md-12">#}
-{#                        <div class="col-md-3">#}
-{#                            <div class="col-md-4">#}
-{#                                <label class="form-check-label" for="exampleRadios1">Hourly</label>#}
-{#                            </div>#}
-{#                            <div class="col-md-8">#}
-{#                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"#}
-{#                                       value="0" checked>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="col-md-3">#}
-{#                            <div class="col-md-4">#}
-{#                                <label class="form-check-label" for="exampleRadios1">Daily</label>#}
-{#                            </div>#}
-{#                            <div class="col-md-8">#}
-{#                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"#}
-{#                                       value="1" checked>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="col-md-3">#}
-{#                            <div class="col-md-4">#}
-{#                                <label class="form-check-label" for="exampleRadios1">Monthly</label>#}
-{#                            </div>#}
-{#                            <div class="col-md-8">#}
-{#                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"#}
-{#                                       value="2" checked>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                        <div class="col-md-3">#}
-{#                            <div class="col-md-4">#}
-{#                                <label class="form-check-label" for="exampleRadios1">Yearly</label>#}
-{#                            </div>#}
-{#                            <div class="col-md-8">#}
-{#                                <input class="form-check-input" type="radio" name="AvgReport" id="exampleRadios1"#}
-{#                                       value="3" checked>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
                 </form>
                 <div class="col-md-12">
-
                     <div class="text-center">
-                        <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                        <button type="button" id="btn_show" class="btn btn-primary"
+                                data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Average Report">
+                            Average Report
+                        </button>
                     </div>
                 </div>
             </div>
@@ -210,12 +160,11 @@
                             <th>23-24</th>
                             <th>Min</th>
                             <th>Max</th>
-{#                            <th>Total</th>#}
+                            {#                            <th>Total</th>#}
                             <th>Average</th>
                         </tr>
                         </thead>
                         <tbody></tbody>
-
                     </table>
                 </div>
             </div>
@@ -224,7 +173,6 @@
 
     <script>
         $(document).ready(function () {
-                $("#id_mine_id").addClass('form-control');
                 $('#id_sensor_list').hide();
                 $('#sensor_id').hide();
                 $('table#hourly').hide();
@@ -241,8 +189,6 @@
                 });
 
                 $("#id_mode").on("change", function () {
-
-
                     let mode = $("#id_mode").val();
                     if (!isEmpty(mode)) {
                         if (mode == "Node Wise" || mode == 0) {
@@ -413,8 +359,7 @@
                             'id': sensor_id
                         },
                         beforeSend: function () {
-                            $("#btn_show").val("Please wait...");
-                            $("#btn_show").prop('disabled', true);
+                            $("#btn_show").button("loading");
                         },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
@@ -464,23 +409,26 @@
                             },
                             beforeSend: function () {
                                 $('.loader-container').show();
+                                $('table#hourly tbody').empty();
+                                $('table#hourly thead th').css('background-color','');
                                 $('table#hourly').show();
                             },
                             success: function (data) {
-                                console.log('DATA', data);
+                                console.log('Data',data);
                                 if (data.hasOwnProperty('result')) {
                                     let SensorValues = data.result;
-                                    ShowWarning(SensorValues,date_from,date_to);
+                                    ShowWarning(SensorValues, date_from, date_to);
                                 }
                             },
                             complete: function () {
                                 $('.loader-container').hide();
+                                $("#btn_show").button("reset");
                             }
                         });
                     })();
                 }
 
-                function ShowWarning(SensorValues,date_from,date_to) {
+                function ShowWarning(SensorValues, date_from, date_to) {
                     let hourly = SensorValues.hourly;
                     let daily = SensorValues.daily;
                     let day = [];
@@ -500,31 +448,6 @@
                             day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][date.getHours()] = hourly[hour].avg;
                         }
                     }
-                    /* let datatable = $('#hourly').DataTable({
-
-                         scrollX: true,
-                         scrollCollapse: true,
-                         paging: true,
-                         columnDefs: [
-                             {width: '200%', targets: 0}
-                         ],
-                         fixedColumns: true,
-                         'createdRow': function (row, data, index) {
-                             var temp = [];
-                             for (d in data) {
-                                 if (data.hasOwnProperty(d)) {
-                                     var isnum = /^\d+$/.test(data[d]);
-                                     if (isnum) {
-                                         temp.push(data[d]);
-                                     }
-                                 }
-                             }
-
-                             console.log('row data' ,Math.max.apply(Math,temp));
-
-                         }
-                     });*/
-
                     let tableData = "";
                     for (let d in day) {
                         if (day.hasOwnProperty(d)) {
@@ -542,19 +465,15 @@
                             for (let h in hours) {
                                 if (hours.hasOwnProperty(h)) {
                                     tableData += '<td>';
-                                    tableData += hours[h].toString();
+                                    tableData += hours[h];
                                     tableData += '</td>';
                                     total += hours[h];
                                     hourlydata.push(hours[h])
                                 }
                             }
-                            {#hourlydata.push(min);#}
-                            {#hourlydata.push(max);#}
-                            {#hourlydata.push((total/hours.length).toFixed(2));#}
-                            //datatable.row.add(hourlydata).draw().node();
+
                             tableData += '<td style="font-weight:bold">' + min + '</td>';
                             tableData += '<td style="font-weight:bold">' + max + '</td>';
-                            {#tableData += '<td style="font-weight:bold">' + (total).toFixed(2) + '</td>';#}
                             tableData += '<td style="font-weight:bold">' + (total / hours.length).toFixed(2) + '</td>';
 
 
@@ -564,57 +483,55 @@
                     $('table#hourly tbody').empty();
                     $('table#hourly').append(tableData);
 
-                    let colmax=[];
-                    let colmin=[];
-                    let colavg=[];
-                    let coltotal=[]
-                    for(i=2;i<=28;i++) {
-                        let coldata=[];
-                        let col=$('table tr td:nth-child(' + i + ')');
-                        let total=0;
-                        for(j=0;j<col.length;j++){
-                            total+= parseFloat(col[j].innerHTML);
+                    let colmax = [];
+                    let colmin = [];
+                    let colavg = [];
+                    let coltotal = []
+                    for (i = 2; i <= 28; i++) {
+                        let coldata = [];
+                        let col = $('table tr td:nth-child(' + i + ')');
+                        let total = 0;
+                        for (j = 0; j < col.length; j++) {
+                            total += parseFloat(col[j].innerHTML);
                             coldata.push(parseFloat(col[j].innerHTML))
                         }
-                        let max=Math.max.apply(Math,coldata);
-                        let min=Math.min.apply(Math,coldata);
+                        let max = Math.max.apply(Math, coldata);
+                        let min = Math.min.apply(Math, coldata);
                         colmin.push(min);
                         colmax.push(max);
                         coltotal.push(total);
-                        colavg.push(total/col.length);
-                        console.log(total,col.length)
-                        console.log('col',coldata);
+                        colavg.push(total / col.length);
                     }
                     tableData = '<tr>';
                     tableData += '<td>Min</td>';
-                    for(i=0;i<colmin.length;i++){
-                        tableData += '<td style="font-weight:bold">'+colmin[i]+'</td>';
+                    for (i = 0; i < colmin.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colmin[i] + '</td>';
                     }
                     tableData += '</tr>';
 
                     tableData += '<tr>';
                     tableData += '<td>Max</td>';
-                    for(i=0;i<colmax.length;i++){
-                        tableData += '<td style="font-weight:bold">'+colmax[i]+'</td>';
+                    for (i = 0; i < colmax.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colmax[i] + '</td>';
                     }
                     tableData += '</tr>';
 
 
                     tableData += '<tr>';
                     tableData += '<td>Average</td>';
-                    for(i=0;i<colavg.length;i++){
-                        tableData += '<td style="font-weight:bold">'+colavg[i].toFixed(2)+'</td>';
+                    for (i = 0; i < colavg.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colavg[i].toFixed(2) + '</td>';
                     }
                     tableData += '</tr>';
 
-                     $('#hourly').append(tableData);
-                        let hourfrom=(new Date(date_from)).getHours();
-                        let hourto=(new Date(date_to)).getHours();
-                        console.log('hourto',hourto);
-                        console.log('hourfrom',hourfrom);
-                        hourto=(hourto==0)?24:hourto;
-                        console.log('hourto',hourto);
-                    for(i=hourfrom+2;i<=hourto+2;i++) {
+                    $('#hourly').append(tableData);
+                    let hourfrom = (new Date(date_from)).getHours();
+                    let hourto = (new Date(date_to)).getHours();
+                    console.log('hourto', hourto);
+                    console.log('hourfrom', hourfrom);
+                    hourto = (hourto == 0) ? 24 : hourto;
+                    console.log('hourto', hourto);
+                    for (i = hourfrom + 2; i <= hourto + 2; i++) {
                         $('table tr td:nth-child(' + i + ')').css('background-color', '#00bcd44d');
                         $('table tr th:nth-child(' + i + ')').css('background-color', '#00bcd44d');
                     }
