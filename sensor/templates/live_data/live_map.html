@@ -150,34 +150,6 @@
                 })();
             }
 
-            function Show_Live_Sensor_Values(mine_id, sensor_id) {
-                (function NODEAJAX() {
-                    $.ajax({
-                        type: "get",
-                        url: $("#sensor_data").data('url'),
-                        data: {
-                            'id': mine_id,
-                            'sensor_id': sensor_id,
-                        },
-                        success: function (data) {
-                            Fill_Sensor(data);
-                            if (data.hasOwnProperty("error")) {
-                                toastr.error(data.error);
-                                return data;
-                                console.log('error');
-                            }
-
-                            return data;
-                        },
-                        error: function () {
-                            console.log("something is not right.please contact admin - 1");
-                        },
-                        complete: function () {
-                        }
-                    });
-                })();
-            }
-
             function Fill_Node(mine_id, NODE) {
                 let contents = "";  //contents = "";
                 for (let node in NODE) {
@@ -203,6 +175,33 @@
                     KBtestmap.mapMarkers[node].modal.content = contents;
                 }
             }
+            function Show_Live_Sensor_Values(mine_id, sensor_id) {
+                (function NODEAJAX() {
+                    $.ajax({
+                        type: "get",
+                        url: $("#sensor_data").data('url'),
+                        data: {
+                            'id': mine_id,
+                            'sensor_id': sensor_id,
+                        },
+                        success: function (data) {
+
+                            if (data.hasOwnProperty("error")) {
+                                toastr.error(data.error);
+                                return data;
+                            }
+                            Fill_Sensor(data);
+                            return data;
+                        },
+                        error: function () {
+                            console.log("something is not right.please contact admin - 1");
+                        },
+                        complete: function () {
+                            setTimeout(NODEAJAX,1000);
+                        }
+                    });
+                })();
+            }
 
             function Fill_Sensor(SENSORS) {
 
@@ -227,7 +226,7 @@
                     .css('background-color', progressBarColor);
 
                 tree.find('div[id='+sensor.sensor+'] > div.progress > div.progress-bar')
-                    .css('width', sensor.value + "%");
+                    .css('width', (sensor.value/sensor.threshold)*100 + "%");
 
                 let htmlSource = tree.html();
                 let value = 'div#Content' + sensor.node + " > div#" + sensor.sensor + ">span";
@@ -235,7 +234,7 @@
 
                 $(value).text(sensor.value);
                 $(progress).css('background-color', progressBarColor);
-                $(progress).css('width', sensor.value + "%");
+                $(progress).css('width', (sensor.value/sensor.threshold)*100 + "%");
 
                 KBtestmap.mapMarkers[sensor.node].modal.content = htmlSource;
 

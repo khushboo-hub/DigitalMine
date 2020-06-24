@@ -1052,9 +1052,9 @@ def node_sensor_data_ajax(request):
             gasValue = strip_tags(response.text)
             gasValue = gasValue if (isNum(gasValue)) else "Network Error"
             warning = str(WarningLevel(gasValue, sensor_details.level_1_warning_unit, sensor_details.level_2_warning_unit, sensor_details.level_3_warning_unit))
-            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': gasValue, 'unit': sensor_details.sensor_unit, 'warning': warning}
+            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': gasValue, 'threshold':sensor_details.sensor_threshold_limit,'unit': sensor_details.sensor_unit, 'warning': warning}
         except:
-            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': "Connection Error!", 'unit': sensor_details.sensor_unit, 'warning': 1}
+            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': "Connection Error!", 'threshold':sensor_details.sensor_threshold_limit,'unit': sensor_details.sensor_unit, 'warning': 1}
             pass
 
         return JsonResponse(data)
