@@ -18,7 +18,7 @@ from theme import views as homeViews
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse, JsonResponse
-
+from setting.utils import decrypt
 
 def login(request):
     next = request.GET.get('next')
@@ -206,10 +206,6 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', {
         'form': form
     })
-
-
-from sensor.views import decrypt, encrypt
-
 
 def In(request, id, tempplate_name='profile.html'):
     ids = str(decrypt(id))

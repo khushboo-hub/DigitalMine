@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
 from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_protect
@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaulttags import register
 
 from apps import settings
+from setting.utils import decrypt
 from .models import Node, Sensor_Node, gasModel_auto
 from .models import MineDetails
 from .forms import NodeForm, Sensor_NodeForm
@@ -20,9 +21,10 @@ from FireExp.models import Gasdb
 
 from django.db.models import Avg, Value
 from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
-
+from accounts.utils import is_manager
 
 @login_required
+@user_passes_test(is_manager)
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
@@ -148,6 +150,9 @@ def manage_sensor(request, mine_id, node_id, template_name='sensor/manage_sensor
     return render(request, template_name, data)
 
 
+
+@login_required
+@user_passes_test(is_manager)
 def add_sensor(request, mine_id, node_id, template_name='sensor/add_sensor.html'):
     mine_id = decrypt(mine_id)
     node_id = decrypt(node_id)
@@ -1274,19 +1279,6 @@ def ellicots_ajax(request):
     return JsonResponse(data)
 
 
-@register.filter(name='lookup')
-def get_item(dictionary, key):
-    return dictionary.get(str(key))
-
-
-@register.filter(name='encrypt')
-def encrypt(key):
-    return encrypt(key)
-
-
-@register.filter(name='decrypt')
-def decrypt(key):
-    return decrypt(key)
 
 
 def isNum(data):
@@ -1297,59 +1289,6 @@ def isNum(data):
         return False
 
 
-from cryptography.fernet import Fernet
-import base64
 
 
-def encrypt(txt):
-    try:
-        # convert integer etc to string first
-        txt = str(txt)
-        # get the key from settings
-        cipher_suite = Fernet(settings.ENCRYPT_KEY)  # key should be byte
-        # #input should be byte, so convert the text to byte
-        encrypted_text = cipher_suite.encrypt(txt.encode('ascii'))
-        # encode to urlsafe base64 format
-        encrypted_text = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
-        return encrypted_text
-    except Exception as e:
-        # log the error if any
-        print(e)
-        return None
 
-
-def decrypt(txt):
-    try:
-        # base64 decode
-        txt = base64.urlsafe_b64decode(txt)
-        cipher_suite = Fernet(settings.ENCRYPT_KEY)
-        decoded_text = cipher_suite.decrypt(txt).decode("ascii")
-        return decoded_text
-    except Exception as e:
-        # log the error
-        print(e)
-        return None
-
-
-@register.filter(name="signed")
-def signed(txt, id):
-    id = id % 26
-    temp_text = ""
-    for t in txt:
-        ch = bytes(t, 'utf-8')
-        s = bytes([ch[0] + int(id)])
-        s = str(s)
-        temp_text += s[2]
-    return temp_text
-
-
-@register.filter(name="unsigned")
-def unsigned(txt, id):
-    id = id % 26
-    temp_text = ""
-    for t in txt:
-        ch = bytes(t, 'utf-8')
-        s = bytes([ch[0] - int(id)])
-        s = str(s)
-        temp_text += s[2]
-    return temp_text
