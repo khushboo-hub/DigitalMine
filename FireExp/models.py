@@ -21,10 +21,27 @@ class Gasdb(models.Model):
         n2 = self.n2
         c2h4 = self.c2h4
         # ratio calculation
-        graham = (100 * co / (0.265 * n2 - o2))
-        young = (100 * co2 / (0.265 * n2 - o2))
-        coco2 = 100 * co / co2
-        jtr = (co2 + 0.75 * co - 0.25 * h2) / (0.265 * n2 - o2)
+        try:
+            graham = (100 * co / (0.265 * n2 - o2))
+        except ZeroDivisionError:
+            graham=0
+            pass
+        try:
+            young = (100 * co2 / (0.265 * n2 - o2))
+        except ZeroDivisionError:
+            young=0
+            pass
+        try:
+            coco2 = 100 * co / co2
+        except ZeroDivisionError:
+            coco2=0
+            pass
+        try:
+            jtr = (co2 + 0.75 * co - 0.25 * h2) / (0.265 * n2 - o2)
+        except ZeroDivisionError:
+            jtr=0
+            pass
+
         if (c2h4 == 0):
             chra = 0
         else:
@@ -91,11 +108,27 @@ class Gasdb(models.Model):
         ch4np = 6.07
         conp = 4.13
         h2np = 16.59
+        try:
+            Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
+        except ZeroDivisionError:
+            Llow = 1
+            pass
+        try:
+            Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
+        except ZeroDivisionError:
+            Lhigh = 1
+            pass
+        try:
+            Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
+        except ZeroDivisionError:
+            Lnose = 1
+            pass
 
-        Llow = pt / (ch4 / ch4low + co / colow + h2 / h2low)
-        Lhigh = pt / (ch4 / ch4high + co / cohigh + h2 / h2high)
-        Lnose = pt / (ch4 / ch4nose + co / conose + h2 / h2nose)
-        Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+        try:
+            Nex = Lnose / pt * (ch4np * ch4 + conp * co + h2np * h2)
+        except ZeroDivisionError:
+            Nex = 1
+            pass
 
         Oxnose = 0.2093 * (100 - Nex - Lnose)
 
@@ -143,16 +176,19 @@ class Gasdb(models.Model):
             explosm = "Unidentified"
         data = {
             'explosibility': explosm,
+
             'graham': grahamm,
             'young': youngm,
             'coco2': coco2m,
             'jtr': jtrm,
             'chra': chram,
+            'co':self.co,
             'graham_ratio': graham,
             'young_ratio': young,
             'coco2_ratio': coco2,
             'jtr_ratio': jtr,
-            'chra_ratio': chra
+            'chra_ratio': chra,
+            'date':self.date.strftime('%Y-%m-%d %H:%M:%S')
         }
         return data
 
@@ -169,6 +205,7 @@ class Gasdb(models.Model):
         idtest = 0
 
         explos = 5
+        print('ch4,co,h2',ch4,co,h2)
         pt = ch4 + co + h2
 
         ch4low = 5

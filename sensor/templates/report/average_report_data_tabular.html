@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="container">
+    <style>
+        .container-custom {
+            width: 100%;
+        }
+    </style>
+    <div class="container container-custom">
         <section class="col-md-12">
-            <h3 class="page-header"><b>ENVIRONMENT MONITORING : TABULAR REPORT</b>
+            <h3 class="page-header"><b>ENVIRONMENT MONITORING : AVERGAGE TABULAR REPORT</b>
             </h3>
             <div class="form-group">
                 <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
@@ -59,44 +64,39 @@
                         <div class="col-md-6">
                             <div class="col-md-4">
                                 <label class="" for="id_dob" id="id_dob">From Date</label>
-
                             </div>
                             <div class="col-md-8">
                                 <div class='input-group date' id='from_date_time_picker'>
                                     <input type="text" name="dob" class="form-control datepicker"
                                            required="" id="from_date" autocomplete="off">
-
                                     <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="col-md-4">
                                 <label class="" for="id_dob" id="id_dob">To Date</label>
-
                             </div>
                             <div class="col-md-8">
                                 <div class='input-group date' id='to_date_time_picker'>
                                     <input type="text" name="dob" class="form-control datepicker"
                                            required="" id="to_date" autocomplete="off">
-
                                     <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </form>
                 <div class="col-md-12">
-
                     <div class="text-center">
-                        <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                        <button type="button" id="btn_show" class="btn btn-primary"
+                                data-loading-text="<i class='fa fa-spinner fa-spin '></i> Processing Average Report">
+                            Average Report
+                        </button>
                     </div>
                 </div>
             </div>
@@ -129,18 +129,53 @@
                 </div>
             </div>
             <div class="col-md-12" style="margin-top:15px;">
-                <div class="table-responsive" id="tableDiv">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-condensed" id="hourly">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>0-1</th>
+                            <th>1-2</th>
+                            <th>2-3</th>
+                            <th>3-4</th>
+                            <th>4-5</th>
+                            <th>5-6</th>
+                            <th>6-7</th>
+                            <th>7-8</th>
+                            <th>8-9</th>
+                            <th>9-10</th>
+                            <th>10-11</th>
+                            <th>11-12</th>
+                            <th>12-13</th>
+                            <th>12-14</th>
+                            <th>14-15</th>
+                            <th>15-16</th>
+                            <th>16-17</th>
+                            <th>17-18</th>
+                            <th>18-19</th>
+                            <th>19-20</th>
+                            <th>20-21</th>
+                            <th>21-22</th>
+                            <th>22-23</th>
+                            <th>23-24</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            {#                            <th>Total</th>#}
+                            <th>Average</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
-
         </section>
     </div>
 
     <script>
         $(document).ready(function () {
-                $("#id_mine_id").addClass('form-control');
                 $('#id_sensor_list').hide();
                 $('#sensor_id').hide();
+                $('table#hourly').hide();
                 $('#from_date_time_picker').datetimepicker({
                     format: 'YYYY-MM-DD HH:mm:ss',
                     useCurrent: false //Important! See issue #1075
@@ -154,8 +189,6 @@
                 });
 
                 $("#id_mode").on("change", function () {
-
-                    $('table').empty();
                     let mode = $("#id_mode").val();
                     if (!isEmpty(mode)) {
                         if (mode == "Node Wise" || mode == 0) {
@@ -326,8 +359,7 @@
                             'id': sensor_id
                         },
                         beforeSend: function () {
-                            $("#btn_show").val("Please wait...");
-                            $("#btn_show").prop('disabled', true);
+                            $("#btn_show").button("loading");
                         },
                         success: function (data) {
                             if (data.hasOwnProperty('result')) {
@@ -365,43 +397,146 @@
                         if (isEmpty(date_to)) {
                             date_to = "2999-01-01 23:59:59";
                         }
-                        console.log(date_from, date_to);
+                        let AvgReport = $("input:radio[name='AvgReport']:checked").val()
                         $.ajax({
                             type: "get",
-                            url: "{% url 'sensor:report_fetch_sensor_values_ajax' %}",
+                            url: "{% url 'sensor:avg_report_fetch_sensor_values_ajax' %}",
                             data: {
                                 'id': sensor_id,
                                 'from': date_from,
-                                'to': date_to
+                                'to': date_to,
+                                'avg': AvgReport
                             },
                             beforeSend: function () {
                                 $('.loader-container').show();
+                                $('table#hourly tbody').empty();
+                                $('table#hourly thead th').css('background-color','');
+                                $('table#hourly').show();
                             },
                             success: function (data) {
+                                console.log('Data',data);
                                 if (data.hasOwnProperty('result')) {
-                                    let SensorValues = JSON.parse(data.result);
-                                    ShowWarning(SensorValues);
+                                    let SensorValues = data.result;
+                                    ShowWarning(SensorValues, date_from, date_to);
                                 }
                             },
                             complete: function () {
                                 $('.loader-container').hide();
+                                $("#btn_show").button("reset");
                             }
                         });
                     })();
                 }
 
-                function ShowWarning(SensorValues) {
-
-                    datatable = $('#displayTable').DataTable();
-                    let minename = $('#id_mine_id').find(":selected").text();
-                    let nodename = $('#id_list').find(":selected").text();
-
-                    for (let values in SensorValues) {
-                        if (SensorValues.hasOwnProperty(values)) {
-                            datatable.row.add([new Date(SensorValues[values].fields.date_time), minename, nodename, parseFloat(SensorValues[values].fields.sensor_value)]).draw().node();
+                function ShowWarning(SensorValues, date_from, date_to) {
+                    let hourly = SensorValues.hourly;
+                    let daily = SensorValues.daily;
+                    let day = [];
+                    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    for (let d in daily) {
+                        if (daily.hasOwnProperty(d)) {
+                            let date = new Date(daily[d].day);
+                            day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()] = [];
+                            for (i = 0; i < 24; i++) {
+                                day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][i] = 0;
+                            }
                         }
                     }
+                    for (let hour in hourly) {
+                        if (hourly.hasOwnProperty(hour)) {
+                            let date = new Date(hourly[hour].day);
+                            day[date.getFullYear() + '-' + (parseInt(date.getMonth()) + 1) + '-' + date.getDate()][date.getHours()] = hourly[hour].avg;
+                        }
+                    }
+                    let tableData = "";
+                    for (let d in day) {
+                        if (day.hasOwnProperty(d)) {
+                            let hourlydata = [];
+                            tableData += "<tr>";
+                            tableData += '<td>';
+                            tableData += d.toString();
+                            hourlydata.push(d.toString())
+                            tableData += '</td>';
+                            let hours = day[d];
+                            let min = Math.min.apply(Math, hours);
+                            let max = Math.max.apply(Math, hours);
+                            let total = 0;
+
+                            for (let h in hours) {
+                                if (hours.hasOwnProperty(h)) {
+                                    tableData += '<td>';
+                                    tableData += hours[h];
+                                    tableData += '</td>';
+                                    total += hours[h];
+                                    hourlydata.push(hours[h])
+                                }
+                            }
+
+                            tableData += '<td style="font-weight:bold">' + min + '</td>';
+                            tableData += '<td style="font-weight:bold">' + max + '</td>';
+                            tableData += '<td style="font-weight:bold">' + (total / hours.length).toFixed(2) + '</td>';
+
+
+                            tableData += '</tr>';
+                        }
+                    }
+                    $('table#hourly tbody').empty();
+                    $('table#hourly').append(tableData);
+
+                    let colmax = [];
+                    let colmin = [];
+                    let colavg = [];
+                    let coltotal = []
+                    for (i = 2; i <= 28; i++) {
+                        let coldata = [];
+                        let col = $('table tr td:nth-child(' + i + ')');
+                        let total = 0;
+                        for (j = 0; j < col.length; j++) {
+                            total += parseFloat(col[j].innerHTML);
+                            coldata.push(parseFloat(col[j].innerHTML))
+                        }
+                        let max = Math.max.apply(Math, coldata);
+                        let min = Math.min.apply(Math, coldata);
+                        colmin.push(min);
+                        colmax.push(max);
+                        coltotal.push(total);
+                        colavg.push(total / col.length);
+                    }
+                    tableData = '<tr>';
+                    tableData += '<td>Min</td>';
+                    for (i = 0; i < colmin.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colmin[i] + '</td>';
+                    }
+                    tableData += '</tr>';
+
+                    tableData += '<tr>';
+                    tableData += '<td>Max</td>';
+                    for (i = 0; i < colmax.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colmax[i] + '</td>';
+                    }
+                    tableData += '</tr>';
+
+
+                    tableData += '<tr>';
+                    tableData += '<td>Average</td>';
+                    for (i = 0; i < colavg.length; i++) {
+                        tableData += '<td style="font-weight:bold">' + colavg[i].toFixed(2) + '</td>';
+                    }
+                    tableData += '</tr>';
+
+                    $('#hourly').append(tableData);
+                    let hourfrom = (new Date(date_from)).getHours();
+                    let hourto = (new Date(date_to)).getHours();
+                    console.log('hourto', hourto);
+                    console.log('hourfrom', hourfrom);
+                    hourto = (hourto == 0) ? 24 : hourto;
+                    console.log('hourto', hourto);
+                    for (i = hourfrom + 2; i <= hourto + 2; i++) {
+                        $('table tr td:nth-child(' + i + ')').css('background-color', '#00bcd44d');
+                        $('table tr th:nth-child(' + i + ')').css('background-color', '#00bcd44d');
+                    }
                 }
+
 
                 function fill_table_sensor_heading(header, condition) {
                     let tableHeaders = "";

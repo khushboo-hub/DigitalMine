@@ -16,11 +16,11 @@
     <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
 </head>
-<body>
+<body style="height: 90%;">
 <div class="container">
     <section class="col-md-12">
         <form method="post" enctype="multipart/form-data">
-            <input type="hidden" value="{{ node_id }}" id="node_id" data-url="{% url 'sensor:ellicots_ajax' %}">
+            <input type="hidden" value="{{ node_id|encrypt }}" id="node_id" data-url="{% url 'sensor:ellicots_ajax' %}">
             <div class="row">
                 <div class="col-md-12">
                     <h3 class="page-header text-center"><b>Ellicots Extension Graph</b></h3>
@@ -60,7 +60,7 @@
                 </svg>
             </div>
         </div>
-        <div id="linechart" class="text-center col-md-12"></div>
+        <div id="linechart"></div>
         <div id="notfound" hidden>
             <div class="notfound">
                 <div class="notfound-404">
@@ -240,12 +240,8 @@
 
                                 var data = [trace1, trace2, trace3, trace4];
                                 var layout = {
-                                    title: 'Ellicott\'s Explosibility Graph(from Manual Entry)',
-                                    titlefont: {
-                                        size: 32
-                                    },
                                     width: 1200,
-                                    height: 800,
+                                    height: 600,
 
                                     xaxis: {
                                         title: "<b>(EFFECTIVE INSERT GASES IN %)</b>",

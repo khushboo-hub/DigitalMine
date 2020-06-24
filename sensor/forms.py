@@ -1,14 +1,10 @@
 from django import forms
 from .models import Node, Sensor_Node
-
+from employee.models import MineDetails
 
 class NodeForm(forms.ModelForm):
-    # def __init__(self,readonly=None, *args, **kwargs):
-    #     super(NodeForm, self).__init__(*args, **kwargs)
-    #     print('readOnly',readonly)
-    #     if readonly is not None and len(readonly)>1:
-    #         for key in readonly:
-    #             self.fields[key].widget.attrs[readonly[key]] = True
+
+    mine_id=forms.ModelChoiceField(queryset=MineDetails.objects.all(),widget=forms.Select(attrs={'class': 'form-control', }))
     node_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Node ID (Ex: N001)'

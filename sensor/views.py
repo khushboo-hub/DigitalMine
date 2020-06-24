@@ -1,8 +1,3 @@
-# from django.shortcuts import render
-
-# Create your views here.
-import traceback
-
 from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.urls import reverse
@@ -22,6 +17,10 @@ from django.utils.html import strip_tags, linebreaks
 from accounts.models import profile_extension
 from background_task.models import Task
 from FireExp.models import Gasdb
+
+from django.db.models import Avg, Value
+from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
+
 
 @login_required
 def node_add(request, template_name='node/node_add.html'):
@@ -44,7 +43,7 @@ def node_add(request, template_name='node/node_add.html'):
 def node_edit(request, pk, template_name='node/node_add.html'):
     pk = decrypt(pk)
     current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    # profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(Node, pk=pk)
     form = NodeForm(request.POST or None, request.FILES or None, instance=book)
     if request.method == "POST":
@@ -103,8 +102,8 @@ def node_delete(request):
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
 
-def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_sensor.html'):
-    # water_level_sensor_details = water_level_monitoring_model.objects.all().order_by('-id')
+
+def manage_sensor(request, mine_id, node_id, template_name='sensor/manage_sensor.html'):
     mine_id = decrypt(mine_id)
     node_id = decrypt(node_id)
     sensors = Sensor_Node.objects.filter(mine_id_id=mine_id, node_id_id=node_id).only('sensor_id', 'sensor_name',
@@ -112,7 +111,6 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
                                                                                       'sensor_threshold_limit')
     data = {}
     prepared_data = []
-    background_task = 0
     node_table = Node.objects.get(id=node_id)
     mine_table = MineDetails.objects.get(id=mine_id)
     for s in sensors:
@@ -150,7 +148,9 @@ def manage_sensor(request, mine_id, node_id, template_name='Sensor_Node/manage_s
     return render(request, template_name, data)
 
 
-def add_sensor(request, mine_id, node_id, template_name='Sensor_Node/add_sensor.html'):
+def add_sensor(request, mine_id, node_id, template_name='sensor/add_sensor.html'):
+    mine_id = decrypt(mine_id)
+    node_id = decrypt(node_id)
     node = Node.objects.get(id=node_id)
     node_name = node.name
     mine = MineDetails.objects.get(pk=mine_id)
@@ -181,7 +181,7 @@ def delete_sensor(request, pk):
 
 
 def edit_sensor(request, pk, node_id,
-                template_name='Sensor_Node/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
+                template_name='sensor/add_sensor.html'):  # pk is Sensor Id of a node, node_id=> id the of wirelss node
     pk = decrypt(pk)
     node_id = decrypt(node_id)
     mine_table = Node.objects.get(id=node_id)
@@ -202,21 +202,6 @@ def edit_sensor(request, pk, node_id,
                    'mine_name': mine_name, 'mine': mine_id, 'action': 'EDIT'})
 
 
-
-def load_map(request):
-    data = {}
-    if request.POST:
-        mine_id = request.POST.get("mine_id")
-        mine_data = MineDetails.objects.values_list().filter(id=mine_id)[0]
-        data['mine_data'] = mine_data
-        routers = Node.objects.values_list().filter(mine_id_id=mine_id)
-        data['routers'] = routers
-    mine_table = MineDetails.objects.all()
-    data['object_list'] = mine_table
-    # print(data)
-    return render(request, "MinersTracking/load_map.html", data)
-
-
 def fetch_node_ajax(request):
     data = {}
     if request.is_ajax():
@@ -234,6 +219,7 @@ def fetch_node_ajax(request):
         data['result'] = "Not Ajax"
 
     return JsonResponse(data)
+
 
 def start_save_multiple_sensor(request, mine_id, node_id):
     data = {}
@@ -344,7 +330,6 @@ def run_back_save(sensor_id):
     #     task.delete()
 
 
-
 @login_required
 def live_data_tabular(request, template_name='live_data/live_data_tabular.html'):
     form = NodeForm(request.POST)
@@ -353,24 +338,21 @@ def live_data_tabular(request, template_name='live_data/live_data_tabular.html')
 
 
 @login_required
-def report_table(request, template_name="live_data/report_data_tabular.html"):
+def report_table(request, template_name="report/report_data_tabular.html"):
     form = NodeForm(request.POST or None)
     return render(request, template_name, {'form': form})
 
 
 @login_required
-def avg_report_table(request, template_name="live_data/average_report_data_tabular.html"):
+def avg_report_table(request, template_name="report/average_report_data_tabular.html"):
     form = NodeForm(request.POST or None)
     return render(request, template_name, {'form': form})
 
 
 @login_required
-def report_graph(request, template_name="live_data/report_data_graph.html"):
+def report_graph(request, template_name="report/report_data_graph.html"):
     form = NodeForm(request.POST or None)
     return render(request, template_name, {'form': form})
-
-
-import random
 
 
 @login_required
@@ -421,6 +403,7 @@ def fetch_mine_ajax(request):
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
+
 
 def fetch_sensor_values_ajax_h(request):
     data = {}
@@ -529,6 +512,8 @@ def fetch_sensor_values_ajax(request):
 def report_fetch_sensor_values_ajax(request):
     data = {}
     if request.is_ajax():
+        for i in range(1,1000):
+            print(i)
         sensor_id = request.GET.get('id', None)
         date_from = request.GET.get('from', None)
         date_to = request.GET.get('to', None)
@@ -558,15 +543,20 @@ def avg_report_fetch_sensor_values_ajax(request):
         try:
             gas = []
             # Hourly avg
-            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to)).order_by('date_time')
+            gases = gasModel_auto.objects.filter(sensor_id=sensor_id, date_time__range=(date_from, date_to)).order_by(
+                'date_time')
 
-            avg_data['hourly'] = list(gases.values('sensor_name').annotate(day=TruncHour('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+            avg_data['hourly'] = list(gases.values('sensor_name').annotate(day=TruncHour('date_time'),
+                                                                           avg=Avg(NullIf('sensor_value', Value(0)))))
 
-            avg_data['daily'] = list(gases.values('sensor_name').annotate(day=TruncDay('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+            avg_data['daily'] = list(gases.values('sensor_name').annotate(day=TruncDay('date_time'),
+                                                                          avg=Avg(NullIf('sensor_value', Value(0)))))
 
-            avg_data['monthly'] = list(gases.values('sensor_name').annotate(day=TruncMonth('date_time'), avg=Avg(NullIf('sensor_value', Value(0)))))
+            avg_data['monthly'] = list(gases.values('sensor_name').annotate(day=TruncMonth('date_time'),
+                                                                            avg=Avg(NullIf('sensor_value', Value(0)))))
 
-            avg_data['yearly'] = list(gases.values('sensor_name').annotate(day=TruncYear('date_time'),avg=Avg(NullIf('sensor_value',Value(0)))))
+            avg_data['yearly'] = list(gases.values('sensor_name').annotate(day=TruncYear('date_time'),
+                                                                           avg=Avg(NullIf('sensor_value', Value(0)))))
 
             data['result'] = avg_data
         except Exception as e:
@@ -915,24 +905,25 @@ def fetch_sensor_values_ajax_sensor_body(request):
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
         data['time'] = str(ok_date)
+        sensor_details = []
         if mode == '0':
             sensor_details = Sensor_Node.objects.filter(mine_id=mine, node_id_id=node_or_sensor_id)
         elif mode == '1':
             sensor_details = Sensor_Node.objects.filter(mine_id=mine, sensor_name=node_or_sensor_id)
         for r in sensor_details:
-            id = str(r.id)
+            rid = str(r.id)
             ip_add = str(r.ip_add)
             try:
                 response = requests.get('http://' + ip_add)
                 sensor_val = strip_tags(response.text)
                 sensor_val = sensor_val if (isNum(sensor_val)) else "Network Error"
                 sensor_data.append({
-                    'id': id,
+                    'id': rid,
                     'sensor_value': sensor_val,
                 })
             except Exception as x:
                 sensor_data.append({
-                    'id': id,
+                    'id': rid,
                     'sensor_value': "Network Error",
                 })
 
@@ -1006,7 +997,7 @@ def WarningLevel(gasValue, AWarning, BWarning, CWarning):
 
 
 @login_required
-def node_sensor_data(request):
+def node_sensor_ajax(request):
     data = {}
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
@@ -1022,38 +1013,61 @@ def node_sensor_data(request):
         sensor_data = {}
         sensor_details = Sensor_Node.objects.filter(node_id=node_id, mine_id=mine_id)
         for sd in sensor_details:
+            sensor_hash_object = hashlib.sha512(str(sd.id).encode())
             try:
-                response = requests.get('http://' + sd.ip_add)
-
-                gasValue = strip_tags(response.text)
-                gasValue = gasValue if (isNum(gasValue)) else "Network Error"
-                warning = str(
-                    WarningLevel(gasValue, sd.level_1_warning_unit, sd.level_1_warning_unit, sd.level_1_warning_unit))
-                sensor_data[str(sd.sensor_name)] = {'value': gasValue, 'unit': sd.sensor_unit, 'warning': warning}
+                warning = ""
+                sensor_data[sensor_hash_object.hexdigest()] = {'id':sd.id,'name':sd.sensor_name,'value': 0, 'unit': sd.sensor_unit, 'warning': warning}
                 print(sensor_data)
             except:
-                sensor_data[str(sd.sensor_name)] = {'value': "Connection Error!", 'unit': sd.sensor_unit, 'warning': 1}
+                sensor_data[sensor_hash_object.hexdigest()] = {'id':sd.id,'name':sd.sensor_name,'value': "Connection Error!", 'unit': sd.sensor_unit, 'warning': 1}
                 pass
 
-        hash_object = hashlib.sha512(str(node_id).encode())
+        node_hash_object = hashlib.sha512(str(node_id).encode())
 
-        data[hash_object.hexdigest()] = sensor_data
+        data[node_hash_object.hexdigest()] = sensor_data
         return JsonResponse(data)
     else:
         data['result'] = "Not Ajax"
     return JsonResponse(data)
 
 
-#import matplotlib.pyplot as plt
-import io
-import numpy as np
-from django.db.models import Avg
-from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
-from django.db.models import Value
+@login_required
+def node_sensor_data_ajax(request):
+    data = {}
+    if request.is_ajax():
+        mine_id = request.GET.get('id', None)
+        sensor_id = request.GET.get('sensor_id', None)
+        mine_details = MineDetails.objects.values_list().filter(id=mine_id)
+        data = {}
+        mine_data = {}
+        for m in mine_details:
+            mine_data['id'] = str(m[0])
+            mine_data['name'] = str(m[1])
+            mine_data['image_url'] = str(m[6])
+
+        sensor_data = {}
+        sensor_details = Sensor_Node.objects.get(id=sensor_id, mine_id=mine_id)
+        sensor_hash_object = hashlib.sha512(str(sensor_details.id).encode())
+        node_ash_object = hashlib.sha512(str(sensor_details.node_id_id).encode())
+        try:
+            response = requests.get('http://' + sensor_details.ip_add)
+            gasValue = strip_tags(response.text)
+            gasValue = gasValue if (isNum(gasValue)) else "Network Error"
+            warning = str(WarningLevel(gasValue, sensor_details.level_1_warning_unit, sensor_details.level_2_warning_unit, sensor_details.level_3_warning_unit))
+            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': gasValue, 'threshold':sensor_details.sensor_threshold_limit,'unit': sensor_details.sensor_unit, 'warning': warning}
+        except:
+            data['result'] = {'node': node_ash_object.hexdigest(),'sensor':sensor_hash_object.hexdigest(),'value': "Connection Error!", 'threshold':sensor_details.sensor_threshold_limit,'unit': sensor_details.sensor_unit, 'warning': 1}
+            pass
+
+        return JsonResponse(data)
+
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
 
 
 @login_required
-def ellicots(request, pk, template_name='sensor/ellicots_graph.html'):
+def ellicots(request, pk, template_name='report/ellicots_graph.html'):
     data = {}
     pk = decrypt(pk)
     data['node_id'] = pk
@@ -1061,32 +1075,72 @@ def ellicots(request, pk, template_name='sensor/ellicots_graph.html'):
 
 
 @login_required
-def locate_node(request, mine_id, node_id, template_name='sensor/test1.html'):
-    mine_id = decrypt(mine_id)
-    node_id = decrypt(node_id)
+def line_chart_ratio_graph(request, pk, template_name='report/line_chart_ratio.html'):
     data = {}
-
-    data['mine_id'] = mine_id
-    try:
-        node = get_object_or_404(Node, mine_id=mine_id, pk=node_id)
-        data['x'] = node.x_axis
-        data['y'] = node.y_axis
-        data['node_name'] = node.name
-        data['content'] = node.description
-        data['location'] = node.location
-
-    except:
-        data['error'] = 1
-        pass
+    pk = decrypt(pk)
+    data['node_id'] = pk
     return render(request, template_name, data)
 
 
 @login_required
-def ellicots_ajax(request, template_name='sensor/ellicots_graph.html'):
+def youngs_ratio_graph(request, pk, template_name='report/young_ratio.html'):
+    data = {}
+    pk = decrypt(pk)
+    data['node_id'] = pk
+    return render(request, template_name, data)
+
+
+@login_required
+def line_chart_ratio_graph_ajax(request):
     data = {}
     if request.is_ajax():
         node_id = request.GET.get('id', None)
-        # node_id = decrypt(node_id)
+
+        node_id = decrypt(node_id)
+        date_from = request.GET.get('date_from', None)
+        date_from += " 00:00:00"
+        date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
+        date_to = request.GET.get('date_to', None)
+        date_to += " 00:00:00"
+        date_to = datetime.strptime(date_to, "%Y-%m-%d %H:%M:%S").date()
+        graph = []
+
+        data_list = gasModel_auto.objects.filter(date_time__range=(
+            date_from, date_to
+        ), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),
+                                                                          avg=Avg('sensor_value'))
+
+        DateWiseData = {}
+        for d in data_list:
+            DateWiseData[d['day']] = []
+        for d in data_list:
+            list = {'name': d['sensor_name'], 'avg': d['avg']}
+            DateWiseData[d['day']].append(list)
+        gases = {}
+
+        for DateWise in DateWiseData:
+            gases['CO'] = gases['CO2'] = gases['CH4'] = gases['O2'] = gases['H2'] = gases['N2'] = gases['C2H4'] = 0
+            for gas in DateWiseData[DateWise]:
+                gases[gas['name']] = gas['avg']
+
+            gas = Gasdb(co=gases['CO'], co2=gases['CO2'], ch4=gases['CH4'], o2=gases['O2'], h2=gases['H2'],
+                        n2=gases['N2'], c2h4=gases['C2H4'], date=DateWise)
+
+            graph.append(gas.findExplosibility())
+
+        data['result'] = graph
+
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
+
+
+@login_required
+def youngs_ratio_graph_ajax(request):
+    data = {}
+    if request.is_ajax():
+        node_id = request.GET.get('id', None)
+        node_id = decrypt(node_id)
         date_from = request.GET.get('date_from', None)
         date_from += " 00:00:00"
         date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
@@ -1113,38 +1167,39 @@ def ellicots_ajax(request, template_name='sensor/ellicots_graph.html'):
             for gas in DateWiseData[DateWise]:
                 gases[gas['name']] = gas['avg']
 
-            Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
-                'C2H4']
-            try:
-                gases['CO'] = (gases['CO'] / Total) * 100
-            except:
-                gases['CO'] = 0
-            try:
-                gases['CO2'] = (gases['CO2'] / Total) * 100
-            except:
-                gases['CO2'] = 0
-            try:
-                gases['CH4'] = (gases['CH4'] / Total) * 100
-            except:
-                gases['CH4'] = 0
-            try:
-                gases['O2'] = (gases['O2'] / Total) * 100
-            except:
-                gases['O2'] = 0
-            try:
-                gases['H2'] = (gases['H2'] / Total) * 100
-            except:
-                gases['H2'] = 0
-            try:
-                gases['N2'] = (gases['N2'] / Total) * 100
-            except:
-                gases['N2'] = 0
-            try:
-                gases['C2H4'] = (gases['C2H4'] / Total) * 100
-            except:
-                gases['C2H4'] = 0
+            # Total = gases['CO'] + gases['CO2'] + gases['CH4'] + gases['O2'] + gases['H2'] + gases['N2'] + gases[
+            #     'C2H4']
+            # try:
+            #     gases['CO'] = (gases['CO'] / Total) * 100
+            # except:
+            #     gases['CO'] = 0
+            # try:
+            #     gases['CO2'] = (gases['CO2'] / Total) * 100
+            # except:
+            #     gases['CO2'] = 0
+            # try:
+            #     gases['CH4'] = (gases['CH4'] / Total) * 100
+            # except:
+            #     gases['CH4'] = 0
+            # try:
+            #     gases['O2'] = (gases['O2'] / Total) * 100
+            # except:
+            #     gases['O2'] = 0
+            # try:
+            #     gases['H2'] = (gases['H2'] / Total) * 100
+            # except:
+            #     gases['H2'] = 0
+            # try:
+            #     gases['N2'] = (gases['N2'] / Total) * 100
+            # except:
+            #     gases['N2'] = 0
+            # try:
+            #     gases['C2H4'] = (gases['C2H4'] / Total) * 100
+            # except:
+            #     gases['C2H4'] = 0
 
-            gas=Gasdb(co=gases['CO'],co2= gases['CO2'],ch4= gases['CH4'] ,o2= gases['O2'],h2= gases['H2'],n2= gases['N2'],c2h4 = gases['C2H4'],date=DateWise)
+            gas = Gasdb(co=gases['CO'], co2=gases['CO2'], ch4=gases['CH4'], o2=gases['O2'], h2=gases['H2'],
+                        n2=gases['N2'], c2h4=gases['C2H4'], date=DateWise)
             graph.append(gas.graph())
 
         data['result'] = graph
@@ -1154,6 +1209,69 @@ def ellicots_ajax(request, template_name='sensor/ellicots_graph.html'):
     return JsonResponse(data)
 
 
+@login_required
+def locate_node(request, mine_id, node_id, template_name='node/locate_node.html'):
+    mine_id = decrypt(mine_id)
+    node_id = decrypt(node_id)
+    data = {}
+
+    data['mine_id'] = mine_id
+    try:
+        node = get_object_or_404(Node, mine_id=mine_id, pk=node_id)
+        data['x'] = node.x_axis
+        data['y'] = node.y_axis
+        data['node_name'] = node.name
+        data['content'] = node.description
+        data['location'] = node.location
+
+    except:
+        data['error'] = 1
+        pass
+    return render(request, template_name, data)
+
+
+@login_required
+def ellicots_ajax(request):
+    data = {}
+    if request.is_ajax():
+        node_id = request.GET.get('id', None)
+        node_id = decrypt(node_id)
+        date_from = request.GET.get('date_from', None)
+        date_from += " 00:00:00"
+        date_from = datetime.strptime(date_from, "%Y-%m-%d %H:%M:%S").date()
+        date_to = request.GET.get('date_to', None)
+        date_to += " 00:00:00"
+        date_to = datetime.strptime(date_to, "%Y-%m-%d %H:%M:%S").date()
+        graph = []
+
+        data_list = gasModel_auto.objects.filter(date_time__range=(
+            date_from, date_to
+        ), node_id=node_id).values('sensor_name', 'sensor_name').annotate(day=TruncDay('date_time'),
+                                                                          avg=Avg('sensor_value'))
+
+        DateWiseData = {}
+        for d in data_list:
+            DateWiseData[d['day']] = []
+        for d in data_list:
+            list = {'name': d['sensor_name'], 'avg': d['avg']}
+            DateWiseData[d['day']].append(list)
+        gases = {}
+
+        for DateWise in DateWiseData:
+            gases['CO'] = gases['CO2'] = gases['CH4'] = gases['O2'] = gases['H2'] = gases['N2'] = gases['C2H4'] = 0
+            for gas in DateWiseData[DateWise]:
+                gases[gas['name']] = gas['avg']
+
+            gas = Gasdb(co=gases['CO'], co2=gases['CO2'], ch4=gases['CH4'], o2=gases['O2'], h2=gases['H2'],
+                        n2=gases['N2'], c2h4=gases['C2H4'], date=DateWise)
+
+            graph.append(gas.graph())
+
+        data['result'] = graph
+
+    else:
+        data['result'] = "Not Ajax"
+    return JsonResponse(data)
 
 
 @register.filter(name='lookup')
@@ -1211,9 +1329,6 @@ def decrypt(txt):
         # log the error
         print(e)
         return None
-
-
-from django.core.signing import Signer
 
 
 @register.filter(name="signed")

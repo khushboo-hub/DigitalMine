@@ -242,16 +242,24 @@
                         console.log(defaultData);
                         let co = [];
                         let young_ratio = [];
-                        let co_ratio = [];
+                        let graham_ratio=[];
+                        let coco2_ratio=[];
+                        let jtr_ratio=[];
+
                         let date = [];
                         for (data in defaultData) {
                             if (defaultData.hasOwnProperty(data)) {
                                 date.push(defaultData[data].date);
-                                co_ratio.push(defaultData[data].co_ratio);
+                                co.push(defaultData[data].co);
                                 young_ratio.push(defaultData[data].young_ratio);
+                                graham_ratio.push(defaultData[data].graham_ratio);
+                                coco2_ratio.push(defaultData[data].coco2_ratio);
+                                jtr_ratio.push(defaultData[data].jtr_ratio);
+
                             }
 
                         }
+
                         var co_ratio_trace = {
                             x: date,
                             y: co_ratio,
