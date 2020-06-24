@@ -22,31 +22,20 @@
                         <div class="col-md-3">
                             <label>Date</label>
                             {{ form.training_date }}
-                            {#                        <div class="form-group">#}
-                            {#                            <div class='input-group date' id='datetimepicker'>#}
-                            {#                                <input type='text' class="form-control" />#}
-                            {#                                <span class="input-group-addon">#}
-                            {#                                    <span class="glyphicon glyphicon-calendar"></span>#}
-                            {#                                </span>#}
-                            {#                            </div>#}
-                            {#                        </div>#}
                         </div>
                         <div class="col-md-3">
                             <label> Training Type </label><br>
                             {{ form.training_type }}
-                            {#                        <input type='text' name='training_type' class='form-control'>#}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
                             <label> Training Tittle </label><br>
                             {{ form.training_tittle }}
-                            {#                        <input type='text' name='training_tittle' class='form-control'>#}
                         </div>
                         <div class="col-md-6">
                             <label> Training Description </label><br>
                             {{ form.training_desc }}
-                            {#                        <textarea class="form-control" rows="5" id="comment" name="training_desc"></textarea>#}
                         </div>
                         <div class="col-md-3">
                             <label> Action </label><br>
@@ -175,17 +164,15 @@
             $("#table_att").empty();
         });
 
-
     $(document).on('submit','#form_submit',function(){
         var $chbx = $("input[name='is_present']");
         $chbx.each(function() {
-            if ($(this).is(':checked')) {
-                $(this).val("Yes");
-            } else {
-                $(this).val("No");
+            if ($(this).is(":checkbox:not(:checked)")) {
+                $(this).attr("value","No");
+                $(this).attr("type","hidden");
             }
         });
-       $('input:checkbox').not(this).prop('checked', this.checked);
+
     });
     </script>
 {% endblock %}

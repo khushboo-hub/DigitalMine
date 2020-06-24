@@ -49,6 +49,10 @@ class Training_Form(forms.ModelForm):
         fields = "__all__"
 
 class training_attendance_details_form(forms.ModelForm):
+    TRUE_FALSE_CHOICES = (
+        ("Yes", 'Yes'),
+        ("No", 'No')
+    )
 
     training_attendance_id = forms.CharField(widget=forms.Select(attrs={
             'class': 'form-control',
@@ -60,10 +64,7 @@ class training_attendance_details_form(forms.ModelForm):
                            'class': 'form-control',
                            'required':False
                        }))
-    is_present = forms.BooleanField(widget=forms.CheckboxInput(attrs={
-        'class': 'form-control',
-        'required': False
-    }))
+    is_present = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,widget=forms.Select(), required=True)
     class Meta():
         model = training_attendance_details
         fields = "__all__"

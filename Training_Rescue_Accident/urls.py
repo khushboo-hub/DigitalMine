@@ -4,7 +4,10 @@ from . import views
 app_name = 'Training_Rescue_Accident'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.index, name='index'),# for training attendance
+    path('manage_training_attendance', views.manage_training_attendance, name='manage_training_attendance'),# for manage training attendance
+    path('EditEmployeeTrainingAttendance/<int:id>', views.EditEmployeeTrainingAttendance, name='EditEmployeeTrainingAttendance'),# for edit training attendance
+
     path('fetch_shift', views.fetch_shift, name='fetch_shift'),
     path('fetch_employee_list', views.fetch_employee_list, name='fetch_employee_list'),
     #path('add_Training_Rescue_Accident', views.add_Training_Rescue_Accident, name='add_Training_Rescue_Accident'),# delete

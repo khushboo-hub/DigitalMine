@@ -6,7 +6,7 @@ from employee.models import MineDetails, EmployeeShiftAssign, Employee, MineShif
 
 class training_attendance(models.Model):
     mine_id = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    shift_id = models.IntegerField(null=True, blank=True)
+    shift_id = models.ForeignKey(MineShift, on_delete=models.CASCADE, null=True, blank=True)
     training_date = models.CharField(max_length=255, null=True, blank=True)
     training_type = models.CharField(max_length=255, null=True, blank=True)
     training_tittle = models.CharField(max_length=255, null=True, blank=True)
@@ -16,9 +16,10 @@ class training_attendance(models.Model):
         db_table = "training_attendance"
 
 class training_attendance_details(models.Model):
+    BOOL_CHOICES = (("Yes", 'Yes'), ("No", 'No'))
     training_attendance_id = models.IntegerField(null=True, blank=True)
     emp_id = models.IntegerField(null=True, blank=True)
-    is_present = models.BooleanField(default=False)
+    is_present = models.CharField(max_length=3, choices=BOOL_CHOICES)
 
     class Meta:
         db_table = "training_attendance_details"
