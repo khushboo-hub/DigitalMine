@@ -760,11 +760,13 @@
                         'args': 'role,immediate_staff'
                     },
                     beforeSend: function () {
-                        $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
-                        $('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
+                       // $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
+                        //$('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
                     },
                     success: function (data) {
                         if (data.hasOwnProperty('result')) {
+                            $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
+                            $('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
                             data = data.result;
                             if(data.hasOwnProperty('role')) {
                                 let roles = data.role;

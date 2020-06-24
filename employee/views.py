@@ -14,14 +14,16 @@ import requests
 from background_task import background
 from django.contrib import messages
 from django.core import serializers
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
+
+from accounts.utils import is_manager
 from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm
-from sensor.views import decrypt
+from setting.utils import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
 from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
     MedicalReport
@@ -91,6 +93,7 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
 
 @login_required
+@user_passes_test(is_manager)
 def get_dropdownlist(request):
     data = {}
     if request.is_ajax():
