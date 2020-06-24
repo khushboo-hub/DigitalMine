@@ -23,10 +23,12 @@ from django.db.models import Avg, Value
 from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
 from accounts.utils import is_manager
 
+
 @login_required
 @user_passes_test(is_manager)
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
+
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     if request.user.is_superuser:
         form = NodeForm()

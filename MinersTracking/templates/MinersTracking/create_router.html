@@ -1,518 +1,430 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% load staticfiles %}
-<div class="container">
-    <div class="row">
+    {% load staticfiles %}
+    <div class="container">
+        <div class="row">
 
-      <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
-        <a href="#" class="close" data-dismiss="alert"aria-label="close">&times;</a>
-      </div>
-      <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
-        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-      </div>
-
-      <section class="col-md-12">
-          <h3 class="page-header text-center"><b>Router Configuration: Add Router</b>
-          <small>&nbspHere you can create router,show all,delete any router</small>
-        </h3>
-
-            <!-- Table content -->
-            <div class="row" style="background-color: powderblue;">
-                <div class="form-group"></div>
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" id="routerForm" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Select Mine</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.mine_id}}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Router ID </label></label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.router_id}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Router Address</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.address}}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Router Location </label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.location}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>X-Axis</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.x_axis}}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Y-Axis </label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.y_axis}}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Is Blocked</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.is_block}}
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>IP Address</label>
-                                </div>
-                                <div class="col-md-8">
-                                    {{form.ip_add}}
-                                </div>
-                            </div>
-                        </div>
-                        <center><button id="RouterCreate" onclick="document.querySelector('.glyphicon').classList.toggle('icon-rotate')" type="submit" class="btn btn-primary" value="Create Router"/><i class="glyphicon glyphicon-signal"></i> Create Router</center>
-
-                    </form>
-                </div>
+            <div class="alert alert-success alert-dismissible fade in hide " id="success-alert" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade in hide " id="failure-alert" role="alert">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
             </div>
 
+            <section class="col-md-12">
+                <h3 class="page-header text-center"><b>Router Configuration: Add Router</b>
+                    <small>&nbspHere you can create router,show all,delete any router</small>
+                </h3>
 
-            <br>
-            <hr>
-            <center><h2>All Created Routers</h2></center>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table hover " id="myTable">
-                            <thead>
-                            <tr>
-                                <th>SL No</th>
-                                <th>Mine Name</th>
-                                <th>Router ID</th>
-                                <th>ADDRESS</th>
-                                <th>Location</th>
-                                <th>Block Area</th>
-                                <th>X,Y (Axis)</th>
-                                <th>IP Address</th>
-                                 <th>Edit</th>
-                                <th>Delete</th>
-
-                            </tr>
-                            </thead>
-                            <tbody id="RouterList">
-                            {% for book in object_list %}
-                            <tr>
-                                <td>{{forloop.counter}}</td>
-                                <td>{{ book.mine_id.name }}</td>
-                                <td>{{ book.router_id }}</td>
-                                <td>{{ book.address }}</td>
-                                <td>{{ book.location }}</td>
-                                <td>{{ book.is_block }}</td>
-                                <td>{{ book.x_axis }},{{ book.y_axis }}</td>
-                                <td>{{ book.ip_add }}</td>
-                                <td class="text-center"><a href="{% url 'MinersTracking:update_router' book.id %}" class="editRouter"
-                                                           data-url="{% url 'MinersTracking:update_router' book.id %}"
-                                                           title="Edit Router."><span
-                                        class="glyphicon glyphicon-pencil"></span></a></td>
-                                <td class="text-center"><a href="#" class="delete"
-                                                           data-url="{{book.id}}"
-                                                           title="Delete Router."><span
-                                        class="glyphicon glyphicon-trash"></span></a></td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                <!-- Table content -->
+                <div class="row" style="background-color: powderblue;">
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" id="routerForm" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Select Mine</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.mine_id }}
+                                        <span style="color:red">{{ form.mine_id.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Router ID </label></label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.router_id }}
+                                        <span style="color:red">{{ form.router_id.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Router Address</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.address }}
+                                        <span style="color:red">{{ form.address.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Router Location </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.location }}
+                                        <span style="color:red">{{ form.location.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>X-Axis</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.x_axis }}
+                                        <span style="color:red">{{ form.x_axis.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Y-Axis </label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.y_axis }}
+                                        <span style="color:red">{{ form.y_axis.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Is Blocked</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.is_block }}
+                                        <span style="color:red">{{ form.is_block.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>IP Address</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        {{ form.ip_add }}
+                                        <span style="color:red">{{ form.ip_add.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-signal"></i>
+                                    Create Router
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </section>
+                <br>
+                <hr>
+                <div class="text-center"><h2>All Created Routers</h2></div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table hover " id="myTable">
+                                <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Mine Name</th>
+                                    <th>Router ID</th>
+                                    <th>ADDRESS</th>
+                                    <th>Location</th>
+                                    <th>Block Area</th>
+                                    <th>X,Y (Axis)</th>
+                                    <th>IP Address</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+
+                                </tr>
+                                </thead>
+                                <tbody id="RouterList">
+                                {% for book in object_list %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ book.mine_id.name }}</td>
+                                        <td>{{ book.router_id }}</td>
+                                        <td>{{ book.address }}</td>
+                                        <td>{{ book.location }}</td>
+                                        <td>{{ book.is_block }}</td>
+                                        <td>{{ book.x_axis }},{{ book.y_axis }}</td>
+                                        <td>{{ book.ip_add }}</td>
+                                        <td class="text-center"><a
+                                                href="{% url 'MinersTracking:update_router' book.id %}"
+                                                class="editRouter"
+                                                data-url="{% url 'MinersTracking:update_router' book.id %}"
+                                                title="Edit Router."><span
+                                                class="glyphicon glyphicon-pencil"></span></a></td>
+                                        <td class="text-center"><a href="#" class="delete"
+                                                                   data-url="{{ book.id }}"
+                                                                   title="Delete Router."><span
+                                                class="glyphicon glyphicon-trash"></span></a></td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-</div>
-<section class="KBmap" id="KBtestmap"/>
-<script>
-     $(document).ready(function(){
-            if($('#id_mine_id').val()!=''){
-                 $('#RouterCreate').prop("disabled", false)
-                setImageData($( "#id_mine_id option:selected" ).val());
-                $('#RouterCreate').prop("disabled", false)
-            }
-            else{
-                $('#RouterCreate').prop("disabled", true)
+    <section class="KBmap" id="KBtestmap"></section>
+    <script>
+        $(document).ready(function () {
+
+            if ($('#id_mine_id').val() != '') {
+                console.log('generate')
+                setImageData($("#id_mine_id option:selected").val());
             }
             $('#KBtestmap').hide();
-     });
 
-    $("#id_mine_id").on("change",function(){
-    if($(this).val()!=''){
-        setImageData(this.value);
-        $('#RouterCreate').prop("disabled", false)
-    }
-    else{
-        $('#RouterCreate').prop("disabled", true)
-    }
-    $('#KBtestmap').hide();
-});
-    $(document).ready(function(){
-    $('title').append('|Create Router');
-    $('#RouterCreate').prop("disabled", true)
-        $("#id_mine_id").addClass('form-control');
-       // $('#id_ip_add').attr("pattern","\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-        $('#myTable').DataTable( {
-          dom: 'Bfrtip',
-          buttons: [
-            'copy', 'csv', 'excel', 'pdf', 'print'
-        ]
-
-        });
-        toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-full-width",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "100",
-                    "timeOut": "3000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",
-                    }
-
-});
-
-
-    $("#id_x_axis").click(function(){
-        if($('#id_mine_id').val()!=""){
-                PointInitialization();
-                var elem = document.getElementById("KBtestmap");
-                openFullscreen(elem);
-                FULLSCREEN();
-        }
-        ZoomButtonsInitialization();
-    });
-
-    $("#id_y_axis").click(function(){
-        if($('#id_mine_id').val()!=""){
-            PointInitialization();
-            var elem = document.getElementById("KBtestmap");
-            openFullscreen(elem);
-        }
-       // ZoomButtonsInitialization();
-    });
-    Delete_Router();
-    //$(document.body).on("click", ".delete", function () {var Curr=$(this).parents('tr');$('#myTable').DataTable().row(Curr).remove().draw();});
-    function Delete_Router(){
-    $(document.body).on("click", ".delete", function () {
-
-       // $("#sureDelete").attr("href", $(this).data('url'));
-        $('#update_info').modal('show');
-        var router_id=$(this).data('url');
-        var Curr=$(this).parents('tr');
-        var datatable=$('#myTable').DataTable();
-        $('#update_info').on('click', '#delete', function(e) {
-        $('#update_info').unbind('click');
-        $('#update_info').modal('hide');
-        $.ajax({
-            type:"post",
-            url:"delete_router/",
-            data:{
-                csrfmiddlewaretoken: "{{ csrf_token }}",
-                'id':router_id,
-            },
-            success:function(json){
-                console.log(json);
-                if(json.hasOwnProperty("success")){
-                    // $("#success-alert").removeClass("hide");
-                    // $("#success-alert").text(json.success);
-                     //$("#success-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-                     datatable.row(Curr).remove().draw();
-                     toastr.success(json.success);
-                 }
-                else{
-                        //$("#failure-alert").removeClass("hide");
-                        //$("#failure-alert").text(json.error);
-                        //$("#failure-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-                        toastr.error(json.error);
+            $("#id_mine_id").on("change", function () {
+                if ($(this).val() != '') {
+                    setImageData(this.value);
+                    $('#RouterCreate').prop("disabled", false)
+                } else {
+                    $('#RouterCreate').prop("disabled", true)
                 }
-            },
-            error: function(){
-                    console.log("something is not right.please contact admin - 1");
-            }});
-        });
-    });}
+                $('#KBtestmap').hide();
+            });
+            $('title').append('|Create Router');
+            $('#myTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
 
-function setImageData(mine_id){
-    url=$("#get_url").data('url');
+            });
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": false,
+                "positionClass": "toast-bottom-full-width",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "100",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+            }
 
-        $.ajax({
-            type:"get",
-            url: "{% url 'Strata:fetch_map_image' %}",
-            data: {
-                     'id': mine_id
-                   },
-            success: function(data) {
-                // CreateMapModel(data.result.image_url,data.result.name);
-                tempData=data;
-                  CreateKBtestMap(data.result.image_url);
 
-                //console.log(data.result.name);
-                //console.log(data.result.image_url);
+            $("#id_x_axis").click(function () {
+                if ($('#id_mine_id').val() != "") {
+                    PointInitialization();
+                    var elem = document.getElementById("KBtestmap");
+                    openFullscreen(elem);
+                    FULLSCREEN();
+                }
+                ZoomButtonsInitialization();
+            });
+
+            $("#id_y_axis").click(function () {
+                if ($('#id_mine_id').val() != "") {
+                    PointInitialization();
+                    var elem = document.getElementById("KBtestmap");
+                    openFullscreen(elem);
+                }
+            });
+            Delete_Router();
+            function Delete_Router() {
+                $(document.body).on("click", ".delete", function () {
+                    $('#update_info').modal('show');
+                    var router_id = $(this).data('url');
+                    var Curr = $(this).parents('tr');
+                    var datatable = $('#myTable').DataTable();
+                    $('#update_info').on('click', '#delete', function (e) {
+                        $('#update_info').unbind('click');
+                        $('#update_info').modal('hide');
+                        $.ajax({
+                            type: "post",
+                            url: "delete_router/",
+                            data: {
+                                csrfmiddlewaretoken: "{{ csrf_token }}",
+                                'id': router_id,
+                            },
+                            success: function (json) {
+                                if (json.hasOwnProperty("success")) {
+                                    datatable.row(Curr).remove().draw();
+                                    toastr.success(json.success);
+                                } else {
+                                    toastr.error(json.error);
+                                }
+                            },
+                            error: function () {
+                                console.log("something is not right.please contact admin - 1");
+                            }
+                        });
+                    });
+                });
+            }
+
+            function setImageData(mine_id) {
+                let url = $("#get_url").data('url');
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'Strata:fetch_map_image' %}",
+                    data: {
+                        'id': mine_id
                     },
-            error: function(){
-                    console.log("something is not right.please contact admin - 1");
-                 }
+                    success: function (data) {
+                        tempData = data;
+                        CreateKBtestMap(data.result.image_url);
+
+                    },
+                    error: function () {
+                        console.log("something is not right.please contact admin - 1");
+                    }
+                });
+            }
+            function CreateKBtestMap(data) {
+                var img = data;
+                if (addedKBmaps.length > 0) {
+                    addedKBmaps.pop();
+                    $('.KBmap__mapContainer').remove();
+                }
+                if (img) {
+                    createKBmap('KBtestmap', '/media/' + img);
+
+                    if (!isEmpty($('#id_x_axis').val()) || !isEmpty($('#id_y_axis').val())) {
+                        var icon = "/static/image/router.svg";
+                        KBtestmap.addMarker(icon, $('#id_x_axis').val(), $('#id_y_axis').val(), 'Test');
+                        KBtestmap.showAllMapMarkers();
+                    }
+                } else {
+                    $("#map").css("");
+                    $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
+                }
+
+
+            };
+            var added = 0;
+            var P;
+
+            function PointInitialization() {
+                $(".KBmap__mapHolder").click(function (e) {
+
+                    if (added == 0) {
+                        var temp = mousePositionElement(e);
+                        P = temp;
+                        console.log(temp);
+                        var icon = "/static/image/router.svg";
+                        var offset = $(this).offset();
+                        var offsetWidth = $('#KBtestmap')[0].offsetWidth;
+                        var ScrollWidth = $('#KBtestmap')[0].scrollWidth;
+
+                        var offsetHeight = $('#KBtestmap')[0].offsetHeight;
+                        var ScrollHeight = $('#KBtestmap')[0].scrollHeight;
+
+                        var offsetY = ((offsetHeight - ScrollHeight) / offsetHeight) * 100;
+                        var offsetX = ((offsetWidth - ScrollWidth) / offsetWidth) * 100;
+                        console.log(offsetX + " " + offsetY);
+                        var PosX = temp.x + offsetY;
+                        var PosY = temp.y - ((document.documentElement.scrollTop)) / 7.8 + offsetX;
+                        //var PosY=temp.y
+                        console.log(PosX + " " + PosY);
+
+                        var random = Math.floor((Math.random() * 10) + 1);
+                        var router_location_name = $('#id_router_id').val();
+                        var router_mine_name = $('#id_mine_id').children("option:selected").text();
+                        var markerName = "Test"
+                        var NodeName = router_location_name + "||" + router_mine_name + "||";
+                        var ipAddress = $('#id_ip_add').val();
+                        var routerLocation = $('#id_location').val();
+                        var routerAddress = $('#id_address').val();
+                        var Blocked = $('#id_is_block').val();
+                        var NodeContent = "<small>";
+                        NodeContent += "<strong >" + "Router Address : ";
+                        NodeContent += "<span class='badge'>";
+                        NodeContent += routerAddress;
+                        NodeContent += "</span>";
+                        NodeContent += "</strong></br>";
+
+                        NodeContent += "<strong >" + "Router Location : ";
+                        NodeContent += "<span class='badge'>";
+                        NodeContent += routerLocation;
+                        NodeContent += "</span>";
+                        NodeContent += "</strong></br>";
+
+                        NodeContent += "<strong >" + "Ip Address : ";
+                        NodeContent += "<span class='badge'>";
+                        NodeContent += ipAddress;
+                        NodeContent += "</span>";
+                        NodeContent += "</strong></br>";
+
+
+                        NodeContent += "<strong >" + "Is It Blocked : ";
+
+                        NodeContent += (Blocked == "Yes") ? "<span class='btn btn-success'>" : "<span class='btn btn-danger'>";
+                        NodeContent += "<span class='badge'>";
+                        NodeContent += Blocked;
+                        NodeContent += "</span></span>";
+                        NodeContent += "</strong></small>";
+
+                        var KBkeys = KBtestmap.mapMarkers;
+
+                        if ("Test" in KBkeys) KBkeys.Test.removeMarker();
+
+                        KBtestmap.addMarker(icon, PosX, PosY, markerName);
+                        KBtestmap.mapMarkers[markerName].addModal(NodeName, NodeContent);
+
+                        $('#id_x_axis').val(PosX);
+                        $('#id_y_axis').val(PosY);
+                        $('.KBmap__marker').not(':last').remove();
+
+                        KBtestmap.showAllMapMarkers();
+
+                    }
+                });
+            }
+
+            function ZoomButtonsInitialization() {
+
+                var $section = $('#KBtestmap');
+                var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
+                    increment: 0.01,
+                    minScale: 1,
+                    maxScale: 10,
+                    startTransform: 'scale(1.0)',
+                    disablePan: false,
+                    contain: 'invert',
+                });
+                $panzoom.parent().on('mousewheel.focal', function (e) {
+                    e.preventDefault();
+                    var delta = e.delta || e.originalEvent.wheelDelta;
+
+                    var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
+                    $panzoom.panzoom('zoom', zoomOut, {
+                        animate: false,
+                        focal: {clientX: e.clientX, clientY: e.clientY}
+                    });
+
+                });
+            }
+            $(document).keyup(function (e) {
+                // if (e.keyCode === 13) $('.save').click();     // enter
+                if (e.keyCode === 27 || e.keyCode === 13) { //esc
+                    $(function () {
+                        $('#AddRouter').modal('toggle');
+                    });
+                }
             });
-}
 
-
-	function CreateKBtestMap(data){
-            var img=data;
-            //console.log(url);
-         if(addedKBmaps.length>0){
-            addedKBmaps.pop();
-            $('.KBmap__mapContainer').remove();
-         }
-
-        //alert(img);
-
-        if(img){
-        createKBmap('KBtestmap', '/media/'+img);
-
-				// KBtestmap.importJSON(jsonData);
-				// KBtestmap.showAllMapMarkers();
-
-
-				}
-        else{
-            $("#map").css("");
-            $("#map").html("No Mine map(blue print) is added in this mine.please add it.");
-        }
-
-
-    };
-var added=0;
-var P;
-function PointInitialization(){
-$(".KBmap__mapHolder").click(function(e){
-
-            if(added==0){
-                   var temp= mousePositionElement(e);
-                   P=temp;
-                   console.log(temp);
-                   var icon="/static/image/router.svg";
-                   var offset = $(this).offset();
-                   var offsetWidth=$('#KBtestmap')[0].offsetWidth;
-                   var ScrollWidth=$('#KBtestmap')[0].scrollWidth;
-
-                   var offsetHeight=$('#KBtestmap')[0].offsetHeight;
-                   var ScrollHeight=$('#KBtestmap')[0].scrollHeight;
-
-                   var offsetY=((offsetHeight-ScrollHeight)/offsetHeight)*100;
-                   var offsetX=((offsetWidth-ScrollWidth)/offsetWidth)*100;
-                   console.log(offsetX+" "+offsetY);
-                   var PosX=temp.x+offsetY;
-                   var PosY=temp.y-((document.documentElement.scrollTop))/7.8+offsetX;
-                   //var PosY=temp.y
-                    console.log(PosX+" "+PosY);
-
-                   var random=Math.floor((Math.random() * 10) + 1);
-                   var router_location_name=$('#id_router_id').val();
-                   var router_mine_name=$('#id_mine_id').children("option:selected").text();
-                   var markerName="Test"
-                   var NodeName=router_location_name+"||"+router_mine_name+"||";
-                   var ipAddress=$('#id_ip_add').val();
-                   var routerLocation=$('#id_location').val();
-                   var routerAddress=$('#id_address').val();
-                   var Blocked=$('#id_is_block').val();
-                   var NodeContent="<small>";
-                   NodeContent+="<strong >"+"Router Address : ";
-                   NodeContent+="<span class='badge'>";
-                   NodeContent+=routerAddress;
-                   NodeContent+="</span>";
-                   NodeContent+="</strong></br>";
-
-                   NodeContent+="<strong >"+"Router Location : ";
-                   NodeContent+="<span class='badge'>";
-                   NodeContent+=routerLocation;
-                   NodeContent+="</span>";
-                   NodeContent+="</strong></br>";
-
-                   NodeContent+="<strong >"+"Ip Address : ";
-                   NodeContent+="<span class='badge'>";
-                   NodeContent+=ipAddress;
-                   NodeContent+="</span>";
-                   NodeContent+="</strong></br>";
-
-
-                   NodeContent+="<strong >"+"Is It Blocked : ";
-
-                   NodeContent+=(Blocked=="Yes")?"<span class='btn btn-success'>":"<span class='btn btn-danger'>";
-                   NodeContent+="<span class='badge'>";
-                   NodeContent+=Blocked;
-                   NodeContent+="</span></span>";
-                   NodeContent+="</strong></small>";
-
-                   var KBkeys=KBtestmap.mapMarkers;
-
-                   if("Test" in KBkeys)KBkeys.Test.removeMarker();
-
-                   KBtestmap.addMarker(icon,PosX,PosY,markerName);
-                   KBtestmap.mapMarkers[markerName].addModal(NodeName,NodeContent);
-
-                   $('#id_x_axis').val(PosX);
-                   $('#id_y_axis').val(PosY);
-                   $('.KBmap__marker').not(':last').remove();
-
-                   KBtestmap.showAllMapMarkers();
-
-                   }
-                });}
-var ZoomLevel;
-
-
-function ZoomButtonsInitialization(){
-
-          var $section = $('#KBtestmap');
-          var $panzoom = $section.find('.KBmap__mapContainer').panzoom({
-            increment       : 0.01,
-            minScale        : 1,
-            maxScale        : 10,
-            startTransform  : 'scale(1.0)',
-            disablePan: false,
-            contain: 'invert',
+            document.addEventListener("fullscreenchange", function (event) {
+                if (checkFullScreenStatus()) {
+                    $('#KBtestmap').show();
+                    $("body").css({"overflow": "hidden"});
+                } else {
+                    $('#KBtestmap').hide();
+                    $("body").css({"overflow": "visible"});
+                }
             });
-          $panzoom.parent().on('mousewheel.focal', function( e ) {
-            e.preventDefault();
-            ZoomLevel=e;
-
-            var delta = e.delta || e.originalEvent.wheelDelta;
-
-            var zoomOut = delta ? delta < 0 : e.originalEvent.deltaY > 0;
-            $panzoom.panzoom('zoom', zoomOut, {
-              animate: false,
-              focal: { clientX: e.clientX, clientY: e.clientY }
+            $('#routerForm').on('submit', function (event) {
+                console.log("form submitted!")  // sanity check
             });
-
-          });
-
-
-}
-    $(document).keyup(function(e) {
- // if (e.keyCode === 13) $('.save').click();     // enter
-  if (e.keyCode === 27 || e.keyCode === 13){ //esc
-        $(function () {
-            $('#AddRouter').modal('toggle');
         });
-  }
-});
 
-
-
-
-document.addEventListener("fullscreenchange", function (event) {
-    if(checkFullScreenStatus()){$('#KBtestmap').show();$("body").css({"overflow":"hidden"});}
-    else{$('#KBtestmap').hide();$("body").css({"overflow":"visible"});}
-});
-
-
-// AJAX for posting
-
-$('#routerForm').on('submit', function(event){
-    event.preventDefault();
-    console.log("form submitted!")  // sanity check
-    create_router();
-});
-
-var X;
-function create_router() {
-    console.log("create post is working!") // sanity check
-    $.ajax({
-        url : "create_router/", // the endpoint
-        type : "POST", // http method
-        data : {
-                csrfmiddlewaretoken: "{{ csrf_token }}",
-                mine : $('#id_mine_id').val(),
-                router_id : $('#id_router_id').val(),
-                address : $('#id_address').val(),
-                location : $('#id_location').val(),
-                x_axis : $('#id_x_axis').val(),
-                y_axis : $('#id_y_axis').val(),
-                isBlock : $('#id_is_block').val(),
-                ip : $('#id_ip_add').val(),
-                }, // data sent with the post request
-
-        // handle a successful response
-        success : function(json) {
-
-            if(json.hasOwnProperty("success")){
-
-                // $("#success-alert").removeClass("hide");
-                // $("#success-alert").text(json.success);
-
-                // $("#success-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-                  var pkc=JSON.parse(json.book)[0].pk;
-                  console.log('pkc',pkc)
-                  var Mid=parseInt($("#myTable").DataTable().rows().count())+1
-                 // var deletebutton='<a href="#" data-url="{% url "MinersTracking:delete_router"  % '+pkc+'}" class="delete" title="Delete Router."><span class="glyphicon glyphicon-trash"></span></a>';
-                  var deletebutton='<a href="#" data-url="'+pkc+'" class="delete" title="Delete Router."><span class="glyphicon glyphicon-trash"></span></a>';
-                  var editbutton='<a href="update_router/'+pkc+'" class="editRouter" title="Edit Router."><span class="glyphicon glyphicon-pencil"></span></a>'
-                    console.log(editbutton);
-                  datatable=$('#myTable').DataTable();
-                 // $('td:last').addClass('text-center');
-
-                  T=JSON.parse(json.book)[0].fields
-                  var mine_name=$("#id_mine_id option[value="+T.mine_id+"]").text();
-                  console.log(mine_name)
-                  var row=datatable.row.add([Mid,mine_name,T.router_id,T.address,T.location,T.is_block,T.x_axis+","+T.y_axis,T.ip_add,editbutton,deletebutton]).draw().node();
-                  row.lastElementChild.setAttribute('class','text-center');
-                  row.lastElementChild.previousElementSibling('class','text-center');
-                  toastr.success(json.success);
-            }
-            else{
-            toastr.error(json.error);
-           // $("#failure-alert").removeClass("hide");
-           // $("#failure-alert").text(json.error);
-           //  $("#failure-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-            }
-        },
-
-        // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-            $("#failure-alert").text("Something Went Wrong!");
-             $("#failure-alert").fadeTo(2000, 500).slideUp(500, function() {$("#success-alert").slideUp(500);});
-        }
-    });
-};
-
-</script>
+    </script>
 
 {% endblock %}

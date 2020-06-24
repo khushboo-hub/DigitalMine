@@ -7,7 +7,9 @@ from employee.models import MineDetails
 
 
 class TrackingRouterForm(forms.ModelForm):
-
+    mine_id=forms.ModelChoiceField(queryset=MineDetails.objects.all(),widget=forms.Select(attrs={
+        'class':'form-control'
+    }))
     router_id = forms.CharField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Router ID:  (EX: R001) '

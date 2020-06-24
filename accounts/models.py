@@ -24,10 +24,6 @@ class SignupForm(UserCreationForm):
             raise forms.ValidationError(u'Email addresses must be unique.')
         return email
 
-
-# from gdstorage.storage import GoogleDriveStorage
-# gd_storage = GoogleDriveStorage()
-
 class profile_extension(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     profile_avatar = models.ImageField(upload_to='employee_image/', null=True, blank=True)

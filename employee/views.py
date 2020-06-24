@@ -60,12 +60,13 @@ import json
 
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
-    profile = get_object_or_404(profile_extension, user_id=request.user.id)
+
     if request.user.is_superuser:
         form = EmployeeForm()
         form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
     else:
+        profile = get_object_or_404(profile_extension, user_id=request.user.id)
         if profile.mine_id is not None:
             form = EmployeeForm(initial={'mine': profile.mine_id})
             form.fields['mine'].widget.attrs['readonly'] = True
