@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import training_attendance,training_attendance_details, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
@@ -8,35 +8,48 @@ from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Tr
 import datetime
 
 
-# MM
+# S S MISHRA
 @login_required
 def index(request, template_name='Training_Attendance.html'):
     if request.POST:
         form = Training_Form(request.POST)
-        print(request.POST.getlist('is_present'))
-        # if form.is_valid():
-        #     my_id = form.save()
-        #
-        #     for key_value in range(len(request.POST.getlist('is_present'))):
-        #         spem_list = {
-        #             'emp_id': request.POST.getlist("emp_id")[key_value],
-        #             'is_present': request.POST.getlist("is_present")[key_value],
-        #             'training_attendance_id': my_id.id
-        #
-        #         }
-        #         sub_form_1 = training_attendance_details_form(spem_list)
-        #         if sub_form_1.is_valid():
-        #             print('')
-        #             # sub_form_1.save()
-        #         else:
-        #             print(sub_form_1.errors)
-        #             print("Sub Part Invalid")
-        # else:
-        #     print("Invalid")
+        if form.is_valid():
+            my_id = form.save()
+
+            for key_value in range(len(request.POST.getlist('is_present'))):
+                spem_list = {
+                    'emp_id': request.POST.getlist("emp_id")[key_value],
+                    'is_present': request.POST.getlist("is_present")[key_value],
+                    'training_attendance_id': my_id.id
+
+                }
+                sub_form_1 = training_attendance_details_form(spem_list)
+                print(spem_list)
+                if sub_form_1.is_valid():
+                   sub_form_1.save()
+                else:
+                    print(sub_form_1.errors)
+                    print("Sub Part Invalid")
+        else:
+            print("Invalid")
     else:
          form = Training_Form()
     return render(request, template_name, {'form': form})
+from accounts.models import profile_extension
+def manage_training_attendance(request, template_name='manage_training_attendance.html'):
+    if request.user.is_superuser:
+        return_data = training_attendance.objects.all().order_by('-id')
+    else:
+        profile=get_object_or_404(profile_extension,user_id=request.user_id)
+        return_data = training_attendance.objects.filter(mine_id=profile.mine_id).order_by('-id')
 
+    return render(request, template_name, {'return_data': return_data})
+
+def EditEmployeeTrainingAttendance(request,id,template_name="EditEmployeeTrainingAttendance.html"):
+    base_column = training_attendance.objects.get(id=id)
+    subTable1 = training_attendance_details.objects.filter(training_attendance_id=id)
+
+    return render(request, template_name,{'form': base_column, "subTable1": subTable1})
 
 # @login_required
 # def add_Training_Rescue_Accident(request):# delete function
