@@ -17,8 +17,8 @@ class training_attendance(models.Model):
 
 class training_attendance_details(models.Model):
     BOOL_CHOICES = (("Yes", 'Yes'), ("No", 'No'))
-    training_attendance_id = models.IntegerField(null=True, blank=True)
-    emp_id = models.IntegerField(null=True, blank=True)
+    training_attendance_id = models.ForeignKey(training_attendance, on_delete=models.CASCADE, null=True, blank=True)
+    emp_id =  models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
     is_present = models.CharField(max_length=3, choices=BOOL_CHOICES)
 
     class Meta:

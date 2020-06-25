@@ -40,7 +40,7 @@ def manage_training_attendance(request, template_name='manage_training_attendanc
     if request.user.is_superuser:
         return_data = training_attendance.objects.all().order_by('-id')
     else:
-        profile=get_object_or_404(profile_extension,user_id=request.user.id)
+        profile=get_object_or_404(profile_extension,user_id=request.user_id)
         return_data = training_attendance.objects.filter(mine_id=profile.mine_id).order_by('-id')
 
     return render(request, template_name, {'return_data': return_data})

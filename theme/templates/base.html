@@ -386,6 +386,7 @@
                                     Attendance </a></li>
                                 <li><a href="{% url 'Training_Rescue_Accident:Rescue_index' %}">Add Rescue Record</a>
                                 </li>
+
                                 <li><a href="{% url 'Training_Rescue_Accident:Rescue_Manage' %}">Manage Rescue
                                     Record</a></li>
 
@@ -406,7 +407,6 @@
                             <ul class="dropdown-menu dropdown-menu-large row navbar-color ">
                                 <li class="col-sm-4">
                                     <ul class="">
-
                                         <li class="dropdown-header" style="color:white;"><strong> <i
                                                 class="pe-7s-display1"></i>Environment
                                             Monitoring</strong>
@@ -415,7 +415,6 @@
                                         <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
                                         <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a>
                                         </li>
-
                                         <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
                                         <li><a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a></li>
                                         <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
@@ -654,7 +653,6 @@
                                 </p>
                             </a>
                             <ul class="dropdown-menu  navbar-color">
-
                                 <li><a href="{% url 'inventory_management:supplier_add' %}">Add Supplier</a></li>
                                 <li><a href="{% url 'inventory_management:category_add' %}">Add Category</a></li>
                                 <li><a href="{% url 'inventory_management:product_add' %}">Add Product</a></li>
@@ -671,7 +669,6 @@
                                 </li>
                             </ul>
                         </li>
-
                         <li class="dropdown  dropdown-large">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="pe-7s-display1"></i>
@@ -762,7 +759,6 @@
                                             Streaming(Web Cam)</a></li>
                                     </ul>
                                 </li>
-
                             </ul>
                         </li>
                         <!--Weather Monitoring-->
@@ -777,11 +773,9 @@
                             <ul class="dropdown-menu navbar-color">
 
                                 <li class="dropdown-header" style="color:white;">Sensor Management</li>
-
                                 <li><a href="{% url 'wm_test:setting' %}">Setting</a></li>
                                 <li><a href="{% url 'wm_test:add_sensor' %}">Add Sensor</a></li>
                                 <li><a href="{% url 'wm_test:manage_sensor' %}">Manage Sensor</a></li>
-
                                 <li class="dropdown-header" style="color:white;">Customise Report</li>
                                 <li><a href="{% url 'wm_test:live_report' %}">Live Report</a></li>
                                 <li><a href="{% url 'wm_test:sensor_hourly_report' %}">Sensor Hourly Report</a></li>

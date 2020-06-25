@@ -11,34 +11,25 @@
                     </h3>
 
                     <div class="row">
-                        <div class="col-md-3">
-                            <label> Select Mine </label><span id="mine_id_span">{{ form.mine_id }}</span><br>
+                        <div class="col-md-4">
+                            <label> Select Mine </label> : {{ form.mine_id }}
                         </div>
-                        <div class="col-md-3">
-                            <label> Choose Shift </label> <span id="shift_id_span">
-                        {{ form.shift_id }}
-                    </span><br>m
+                        <div class="col-md-4">
+                            <label> Choose Shift </label> :  {{ form.shift_id }}
                         </div>
-                        <div class="col-md-3">
-                            <label>Date</label>
-                            {{ form.training_date }}
-                        </div>
-                        <div class="col-md-3">
-                            <label> Training Type </label><br>
-                            {{ form.training_type }}
+                        <div class="col-md-4">
+                            <label>Date</label> : {{ form.training_date }}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
-                            <label> Training Tittle </label><br>
-                            {{ form.training_tittle }}
+                        <div class="col-md-4">
+                            <label> Training Type </label> : {{ form.training_type }}
                         </div>
-                        <div class="col-md-6">
-                            <label> Training Description </label><br>
-                            {{ form.training_desc }}
+                        <div class="col-md-4">
+                            <label> Training Tittle </label> : {{ form.training_tittle }}
                         </div>
-                        <div class="col-md-3">
-
+                        <div class="col-md-4">
+                            <label> Training Description </label> : {{ form.training_desc }}
                         </div>
                     </div>
                 </div>
@@ -61,7 +52,18 @@
                             </tr>
                             </thead>
                             <tbody id="table_att">
+                                {% for obj in subTable1 %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td><input class='present' type='checkbox' class='is_present' name='is_present'  value='Yes'>Present</td>
+                                        <td><input type='hidden' name='emp_id' value="{{obj.emp_id}}">{{ obj.emp_id.name }}</td>
+                                        <td>{{ obj.emp_id.designation }}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
 
+                                    </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -73,7 +75,6 @@
     <script>
 
         $(document).ready(function () {
-
             $('#id_mine').addClass('form-control');
             $('#id_training_date').datetimepicker({
                 format: 'YYYY-MM-DD'
