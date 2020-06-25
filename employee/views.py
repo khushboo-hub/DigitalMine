@@ -21,7 +21,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 
-from accounts.utils import is_manager
+from accounts.utils import manager
 from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm
 from setting.utils import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
@@ -60,12 +60,13 @@ import json
 
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
-    profile = get_object_or_404(profile_extension, user_id=request.user.id)
+
     if request.user.is_superuser:
         form = EmployeeForm()
         form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
         form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=-1)
     else:
+        profile = get_object_or_404(profile_extension, user_id=request.user.id)
         if profile.mine_id is not None:
             form = EmployeeForm(initial={'mine': profile.mine_id})
             form.fields['mine'].widget.attrs['readonly'] = True
@@ -93,7 +94,7 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
 
 @login_required
-@user_passes_test(is_manager)
+@manager
 def get_dropdownlist(request):
     data = {}
     if request.is_ajax():
@@ -432,30 +433,19 @@ def mine_role_fetch_ajax(request):
 
 @login_required
 def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
-    # book = Employee.objects.all()
-    book = MiningRole.objects.all()
-    current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
-
-    admin_or_not = 0
-    try:
-        current_user = request.user
-        profile = get_object_or_404(profile_extension, user_id=current_user.id)
-        if request.user.is_superuser:
-            book = MiningRole.objects.all().order_by('mine_id')
-            mine_name = "Super User"
-            admin_or_not = 1
-        else:
-            book = MiningRole.objects.filter(mine_id=profile.mine_id.id)
-            mine_name = MineDetails.objects.get(id=profile.mine_id.id)
-            admin_or_not = 0
-    except:
-        pass
     data = {}
-    data['object_list'] = book
-    data['mine_name'] = mine_name
-    data['admin'] = admin_or_not
-
+    if request.user.is_superuser:
+        book = MiningRole.objects.all()
+        data['object_list'] = book
+        data['mine_name'] = "Super User"
+    else:
+        try:
+            profile = request.user.profile_extension_set.values('mine_id')[0]
+            book = MiningRole.objects.filter(mine_id=profile['mine_id'])
+            data['object_list'] = book
+            data['mine_name'] = MineDetails.objects.get(id=profile['mine_id']).name
+        except Exception as e:
+           data['is_not_assigned']=True
     return render(request, template_name, data)
 
 

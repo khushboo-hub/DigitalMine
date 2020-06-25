@@ -4,8 +4,8 @@
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h3 class="page-header"><b>MANAGE MININIG ROLE:</b> {% if admin %}ALL {% else %}
-                    <span style="color:#ff9800">{{ mine_name.name }}</span>{% endif %}</h3>
+                <h3 class="page-header"><b>MANAGE MININIG ROLE:</b> {% if request.user.is_superuser %}ALL {% else %}
+                    <span style="color:#ff9800">{{ mine_name }}</span>{% endif %}</h3>
                 <div class="row text-center">
                     <div class="col-md-12">
                         <a class="btn btn-primary" href="{% url 'employee:add_mining_role' %}">Add Mining Role</a>
@@ -53,6 +53,8 @@
                         </div>
                     </div>
                 </div><!--end Table content -->
+
+
             </section>
         </div>
     </div>
@@ -69,6 +71,7 @@
 
 
             });
+
             $('#MiningRole').DataTable({
                 dom: 'Bflrtip',
                 buttons: [

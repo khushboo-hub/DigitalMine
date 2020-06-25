@@ -8,6 +8,29 @@
             min-height: 50px;
             position: fixed;
         }
+         .form-control-feedback{
+            top:0px !important;
+        }
+
+        .example {
+
+            margin: 15px;
+            font-size: 14px;
+            color: #656666;
+            content: "Example";
+
+            background-color: #fff;
+            border-color: #929494;
+            border-width: 1px;
+            border-radius: 4px;
+
+            padding: 10px 20px 10px;
+            border-style: solid;
+        }
+
+        .form-control-feedback {
+            display: none;
+        }
     </style>
     <ol class="breadcrumb custom-div">
         <li><a href="/">Home</a></li>
@@ -30,7 +53,8 @@
                 <!-- Table content -->
                 <div class="row">
                     <div class="form-group">
-                        <form class="form-horizontal" enctype="multipart/form-data" method="post">{% csrf_token %}
+                        <form class="form-horizontal" id="user-form" enctype="multipart/form-data"
+                              method="post">{% csrf_token %}
 
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; "> Personal Details</span>
@@ -40,7 +64,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_empid" id="id_empid">Emp-ID / आए डी<span
+                                            <label class="" for="id_empid" id="id_empid">Emp-ID<span
                                                     style="color: red; ">*</span>
                                             </label>
                                         </div>
@@ -52,7 +76,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_name" id="id_name">Name / नाम<span
+                                            <label class="" for="id_name" id="id_name">Name<span
                                                     style="color:red">*</span></label>
                                         </div>
                                         <div class="col-md-8">
@@ -64,9 +88,8 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_father_name" id="id_father_name">Father's Name /
-                                                पिता का
-                                                नाम </label>
+                                            <label class="" for="id_father_name" id="id_father_name">Father's
+                                                Name</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.father_name }}
@@ -75,20 +98,24 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_email" id="id_email">Email / ईमेल <span
+                                            <label class="" for="id_email">Email<span
                                                     style="color: red; ">*</span></label>
 
+
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 has-feedback">
+
                                             {{ form.email }}
+
                                             <span style="color:red">{{ form.email.errors|striptags }}</span>
+                                             <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_dob" id="id_dob">Date of Birth / जन्म तिथि </label>
+                                            <label class="" for="id_dob" id="id_dob">Date of Birth</label>
 
                                         </div>
                                         <div class="col-md-8">
@@ -105,7 +132,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_mob" id="id_mob">Mobile No / मोबाइल </label>
+                                            <label class="" for="id_mob" id="id_mob">Mobile No</label>
 
                                         </div>
                                         <div class="col-md-8">
@@ -126,8 +153,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Identification Mark / पहचान
-                                                चिन्ह</label>
+                                            <label class="" for="id_photo" id="id_photo">Identification Mark</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.identification_mark }}
@@ -138,7 +164,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_gender" id="id_gender">Gender / लिंग </label>
+                                            <label class="" for="id_gender" id="id_gender">Gender</label>
 
                                         </div>
                                         <div class="col-md-8">
@@ -149,9 +175,7 @@
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_marital_status" id="id_marital_status">Marital
-                                                Status /
-                                                वैवाहिक
-                                                स्थिति </label>
+                                                Status</label>
 
                                         </div>
                                         <div class="col-md-8">
@@ -163,7 +187,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Spouse / पति या पत्नी </label>
+                                            <label class="" for="id_photo" id="id_photo">Spouse</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.spouse_name }}
@@ -172,8 +196,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Nationality /
-                                                राष्ट्रीयता </label>
+                                            <label class="" for="id_photo" id="id_photo">Nationality</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.nationality }}
@@ -184,7 +207,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Image / फोटो </label>
+                                            <label class="" for="id_photo" id="id_photo">Image</label>
                                         </div>
                                         <div class="col-md-8" id="CurrentPhotoCheck">
                                             {{ form.photo }}
@@ -194,7 +217,7 @@
 
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Signature / हस्ताक्षर</label>
+                                            <label class="" for="id_photo" id="id_photo">Signature</label>
                                         </div>
                                         <div class="col-md-8" id="CurrentSignatureCheck">
                                             {{ form.signature }}
@@ -213,9 +236,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_address" id="id_address">Present Address / वर्तमान
-                                                पता</label>
-
+                                            <label class="" for="id_address" id="id_address">Present Address</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.present_address }}
@@ -224,8 +245,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_address" id="id_address">Permanent Address / स्थायी
-                                                पता </label>
+                                            <label class="" for="id_address" id="id_address">Permanent Address</label>
                                             <div class="checkbox" style="font-size: 12px;font-family: cursive;">
                                                 <label><input type="checkbox" id="same_address" value="">Same as Present
                                                     Address</label>
@@ -241,7 +261,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_state" id="id_state">State / राज्य </label>
+                                            <label class="" for="id_state" id="id_state">State</label>
                                         </div>
                                         <div class="col-md-8 autocomplete">
                                             {{ form.state }}
@@ -251,7 +271,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_city" id="id_city">City / शहर </label>
+                                            <label class="" for="id_city" id="id_city">City</label>
                                         </div>
                                         <div class="col-md-8 autocomplete">
                                             {{ form.city }}
@@ -263,7 +283,7 @@
 
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pin" id="id_pin">Pin / पिन </label>
+                                            <label class="" for="id_pin" id="id_pin">Pin</label>
 
                                         </div>
                                         <div class="col-md-8">
@@ -291,7 +311,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_mine" id="id_mine"> Select Mine / खदान चुने </label>
+                                            <label class="" for="id_mine" id="id_mine"> Select Mine</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.mine }}
@@ -300,7 +320,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_rfid" id="id_rfid">RFID / आर.एफ.आइ.डी </label>
+                                            <label class="" for="id_rfid" id="id_rfid">RFID</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.rfid }}
@@ -335,8 +355,7 @@
 
                                         <div class="col-md-4">
                                             <label class="" for="id_date_of_joining" id="id_date_of_joining">Date of
-                                                Joining / शामिल होने की तिथि
-                                            </label>
+                                                Joining</label>
                                         </div>
                                         <div class="col-md-8">
                                             <div class='input-group date' id='doj_date_time_picker'>
@@ -353,8 +372,7 @@
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_retirement_date" id="id_retirement_date">Retirement
-                                                Date
-                                                / </label>
+                                                Date</label>
                                         </div>
                                         <div class="col-md-8">
                                             <div class='input-group date' id='dor_date_time_picker'>
@@ -394,8 +412,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_token_no">Token No / टोकन
-                                                No. </label>
+                                            <label class="" for="id_token_no">Token No No.</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.token_no }}
@@ -416,8 +433,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_designation" id="id_designation">Designation /
-                                                पद </label>
+                                            <label class="" for="id_designation" id="id_designation">Designation</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.designation }}
@@ -426,7 +442,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue </label>
+                                            <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.is_rescue }}
@@ -442,8 +458,7 @@
                                 <div class="form-group col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_aadhaar_no" id="id_aadhaar">Aadhar No/आधार
-                                                नं</label>
+                                            <label class="" for="id_aadhaar_no" id="id_aadhaar">Aadhar No</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.aadhaar_no }}
@@ -452,7 +467,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">PAN No/पेन संख्या</label>
+                                            <label class="" for="id_pan_no" id="id_pan_no">PAN No</label>
                                         </div>
                                         <div class="col-md-8">
                                             {{ form.pan_no }}
@@ -718,7 +733,8 @@
                     placement: 'bottom',
                     html: true
                 });
-            };
+            }
+            ;
             if ($('div#CurrentSignatureCheck').children('a').length > 0) {
                 $("div#CurrentSignatureCheck").has("a").children('a').attr('id', 'CurrentSignatureCheckOnHover')
                 $('<img id="CurrentSignatureCheckOnHover" width="40px" height="40px" src="' + $('#CurrentSignatureCheckOnHover').attr("href") + '" />').insertAfter('#CurrentSignatureCheckOnHover');
@@ -760,7 +776,7 @@
                         'args': 'role,immediate_staff'
                     },
                     beforeSend: function () {
-                       // $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
+                        // $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
                         //$('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
                     },
                     success: function (data) {
@@ -768,7 +784,7 @@
                             $('select#id_mining_role').empty().append($("<option />").val('').text('---------'));
                             $('select#id_immediate_staff').empty().append($("<option />").val('').text('---------'));
                             data = data.result;
-                            if(data.hasOwnProperty('role')) {
+                            if (data.hasOwnProperty('role')) {
                                 let roles = data.role;
                                 roles = JSON.parse(roles);
                                 for (let role in roles) {
@@ -777,7 +793,7 @@
                                     }
                                 }
                             }
-                            if(data.hasOwnProperty('immediate_staff')) {
+                            if (data.hasOwnProperty('immediate_staff')) {
                                 let immediate_staffs = data.immediate_staff;
 
                                 immediate_staffs = JSON.parse(immediate_staffs);
@@ -867,15 +883,28 @@
                 });
             });
 
-            $('#id_aadhaar_no').keyup(function () {
-                var foo = $(this).val().split("-").join(""); // remove hyphens
-                if (foo.length > 0) {
-                    foo = foo.match(new RegExp('.{1,4}', 'g')).join("-");
+        });
+        $(document).ready(function () {
+            $('#user-form').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                },
+
+                highlight: function (element, errorClass, validClass) {
+                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-ok').addClass('glyphicon-remove');
+                    $(element).addClass(errorClass).removeClass(validClass);
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (element) {
+                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-remove').addClass('glyphicon-ok');
+                    element.closest('.form-group').removeClass('has-error').addClass('has-success');
+                    $(element).remove();
                 }
-                $(this).val(foo);
             });
         });
-
 
     </script>
     <style>
@@ -885,6 +914,10 @@
 
         .red-tooltip + .tooltip > .tooltip-arrow {
             border-bottom-color: #fff;
+        }
+
+        .highlight-error {
+            border-color: red;
         }
 
     </style>

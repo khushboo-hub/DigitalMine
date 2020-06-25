@@ -162,8 +162,7 @@ def profile(request, action="overview", template_name='profile.html'):
                     return render(request, template_name,
                                   {'form': form, 'form_extension': form_extension, 'active': active})
                 else:
-                    print('I am Here')
-                    # form = PasswordChangeCustomForm(request.user)
+
                     return render(request, template_name,
                                   {'form': form, 'form_extension': form_extension, 'active': active})
         except:
@@ -176,11 +175,9 @@ def profile(request, action="overview", template_name='profile.html'):
     try:
         if request.method == 'POST':
             if form.is_valid():
-                print('form is valid')
                 form.save()
             if form_extension.is_valid():
-                print('form extension is valid')
-                # print(form_extension)
+                print('here')
                 fs = form_extension.save(commit=False)
                 fs.user_id = book
                 fs.save()

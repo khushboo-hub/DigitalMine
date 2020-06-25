@@ -101,15 +101,15 @@ class EmployeeForm(forms.ModelForm):
 
     empid = forms.CharField(max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Emp-ID (Ex: E001)/आए डी '
+        'placeholder': 'Emp-ID (Ex: E001)'
     }))
     name = forms.CharField(label='Name', max_length=100, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Full Name /पूरा नाम '
+        'placeholder': 'Full Name'
     }))
     father_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Father Name / पिता का नाम'
+        'placeholder': 'Father Name'
     }))
     dob = forms.DateField(widget=forms.TextInput(attrs=
     {
@@ -118,12 +118,12 @@ class EmployeeForm(forms.ModelForm):
     }))
     email = forms.EmailField(max_length=200, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Please Enter Your Email / ईमेल ',
+        'placeholder': 'Please Enter Your Email',
         'type': 'email'
     }))
     mob = forms.CharField(required=False, max_length=14, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Mobile No (10 Digits Only) / मोबाइल',
+        'placeholder': 'Mobile No (10 Digits Only)',
         # 'pattern':'pattern="[6789][0-9]{9}"',
         'oninvalid': "setCustomValidity('Enter a Valid Mobile Number')",
         'onchange': "try{setCustomValidity('')}catch(e){}"
@@ -132,12 +132,12 @@ class EmployeeForm(forms.ModelForm):
     present_address = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'rows': '3',
-        'placeholder': 'Please Enter Present Address here / वर्तमान पता '
+        'placeholder': 'Please Enter Present Address here'
     }))
     permanent_address = forms.CharField(max_length=200, required=False, widget=forms.Textarea(attrs={
         'class': 'form-control',
         'rows': '3',
-        'placeholder': 'Please Enter Permanent Address here / स्थायी पता '
+        'placeholder': 'Please Enter Permanent Address here'
     }))
 
     # state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
@@ -149,7 +149,7 @@ class EmployeeForm(forms.ModelForm):
     state = forms.CharField(label='Name', widget=forms.Select(choices=STATE,attrs={
         'name': 'myState',
         'id': 'mystate',
-        'placeholder': 'State /राज्य',
+        'placeholder': 'State',
         'class':'form-control'
     }))
 
@@ -165,11 +165,11 @@ class EmployeeForm(forms.ModelForm):
     city = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'name': 'myCity',
         'id': 'mycity',
-        'placeholder': 'Please Enter Your City / शहर'
+        'placeholder': 'Please Enter Your City'
     }))
     pin = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'PIN Code / पिन '
+        'placeholder': 'PIN Code'
     }))
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect())
     marital_status = forms.ChoiceField(choices=MARITAL_STATUS, widget=forms.RadioSelect())
@@ -218,15 +218,15 @@ class EmployeeForm(forms.ModelForm):
     # mine
     rfid = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'RFID /  आर.एफ.आइ.डी '
+        'placeholder': 'RFID'
     }))
     designation = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Designation /  पद '
+        'placeholder': 'Designation'
     }))
     token_no = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'TOKEN NO /  टोकन No. '
+        'placeholder': 'TOKEN NO '
     }))
     date_of_joining = forms.DateField(widget=forms.TextInput(attrs=
     {
@@ -259,19 +259,19 @@ class EmployeeForm(forms.ModelForm):
     #############   Additional Info  ###################
     aadhaar_no = forms.CharField(max_length=19, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Aadhaar No / आधार नं '
+        'placeholder': 'Aadhaar No'
     }))
     pan_no = forms.CharField(max_length=20, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'PAN No / पेन संख्या '
+        'placeholder': 'PAN No'
     }))
     voter_id_no = forms.CharField(max_length=20, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Votar ID No '
+        'placeholder': 'Votar ID No'
     }))
     medical_ins_no = forms.CharField(max_length=20, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Medical Ins. No '
+        'placeholder': 'Medical Ins. No'
     }))
 
     #############   Bank Details  ###################

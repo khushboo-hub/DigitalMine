@@ -171,11 +171,10 @@
             (function Delete_Node() {
                 $(document.body).on("click", ".delete", function () {
                     $('#update_info').modal('show');
-                    var node_id = $(this).attr('id');
-                    var url = $(this).data('url');
-                    console.log(node_id)
-                    var Curr = $(this).parents('tr');
-                    var datatable = $('#myTable').DataTable();
+                    let node_id = $(this).attr('id');
+                    let url = $(this).data('url');
+                    let Curr = $(this).parents('tr');
+                    let datatable = $('#myTable').DataTable();
                     $('#update_info').on('click', '#delete', function (e) {
                         $('#update_info').unbind('click');
                         $('#update_info').modal('hide');

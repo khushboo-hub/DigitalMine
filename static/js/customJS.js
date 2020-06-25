@@ -231,3 +231,39 @@ $(document).ready(function() {
             });
             $.xhrPool.length = 0
         };
+
+
+// VALIDATIONS
+$('#id_aadhaar_no').keyup(function () {
+                var value = $(this).val();
+                value = value.replace(/\D/g, "").split(/(?:([\d]{4}))/g).filter(s => s.length > 0).join("-");
+                $(this).val(value);
+            });
+
+            $('#id_aadhaar_no').on("change, blur", function () {
+                var value = $(this).val();
+                var maxLength = $(this).attr("maxLength");
+                if (value.length != maxLength) {
+                    $(this).addClass("highlight-error");
+                } else {
+                    $(this).removeClass("highlight-error");
+                }
+            });
+             $('input#id_email').keyup(function () {
+
+                var value = $(this).val();
+
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+            });
+              $('#id_email').on("change, blur", function () {
+                var value = $(this).val();
+                var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+                let email_validation=regex.test(value);
+                console.log(email_validation);
+                if (!email_validation) {
+                    $(this).addClass("highlight-error");
+                } else {
+                    $(this).removeClass("highlight-error");
+                }
+            });

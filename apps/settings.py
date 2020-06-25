@@ -17,7 +17,6 @@ import psycopg2 as psycopg2
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -29,7 +28,6 @@ ENCRYPT_KEY = b'zuXLx4c01oe15FstyxBPqyjgC0RKbzMEPZKA--bUHyI='
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -63,10 +61,10 @@ INSTALLED_APPS = [
     'ProductionMonitoring',
     'sensor',
     'water_level_monitoring',
-    'SMS', 
+    'SMS',
     'news',
     'emails',
-    #'django_hosts',
+    # 'django_hosts',
     # 'mail_templated',
     'dashboard',
     'setting',
@@ -76,7 +74,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    #'django_hosts.middleware.HostsRequestMiddleware',
+    # 'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,14 +83,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    #'django_hosts.middleware.HostsResponseMiddleware',
+    # 'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'apps.urls'
 
-
-#ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
-#DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
+# ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
+# DEFAULT_HOST = 'www'  # Name of the default host, we will create it in the next steps
 
 TEMPLATES = [
     {
@@ -112,11 +109,26 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'apps.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
+    #To use postgresl pip install psycopg2
+    # 'default': {
+    #
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #
+    #     'NAME': 'iot',
+    #
+    #     'USER': 'postgres',
+    #
+    #     'PASSWORD': 'root',
+    #
+    #     'HOST': '127.0.0.1',
+    #
+    #     'PORT': '5432',
+    #
+    # }
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
@@ -173,7 +185,6 @@ LANGUAGES = (
     ('zn-tw', 'Traditional Chinese'),
 )
 
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
@@ -201,7 +212,6 @@ LOGOUT_REDIRECT_URL = "/"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -224,12 +234,14 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.profiling.ProfilingPanel',
 ]
 
+
 def show_toolbar(request):
     return False
 
-DEBUG_TOOLBAR_CONFIG={
-    'INTERCEPT_REDIRECTS':True,
-    'SHOW_TOOLBAR_CALLBACK':show_toolbar
+
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': True,
+    'SHOW_TOOLBAR_CALLBACK': show_toolbar
 }
 # GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE ='my-project-1549610242332-d51f9c84fd50.json'
 # X_FRAME_OPTIONS = 'SAMEORIGIN'

@@ -380,10 +380,12 @@
                                 </li>
 
                                 <li><a href="{% url 'Training_Rescue_Accident:index' %}">Add Employee Training
+
                                     Attendance </a></li>
                                 <li><a href="{% url 'Training_Rescue_Accident:manage_training_attendance' %}">Manage
                                    Employee Training
                                     Attendance </a></li>
+
                                 <li><a href="{% url 'Training_Rescue_Accident:Rescue_index' %}">Add Rescue Record</a>
                                 </li>
 
@@ -412,7 +414,7 @@
                                             Monitoring</strong>
                                         </li>
 
-                                        <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
+                                        {% if request|manager %}<li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>{% endif %}
                                         <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a>
                                         </li>
                                         <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>
@@ -420,7 +422,8 @@
                                         <li><a href="{% url 'sensor:live_map' %}">Live Data in Map</a></li>
                                         <li><a href="{% url 'sensor:report_table' %}">Tabular Report</a></li>
                                         <li><a href="{% url 'sensor:report_graph' %}">Graphical Report</a></li>
-                                        <li><a href="{% url 'sensor:avg_report_table' %}">Average Tabular Report</a></li>
+                                        <li><a href="{% url 'sensor:avg_report_table' %}">Average Tabular Report</a>
+                                        </li>
 
 
                                         <li><a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf
@@ -501,7 +504,7 @@
                                             data(Tabular)-Static</a></li>
                                         <li><a href="{% url 'Slope:slope_live_table_dynamic' %}">Show Realtime slope
                                             data(Tabular)-Dynamic</a></li>
-                                            <li><a href="{% url 'Slope:graph_from_thingspeak' %}">All Graph</a></li>
+                                        <li><a href="{% url 'Slope:graph_from_thingspeak' %}">All Graph</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -836,10 +839,7 @@
                                     <li><a href="/accounts/profile/overview/"><span
                                             class="glyphicon glyphicon-th"></span>
                                         Profile</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="/accounts/password_change/"><span
-                                            class="glyphicon glyphicon-refresh"></span>
-                                        Change Password </a></li>
+
                                     <li class="divider"></li>
                                     <li><a href="#" data-toggle="modal" data-target="#logoutModal"><span
                                             class="glyphicon glyphicon-off"></span>
@@ -861,7 +861,6 @@
 </div>
 
 
-
 <div class="row">
     <div class="col-md-2"></div>
     <div class="col-md-8" id="is_visiable" style="display:none">
@@ -879,20 +878,20 @@
 </div>
 <div class="spacer"></div>
 <div class="main">
-{% if messages %}
+    {% if messages %}
         {% for message in messages %}
-            <div id="alertId" style="text-align: center"  class="container alert alert-{{ message.tags }}">
+            <div id="alertId" style="text-align: center" class="container alert alert-{{ message.tags }}">
                 <strong>{{ message }} !</strong>
             </div>
-         {% endfor %}
+        {% endfor %}
     {% endif %}
     <div id="content">
         {% block content %}
         {% endblock %}
-    <!------------------------------- For Alert Display---------------------------->
+        <!------------------------------- For Alert Display---------------------------->
 
 
-    <!-------------------------------------------------------------------------------->
+        <!-------------------------------------------------------------------------------->
     </div><!-- content -->
 
 </div>
@@ -939,6 +938,33 @@
         </div>
     </div>
 </div>
+{% if not request.user.is_superuser and is_not_assigned %}
+    <div id="user_not_assigned" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                    <h4 class="modal-title text-primary">Mine not assigned yet</h4>
+                </div>
+                <div class="modal-body">
+                    <p>User has not been assigned to any mine yet</p>
+                    <p class="text-warning">
+                        <small>please contact admin or wait for the admin to assign you to a mine</small>
+                    </p>
+                    <p class="text-info">
+                        <small><strong>Note:</strong> If this problem persist even after mine assigned please contact
+                            admin
+                        </small>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 
 <script type="text/javascript" src="{% static 'js/underscore-min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/lodash.min.js' %}"></script>
@@ -985,6 +1011,8 @@
 <script src="{% static 'js/select2.min.js' %}"></script>
 <script src="{% static 'js/toastr.min.js' %}"></script>
 <script src="{% static 'js/prettify.js' %}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
@@ -1253,6 +1281,10 @@
         }
 
         <!-- --------- Global warning for STRATA, Water and gas Monitoring (End Here)-----------------------------------  -->
+
+        $('#user_not_assigned').modal({
+            backdrop: 'static'
+        });
     });
 
 </script>
