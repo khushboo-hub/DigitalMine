@@ -883,7 +883,6 @@
 </div>
 <div class="spacer"></div>
 <div class="main">
-{% if request|manager  %}Yes{% else %}No{% endif %}
     {% if messages %}
         {% for message in messages %}
             <div id="alertId" style="text-align: center" class="container alert alert-{{ message.tags }}">
@@ -1017,6 +1016,8 @@
 <script src="{% static 'js/select2.min.js' %}"></script>
 <script src="{% static 'js/toastr.min.js' %}"></script>
 <script src="{% static 'js/prettify.js' %}"></script>
+<script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
