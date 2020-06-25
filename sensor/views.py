@@ -21,11 +21,11 @@ from FireExp.models import Gasdb
 
 from django.db.models import Avg, Value
 from django.db.models.functions import NullIf, TruncDay, TruncHour, TruncMonth, TruncYear
-from accounts.utils import is_manager
+from accounts.utils import manager
 
 
 @login_required
-@user_passes_test(is_manager)
+@manager
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
 
@@ -154,7 +154,7 @@ def manage_sensor(request, mine_id, node_id, template_name='sensor/manage_sensor
 
 
 @login_required
-@user_passes_test(is_manager)
+@manager
 def add_sensor(request, mine_id, node_id, template_name='sensor/add_sensor.html'):
     mine_id = decrypt(mine_id)
     node_id = decrypt(node_id)

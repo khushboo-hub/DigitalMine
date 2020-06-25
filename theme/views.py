@@ -9,7 +9,7 @@ from .forms import CarousalPhotoUploadForm
 from .models import Carousal
 from django.core import serializers
 from employee.models import MineDetails
-from accounts.models import profile_extension,profile
+from accounts.models import profile_extension
 import datetime
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
