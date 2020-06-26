@@ -59,394 +59,399 @@
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; "> Personal Details</span>
                                 </legend>
-
-
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_empid" id="id_empid">Emp-ID<span
+                                            <label class="" for="id_empid">Emp-ID<span
                                                     style="color: red; ">*</span>
                                             </label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="form-group col-md-8 has-feedback">
                                             {{ form.empid }}
                                             <span style="color:red">{{ form.empid.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
 
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_name" id="id_name">Name<span
+                                            <label class="" for="id_name">Name<span
                                                     style="color:red">*</span></label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.name }}
                                             <span style="color:red">{{ form.name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_father_name" id="id_father_name">Father's
+                                            <label class="" for="id_father_name">Father's
                                                 Name</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.father_name }}
                                             <span style="color:red">{{ form.father_name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_email">Email<span
                                                     style="color: red; ">*</span></label>
-
-
                                         </div>
-                                        <div class="col-md-8 has-feedback">
-
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.email }}
-
                                             <span style="color:red">{{ form.email.errors|striptags }}</span>
                                              <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_dob" id="id_dob">Date of Birth</label>
-
+                                            <label class="" for="id_dob">Date of Birth</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             <div class='input-group date' id='dob_date_time_picker'>
                                                 {{ form.dob }}
-
                                                 <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
-
+                                                </span>
                                             </div>
                                             <span style="color:red">{{ form.dob.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_mob" id="id_mob">Mobile No</label>
-
+                                            <label class="" for="id_mob">Mobile No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.mob }}
                                             <span style="color:red">{{ form.mob.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_blood_group" id="id_blood_group">Blood Group</label>
+                                            <label class="" for="id_blood_group">Blood Group</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.blood_group }}
                                             <span style="color:red">{{ form.blood_group.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Identification Mark</label>
+                                            <label class="" for="id_photo">Identification Mark</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.identification_mark }}
                                             <span style="color:red">{{ form.identification_mark.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_gender" id="id_gender">Gender</label>
+                                            <label class="" for="id_gender">Gender</label>
 
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.gender }}
                                             <span style="color:red">{{ form.gender.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_marital_status" id="id_marital_status">Marital
+                                            <label class="" for="id_marital_status">Marital
                                                 Status</label>
 
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.marital_status }}
                                             <span style="color:red">{{ form.marital_status.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Spouse</label>
+                                            <label class="" for="id_spouse_name">Spouse</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.spouse_name }}
-                                            <span style="color:red">{{ form.photo.errors|striptags }}</span>
+                                            <span style="color:red">{{ form.spouse_name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Nationality</label>
+                                            <label class="" for="id_nationality">Nationality</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.nationality }}
                                             <span style="color:red">{{ form.nationality.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Image</label>
+                                            <label class="" for="id_photo">Image</label>
                                         </div>
-                                        <div class="col-md-8" id="CurrentPhotoCheck">
+                                        <div class="col-md-8 form-group has-feedback" id="CurrentPhotoCheck">
                                             {{ form.photo }}
                                             <span style="color:red">{{ form.photo.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_photo" id="id_photo">Signature</label>
+                                            <label class="" for="id_signature">Signature</label>
                                         </div>
-                                        <div class="col-md-8" id="CurrentSignatureCheck">
+                                        <div class="col-md-8 form-group has-feedback" id="CurrentSignatureCheck">
                                             {{ form.signature }}
                                             <span style="color:red">{{ form.signature.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </fieldset>
 
                             <br/><br/>
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Address</span>
                                 </legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_address" id="id_address">Present Address</label>
+                                            <label class="" for="id_present_address">Present Address</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.present_address }}
-                                            <span style="color:red">{{ form.address.errors|striptags }}</span>
+                                            <span style="color:red">{{ form.present_address.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_address" id="id_address">Permanent Address</label>
+                                            <label class="" for="id_permanent_address">Permanent Address</label>
                                             <div class="checkbox" style="font-size: 12px;font-family: cursive;">
                                                 <label><input type="checkbox" id="same_address" value="">Same as Present
                                                     Address</label>
                                             </div>
 
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.permanent_address }}
-                                            <span style="color:red">{{ form.address.errors|striptags }}</span>
+                                            <span style="color:red">{{ form.permanent_address.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_state" id="id_state">State</label>
+                                            <label class="" for="id_state">State</label>
                                         </div>
-                                        <div class="col-md-8 autocomplete">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.state }}
                                             <span style="color:red">{{ form.state.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
 
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_city" id="id_city">City</label>
+                                            <label class="" for="id_city" >City</label>
                                         </div>
-                                        <div class="col-md-8 autocomplete">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.city }}
                                             <span style="color:red">{{ form.city.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
 
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pin" id="id_pin">Pin</label>
+                                            <label class="" for="id_pin">Pin</label>
 
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.pin }}
                                             <span style="color:red">{{ form.pin.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
 
-                                </div>
-                                <div class="form-group col-md-12">
 
-                                    <div class="col-md-6">
-                                        <div class="col-md-4">
-
-                                        </div>
-                                        <div class="col-md-8">
-
-                                        </div>
-                                    </div>
                                 </div>
                             </fieldset>
 
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Mining Info</span></legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_mine" id="id_mine"> Select Mine</label>
+                                            <label class="" for="id_mine"> Select Mine</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.mine }}
                                             <span style="color:red">{{ form.mine.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_rfid" id="id_rfid">RFID</label>
+                                            <label class="" for="id_rfid" >RFID</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.rfid }}
                                             <span style="color:red">{{ form.rfid.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_mining_role" id="id_mining_role">Mining
+                                            <label class="" for="id_mining_role">Mining
                                                 Role </label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.mining_role }}
                                             <span style="color:red">{{ form.mining_role.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_immediate_staff" id="id_immediate_staff">Immediate
+                                            <label class="" for="id_immediate_staff">Immediate
                                                 Staff</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.immediate_staff }}
                                             <span style="color:red">{{ form.immediate_staff.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
 
                                         <div class="col-md-4">
-                                            <label class="" for="id_date_of_joining" id="id_date_of_joining">Date of
+                                            <label class="" for="id_date_of_joining">Date of
                                                 Joining</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             <div class='input-group date' id='doj_date_time_picker'>
                                                 {{ form.date_of_joining }}
                                                 <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
-
-                                                <!--                                        {{form.date_of_joining}}-->
                                             </div>
                                             <span style="color:red">{{ form.date_of_joining.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_retirement_date" id="id_retirement_date">Retirement
+                                            <label class="" for="id_retirement_date">Retirement
                                                 Date</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             <div class='input-group date' id='dor_date_time_picker'>
                                                 {{ form.retirement_date }}
                                                 <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
-
                                             </div>
                                             <span style="color:red">{{ form.retirement_date.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_job_type" id="id_job_type">Job Type </label>
+                                            <label class="" for="id_job_type">Job Type </label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.job_type }}
                                             <span style="color:red">{{ form.job_type.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_medical_status" id="id_medical_status">Category
+                                            <label class="" for="id_medical_status">Category
                                                 Address</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.category_address }}
                                             <span style="color:red">{{ form.category_address.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
 
                                 </div>
 
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_token_no">Token No No.</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.token_no }}
                                             <span style="color:red">{{ form.token_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_cat_type" id="id_cat_type">Mining
+                                            <label class="" for="id_cat_type">Mining
                                                 Type/Category </label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.cat_type }}
                                             <span style="color:red">{{ form.cat_type.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_designation" id="id_designation">Designation</label>
+                                            <label class="" for="id_designation">Designation</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.designation }}
                                             <span style="color:red">{{ form.designation.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_is_rescue" id="id_is_rescue">Is Rescue</label>
+                                            <label class="" for="id_is_rescue">Is Rescue</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.is_rescue }}
                                             <span style="color:red">{{ form.is_rescue.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -455,106 +460,116 @@
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Additional Info</span>
                                 </legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_aadhaar_no" id="id_aadhaar">Aadhar No</label>
+                                            <label class="" for="id_aadhaar_no">Aadhar No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.aadhaar_no }}
                                             <span style="color:red">{{ form.aadhaar_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">PAN No</label>
+                                            <label class="" for="id_pan_no">PAN No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.pan_no }}
                                             <span style="color:red">{{ form.pan_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_medical_status" id="id_medical_status">Medical
+                                            <label class="" for="id_medical_status">Medical
                                                 Status/Description</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.medical_status }}
                                             <span style="color:red">{{ form.medical_status.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_medical_ins_no" id="id_medical_ins_no">Medical Ins.
+                                            <label class="" for="id_medical_ins_no">Medical Ins.
                                                 No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.medical_ins_no }}
                                             <span style="color:red">{{ form.medical_ins_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
                                             <label class="" for="id_esic_ip" id="id_esic">ESIC IP</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.esic_ip }}
                                             <span style="color:red">{{ form.esic_ip.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">LWF</label>
+                                            <label class="" for="id_pan_no">LWF</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.lwf }}
                                             <span style="color:red">{{ form.lwf.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">Service Book No</label>
+                                            <label class="" for="id_pan_no">Service Book No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.service_book_no }}
                                             <span style="color:red">{{ form.service_book_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">UAN</label>
+                                            <label class="" for="id_pan_no">UAN</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.uan }}
                                             <span style="color:red">{{ form.uan.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_votar_id_no" id="id_votar_id_no">Votar ID No</label>
+                                            <label class="" for="id_votar_id_no">Votar ID No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.voter_id_no }}
                                             <span style="color:red">{{ form.voter_id_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">Remarks</label>
+                                            <label class="" for="id_pan_no">Remarks</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.remarks }}
                                             <span style="color:red">{{ form.remarks.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -564,13 +579,13 @@
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Exit</span>
                                 </legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
 
                                         <div class="col-md-4">
                                             <label class="" for="id_date_of_exit">Date of Exit</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             <div class='input-group date' id='doe_date_time_picker'>
                                                 {{ form.date_of_exit }}
                                                 <span class="input-group-addon">
@@ -578,15 +593,17 @@
                                             </span>
                                             </div>
                                             <span style="color:red">{{ form.date_of_exit.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_pan_no" id="id_pan_no">Reason of Exit</label>
+                                            <label class="" for="id_pan_no">Reason of Exit</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.reason_of_exit }}
                                             <span style="color:red">{{ form.reason_of_exit.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -595,46 +612,49 @@
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Last Qualification</span>
                                 </legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_edu_course_name" id="id_edu_course_name">Course/Exam/Degree
+                                            <label class="" for="id_edu_course_name">Course/Exam/Degree
                                                 Name</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.edu_course_name }}
                                             <span style="color:red">{{ form.edu_course_name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_edu_board_name" id="id_edu_board_name">Board/University
+                                            <label class="" for="id_edu_board_name">Board/University
                                                 Name</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.edu_board_name }}
                                             <span style="color:red">{{ form.edu_board_name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_edu_year" id="id_edu_year">Passing Year</label>
+                                            <label class="" for="id_edu_year">Passing Year</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.edu_year }}
                                             <span style="color:red">{{ form.edu_year.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_edu_percent" id="id_edu_percent">Percentage
-                                                %</label>
+                                            <label class="" for="id_edu_percent">Percentage %</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.edu_percent }}
                                             <span style="color:red">{{ form.edu_percent.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -644,43 +664,47 @@
                             <fieldset class="scheduler-border">
                                 <legend class="scheduler-border"><span style="color: blue; ">Bank Details</span>
                                 </legend>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_bank_name" id="id_bank_name">Bank Name</label>
+                                            <label class="" for="id_bank_name">Bank Name</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.bank_name }}
                                             <span style="color:red">{{ form.bank_name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_bank_ac_no" id="id_bank_ac_no">A/C No</label>
+                                            <label class="" for="id_bank_ac_no">A/C No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.bank_ac_no }}
                                             <span style="color:red">{{ form.bank_ac_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group col-md-12">
+                                <div class="col-md-12">
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_bank_ifsc" id="id_bank_ifsc">IFSC Code</label>
+                                            <label class="" for="id_bank_ifsc">IFSC Code</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.bank_ifsc }}
                                             <span style="color:red">{{ form.bank_ifsc.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="col-md-4">
-                                            <label class="" for="id_bank_pf_no" id="id_bank_pf_no">PF No</label>
+                                            <label class="" for="id_bank_pf_no">PF No</label>
                                         </div>
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.bank_pf_no }}
                                             <span style="color:red">{{ form.bank_pf_no.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
                                     </div>
                                 </div>
