@@ -60,6 +60,7 @@ class MiningRole(models.Model):
 
     class Meta:
         db_table = "MiningRole"
+        unique_together = ('mine', 'name')
 
 
 class Employee(models.Model):

@@ -60,7 +60,6 @@ import json
 
 @login_required
 def employee_add(request, template_name='employee/employee_add.html'):
-
     if request.user.is_superuser:
         form = EmployeeForm()
         form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=-1)
@@ -107,8 +106,9 @@ def get_dropdownlist(request):
         if 'role' in args:
             result['role'] = serializers.serialize('json', MiningRole.objects.filter(mine_id=id), fields=('id', 'name'))
         if 'immediate_staff' in args:
-            result['immediate_staff'] = serializers.serialize('json', Employee.objects.filter(mine_id=id),fields=('id', 'name'))
-        data['result']=result
+            result['immediate_staff'] = serializers.serialize('json', Employee.objects.filter(mine_id=id),
+                                                              fields=('id', 'name'))
+        data['result'] = result
     else:
         data['error'] = 'Something went wrong!'
     return JsonResponse(data)
@@ -303,7 +303,6 @@ def fetch_role_ajax(request):
     return HttpResponse(data)
 
 
-
 @login_required
 def add_mine(request, template_name='mine/mine_add.html'):
     form = MineDetailsForm()
@@ -312,7 +311,6 @@ def add_mine(request, template_name='mine/mine_add.html'):
         form = MineDetailsForm(request.POST or None, request.FILES)
         if form.is_valid():
             form.save()
-
             return redirect('employee:manage_mine')
         # return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
     return render(request, template_name, {'form': form, 'action': 'ADD', 'mine_name': ''})
@@ -351,37 +349,55 @@ def delete_mine(request, pk):
 
 @login_required
 def add_mining_role(request, template_name='mine/add_mining_role.html'):
-    current_user = request.user
-    profile = get_object_or_404(profile_extension, user_id=current_user.id)
+    data = {}
     admin_or_not = 0
+    mine_name = ""
     if request.user.is_superuser:
         admin_or_not = 1
-        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
-        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
+        form = MiningRoleForm()
         mine_name = "Super User"
-    else:
-        admin_or_not = 0
-        form = MiningRoleForm(request.POST or None)  # Passed Mine id as an argument
         form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
-        mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+    else:
+        try:
+            profile = get_object_or_404(profile_extension,user_id=request.user.id)
+            admin_or_not = 0
+            form = MiningRoleForm(initial={'mine': profile.mine_id})  # Passed Mine id as an argument
+            form.fields['mine'].widget = form.fields['mine'].hidden_widget()
+            form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=profile.mine_id_id)
+            mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+
+        except Exception as e:
+            form = []
+            data['is_not_assigned'] = True
 
     if request.method == "POST":
-        if request.user.is_superuser:
+
+        if not request.user.is_superuser:
+            mine=MineDetails.objects.get(pk=profile.mine_id.id)
+            form = MiningRoleForm(request.POST or None,initial={'mine': mine})
+            form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=profile.mine_id_id)
+            form.fields['mine'].widget = form.fields['mine'].hidden_widget()
+        else:
             form = MiningRoleForm(request.POST or None)
+
         if form.is_valid():
-            fs = form.save(commit=False)
-            if not request.user.is_superuser:
-                fs.mine_id = profile.mine_id.id
-            fs.save()
-            # messages.add_message(request, messages.SUCCESS, 'Changes successfully saved.')
+            form.save()
             messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
-    return render(request, template_name,
-                  {'form': form, 'mine_name': mine_name, 'admin': admin_or_not, 'action': 'ADD'})
+        else:
+            messages.error(request,'Role name Already exists')
+    data['form'] = form
+    data['mine_name'] = mine_name
+    data['admin'] = admin_or_not
+    data['action'] = 'ADD'
+    data['title']='Add Role'
+
+    return render(request, template_name, data)
 
 
 @login_required
 def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
+    data = {}
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
     book = get_object_or_404(MiningRole, pk=pk)
@@ -393,10 +409,13 @@ def edit_mining_role(request, pk, template_name='mine/add_mining_role.html'):
         mine_name = "Super User"
         admin_or_not = 1
     else:
-        form = MiningRoleForm(request.POST or None, instance=book)
-        form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
-        mine_name = MineDetails.objects.get(id=profile.mine_id.id)
-        admin_or_not = 0
+        try:
+            form = MiningRoleForm(request.POST or None, instance=book)
+            form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
+            mine_name = MineDetails.objects.get(id=profile.mine_id.id)
+            admin_or_not = 0
+        except Exception as e:
+            data['is_not_assigned'] = True
 
     if request.method == "POST":
         if form.is_valid():
@@ -445,7 +464,8 @@ def manage_mining_role(request, template_name='mine/manage_mining_role.html'):
             data['object_list'] = book
             data['mine_name'] = MineDetails.objects.get(id=profile['mine_id']).name
         except Exception as e:
-           data['is_not_assigned']=True
+            data['is_not_assigned'] = True
+    data['title'] = 'Manage Role'
     return render(request, template_name, data)
 
 

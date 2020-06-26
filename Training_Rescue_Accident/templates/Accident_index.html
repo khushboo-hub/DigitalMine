@@ -208,16 +208,16 @@ $("#id_mine").change(function () {
 	});
 });
 //POPULATE SHIFT DROP DOWN
-function fill_dropdown_shift(result) {
+function fill_dropdown_shift(Employee) {
 	$("#shift_id").html("<option required value=''>------------Choose Shift------------</option>");
-	if (isEmpty(result)) return;
-	for (index = 0; index < result.length; index++) {
-		//alert(result[index]);
-		var str_array = result[index].split(',');
-		$("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "(" + str_array[3] + " - " + str_array[4] + ")"));
+	if (isEmpty(Employee)) return;
+	for (emp in Employee) {
+	    if(Employee.hasOwnProperty(emp)){
+		    $("#shift_id").append($("<option />").val(Employee[emp].id).text(Employee[emp].shift_name));
+		}
 	}
 }
-var X;
+
 
 function Fetch_Miners(mine_id) {
 	$(".js-example-basic-multiple").select2({

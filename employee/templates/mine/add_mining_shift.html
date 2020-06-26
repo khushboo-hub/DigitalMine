@@ -1,17 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% load staticfiles %}
+    {% load static %}
     <link rel="stylesheet" href="{% static '/css/bootstrap-timepicker.css' %}">
     <script src="{% static 'js/bootstrap-timepicker.js' %}"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h1 class="page-header">Add Mining Shift
-                    <small>&nbsp&nbsp&nbspHere you can assign Shift to :<font color="f77c4a"> {{ mine_name }}</font>
+                <h3 class="page-header">Add Mining Shift
+                    <small>&nbsp&nbsp&nbspHere you can assign Shift to :<span
+                            style="color: f77c4a; "> {{ mine_name }}</span>
                     </small>
-                    </sma></h1>
+                </h3>
                 <div class="row text-center">
                     <div class="col-md-12">
                         <a class="btn btn-primary" href="{% url 'employee:manage_mining_shift'  mine_id %}">Manage

@@ -1,264 +1,259 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% load staticfiles %}
-{#<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">#}
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <h3 class="page-header"><b>MANAGE MINE: {{action}} MINE</b>
-                <small>Here you can add/edit basic info of mine<span style="color:#ff9800">{{mine_name}}</span></small>
-            </h3>
+    {% load static %}
+    <style>
+          .form-control-feedback{
+            top:0px !important;
+        }
 
-            <div class="row text-center">
-                <div class="col-md-12">
-                    <a class="btn btn-primary" href="{% url 'employee:manage_mine' %}" data-toggle="tooltip"
-                       title="Click Here to Manage Employees">Manage Mine</a>
+        .form-control-feedback {
+            display: none;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header"><b>MANAGE MINE: {{ action }} MINE</b>
+                    <small>Here you can add/edit basic info of mine<span style="color:#ff9800">{{ mine_name }}</span>
+                    </small>
+                </h3>
+
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="btn btn-primary" href="{% url 'employee:manage_mine' %}" data-toggle="tooltip"
+                           title="Click Here to Manage Employees">Manage Mine</a>
+                    </div>
                 </div>
-            </div>
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue"> Mine Details</font></legend>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" id="user-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; "> Mine Details</span>
+                                </legend>
 
 
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_empid" class="" id="">Mine Name / खान का नाम<font color="red">*</font>
-                                        </label>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_empid" class="">Mine Name<span style="color: red; ">*</span></label>
+                                        </div>
+                                        <div class="form-group col-md-8 has-feedback">
+                                            {{ form.name }}
+                                            <span style="color:red">{{ form.name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
                                     </div>
-                                    <div class="col-md-8">
-                                        {{form.name}}
-                                        <span style="color:red">{{form.name.errors|striptags}}</span>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_dob" class="" id="">Date of Opening</label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            <div class='input-group date' id='doo_date_time_picker'>
+                                                {{ form.date_of_opening }}
 
-                                    </div>
-
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_dob" class="" id="">Date of Opening /खोलने की तिथि </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class='input-group date' id='doo_date_time_picker'>
-                                            {{form.date_of_opening}}
-
-                                            <span class="input-group-addon">
+                                                <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </span>
 
+                                            </div>
+                                            <span style="color:red">{{ form.date_of_opening.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
                                         </div>
-                                        <span style="color:red">{{form.date_of_opening.errors|striptags}}</span>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_mob" class="" id="">Mine Map Image</label></label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback" id="CurrentPhotoCheck">
+                                            {{ form.mine_map_image }}
+                                            <span style="color:red">{{ form.mine_map_image.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_mine_map_unit" class="" id="">Mine Map Unit</label></label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.mine_map_unit }}
+                                            <span style="color:red">{{ form.mine_map_unit.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_email" class="" id="">Latitude<span
+                                                    style="color: red; ">*</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.latitude }}
+                                            <span style="color:red">{{ form.latitude.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_dob" class="" id="">Longitude / देशान्तर</label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.longitude }}
+                                            <span style="color:red">{{ form.longitude.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
                                     </div>
 
                                 </div>
 
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_father_name" class="" id="">State</label>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.state }}
+                                            <span style="color:red">{{ form.state.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_state" class="" id="">District</label></label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.district }}
+                                            <span style="color:red">{{ form.district.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_name" class="" id="">Area<span style="color: red; ">*</span>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.area }}
+                                            <span style="color:red">{{ form.area.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_address" class="" id="">
+                                                Tehsil Taluka Subdivision
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.tehsil_taluka_subdivision }}
+                                            <span style="color:red">{{ form.tehsil_taluka_subdivision.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_marital_status" class="" id="">Village Area Road</label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.village_area_road }}
+                                            <span style="color:red">{{ form.marital_status.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_city" class="" id="">Pin</label></label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.pin }}
+                                            <span style="color:red">{{ form.city.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_photo" class="" id="">Lin No</label></label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback" id="CurrentPhotoCheck">
+                                            {{ form.lin_no }}
+                                            <span style="color:red">{{ form.photo.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="text-center">
+                                <input type="submit" class="btn btn-primary" value="Submit"/>
                             </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_mob" class="" id="">Mine Map Image / खान का नक्शा छवि </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8" id="CurrentPhotoCheck">
-                                        {{form.mine_map_image}}
-                                        <span style="color:red">{{form.mine_map_image.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_mine_map_unit" class="" id="">Mine Map Unit / नक्शा  इकाई </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.mine_map_unit}}
-                                        <span style="color:red">{{form.mine_map_unit.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_email" class="" id="">
-                                            Latitude / अक्षांश
-                                            <span style="color: red; ">*</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.latitude}}
-                                        <span style="color:red">{{form.latitude.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_dob" class="" id="">Longitude / देशान्तर</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                            {{form.longitude}}
-                                        <span style="color:red">{{form.longitude.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_father_name" class="" id="">State / राज्य </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.state}}
-                                        <span style="color:red">{{form.state.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_state" class="" id="">District / जिला </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.district}}
-                                        <span style="color:red">{{form.district.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-
-
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_name" class="" id="">Area / क्षेत्र<span
-                                                style="color: red; ">*</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.area}}
-                                        <span style="color:red">{{form.area.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_address" class="" id="">
-                                            Tehsil Taluka Subdivision / तहसील
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.tehsil_taluka_subdivision}}
-                                        <span style="color:red">{{form.tehsil_taluka_subdivision.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_marital_status" class="" id="">
-                                            Village Area Road / गाँव इलाका सड़क
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.village_area_road}}
-                                        <span style="color:red">{{form.marital_status.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_city" class="" id="">Pin / पिन कोड </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form.pin}}
-                                        <span style="color:red">{{form.city.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
-
-                            <div class="form-group col-md-12">
-
-
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_photo" class="" id="">Lin No / श्रम पहचान संख्या </label>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8" id="CurrentPhotoCheck">
-                                        {{form.lin_no}}
-                                        <span style="color:red">{{form.photo.errors|striptags}}</span>
-                                    </div>
-                                </div>
-
-                        </fieldset>
-
-                        <div class="text-center">
-                            <input type="submit" class="btn btn-primary" value="Submit"/>
-                        </div>
-                    </form>
-                </div>
-            </div><!--end Table content -->
-        </section>
+                        </form>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
     </div>
-</div>
-<style>
-    fieldset.scheduler-border {
-    border: solid 1px #DDD !important;
-    padding: 0 10px 10px 10px;
-    border-bottom: none;
-}
+    <style>
+        fieldset.scheduler-border {
+            border: solid 1px #DDD !important;
+            padding: 0 10px 10px 10px;
+            border-bottom: none;
+        }
 
-legend.scheduler-border {
-    width: auto !important;
-    border: none;
-    font-size: 14px;
-}
-fieldset ul {list-style:none}
+        legend.scheduler-border {
+            width: auto !important;
+            border: none;
+            font-size: 14px;
+        }
 
-</style>
-<script>
-$(function () {
+        fieldset ul {
+            list-style: none
+        }
 
-                var date_from=$('#doo_date_time_picker').datetimepicker({
-                     format: 'YYYY-MM-DD '
+    </style>
+    <script>
+
+        $(document).ready(function () {
+            var date_from = $('#doo_date_time_picker').datetimepicker({
+                format: 'YYYY-MM-DD '
+            });
+            date_from.children()[0].id = "id_date_fr";
+            date_from.children()[0].required = "true";
+            if ($('div#CurrentPhotoCheck').children('a').length > 0) {
+                $("div#CurrentPhotoCheck").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover')
+                $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover');
+                $('img#CurrentPhotoCheckOnHover').attr('data-toggle', 'tooltip');
+                $('img#CurrentPhotoCheckOnHover').attr('class', 'red-tooltip');
+                $('img#CurrentPhotoCheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentPhotoCheckOnHover').attr("href") + "' />");
+                $("a#CurrentPhotoCheckOnHover").hide();
+                $('input#photo-clear_id').hide();
+                $('img[data-toggle="tooltip"]').tooltip({
+                    animated: 'fade',
+                    placement: 'bottom',
+                    html: true
                 });
-                date_from.children()[0].id="id_date_fr";
-                date_from.children()[0].required="true";
+            }
         });
-$(document).ready(function(){
-    $("#id_mine").addClass('form-control');
-    $("#id_mining_role").addClass('form-control');
-    $("#id_immediate_staff").addClass('form-control')
-     if ($('div#CurrentPhotoCheck').children('a').length > 0) {
-         $("div#CurrentPhotoCheck").has("a").children('a').attr('id', 'CurrentPhotoCheckOnHover')
-         $('<img id="CurrentPhotoCheckOnHover" width="40px" height="40px" src="' + $('#CurrentPhotoCheckOnHover').attr("href") + '" />').insertAfter('#CurrentPhotoCheckOnHover');
-         $('img#CurrentPhotoCheckOnHover').attr('data-toggle', 'tooltip');
-         $('img#CurrentPhotoCheckOnHover').attr('class', 'red-tooltip');
-         $('img#CurrentPhotoCheckOnHover').attr('title', "<img width='250px' src='" + $('#CurrentPhotoCheckOnHover').attr("href") + "' />");
-         $("a#CurrentPhotoCheckOnHover").hide();
-         $('input#photo-clear_id').hide();
-         $('img[data-toggle="tooltip"]').tooltip({
-             animated: 'fade',
-             placement: 'bottom',
-             html: true
-         });
-     }
-    });
 
 
-
-</script>
-<style>
-    .red-tooltip + .tooltip > .tooltip-inner {background-color: #fff;}
-    .red-tooltip + .tooltip > .tooltip-arrow { border-bottom-color:#fff; }
-
-</style>
+    </script>
 {% endblock %}
 

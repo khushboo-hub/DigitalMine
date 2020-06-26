@@ -1,12 +1,11 @@
 from django.http import JsonResponse
+from django.contrib import messages
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import training_attendance,training_attendance_details, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
 from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
     training_attendance_details_form
-import datetime
-
 
 # S S MISHRA
 @login_required
@@ -174,17 +173,15 @@ def fetch_employee_list(request):
 
 @login_required
 def Rescue_index(request, template_name='Rescue_index.html'):
-    print('hello world')
+    form = Rescue_Form()
     if request.method == "POST":
         form = Rescue_Form(request.POST or None)
+        print('Rescue',form)
         if form.is_valid():
-            print(request.POST)
-            form.save()
+            # form.save()
+            messages.success(request, 'Rescue Recorded Successfully.')
             return redirect('Training_Rescue_Accident:Rescue_Manage')
-        else:
-            print("Invalid!")
-    else:
-        form = Rescue_Form()
+
     return render(request, template_name, {'form': form})
 
 
@@ -200,7 +197,6 @@ def Rescue_Manage(request, template_name='Rescue_Manage.html'):
             employee['mine_name'] = str(mine.name)
 
         employee['shift_id'] = str(emp.shift_id)
-        print('ShiftID=' + str(emp.shift_id))
         shift_table = MineShift.objects.get(id=emp.shift_id)
         employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
             shift_table.time_to) + ')'
@@ -215,7 +211,6 @@ def Rescue_Manage(request, template_name='Rescue_Manage.html'):
 
         employee_data[str(emp.id)] = employee
     emp_data['dt_store'] = employee_data
-    print(employee_data)
     return render(request, template_name, emp_data)
 
 
@@ -298,6 +293,7 @@ def rescue_record_submit_ajax(request):
         acc_type = request.POST.get('acc_type')
         rescued_no = request.POST.get('rescued_no')
         rescued_per_name = request.POST.get('rescued_per_name')
+        print(resq_per_name,rescued_per_name)
 
         rescue_record_instance = Rescue_Records()
         rescue_record_instance.mine_id = str(mine_id)

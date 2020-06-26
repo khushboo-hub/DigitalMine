@@ -12,22 +12,6 @@
             top:0px !important;
         }
 
-        .example {
-
-            margin: 15px;
-            font-size: 14px;
-            color: #656666;
-            content: "Example";
-
-            background-color: #fff;
-            border-color: #929494;
-            border-width: 1px;
-            border-radius: 4px;
-
-            padding: 10px 20px 10px;
-            border-style: solid;
-        }
-
         .form-control-feedback {
             display: none;
         }
@@ -908,27 +892,7 @@
             });
 
         });
-        $(document).ready(function () {
-            $('#user-form').validate({
-                rules: {
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                },
 
-                highlight: function (element, errorClass, validClass) {
-                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-ok').addClass('glyphicon-remove');
-                    $(element).addClass(errorClass).removeClass(validClass);
-                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
-                },
-                success: function (element) {
-                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-remove').addClass('glyphicon-ok');
-                    element.closest('.form-group').removeClass('has-error').addClass('has-success');
-                    $(element).remove();
-                }
-            });
-        });
 
     </script>
     <style>

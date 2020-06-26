@@ -1,7 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% load staticfiles %}
+    <style>
+        .form-control-feedback {
+            top: 0px !important;
+        }
+
+        .form-control-feedback {
+            display: none;
+        }
+    </style>
     <div class="container">
         <div class="row">
             <section class="col-md-12">
@@ -17,63 +25,80 @@
                 <br>
                 <!-- Table content -->
                 <div class="row">
-                    <div class="form-group col-md-12">
-                        <form class="form-horizontal" method="post" enctype="multipart/form-data" onsubmit="return validateForm(this)">
+                    <div class="col-md-12">
+                        <form class="form-horizontal" method="post" id="user-form" enctype="multipart/form-data">
                             {% csrf_token %}
-                                <table class="table table-responsive table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th><label for="id_mine">Mine:</label></th>
-                                            <td>
-                                                {% if admin %}
-                                                    {{ form.mine }}
-                                                {% else %}
-                                                    <b>{{ mine_name.name }}<b>
-                                                {% endif %}
+                            <div id="fetch_role" data-url="{% url 'employee:mine_role_fetch_ajax' %}" hidden></div>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; "> Mining Role</span>
+                                </legend>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_empid" class="">Mine Name<span style="color: red; ">*</span></label>
+                                        </div>
+                                        <div class="form-group col-md-8 has-feedback">
+                                            {% if admin %}{{ form.mine }}{% else %} <div class="well">{{ form.mine }}{{ mine_name.name }}</div>{% endif %}
 
-                                            </td>
-                                        </tr>
-
-                                    <tr>
-                                        <th><label for="id_parent_role" id="fetch_role"
-                                                   data-url="{% url 'employee:mine_role_fetch_ajax' %}">Parent
-                                            role:</label>
-                                        <input type="checkbox" name="parent" id="parent" aria-label="Checkbox for following text input">
-                                        </th>
-                                        <td>
+                                            <span style="color:red">{{ form.mine.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_dob" class="" id="">Parent Role</label>
+                                            <input type="checkbox" name="parent" id="parent"
+                                                   aria-label="Checkbox for following text input">
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
                                             {{ form.parent_role }}
-                                            <span style="color:red">{{form.parent_role.errors|striptags}}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>
-                                            <label for="id_name">Name:</label>
-
-                                        </th>
-
-                                        <td>
-                                            {{ form.name }}
-                                            <span style="color:red">{{form.name.errors|striptags}}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th><label for="id_type_0">Type:</label></th>
-                                        <td>
-                                            {{ form.type }}
-                                            <span style="color:red">{{form.type.errors|striptags}}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th><label for="id_description">Description:</label></th>
-                                        <td>
-                                            {{ form.description }}
-                                            <span style="color:red">{{form.description.errors|striptags}}</span>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <div class="text-center"><input type="submit" id="submit" class="btn btn-primary" value="Submit"/>
+                                            <span style="color:red">{{ form.parent_role.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_empid" class="">Name<span
+                                                    style="color: red; ">*</span></label>
+                                        </div>
+                                        <div class="form-group col-md-8 has-feedback">
+                                            {{ form.name }}
+                                            <span style="color:red">{{ form.name.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_dob" class="" id="">Type</label>
+                                        </div>
+                                        <div class="col-md-8 form-group has-feedback">
+                                            {{ form.type }}
+                                            <span style="color:red">{{ form.type.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_empid" class="">Description<span
+                                                    style="color: red; ">*</span></label>
+                                        </div>
+                                        <div class="form-group col-md-8 has-feedback">
+                                            {{ form.description }}
+                                            <span style="color:red">{{ form.description.errors|striptags }}</span>
+                                            <span class="form-control-feedback glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="text-center">
+                                  {% if not is_not_assigned %} <input type="submit" id="submit" class="btn btn-primary" value="Submit"/>{% endif %}
+                                </div>
+                            </fieldset>
 
                         </form>
                     </div>
@@ -85,15 +110,9 @@
         ul {
             list-style: none
         }
-
     </style>
     <script>
         $(document).ready(function () {
-            $("#id_parent_role").addClass('form-control');
-             $("#id_parent_role").prop('required',false);
-            $('select#id_mine').addClass('form-control');
-            $('select#id_mine').prop('required',true);
-
             $('select#id_mine').change(function () {
                 let mine_id = this.value;
                 $.ajax({
@@ -103,35 +122,34 @@
                     },
                     beforeSend: function (jqXHR) {
                         $.xhrPool.push(jqXHR);
-                         $('select#id_parent_role').empty();
+                        $('select#id_parent_role').empty();
                     },
                     success: function (data) {
-                        let role = JSON.parse(data.result);
-                        X=role;
-                        $('select#id_parent_role').append("<option value=''>---------</option>");
-                        for (i = 0; i < role.length; i++) {
-                            console.log(role[i].pk)
-                            $('select#id_parent_role').append('<option value=' + role[i].pk + '>' + role[i].fields.name + '</option>');
+                        if (data.hasOwnProperty('result')) {
+                            let role = JSON.parse(data.result);
+                            $('select#id_parent_role').append("<option value=''>---------</option>");
+                            for (let r in role) {
+                                if (role.hasOwnProperty(r)) {
+                                    $('select#id_parent_role').append($("<option />").val(role[r].pk).text(role[r].fields.name));
+                                }
+                            }
                         }
                     },
                     error: function () {
                     }
                 });
             });
-            if(isEmpty($('#id_parent_role').val())){
-                    $('#parent').prop('checked', true);
-                }
+            if (isEmpty($('#id_parent_role').val())) {
+                $('#parent').prop('checked', true);
+            }
 
-            $('#id_parent_role').change(function(){
-                if(isEmpty(this.value)){
+            $('#id_parent_role').change(function () {
+                if (isEmpty(this.value)) {
                     $('#parent').prop('checked', true);
+                } else {
+                    $('#parent').prop('checked', false);
                 }
-                else{
-                     $('#parent').prop('checked', false);
-                }
-            })
+            });
         });
-
-
     </script>
 {% endblock %}

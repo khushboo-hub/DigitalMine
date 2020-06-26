@@ -6,7 +6,7 @@ from .models import Employee
 from .models import SensorData, MineDetails, MineShift, MiningRole, RateOfMinimumWages
 
 STATE = (
-    ('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'),
+    ('', '------------'),('Andhra Pradesh', 'Andhra Pradesh'), ('Arunachal Pradesh', 'Arunachal Pradesh'), ('Assam', 'Assam'),
     ('Bihar', 'Bihar'), ('Chhattisgarh', 'Chhattisgarh'), ('Goa', 'Goa'),
     ('Chandigarh', 'Chandigarh'), ('Delhi', 'Delhi'), ('Gujarat', 'Gujarat'), ('Haryana', 'Haryana'),
     ('Jammu and Kashmir', 'Jammu and Kashmir'),
@@ -24,7 +24,7 @@ STATE = (
 class MiningRoleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(MiningRoleForm, self).__init__(*args, **kwargs)
-
+    mine=forms.ModelChoiceField(queryset=MineDetails.objects.all(),widget=forms.Select(attrs={'class': 'form-control', }))
     name = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Mining Role Name (ex: GM,Manager,Foreman,Level Incharge)'
@@ -39,10 +39,7 @@ class MiningRoleForm(forms.ModelForm):
     )
     type = forms.ChoiceField(required=False, choices=MINING_TYPE1, widget=forms.RadioSelect())
 
-    # parent_role = forms.CharField(required=False,
-    #                               widget=forms.Select(choices=MiningRole.objects.all().values_list('id', 'name'),
-    #                                                   attrs={'class': 'form-control',
-    #                                                          }))
+    parent_role = forms.ModelChoiceField(required=False,queryset=MiningRole.objects.all(),widget=forms.Select(attrs={'class': 'form-control',}))
     class Meta():
         model = MiningRole
         widgets = {
@@ -317,24 +314,18 @@ class EmployeeForm(forms.ModelForm):
 
 
 class MineDetailsForm(forms.ModelForm):
-    name = forms.CharField(label='Name', max_length=200, widget=forms.TextInput(attrs={
+    name = forms.CharField(label='Name', required=True, max_length=25,widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Mines Name /खदान का नाम '
+        'placeholder': 'Mines Name'
     }))
     area = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
-        'placeholder': 'Area Name /क्षेत्र का नाम '
+        'placeholder': 'Area Name'
     }))
-    # state = forms.CharField(max_length=200, required=False, widget=forms.TextInput(attrs={
-    #     'class': 'form-control',
-    #     'placeholder': 'State /राज्य का नाम '
-    # }))
-    # state = forms.CharField(required=False, widget=forms.Select(choices=STATE, attrs={'class': 'form-control', }), )
 
-    state = forms.CharField(label='Name', widget=forms.TextInput(attrs={
-        'name': 'myState',
-        'id': 'mystate',
-        'placeholder': 'State /राज्य'
+    state = forms.CharField(label='Name', widget=forms.Select(choices=STATE, attrs={
+        'placeholder': 'State',
+        'class': 'form-control'
     }))
     latitude = forms.FloatField(required=False, min_value=0, widget=forms.NumberInput(attrs={
         'class': 'form-control',
@@ -346,21 +337,23 @@ class MineDetailsForm(forms.ModelForm):
         'placeholder': 'Logitude (ex:86.4067042)'
     }))
 
+    mine_map_image=forms.ImageField()
     mine_map_unit = forms.FloatField(required=False, widget=forms.NumberInput(attrs={
         'class': 'form-control',
         'placeholder': 'Map Scalling Unit (ex: 1 CM= 8M)'
     }))
 
+
     #### ENHANCEMENT
-    village_area_road = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    village_area_road = forms.CharField(required=False,max_length=50, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Village /Area / Road'
     }))
-    tehsil_taluka_subdivision = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    tehsil_taluka_subdivision = forms.CharField(required=False, max_length=25,widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Tehsil /Taluka / Sub Division'
     }))
-    district = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    district = forms.CharField(required=False,max_length=20, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'District'
     }))
@@ -374,7 +367,7 @@ class MineDetailsForm(forms.ModelForm):
         'placeholder': 'Date of Opening'
 
     }))
-    lin_no = forms.CharField(required=False, widget=forms.TextInput(attrs={
+    lin_no = forms.CharField(required=False,max_length=25, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Labour Identification No.(LIN)'
     }))

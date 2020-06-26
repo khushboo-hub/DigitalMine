@@ -82,6 +82,11 @@ class Training_Rescue_Accident_Form(forms.ModelForm):
 
 
 class Rescue_Form(forms.ModelForm):
+    mine= forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="---Select Mine---")
+
     shift_id = forms.CharField(widget=forms.Select(attrs=
     {
         'class': 'form-control',
@@ -115,11 +120,11 @@ class Rescue_Form(forms.ModelForm):
 
     rescue_person_name = forms.CharField(widget=forms.Select(attrs=
     {
-        'class': 'form-control js-example-basic-multiple',
-        'name':'states[]',
-        'multiple':'multiple',
-        'placeholer':'Add Miners',
-        'required': 'true'
+        'class': 'form-control',
+        # 'name':'states[]',
+        # 'multiple':'multiple',
+        # 'placeholer':'Add Miners',
+        # 'required': 'true'
     }))
 
     incident_type = forms.CharField(widget=forms.TextInput(attrs=
@@ -136,11 +141,11 @@ class Rescue_Form(forms.ModelForm):
 
     rescued_employees_name = forms.CharField(widget=forms.Select(attrs=
     {
-        'class': 'form-control js-example-basic-multiple',
-        'name':'states[]',
-        'multiple':'multiple',
-        'placeholer':'Add Miners',
-        'required': 'true'
+        'class': 'form-control',
+        # 'name':'states[]',
+        # 'multiple':'multiple',
+        # 'placeholer':'Add Miners',
+        # 'required': 'true'
     }))
 
     class Meta():

@@ -3,7 +3,7 @@
 <head>
     {% load static %}
 
-    <title>Digital Mine (IoT) | CSIR-CIMFR</title>
+    <title>Digital Mine (IoT) | CSIR-CIMFR {% if title %}| {{ title }}{% endif %}</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -245,6 +245,8 @@
                 padding: 3px 15px !important;
             }
         }
+
+
     </style>
     <script>
         window.onload = function () {
@@ -1286,6 +1288,27 @@
             backdrop: 'static'
         });
     });
+       $(document).ready(function () {
+            $('#user-form').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                },
+
+                highlight: function (element, errorClass, validClass) {
+                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-ok').addClass('glyphicon-remove');
+                    $(element).addClass(errorClass).removeClass(validClass);
+                    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                },
+                success: function (element) {
+                    $(element).nextAll('.form-control-feedback').show().removeClass('glyphicon-remove').addClass('glyphicon-ok');
+                    element.closest('.form-group').removeClass('has-error').addClass('has-success');
+                    $(element).remove();
+                }
+            });
+        });
 
 </script>
 <script src="{% static 'js/ct-navbar.js' %}"></script>
