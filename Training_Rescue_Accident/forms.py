@@ -118,15 +118,8 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),widget=forms.SelectMultiple(attrs={'class':'form-control'}))
-    # attrs=
-    # {
-    #     'class': 'form-control',
-        # 'name':'states[]',
-        # 'multiple':'multiple',
-        # 'placeholer':'Add Miners',
-        # 'required': 'true'
-    # }))
+    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                        widget=forms.SelectMultiple(attrs={'class':'form-control js-example-basic-multiple'}))
 
     incident_type = forms.CharField(widget=forms.TextInput(attrs=
     {
@@ -140,8 +133,8 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    # rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
-    #                                                     widget=forms.SelectMultiple(attrs={'class': 'form-control'}))
+    rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                        widget=forms.SelectMultiple(attrs={'class': 'form-control js-example-basic-multiple'}))
 
     class Meta():
         model = Rescue_Records

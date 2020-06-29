@@ -151,11 +151,6 @@
 
     <script>
         $(document).ready(function () {
-
-            $('select#id_mine').addClass('form-control');
-            $('select#id_mine').prop('required', true);
-            $('select#shift_id').prop('required', true);
-
             $(function () {
 
                 var date_from = $('#datetimepicker6').datetimepicker({
@@ -179,6 +174,7 @@
                     $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
                 });
             });
+             $('.js-example-basic-multiple').select2();
 
             toastr.options = {
                 "closeButton": false,
@@ -203,10 +199,11 @@
             $(".date_fill").val($(this).val());
         });
 
+
         //FETCH MINE DETAILS
         $("#id_mine").change(function () {
             let mine_id = $(this).val();
-            Fetch_Miners(mine_id);
+            {#Fetch_Miners(mine_id);#}
             $.ajax({
                 type: "get",
                 url: "{% url 'attendance:fetch_shift' %}",
@@ -246,11 +243,6 @@
                 },
                 success: function (data) {
                     let list = data.result;
-                    $(".js-example-basic-multiple").select2({
-                        data: list,
-                        tags: true,
-                        tokenSeparators: [',']
-                    });
 
                     return data;
                 },
