@@ -1,3 +1,4 @@
+
 from django.db import models
 
 # Create your models here.
@@ -60,4 +61,3 @@ class Accident_Records(models.Model):
 
     class Meta:
         db_table = "accident_records"
-
