@@ -15,7 +15,6 @@
                     <div class="form-group"></div>
                     <div class="form-group">
 
-
                         <form method="post" id="RescueForm" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group col-md-12">
@@ -33,8 +32,9 @@
                                         <label> Choose Shift</label>
                                     </div>
                                     <div class="col-md-8">
-                                    <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option
-                                            value="0">  --------- </option></select></span>
+                                    <span id="shift_id_span"><select required name="shift_id" id="id_shift_id"
+                                                                     class="form-control"><option
+                                            value="">------------------Select Shift------------------</option></select></span>
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,7 @@
                                     <div class="col-md-8">
                                         <div class="form-group">
                                             <div class='input-group date' id='datetimepicker7'>
-                                               {{ form.date_to }}
+                                                {{ form.date_to }}
                                                 <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -92,29 +92,6 @@
                                 </div>
 
                             </div>
-
-
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Rescue Person(s) Deployed</label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <span>{{ form.rescue_dep_num }}</span></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Employee(s) Rescued</label>
-
-                                    </div>
-                                    <div class="col-md-8">
-                                        <span>{{ form.employee_rescued_num }}</span>
-                                    </div>
-                                </div>
-
-                            </div>
-
                             <div class="form-group col-md-12">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
@@ -174,7 +151,7 @@
                     $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
                 });
             });
-             $('.js-example-basic-multiple').select2();
+           $('.js-example-basic-multiple').select2();
 
             toastr.options = {
                 "closeButton": false,
@@ -203,7 +180,7 @@
         //FETCH MINE DETAILS
         $("#id_mine").change(function () {
             let mine_id = $(this).val();
-            {#Fetch_Miners(mine_id);#}
+            Fetch_Miners(mine_id);
             $.ajax({
                 type: "get",
                 url: "{% url 'attendance:fetch_shift' %}",
@@ -224,12 +201,11 @@
 
         //POPULATE SHIFT DROP DOWN
 
-        function fill_dropdown_shift(Employee) {
-            $("#shift_id").html("<option required value=''>------------Choose Shift------------</option>");
-            if (isEmpty(Employee)) return;
-            for (emp in Employee) {
-                if (Employee.hasOwnProperty(emp)) {
-                    $("#shift_id").append($("<option />").val(Employee[emp].id).text(Employee[emp].shift_name));
+        function fill_dropdown_shift(Shift) {
+            $("#id_shift_id:not(:first-child)").empty();
+            for (let Sh in Shift) {
+                if (Shift.hasOwnProperty(Sh)) {
+                    $("#id_shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
                 }
             }
         }
@@ -242,8 +218,19 @@
                     'mine_id': mine_id
                 },
                 success: function (data) {
-                    let list = data.result;
 
+                    if(data.hasOwnProperty('result')) {
+                        let employees = data.result;
+                        $("select#id_rescue_person_name").empty();
+                        $("select#id_rescued_employees_name").empty();
+                        for (let emp in employees) {
+                            if (employees.hasOwnProperty(emp)) {
+                                    $("select#id_rescue_person_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                                    $("select#id_rescued_employees_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                            }
+                        }
+
+                    }
                     return data;
                 },
                 error: function () {
@@ -251,90 +238,5 @@
                 }
             });
         }
-
-        $('span.rescue').click(function(){
-          $('#rescue_select').append($('div#rescue_select >div').html())
-        });
-        $('span.rescued').click(function(){
-
-        });
-
-      /*  $('#RescueForm').on('submit', function (event) {
-            event.preventDefault();
-            console.log("form submitted!")  // sanity check
-            SubmitForm();
-        });
-*/
-        function SubmitForm() {
-            let mine_id = $('#id_mine').val();
-            let shift_id = $('#shift_id').val();
-            let area = $('#id_area').val();
-            let date_from = $('#id_date_fr').val();
-            let date_to = $('#id_date_to').val();
-            let resq_no = $('#id_rescue_dep_num').val();
-            let resq_per_name = $('#id_rescue_person_name')[0].selectedOptions;
-            let resq={};
-            for(let r in resq_per_name){
-                if(resq_per_name.hasOwnProperty(r)){
-
-                    resq[resq_per_name[r].dataset.select2Id]=resq_per_name[r].value
-                }
-            }
-            resq_per_name=JSON.stringify(resq);
-            let acc_type = $('#id_incident_type').val();
-            let rescued_no = $('#id_employee_rescued_num').val();
-            let rescued_per_name = $('#id_rescued_employees_name').selectedOptions;
-            let rescued={};
-            for(let r in rescued_per_name){
-                if(rescued_per_name.hasOwnProperty(r)){
-
-                    rescued[rescued_per_name[r].dataset.select2Id]=rescued_per_name[r].value
-                }
-            }
-            rescued_per_name=JSON.stringify(rescued);
-            d = {
-                mine_id,
-                shift_id,
-                area,
-                date_from,
-                date_to,
-                resq_no,
-                resq_per_name,
-                acc_type,
-                rescued_no,
-                rescued_per_name
-            };
-            console.log(d)
-            $.ajax({
-                type: "POST",
-                url: "{% url 'Training_Rescue_Accident:rescue_record_submit_ajax' %}",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    mine_id: mine_id,
-                    shift_id: shift_id,
-                    area: area,
-                    date_from: date_from,
-                    date_to: date_to,
-                    resq_no: resq_no,
-                    resq_per_name: resq_per_name,
-                    acc_type: acc_type,
-                    rescued_no: rescued_no,
-                    rescued_per_name: rescued_per_name
-                },
-                success: function (json) {
-                    if (json.hasOwnProperty("success")) {
-                        toastr.success(json.success);
-                    } else {
-                        toastr.error(json.error);
-                    }
-                    return json;
-                },
-                error: function () {
-                    console.log("Error!");
-                    toastr.error('Something Went wrong!');
-                }
-            });
-        }
-
     </script>
 {% endblock %}

@@ -176,7 +176,7 @@ def Rescue_index(request, template_name='Rescue_index.html'):
     form = Rescue_Form()
     if request.method == "POST":
         form = Rescue_Form(request.POST or None)
-        print('Rescue',form.errors)
+        print('Rescue',form.errors,request.POST['shift_id'])
         if form.is_valid():
             form.save()
             messages.success(request, 'Rescue Recorded Successfully.')
@@ -189,28 +189,6 @@ def Rescue_index(request, template_name='Rescue_index.html'):
 def Rescue_Manage(request, template_name='Rescue_Manage.html'):
     emp_data={}
     emp_show = Rescue_Records.objects.all()
-    # employee_data = {}
-    # emp_data = {}
-    # for emp in emp_show:
-    #     employee = {}
-    #     mine_details = MineDetails.objects.filter(id=emp.mine_id)
-    #     for mine in mine_details:
-    #         employee['mine_name'] = str(mine.name)
-    #
-    #     employee['shift_id'] = str(emp.shift_id)
-    #     shift_table = MineShift.objects.get(id=emp.shift_id)
-    #     employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
-    #         shift_table.time_to) + ')'
-    #     employee['area'] = str(emp.area)
-    #     employee['date_fr'] = str(emp.date_fr)
-    #     employee['date_to'] = str(emp.date_to)
-    #     employee['rescue_dep_num'] = str(emp.rescue_dep_num)
-    #     employee['rescue_person_name'] = str(emp.rescue_person_name)
-    #     employee['incident_type'] = str(emp.incident_type)
-    #     employee['employee_rescued_num'] = str(emp.employee_rescued_num)
-    #     employee['rescued_employees_name'] = str(emp.rescued_employees_name)
-    #
-    #     employee_data[str(emp.id)] = employee
     emp_data['dt_store'] = emp_show
     return render(request, template_name, emp_data)
 
@@ -261,7 +239,6 @@ def Accident_Manage(request, template_name='Accident_Manage.html'):
 
         employee_data[str(emp.id)] = employee
     emp_data['dt_store'] = employee_data
-    print(employee_data)
     return render(request, template_name, emp_data)
 
 
@@ -273,10 +250,11 @@ def fetch_miners_ajax(request):
         miners = Employee.objects.filter(mine_id=mine_id)
         mn = []
         for m in miners:
-            mn.append({'id': m.name, 'text': str(m.name)})
+            print(m)
+            mn.append({'id': m.id, 'name': str(m.name_with_email())})
         data['result'] = mn
-        return JsonResponse(data)
-    data['result'] = "Not Ajax"
+    else:
+        data['result'] = "Not Ajax"
     return JsonResponse(data)
 
 

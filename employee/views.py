@@ -40,7 +40,7 @@ from django.db import IntegrityError
 
 # Create your views here.
 @login_required
-def employee_manage(request, template_name='employee/employee_manage.html'):
+def employee_manage(request, template_name='employee/employee_manage_.html'):
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
 

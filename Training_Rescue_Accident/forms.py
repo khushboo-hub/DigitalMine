@@ -1,6 +1,6 @@
 from dateutil.utils import today
 
-from employee.models import MineDetails
+from employee.models import MineDetails, MineShift
 from employee.models import Employee
 from .models import training_attendance,training_attendance_details
 from .models import Rescue_Records, Accident_Records
@@ -87,11 +87,11 @@ class Rescue_Form(forms.ModelForm):
                                          'class': 'form-control'}),
                                      empty_label="---Select Mine---")
 
-    shift_id = forms.CharField(widget=forms.Select(attrs=
-    {
-        'class': 'form-control',
-        'required':''
-    }))
+    # shift_id = forms.ChoiceField(widget=forms.Select(attrs=
+    # {
+    #     'class': 'form-control',
+    #     'required':''
+    # }))
     area = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control',
@@ -111,13 +111,6 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    rescue_dep_num = forms.IntegerField(widget=forms.NumberInput(attrs=
-    {
-        'class': 'form-control',
-        'min':'0',
-        'required': 'true'
-    }))
-
     rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.SelectMultiple(attrs={'class':'form-control js-example-basic-multiple'}))
 
@@ -126,19 +119,12 @@ class Rescue_Form(forms.ModelForm):
         'class': 'form-control',
         'required': 'true'
     }))
-
-    employee_rescued_num = forms.IntegerField(widget=forms.NumberInput(attrs=
-    {
-        'class': 'form-control',
-        'required': 'true'
-    }))
-
     rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.SelectMultiple(attrs={'class': 'form-control js-example-basic-multiple'}))
 
     class Meta():
         model = Rescue_Records
-        fields = ['mine', 'shift_id', 'area', 'date_fr', 'date_to', 'rescue_dep_num', 'rescue_person_name', 'incident_type', 'employee_rescued_num', 'rescued_employees_name']
+        fields = ['mine', 'shift_id', 'area', 'date_fr', 'date_to', 'rescue_person_name', 'incident_type', 'rescued_employees_name']
 
 
 class Accident_Form(forms.ModelForm):
