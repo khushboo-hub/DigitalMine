@@ -28,19 +28,19 @@
                     </tr>
                     </thead>
                         <tbody>
-                            {% for emp_show in dt_store %}
+                            {% for key,emp_show in dt_store.items %}
                             <tr>
                             <td>{{forloop.counter}}</td>
-                            <td>{{emp_show.mine.name}}</td>
-                            <td>{{emp_show.shift_id}}</td>
+                            <td>{{emp_show.mine_name}}</td>
+                            <td>{{emp_show.shift_name}}</td>
                             <td>{{emp_show.area}}</td>
                             <td>{{emp_show.date_fr}}</td>
                             <td>{{emp_show.date_to}}</td>
                             <td>{{emp_show.rescue_dep_num}}</td>
-                            <td>{% for emp in emp_show.rescue_person_name.all %}{{forloop.counter}}.{{ emp }}<br>{% endfor %}</td>
+                            <td>{{emp_show.rescue_person_name}}</td>
                             <td>{{emp_show.incident_type}}</td>
                             <td>{{emp_show.employee_rescued_num}}</td>
-                            <td>{% for emp in emp_show.rescued_employees_name.all %}{{forloop.counter}}.{{ emp }}<br>{% endfor %}</td>
+                            <td> {{emp_show.rescued_employees_name}}</td>
                             </tr>
                             {% endfor %}
                         </tbody>

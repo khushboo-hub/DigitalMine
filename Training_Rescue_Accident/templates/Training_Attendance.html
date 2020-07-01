@@ -46,10 +46,8 @@
             </div>
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-12">
-
-                    {% csrf_token %}
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered responsive" id="content">
+{#                    <div class="table-responsive">#}
+                         <table class="table table-bordered" id="dataTable">
                             <thead>
                             <tr>
                                 <th>SL No.</th>
@@ -65,7 +63,7 @@
 
                             </tbody>
                         </table>
-                    </div>
+{#                    </div>#}
                     <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Attendance"/>
                 </div>
             </div>
@@ -147,7 +145,7 @@
                     "<td>" + sl + "</td>" +
                     "<td>" +
                     "<div class=\"checkbox\">" +
-                    "<label><input class='present' type='checkbox' class='is_present' name='is_present'  value='Yes'>Present</label>" +
+                    "<label><input class='present' type='checkbox' class='is_present' name='is_present'  value='Present'>Present</label>" +
                     "</div>" +
                     "</td>" +
                     "<td><input type='hidden' name='emp_id' value=" + result[index].emp_id + ">" + result[index].emp_name + "</td>" +
@@ -168,7 +166,7 @@
         var $chbx = $("input[name='is_present']");
         $chbx.each(function() {
             if ($(this).is(":checkbox:not(:checked)")) {
-                $(this).attr("value","No");
+                $(this).attr("value","Absent");
                 $(this).attr("type","hidden");
             }
         });

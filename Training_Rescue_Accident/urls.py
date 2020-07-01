@@ -7,6 +7,8 @@ urlpatterns = [
     path('', views.index, name='index'),# for training attendance
     path('manage_training_attendance', views.manage_training_attendance, name='manage_training_attendance'),# for manage training attendance
     path('EditEmployeeTrainingAttendance/<int:id>', views.EditEmployeeTrainingAttendance, name='EditEmployeeTrainingAttendance'),# for edit training attendance
+    path('ViewEmployeeTrainingAttendance/<int:id>', views.ViewEmployeeTrainingAttendance, name='ViewEmployeeTrainingAttendance'),# for view training attendance
+    path('DeleteEmployeeTrainingAttendance/<int:id>', views.DeleteEmployeeTrainingAttendance, name='DeleteEmployeeTrainingAttendance'),# for Delete training attendance
 
     path('fetch_shift', views.fetch_shift, name='fetch_shift'),
     path('fetch_employee_list', views.fetch_employee_list, name='fetch_employee_list'),
