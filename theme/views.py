@@ -6,7 +6,6 @@ from django.shortcuts import render, HttpResponse, get_object_or_404
 from accounts.models import profile_extension, User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CarousalPhotoUploadForm
-from .models import Carousal
 from django.core import serializers
 from employee.models import MineDetails
 from accounts.models import profile_extension

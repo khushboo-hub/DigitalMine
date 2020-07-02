@@ -7,7 +7,7 @@ from django.db import models
 from django.db import models
 from datetime import date, datetime,timedelta
 from django.dispatch import receiver
-from django.utils import timezone
+
 
 
 class MineDetails(models.Model):
@@ -312,3 +312,21 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
             os.remove(old_file.path)
 
 ################# Reciever for Sensor Node END #################
+
+from accounts.models import profile_extension
+#################Reciever for Shift Change####################
+@receiver(models.signals.post_save, sender=EmployeeShiftAssign, dispatch_uid="employee_shift_assign")
+def auto_update_employee_shift_on_insert(sender,instance,**kwargs):
+    print('Shift============',instance)
+
+    if not instance.pk:
+        return False
+
+    try:
+        profile=profile_extension.objects.get(user_id_id=instance.employee_id)
+        profile.shift_id_id=instance.mine_shift_id
+        profile.save()
+        print('saved successfully')
+    except profile_extension.DoesNotExist:
+        return False
+    
