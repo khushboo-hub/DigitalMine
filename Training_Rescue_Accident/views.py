@@ -5,9 +5,6 @@ from .models import training_attendance,training_attendance_details, Rescue_Reco
     EmployeeShiftAssign, MineDetails
 from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
     training_attendance_details_form
-import datetime
-
-
 # S S MISHRA
 @login_required
 def index(request, template_name='Training_Attendance.html'):
@@ -388,7 +385,7 @@ def accident_record_submit_ajax(request):
         accident_record_instance.date_hour_accident = date_time
         accident_record_instance.accident_location = accident_location
         accident_record_instance.killed_num = killed_num
-        accident_record_instance.injured_num = injured_num
+        accident_record_instance. injured_num = injured_num
         accident_record_instance.accident_cause_description = accident_cause_description
         accident_record_instance.person_names = person_names
         accident_record_instance.emp_nat = nature_of_employment
@@ -407,5 +404,3 @@ def accident_record_submit_ajax(request):
 
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
-#===========================================
-

@@ -162,6 +162,8 @@ class Employee(models.Model):
 
     def mine_name(self):
         return "Hello"
+    def name_with_email(self):
+        return self.name+'('+self.email+')'
 
     class Meta:
         db_table = "employee"

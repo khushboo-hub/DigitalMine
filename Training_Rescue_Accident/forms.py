@@ -15,10 +15,10 @@ class Training_Form(forms.ModelForm):
                                     'class': 'form-control'}),
                                     empty_label="Select Mine")
 
-    shift_id = forms.ModelChoiceField(queryset=MineShift.objects.filter(),
-                                      widget=forms.Select(attrs={
-                                    'class': 'form-control'}),
-                                    empty_label="Select Shift")
+    shift_id = forms.CharField(widget=forms.Select(attrs={
+                           'class': 'form-control',
+                           'required':False
+                       }))
 
     training_date = forms.DateField(widget=forms.TextInput(attrs={
         'class': 'form-control datepicker',
@@ -49,8 +49,22 @@ class Training_Form(forms.ModelForm):
         fields = "__all__"
 
 class training_attendance_details_form(forms.ModelForm):
-    BOOL_CHOICES = (("Present", 'Present'), ("Absent", 'Absent'))
-    is_present = forms.ChoiceField(choices = BOOL_CHOICES,widget=forms.Select(), required=True)
+    TRUE_FALSE_CHOICES = (
+        ("Yes", 'Yes'),
+        ("No", 'No')
+    )
+
+    training_attendance_id = forms.CharField(widget=forms.Select(attrs={
+            'class': 'form-control',
+            'required':False
+        }))
+
+
+    emp_id = forms.CharField(widget=forms.TextInput(attrs={
+                           'class': 'form-control',
+                           'required':False
+                       }))
+    is_present = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,widget=forms.Select(), required=True)
     class Meta():
         model = training_attendance_details
         fields = "__all__"
@@ -68,11 +82,16 @@ class Training_Rescue_Accident_Form(forms.ModelForm):
 
 
 class Rescue_Form(forms.ModelForm):
-    shift_id = forms.CharField(widget=forms.Select(attrs=
-    {
-        'class': 'form-control',
-        'required':''
-    }))
+    mine= forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="---Select Mine---")
+
+    # shift_id = forms.ChoiceField(widget=forms.Select(attrs=
+    # {
+    #     'class': 'form-control',
+    #     'required':''
+    # }))
     area = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control',
@@ -92,46 +111,20 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    rescue_dep_num = forms.IntegerField(widget=forms.NumberInput(attrs=
-    {
-        'class': 'form-control',
-        'min':'0',
-        'required': 'true'
-    }))
-
-    rescue_person_name = forms.CharField(widget=forms.Select(attrs=
-    {
-        'class': 'form-control js-example-basic-multiple',
-        'name':'states[]',
-        'multiple':'multiple',
-        'placeholer':'Add Miners',
-        'required': 'true'
-    }))
+    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                        widget=forms.SelectMultiple(attrs={'class':'form-control js-example-basic-multiple'}))
 
     incident_type = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control',
         'required': 'true'
     }))
-
-    employee_rescued_num = forms.IntegerField(widget=forms.NumberInput(attrs=
-    {
-        'class': 'form-control',
-        'required': 'true'
-    }))
-
-    rescued_employees_name = forms.CharField(widget=forms.Select(attrs=
-    {
-        'class': 'form-control js-example-basic-multiple',
-        'name':'states[]',
-        'multiple':'multiple',
-        'placeholer':'Add Miners',
-        'required': 'true'
-    }))
+    rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                        widget=forms.SelectMultiple(attrs={'class': 'form-control js-example-basic-multiple'}))
 
     class Meta():
         model = Rescue_Records
-        fields = ['mine', 'shift_id', 'area', 'date_fr', 'date_to', 'rescue_dep_num', 'rescue_person_name', 'incident_type', 'employee_rescued_num', 'rescued_employees_name']
+        fields = ['mine', 'shift_id', 'area', 'date_fr', 'date_to', 'rescue_person_name', 'incident_type', 'rescued_employees_name']
 
 
 class Accident_Form(forms.ModelForm):

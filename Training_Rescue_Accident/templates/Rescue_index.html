@@ -1,175 +1,148 @@
 {% extends "base.html" %}
 {% block content %}
-{% load staticfiles %}
-<style>
-    .container.rescue{width:90% !important;}
-</style>
+    {% load staticfiles %}
+    <style>
+        .container.rescue {
+            width: 90% !important;
+        }
+    </style>
 
-<div class="container rescue">
-    <div class="row">
-        <section class="col-md-12">
-            <h3 class="text-center page-header">Rescue Record Management</h3>
-            <div class="row" style="background-color: lightblue;">
-                <div class="form-group"></div>
-                <div class="form-group">
+    <div class="container rescue">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="text-center page-header">Rescue Record Management</h3>
+                <div class="row" style="background-color: lightblue;">
+                    <div class="form-group"></div>
+                    <div class="form-group">
 
+                        <form method="post" id="RescueForm" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Select Mine</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <span id="mine_id_span">{{ form.mine }}</span>
+                                    </div>
+                                </div>
 
-                    <form method="post" id="RescueForm" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Select Mine</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span id="mine_id_span">{{form.mine}}</span>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label> Choose Shift</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option
-                                            value="0">  --------- </option></select></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Exact Area/Location</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span>{{form.area}}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Type of Incident</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span>{{form.incident_type}}</span>
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Date &amp; Time (From) (Approx.)</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <div class='input-group date' id='datetimepicker6'>
-                                            <input type='text' class="form-control"/>
-                                            <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                        </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label> Choose Shift</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                    <span id="shift_id_span"><select required name="shift_id" id="id_shift_id"
+                                                                     class="form-control"><option
+                                            value="">------------------Select Shift------------------</option></select></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Date &amp; Time (To) (Approx.)</label>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Exact Area/Location</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <span>{{ form.area }}</span>
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <div class='input-group date' id='datetimepicker7'>
-                                            <input type='text' class="form-control"/>
-                                            <span class="input-group-addon">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Type of Incident</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <span>{{ form.incident_type }}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Date &amp; Time (From) (Approx.)</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <div class='input-group date' id='datetimepicker6'>
+                                                {{ form.date_fr }}
+                                                <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Rescue Person(s) Deployed</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span>{{form.rescue_dep_num}}</span></span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Rescue Person Name(s)</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <!--<span class="ui-widget">-->
-                                    {{form.rescue_person_name}}
-                                    <!--</span>-->
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Date &amp; Time (To) (Approx.)</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <div class='input-group date' id='datetimepicker7'>
+                                                {{ form.date_to }}
+                                                <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>
-
-                        </div>
-
-                        <div class="form-group col-md-12">
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Employee(s) Rescued</label>
-
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Rescue Person Name(s)</label>
+                                    </div>
+                                    <div class="col-md-8" id="rescue_select">
+                                        {{ form.rescue_person_name }}
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <span>{{form.employee_rescued_num}}</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="col-md-4">
-                                    <label>Rescued Person's Name(s)</label>
-                                </div>
-                                <div class="col-md-8">
-                                    <span>{{form.rescued_employees_name}}</span>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Rescued Person's Name(s)</label>
+                                    </div>
+                                    <div class="col-md-8" id="rescued_select">
+                                        {{ form.rescued_employees_name }}
+                                    </div>
+
                                 </div>
                             </div>
-                        </div>
 
-                        <center>
-                            <button type="submit" id="Rescue_Record_Submit" class="btn btn-primary"
-                                    value="Submit Records">Submit Records
-                            </button>&nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Rescue_Manage' %}"
-                                                          class="btn btn-primary" role="button">Show Records</a>
-                        </center>
-                    </form>
+                            <div style="text-align: center;">
+
+                                <button type="submit" id="Rescue_Record_Submit" class="btn btn-primary"
+                                        value="Submit Records">Submit Records
+                                </button>&nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Rescue_Manage' %}"
+                                                              class="btn btn-primary" role="button">Show Records</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </div>
-</div>
 
-<script>
-    $(document).ready(function(){
+    <script>
+        $(document).ready(function () {
+            $(function () {
 
-        $('select#id_mine').addClass('form-control');
-         $('select#id_mine').prop('required',true);
-         $('select#shift_id').prop('required',true);
-
-         $(function () {
-
-                var date_from=$('#datetimepicker6').datetimepicker({
-                     format: 'YYYY-MM-DD HH:mm:ss'
+                var date_from = $('#datetimepicker6').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss'
                 });
-                date_from.children()[0].id="id_date_fr";
-                date_from.children()[0].required="true";
+                date_from.children()[0].id = "id_date_fr";
+                date_from.children()[0].required = "true";
 
-                var date_to= $('#datetimepicker7').datetimepicker({
+                var date_to = $('#datetimepicker7').datetimepicker({
                     format: 'YYYY-MM-DD HH:mm:ss',
                     useCurrent: false //Important! See issue #1075
                 });
 
-                date_to.children()[0].id="id_date_to";
-                date_to.children()[0].required="true";
+                date_to.children()[0].id = "id_date_to";
+                date_to.children()[0].required = "true";
 
                 $("#datetimepicker6").on("dp.change", function (e) {
                     $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
@@ -177,146 +150,93 @@
                 $("#datetimepicker7").on("dp.change", function (e) {
                     $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
                 });
+            });
+           $('.js-example-basic-multiple').select2();
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": false,
+                "positionClass": "toast-bottom-full-width",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "100",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+            }
+
+        });
+        $(document.body).on('blur', '#id_date_parent', function () {
+            $(".date_fill").val($(this).val());
         });
 
-        toastr.options = {
-                    "closeButton": false,
-                    "debug": false,
-                    "newestOnTop": true,
-                    "progressBar": false,
-                    "positionClass": "toast-bottom-full-width",
-                    "preventDuplicates": true,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "100",
-                    "timeOut": "3000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut",
-                    }
 
-    });
-    $(document.body).on('blur','#id_date_parent',function(){
-        $(".date_fill").val($(this).val());
-     });
+        //FETCH MINE DETAILS
+        $("#id_mine").change(function () {
+            let mine_id = $(this).val();
+            Fetch_Miners(mine_id);
+            $.ajax({
+                type: "get",
+                url: "{% url 'attendance:fetch_shift' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    fill_dropdown_shift(data.result);
 
-    //FETCH MINE DETAILS
-    $("#id_mine").change(function(){
-        mine_id=$(this).val();
-        var list=[];
-        $('#id_rescue_person_name').empty();
-        $('#id_rescued_employees_name').empty();
-         $(".js-example-basic-multiple").select2({data:null});
-<!--         $(".js-example-basic-multiple").select2('data',null);-->
-        Fetch_Miners(mine_id);
-        $.ajax({
-            type:"get",
-            url: "{% url 'attendance:fetch_shift' %}",
-            data: {
-             'id': mine_id
-            },
-            success: function(data) {
-                console.log(data)
-                fill_dropdown_shift(data.result);
+                    return data;
+                },
+                error: function () {
+                    //console.log("Error!");
+                }
+            });
 
-                return data;
-            },
-            error: function(){
-                //console.log("Error!");
+        });
+
+        //POPULATE SHIFT DROP DOWN
+
+        function fill_dropdown_shift(Shift) {
+            $("#id_shift_id:not(:first-child)").empty();
+            for (let Sh in Shift) {
+                if (Shift.hasOwnProperty(Sh)) {
+                    $("#id_shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+                }
             }
-          });
-
-    });
-
-    //POPULATE SHIFT DROP DOWN
-
-    function fill_dropdown_shift(result){
-
-        $("#shift_id").html("<option required value=''>------------Choose Shift------------</option>");
-        if(isEmpty(result))return;
-        for (index = 0; index < result.length; index++) {
-            //alert(result[index]);
-            var str_array = result[index].split(',');
-            $("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "("+str_array[3]+" - "+str_array[4]+")"));
         }
-    }0
-var X;
 
-function Fetch_Miners(mine_id){
-    $(".js-example-basic-multiple").select2({data:null});
+        function Fetch_Miners(mine_id) {
+            $.ajax({
+                type: "get",
+                url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
+                data: {
+                    'mine_id': mine_id
+                },
+                success: function (data) {
 
-    $.ajax({
-            type:"get",
-            url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
-            data: {
-             'mine_id': mine_id
-            },
-            success: function(data) {
-                 list = data.result;
-                 console.log(data.result);
-                 $(".js-example-basic-multiple").select2({
-                    data: list,
-                    tags: true,
-                    tokenSeparators: [',']
-                 });
+                    if(data.hasOwnProperty('result')) {
+                        let employees = data.result;
+                        $("select#id_rescue_person_name").empty();
+                        $("select#id_rescued_employees_name").empty();
+                        for (let emp in employees) {
+                            if (employees.hasOwnProperty(emp)) {
+                                    $("select#id_rescue_person_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                                    $("select#id_rescued_employees_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                            }
+                        }
 
-                 return data;
-            },
-            error: function(){
-                //console.log("Error!");
-            }
-          });
-}
-
-    $('#RescueForm').on('submit', function(event){
-            event.preventDefault();
-            console.log("form submitted!")  // sanity check
-            SubmitForm();
-    });
-
-    function SubmitForm(){
-        mine_id     =   $('#id_mine').val();
-        shift_id    =   $('#shift_id').val();
-        area        =   $('#id_area').val();
-        date_from   =   $('#id_date_fr').val();
-        date_to     =   $('#id_date_to').val();
-        resq_no     =   $('#id_rescue_dep_num').val();
-        resq_per_name =   $('#id_rescue_person_name').val().toString();
-        acc_type    =   $('#id_incident_type').val();
-        rescued_no  =   $('#id_employee_rescued_num').val();
-        rescued_per_name = $('#id_rescued_employees_name').val();
-        d={mine_id,shift_id,area,date_from,date_to,resq_no,resq_per_name,acc_type,rescued_no,rescued_per_name};
-        console.log(d);
-        $.ajax({
-            type:"POST",
-            url: "{% url 'Training_Rescue_Accident:rescue_record_submit_ajax' %}",
-            data:{
-                  csrfmiddlewaretoken: "{{ csrf_token }}",
-                  mine_id          : mine_id,
-                  shift_id         : shift_id,
-                  area             : area,
-                  date_from        : date_from,
-                  date_to          : date_to,
-                  resq_no          : resq_no,
-                  resq_per_name    : resq_per_name,
-                  acc_type         : acc_type,
-                  rescued_no       : rescued_no,
-                  rescued_per_name : rescued_per_name
-             },
-            success: function(json) {
-                 if(json.hasOwnProperty("success")){toastr.success(json.success);}
-
-                 else{toastr.error(json.error);}
-                 return json;
-            },
-            error: function(){
-                console.log("Error!");
-                toastr.error('Something Went wrong!');
-            }
-          });
-    }
-
-</script>
+                    }
+                    return data;
+                },
+                error: function () {
+                    console.log("Error!");
+                }
+            });
+        }
+    </script>
 {% endblock %}

@@ -1,3 +1,4 @@
+
 from django.db import models
 
 # Create your models here.
@@ -16,25 +17,27 @@ class training_attendance(models.Model):
         db_table = "training_attendance"
 
 class training_attendance_details(models.Model):
-    BOOL_CHOICES = (("Present", 'Present'), ("Absent", 'Absent'))
+    BOOL_CHOICES = (("Yes", 'Yes'), ("No", 'No'))
     training_attendance_id = models.ForeignKey(training_attendance, on_delete=models.CASCADE, null=True, blank=True)
     emp_id =  models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
-    is_present = models.CharField(max_length=7, choices=BOOL_CHOICES)
+    is_present = models.CharField(max_length=3, choices=BOOL_CHOICES)
 
     class Meta:
         db_table = "training_attendance_details"
 
 class Rescue_Records(models.Model):
     mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    shift_id = models.IntegerField(null=True, blank=True)
+    shift_id = models.ForeignKey(MineShift,on_delete=models.CASCADE,null=True, blank=True)
     area = models.CharField(max_length=255, null=True, blank=True)
     date_fr = models.DateTimeField(max_length=255, null=True, blank=True)
     date_to = models.DateTimeField(max_length=255, null=True, blank=True)
-    rescue_dep_num = models.IntegerField(null=True, blank=True)
-    rescue_person_name = models.CharField(max_length=255, null=True, blank=True)
+    # rescue_dep_num = models.IntegerField(null=True, blank=True)
+    # rescue_person_name = models.CharField(max_length=255, null=True, blank=True)
+    rescue_person_name = models.ManyToManyField(Employee, null=True, blank=True,related_name='rescue')
     incident_type = models.CharField(max_length=255, null=True, blank=True)
-    employee_rescued_num = models.IntegerField(null=True, blank=True)
-    rescued_employees_name = models.CharField(max_length=255, null=True, blank=True)
+    # employee_rescued_num = models.IntegerField(null=True, blank=True)
+    # rescued_employees_name = models.CharField(max_length=255, null=True, blank=True)
+    rescued_employees_name = models.ManyToManyField(Employee, null=True, blank=True,related_name='rescued')
 
     class Meta:
         db_table = "rescue_records"
@@ -58,4 +61,3 @@ class Accident_Records(models.Model):
 
     class Meta:
         db_table = "accident_records"
-
