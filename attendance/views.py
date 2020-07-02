@@ -163,7 +163,7 @@ def fetch_employee_list(request):
         mine_shift_id = request.GET.get('id', None)
         shift_table = MineShift.objects.get(id=mine_shift_id)
         mine_table = MineDetails.objects.get(id=shift_table.mine_id)
-        employee_shift_assign = EmployeeShiftAssign.objects.filter(mine_shift_id=mine_shift_id).distinct()
+        employee_shift_assign = EmployeeShiftAssign.objects.filter(mine_shift_id=mine_shift_id).distinct('employee_id')
         #print(employee_shift_assign.query)
         # print("mine shift id:" + employee_shift_assign[0].mine_shift_id)
         # print("Employee id:" + employee_shift_assign[0] .employee_id)
