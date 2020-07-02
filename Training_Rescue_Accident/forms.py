@@ -111,14 +111,14 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
-                                                        widget=forms.SelectMultiple(attrs={'class':'form-control js-example-basic-multiple'}))
-
     incident_type = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control',
         'required': 'true'
     }))
+    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                            widget=forms.SelectMultiple(attrs={
+                                                                'class': 'form-control js-example-basic-multiple'}))
     rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.SelectMultiple(attrs={'class': 'form-control js-example-basic-multiple'}))
 
@@ -128,6 +128,10 @@ class Rescue_Form(forms.ModelForm):
 
 
 class Accident_Form(forms.ModelForm):
+    mine= forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="------Select Mine------")
     shift_id = forms.CharField(widget=forms.Select(attrs=
     {
         'class': 'form-control'

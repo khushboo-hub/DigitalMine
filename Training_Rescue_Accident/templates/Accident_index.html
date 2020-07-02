@@ -1,309 +1,319 @@
 {% extends "base.html" %}
 {% block content %}
-{% load staticfiles %}
-
-<div class="container">
-	<div class="row">
-		<section class="col-md-12">
-			<h3 class="text-center page-header">Accident Record Management</h3>
-			<div class="row" style="background-color: lightblue;">
-				<div class="form-group"></div>
-				<div class="form-group">
-					<form method="post" id="RescueForm" enctype="multipart/form-data">{% csrf_token %}
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Select Mine</label>
-								</div>
-								<div class="col-md-8"> <span id="mine_id_span">{{form.mine}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Choose Shift</label>
-								</div>
-								<div class="col-md-8"> <span id="shift_id_span"><select name="shift_id" id="shift_id" class="form-control"><option value="0">  --------- </option></select></span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Situation of Mines</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.situation_mines}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Name and postal address of owner</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.name_address}}</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Village Post Office Police Station Sub-Division(Taluqa) District Pin</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.vil_pin}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Date and hour of accident</label>
-								</div>
-								<div class="col-md-8">
-									<div class="form-group">
-										<div class='input-group date' id='datetimepicker'>
-											<input type='text' class="form-control" /> <span class="input-group-addon">
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="text-center page-header">Accident Record Management</h3>
+                <div class="row" style="background-color: lightblue;">
+                    <div class="form-group"></div>
+                    <div class="form-group">
+                        <form method="post" id="RescueForm" enctype="multipart/form-data">{% csrf_token %}
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Select Mine</label>
+                                    </div>
+                                    <div class="col-md-8"><span id="mine_id_span">{{ form.mine }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Choose Shift</label>
+                                    </div>
+                                    <div class="col-md-8"> <span id="shift_id_span"><select required name="shift_id"
+                                                                                            id="id_shift_id"
+                                                                                            class="form-control"><option
+                                            value="">------------------Select Shift------------------</option></select></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Situation of Mines</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.situation_mines }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Name and postal address of owner</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.name_address }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Village Post Office Police Station Sub-Division(Taluqa) District
+                                            Pin</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.vil_pin }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Date and hour of accident</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <div class='input-group date' id='datetimepicker'>
+                                                <input type='text' class="form-control"/> <span
+                                                    class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
 											</span>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Place of location of accident in mine/rescue station/rescue room*</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.accident_location}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Number of person(s) Killed</label>
-								</div>
-								<div class="col-md-8">
-									<!--<span class="ui-widget">--> <span>{{form.killed_num}}</span>
-									<!--</span>-->
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Number of person(s) Seriously Injured</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.injured_num}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Cause and description of accident</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.accident_cause_description}}</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Name of person(s) killed/injured</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.person_names}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Nature of employment</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.emp_nat}}</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Age</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.age}}</span>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Sex</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.sex}}</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group col-md-12">
-							<div class="col-md-6">
-								<div class="col-md-4">
-									<label>Nature of injured/cause of death</label>
-								</div>
-								<div class="col-md-8"> <span>{{form.injury_death_cause}}</span>
-								</div>
-							</div>
-						</div>
-						    <div style="text-align:center;margin-left:auto; margin-right:auto">
-							<button type="submit"  id="Rescue_Record_Submit" class="btn btn-primary" value="Submit Records">Submit Records</button>&nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Rescue_Manage' %}" class="btn btn-primary" role="button">Show Records</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-					</form>
-				</div>
-			</div>
-		</section>
-	</div>
-</div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Place of location of accident in mine/rescue station/rescue room*</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.accident_location }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Number of person(s) Killed</label>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <!--<span class="ui-widget">--> <span>{{ form.killed_num }}</span>
+                                        <!--</span>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Number of person(s) Seriously Injured</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.injured_num }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Cause and description of accident</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.accident_cause_description }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Name of person(s) killed/injured</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.person_names }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Nature of employment</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.emp_nat }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Age</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.age }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Sex</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.sex }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <label>Nature of injured/cause of death</label>
+                                    </div>
+                                    <div class="col-md-8"><span>{{ form.injury_death_cause }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align:center;margin-left:auto; margin-right:auto">
+                                <button type="submit" id="Rescue_Record_Submit" class="btn btn-primary"
+                                        value="Submit Records">Submit Records
+                                </button>&nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Accident_Manage' %}"
+                                                              class="btn btn-primary" role="button">Show Records</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
 
-<script>
-    $(document).ready(function () {
-	$('select#id_mine').addClass('form-control');
-	$('select#id_mine').prop('required', true);
-	$('select#shift_id').prop('required', true);
-	$(function () {
-		var date_from = $('#datetimepicker').datetimepicker({
-			format: 'YYYY-MM-DD HH:mm:ss'
-		});
-	});
-	toastr.options = {
-		"closeButton": false,
-		"debug": false,
-		"newestOnTop": true,
-		"progressBar": false,
-		"positionClass": "toast-bottom-full-width",
-		"preventDuplicates": true,
-		"onclick": null,
-		"showDuration": "300",
-		"hideDuration": "100",
-		"timeOut": "3000",
-		"extendedTimeOut": "1000",
-		"showEasing": "swing",
-		"hideEasing": "linear",
-		"showMethod": "fadeIn",
-		"hideMethod": "fadeOut",
-	}
-});
-$(document.body).on('blur', '#id_date_parent', function () {
-	$(".date_fill").val($(this).val());
-});
-//FETCH MINE DETAILS
-$("#id_mine").change(function () {
-	mine_id = $(this).val();
-	var list = [];
-	$('#id_rescue_person_name').empty();
-	$('#id_rescued_employees_name').empty();
-	$(".js-example-basic-multiple").select2({
-		data: null
-	});
-	Fetch_Miners(mine_id);
-	$.ajax({
-		type: "get",
-		url: "{% url 'attendance:fetch_shift' %}",
-		data: {
-			'id': mine_id
-		},
-		success: function (data) {
-			console.log(data);
-			fill_dropdown_shift(data.result);
-			return data;
-		},
-		error: function () {
-			//console.log("Error!");
-		}
-	});
-});
-//POPULATE SHIFT DROP DOWN
-function fill_dropdown_shift(result) {
-	$("#shift_id").html("<option required value=''>------------Choose Shift------------</option>");
-	if (isEmpty(result)) return;
-	for (index = 0; index < result.length; index++) {
-		//alert(result[index]);
-		var str_array = result[index].split(',');
-		$("#shift_id").append($("<option />").val(str_array[0]).text(str_array[1] + "(" + str_array[3] + " - " + str_array[4] + ")"));
-	}
-}
-var X;
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                var date_from = $('#datetimepicker').datetimepicker({
+                    format: 'YYYY-MM-DD HH:mm:ss'
+                });
+            });
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": false,
+                "positionClass": "toast-bottom-full-width",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "100",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+            }
+        });
+        $(document.body).on('blur', '#id_date_parent', function () {
+            $(".date_fill").val($(this).val());
+        });
+        //FETCH MINE DETAILS
+        $("#id_mine").change(function () {
+            mine_id = $(this).val();
+            var list = [];
+            $('#id_rescue_person_name').empty();
+            $('#id_rescued_employees_name').empty();
+            $(".js-example-basic-multiple").select2({
+                data: null
+            });
+            Fetch_Miners(mine_id);
+            $.ajax({
+                type: "get",
+                url: "{% url 'attendance:fetch_shift' %}",
+                data: {
+                    'id': mine_id
+                },
+                success: function (data) {
+                    console.log(data);
+                    fill_dropdown_shift(data.result);
+                    return data;
+                },
+                error: function () {
+                    //console.log("Error!");
+                }
+            });
+        });
 
-function Fetch_Miners(mine_id) {
-	$(".js-example-basic-multiple").select2({
-		data: null
-	});
-	$.ajax({
-		type: "get",
-		url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
-		data: {
-			'mine_id': mine_id
-		},
-		success: function (data) {
-			list = data.result;
-			console.log(data.result);
-			$(".js-example-basic-multiple").select2({
-				data: list,
-				tags: true,
-				tokenSeparators: [',']
-			});
-			return data;
-		},
-		error: function () {
-			//console.log("Error!");
-		}
-	});
-}
-$('#RescueForm').on('submit', function (event) {
-	event.preventDefault();
-	console.log("form submitted!"); // sanity check
-	SubmitForm();
-});
+        //POPULATE SHIFT DROP DOWN
+        function fill_dropdown_shift(Shift) {
+            $("#id_shift_id:not(:first-child)").empty();
+            for (let Sh in Shift) {
+                if (Shift.hasOwnProperty(Sh)) {
+                    $("#id_shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+                }
+            }
+        }
 
-function SubmitForm() {
-	mine_id = $('#id_mine').val();
-	shift_id = $('#shift_id').val();
-	situation = $('#id_situation_mines').val();
-	name_address = $('#id_name_address').val();
-	vill_pin = $('#id_vil_pin').val();
-	date_time = $('#datetimepicker>input').val();
-	accident_location = $('#id_accident_location').val();
-	killed_num = $('#id_killed_num').val();
-	injured_num = $('#id_injured_num').val();
-	accident_cause_description = $('#id_accident_cause_description').val();
-	person_names = $('#id_person_names').val();
-	nature_of_employment = $('#id_emp_nat').val();
-	age = $('#id_age').val();
-	sex = $('#id_sex').val();
-	cause_of_death_or_injury = $('#id_injury_death_cause').val();
-	d = {
-		mine_id, shift_id, situation, name_address, vill_pin, date_time, accident_location, killed_num, injured_num, accident_cause_description, person_names, nature_of_employment, age, sex, cause_of_death_or_injury
-	};
-	console.log(d);
-	$.ajax({
-		type: "POST",
-		url: "{% url 'Training_Rescue_Accident:accident_record_submit_ajax' %}",
-		data: {
-			csrfmiddlewaretoken: "{{ csrf_token }}",
-			mine_id: mine_id,
-			shift_id: shift_id,
-			situtation: situation,
-			name_address: name_address,
-			vill_pin: vill_pin,
-			date_time: date_time,
-			accident_location: accident_location,
-			killed_num: killed_num,
-			injured_num: injured_num,
-			accident_cause_description: accident_cause_description,
-			persion_names: person_names,
-			nature_of_employment: nature_of_employment,
-			age: age,
-			sex: sex,
-			cause_of_death_or_injury: cause_of_death_or_injury
-		},
-		success: function (json) {
-			if (json.hasOwnProperty("success")) {
-				toastr.success(json.success);
-			} else {
-				toastr.error(json.error);
-			}
-			return json;
-		},
-		error: function () {
-			console.log("Error!");
-			toastr.error('Something Went wrong!');
-		}
-	});
-}
-</script>
+        function Fetch_Miners(mine_id) {
+            $(".js-example-basic-multiple").select2({
+                data: null
+            });
+            $.ajax({
+                type: "get",
+                url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
+                data: {
+                    'mine_id': mine_id
+                },
+                success: function (data) {
+                    list = data.result;
+                    console.log(data.result);
+                    $(".js-example-basic-multiple").select2({
+                        data: list,
+                        tags: true,
+                        tokenSeparators: [',']
+                    });
+                    return data;
+                },
+                error: function () {
+                    //console.log("Error!");
+                }
+            });
+        }
+        function SubmitForm() {
+            let mine_id = $('#id_mine').val();
+            let shift_id = $('#shift_id').val();
+            let situation = $('#id_situation_mines').val();
+            let name_address = $('#id_name_address').val();
+            let vill_pin = $('#id_vil_pin').val();
+            let date_time = $('#datetimepicker>input').val();
+            let accident_location = $('#id_accident_location').val();
+            let killed_num = $('#id_killed_num').val();
+            let injured_num = $('#id_injured_num').val();
+            let accident_cause_description = $('#id_accident_cause_description').val();
+            let person_names = $('#id_person_names').val();
+            let nature_of_employment = $('#id_emp_nat').val();
+            let age = $('#id_age').val();
+            let sex = $('#id_sex').val();
+            let cause_of_death_or_injury = $('#id_injury_death_cause').val();
+            d = {
+                mine_id,
+                shift_id,
+                situation,
+                name_address,
+                vill_pin,
+                date_time,
+                accident_location,
+                killed_num,
+                injured_num,
+                accident_cause_description,
+                person_names,
+                nature_of_employment,
+                age,
+                sex,
+                cause_of_death_or_injury
+            };
+            console.log(d);
+            $.ajax({
+                type: "POST",
+                url: "{% url 'Training_Rescue_Accident:accident_record_submit_ajax' %}",
+                data: {
+                    csrfmiddlewaretoken: "{{ csrf_token }}",
+                    mine_id: mine_id,
+                    shift_id: shift_id,
+                    situtation: situation,
+                    name_address: name_address,
+                    vill_pin: vill_pin,
+                    date_time: date_time,
+                    accident_location: accident_location,
+                    killed_num: killed_num,
+                    injured_num: injured_num,
+                    accident_cause_description: accident_cause_description,
+                    persion_names: person_names,
+                    nature_of_employment: nature_of_employment,
+                    age: age,
+                    sex: sex,
+                    cause_of_death_or_injury: cause_of_death_or_injury
+                },
+                success: function (json) {
+                    if (json.hasOwnProperty("success")) {
+                        toastr.success(json.success);
+                    } else {
+                        toastr.error(json.error);
+                    }
+                    return json;
+                },
+                error: function () {
+                    console.log("Error!");
+                    toastr.error('Something Went wrong!');
+                }
+            });
+        }
+    </script>
 {% endblock %}
