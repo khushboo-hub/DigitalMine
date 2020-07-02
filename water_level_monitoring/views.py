@@ -1,4 +1,4 @@
-from turtledemo import clock
+#from turtledemo import clock
 
 # from pygame import mixer
 

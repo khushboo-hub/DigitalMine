@@ -388,7 +388,7 @@ def accident_record_submit_ajax(request):
         accident_record_instance.date_hour_accident = date_time
         accident_record_instance.accident_location = accident_location
         accident_record_instance.killed_num = killed_num
-        accident_record_instance. injured_num = injured_num
+        accident_record_instance.injured_num = injured_num
         accident_record_instance.accident_cause_description = accident_cause_description
         accident_record_instance.person_names = person_names
         accident_record_instance.emp_nat = nature_of_employment
@@ -407,3 +407,5 @@ def accident_record_submit_ajax(request):
 
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
+#===========================================
+
