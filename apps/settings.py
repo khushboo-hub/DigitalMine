@@ -83,9 +83,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+
+    'django.middleware.gzip.GZipMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
+    'htmlmin.middleware.HtmlMinifyMiddleware',
+    # other middleware classes
+    'django.middleware.cache.FetchFromCacheMiddleware',
+    'htmlmin.middleware.MarkRequestMiddleware',
     # 'django_hosts.middleware.HostsResponseMiddleware',
 ]
-
+HTML_MINIFY = True
 ROOT_URLCONF = 'apps.urls'
 
 # ROOT_HOSTCONF = 'apps.hosts'  # Change `mysite` to the name of your project
@@ -106,7 +113,6 @@ TEMPLATES = [
         },
     },
 ]
-
 WSGI_APPLICATION = 'apps.wsgi.application'
 
 # Database

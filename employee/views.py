@@ -25,7 +25,7 @@ from accounts.utils import manager
 from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm
 from setting.utils import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
-from .models import SensorData, MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
+from .models import MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
     MedicalReport
 from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
@@ -36,6 +36,7 @@ from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 from employee.models import Employee
 from django.db import IntegrityError
+from django.template.defaulttags import register
 
 
 # Create your views here.
@@ -52,9 +53,6 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
 
     data['object_list'] = book
     return render(request, template_name, data)
-
-
-import json
 
 
 @login_required
@@ -358,7 +356,7 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
         form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=-1)
     else:
         try:
-            profile = get_object_or_404(profile_extension,user_id=request.user.id)
+            profile = get_object_or_404(profile_extension, user_id=request.user.id)
             admin_or_not = 0
             form = MiningRoleForm(initial={'mine': profile.mine_id})  # Passed Mine id as an argument
             form.fields['mine'].widget = form.fields['mine'].hidden_widget()
@@ -372,8 +370,8 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
     if request.method == "POST":
 
         if not request.user.is_superuser:
-            mine=MineDetails.objects.get(pk=profile.mine_id.id)
-            form = MiningRoleForm(request.POST or None,initial={'mine': mine})
+            mine = MineDetails.objects.get(pk=profile.mine_id.id)
+            form = MiningRoleForm(request.POST or None, initial={'mine': mine})
             form.fields['parent_role'].queryset = MiningRole.objects.filter(mine_id=profile.mine_id_id)
             form.fields['mine'].widget = form.fields['mine'].hidden_widget()
         else:
@@ -384,12 +382,12 @@ def add_mining_role(request, template_name='mine/add_mining_role.html'):
             messages.success(request, 'Changes successfully saved.')
             return redirect('employee:manage_mining_role')
         else:
-            messages.error(request,'Role name Already exists')
+            messages.error(request, 'Role name Already exists')
     data['form'] = form
     data['mine_name'] = mine_name
     data['admin'] = admin_or_not
     data['action'] = 'ADD'
-    data['title']='Add Role'
+    data['title'] = 'Add Role'
 
     return render(request, template_name, data)
 
@@ -553,10 +551,12 @@ def update_shift_link(request, pk):
 @login_required
 def update_shift_link_ajax(request):
     data = {}
-    if request.is_ajax():
+    if not request.is_ajax():
         miner_id = request.GET.get('miner_id')
+        miner = Employee.objects.get(id=miner_id)
         mode = request.GET.get('mode')
         mine_shift_id = request.GET.get('mine_shift_id')
+        shift_id = MineShift.objects.get(pk=mine_shift_id)
         if mode == '0':
             try:
                 emp_table = Employee.objects.get(id=miner_id)
@@ -581,15 +581,19 @@ def update_shift_link_ajax(request):
                 data['error'] = "Something Went Wrong!"
                 return JsonResponse(data)
         elif mode == '1':
-            obj = EmployeeShiftAssign()
-            obj.employee_id = miner_id
-            obj.mine_shift_id = mine_shift_id
-            now = datetime.datetime.now()
-            curr_date = now.strftime("%Y-%m-%d")
-            obj.assign_date = curr_date
-            obj.created_date = curr_date
-            obj.modified_date = curr_date
-            obj.save()
+            try:
+                obj = EmployeeShiftAssign()
+                obj.employee_id = miner
+                obj.shift_id = shift_id
+                now = datetime.datetime.now()
+                curr_date = now.strftime("%Y-%m-%d")
+                obj.assign_date = curr_date
+                obj.created_date = curr_date
+                obj.modified_date = curr_date
+                obj.save()
+            except Exception as e:
+                print(e)
+
         data['success'] = "Shift Updated Successfully"
         # data['error'] = "Something Went Wrong!"
         return JsonResponse(data)
@@ -636,36 +640,12 @@ def save_updated_shift(request):
 
 
 @login_required
-def details_employee_shift_assign(request, emp_id):
-    final_data1 = {}
-    final_data = []
+def details_employee_shift_assign(request, emp_id, template_name="employee/shift_assign_report.html"):
+    data = {}
+    shiftassign_table = EmployeeShiftAssign.objects.filter(employee_id=emp_id)
+    data['result'] = shiftassign_table
 
-    i = 0
-    shiftassign_table = EmployeeShiftAssign.objects.values_list().filter(employee_id=emp_id)
-
-    miner = get_object_or_404(Employee, pk=emp_id)
-
-    for assign_row in shiftassign_table:
-        data = {}
-        data['assign_date'] = assign_row[4]
-        mine_shift_id = assign_row[2]
-        shift_table = MineShift.objects.get(id=mine_shift_id)
-        data['shift_name'] = shift_table.shift_name
-        data['time_from'] = shift_table.time_from
-        data['time_to'] = shift_table.time_to
-        final_data.append([])
-        final_data[i] = data
-        i = i + 1
-    # print(final_data)
-    # return HttpResponse("<pre>"+str(final_data)+"</pre>")
-    final_data1['data'] = final_data
-    final_data1['miner_name'] = str(miner.name)
-    # print(final_data1)
-    # return HttpResponse(final_data1)
-    return render(request, "employee/shift_assign_report.html", final_data1)
-
-
-from django.template.defaulttags import register
+    return render(request, template_name, data)
 
 
 @register.filter(name='calculateage')
