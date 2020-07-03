@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-    {% load staticfiles %}
     <div class="container">
         <form method="post" id="form_submit" enctype="multipart/form-data">
             <input type="hidden" name="training_attendance_id" value="{{ form.id }}">
@@ -71,6 +70,9 @@
                 </div>
             </div>
         </form>
+     <div class="text-center">
+      <a href="{% url 'Training_Rescue_Accident:manage_training_attendance' %}"><span class="btn btn-success">Go Back To Mananage Employee Attendance</span></a>
+  </div>
     </div>
     <script>
         //====================== for send all uncheck value as hidden  ================================================
