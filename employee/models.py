@@ -62,6 +62,39 @@ class MiningRole(models.Model):
         db_table = "MiningRole"
         unique_together = ('mine', 'name')
 
+class MineShift(models.Model):
+    objects = None
+    shift_name = models.CharField(max_length=200)
+    mine_id = models.IntegerField()
+    time_from = models.CharField(max_length=20)
+    time_to = models.CharField(max_length=20)
+    description = models.TextField(null=True, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.pk) + "-" + self.shift_name
+
+    @property
+    def shift(self):
+        return self.shift_name+"("+self.time_from+"-"+self.time_to+")"
+    class Meta:
+        db_table = "MineShift"
+
+
+class EmployeeShiftAssign(models.Model):
+    employee_id = models.IntegerField()
+    mine_shift_id = models.IntegerField()
+    shift_time = models.CharField(max_length=200)
+    assign_date = models.DateField(default=datetime.now, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.pk)
+
+    class Meta:
+        db_table = "EmployeeShiftAssign"
 
 class Employee(models.Model):
     #########   Personal Details   #################
@@ -156,6 +189,7 @@ class Employee(models.Model):
 
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
+    shift_id = models.ForeignKey(MineShift, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -164,6 +198,9 @@ class Employee(models.Model):
         return "Hello"
     def name_with_email(self):
         return self.name+'('+self.email+')'
+    def get_shift(self):
+        return self.shift_id
+
 
     class Meta:
         db_table = "employee"
@@ -177,39 +214,6 @@ class SensorData(models.Model):
         db_table = "SensorData"
 
 
-class MineShift(models.Model):
-    objects = None
-    shift_name = models.CharField(max_length=200)
-    mine_id = models.IntegerField()
-    time_from = models.CharField(max_length=20)
-    time_to = models.CharField(max_length=20)
-    description = models.TextField(null=True, blank=True)
-    created_date = models.DateTimeField(default=datetime.now, blank=True)
-    modified_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.pk) + "-" + self.shift_name
-
-    @property
-    def shift(self):
-        return self.shift_name+"("+self.time_from+"-"+self.time_to+")"
-    class Meta:
-        db_table = "MineShift"
-
-
-class EmployeeShiftAssign(models.Model):
-    employee_id = models.IntegerField()
-    mine_shift_id = models.IntegerField()
-    shift_time = models.CharField(max_length=200)
-    assign_date = models.DateField(default=datetime.now, blank=True)
-    created_date = models.DateTimeField(default=datetime.now, blank=True)
-    modified_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.pk)
-
-    class Meta:
-        db_table = "EmployeeShiftAssign"
 
 
 class RateOfMinimumWages(models.Model):
@@ -323,10 +327,9 @@ def auto_update_employee_shift_on_insert(sender,instance,**kwargs):
         return False
 
     try:
-        profile=profile_extension.objects.get(user_id_id=instance.employee_id)
-        profile.shift_id_id=instance.mine_shift_id
-        profile.save()
-        print('saved successfully')
-    except profile_extension.DoesNotExist:
+        employee=Employee.objects.get(id=instance.employee_id)
+        employee.shift_id_id=instance.mine_shift_id
+        employee.save()
+    except employee.DoesNotExist:
         return False
     

@@ -40,7 +40,8 @@ from django.db import IntegrityError
 
 # Create your views here.
 @login_required
-def employee_manage(request, template_name='employee/employee_manage_.html'):
+def employee_manage(request, template_name='employee/employee_manage.html'):
+    data = {}
     current_user = request.user
     profile = get_object_or_404(profile_extension, user_id=current_user.id)
 
@@ -48,10 +49,8 @@ def employee_manage(request, template_name='employee/employee_manage_.html'):
         book = Employee.objects.all()
     else:
         book = Employee.objects.filter(mine_id=profile.mine_id.id)
-    data = {}
+
     data['object_list'] = book
-    for b in book:
-        print(b.photo)
     return render(request, template_name, data)
 
 

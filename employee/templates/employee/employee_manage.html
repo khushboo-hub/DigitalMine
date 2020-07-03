@@ -113,7 +113,8 @@
                                 <tbody>
                                 {% for book in object_list %}
                                     <tr>
-                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ forloop.counter }}
+                                        </td>
                                         <!--                                <td>{{ book.id }}</td>-->
                                         <td>{{ book.name }}</td>
                                         <td>{{ book.mine.name }}</td>
@@ -146,15 +147,17 @@
                                                   id="{{ book.id }}"
                                                   title="Click here generate Login">Generate Login</span>
 
+
                                         </td>
                                         <!--                                "{% url 'employee:update_shift_link' book.id %}-->
                                         <td class="text-center">
-                                            <span class="btn btn-success btn-sm update_shift" data-toggle="tooltip"
+                                            <span class="btn  {%  if book.get_shift %} btn-success {% else %}btn-warning{% endif %} btn-sm update_shift" data-toggle="tooltip"
                                                   data-url="{% url 'employee:update_shift_link_ajax' %}"
                                                   id="{{ book.id }}"
                                                   mode="0"
                                                   title="Click here to update shift">Update Shift
                                             </span>
+
                                             <br><br>
                                             <a data-toggle="tooltip"
                                                href="{% url 'employee:details_employee_shift_assign' book.id %}"

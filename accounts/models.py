@@ -28,8 +28,6 @@ class profile_extension(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     profile_avatar = models.ImageField(upload_to='employee_image/', null=True, blank=True)
     mine_id=models.ForeignKey(MineDetails,on_delete=models.CASCADE,blank=True,null=True)
-    shift_id=models.ForeignKey(MineShift,on_delete=models.CASCADE,blank=True,null=True)
-
     def __str__(self):
         return self.user_id
 
