@@ -3,7 +3,7 @@
     {% load staticfiles %}
     <div class="container">
         <form method="post" id="form_submit" enctype="multipart/form-data">
-        <input type="hidden" name="training_attendance_id" value="{{ form.id }}">
+            <input type="hidden" name="training_attendance_id" value="{{ form.id }}">
             {% csrf_token %}
             <div class="row">
                 <div class="col-md-12">
@@ -15,7 +15,7 @@
                             <label> Select Mine </label> : {{ form.mine_id }}
                         </div>
                         <div class="col-md-4">
-                            <label> Choose Shift </label> :  {{ form.shift_id }}
+                            <label> Choose Shift </label> : {{ form.shift_id }}
                         </div>
                         <div class="col-md-4">
                             <label>Date</label> : {{ form.training_date }}
@@ -36,55 +36,60 @@
             </div>
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-12">
-{#                    <div class="table-responsive">#}
-                        <table class="table table-bordered" id="dataTable1">
-                            <thead>
+                    {#                    <div class="table-responsive">#}
+                    <table class="table table-bordered" id="dataTable1">
+                        <thead>
+                        <tr>
+                            <th>SL No.</th>
+                            <th><input type="checkbox" id="checkAll"> Present All</th>
+                            <th>Employee Name</th>
+                            <th>Designation</th>
+                            <th>Father's Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table_att">
+                        {% for obj in subTable1 %}
                             <tr>
-                                <th>SL No.</th>
-                                <th><input type="checkbox" id="checkAll"> Present All</th>
-                                <th>Employee Name</th>
-                                <th>Designation</th>
-                                <th>Father's Name</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
+                                <td>{{ forloop.counter }}</td>
+                                <td><input class='present' type='checkbox' class='is_present' name='is_present'
+                                           value='Yes' {% if obj.is_present == "Yes" %}checked ="checked"{% endif %}> Present
+                                </td>
+                                <td><input type='hidden' name='emp_id' value="{{ obj.emp_id_id }}">{{ obj.emp_id.name }}
+                                </td>
+                                <td>{{ obj.emp_id.designation }}</td>
+                                <td>{{ obj.emp_id.father_name }}</td>
+                                <td>{{ obj.emp_id.mob }}</td>
+                                <td>{{ obj.emp_id.email }}</td>
                             </tr>
-                            </thead>
-                            <tbody id="table_att">
-                                {% for obj in subTable1 %}
-                                    <tr>
-                                        <td>{{forloop.counter}}</td>
-                                        <td><input class='present' type='checkbox' class='is_present' name='is_present'  value='Present' {% if obj.is_present == "Present" %}checked ="checked"{% endif %}>Present</td>
-                                        <td><input type='hidden' name='emp_id' value="{{obj.emp_id_id}}">{{ obj.emp_id.name }}</td>
-                                        <td>{{ obj.emp_id.designation }}</td>
-                                        <td>{{ obj.emp_id.father_name }}</td>
-                                        <td>{{ obj.emp_id.mob }}</td>
-                                        <td>{{ obj.emp_id.email }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-{#                    </div>#}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {#                    </div>#}
                     <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Attendance"/>
                 </div>
             </div>
         </form>
     </div>
     <script>
-    //====================== for send all uncheck value as hidden  ================================================
-    $(document).on('submit','#form_submit',function(){
-        var $chbx = $("input[name='is_present']");
-        $chbx.each(function() {
-            if ($(this).is(":checkbox:not(:checked)")) {
-                $(this).attr("value","Absent");
-                $(this).prop('checked', false);
-                $(this).attr("type","hidden");
-            }
+        //====================== for send all uncheck value as hidden  ================================================
+        $(document).ready(function () {
+            $(document).on('submit', '#form_submit', function () {
+                var $chbx = $("input[name='is_present']");
+                $chbx.each(function () {
+                    if ($(this).is(":checkbox:not(:checked)")) {
+                        $(this).attr("value", "No");
+                        $(this).prop('checked', false);
+                        $(this).attr("type", "hidden");
+                    }
+                });
+            });
+            $(document).ready(function () {
+                $("#checkAll").click(function () {
+                    $('input:checkbox').not(this).prop('checked', this.checked);
+                });
+            });
         });
-    });
-    $(document).ready(function () {
-        $("#checkAll").click(function () {
-            $('input:checkbox').not(this).prop('checked', this.checked);
-        });
-    });
     </script>
 {% endblock %}

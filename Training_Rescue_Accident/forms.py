@@ -15,10 +15,6 @@ class Training_Form(forms.ModelForm):
                                     'class': 'form-control'}),
                                     empty_label="Select Mine")
 
-    shift_id = forms.CharField(widget=forms.Select(attrs={
-                           'class': 'form-control',
-                           'required':False
-                       }))
 
     training_date = forms.DateField(widget=forms.TextInput(attrs={
         'class': 'form-control datepicker',
@@ -54,16 +50,6 @@ class training_attendance_details_form(forms.ModelForm):
         ("No", 'No')
     )
 
-    training_attendance_id = forms.CharField(widget=forms.Select(attrs={
-            'class': 'form-control',
-            'required':False
-        }))
-
-
-    emp_id = forms.CharField(widget=forms.TextInput(attrs={
-                           'class': 'form-control',
-                           'required':False
-                       }))
     is_present = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,widget=forms.Select(), required=True)
     class Meta():
         model = training_attendance_details

@@ -8,8 +8,10 @@ from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Tr
 # S S MISHRA
 @login_required
 def index(request, template_name='Training_Attendance.html'):
-    if request.POST:
-        form = Training_Form(request.POST)
+    print('Training Attendance.........')
+    form = Training_Form()
+    if request.method=="POST":
+        form = Training_Form(request.POST or None)
         if form.is_valid():
             my_id = form.save()
             for key_value in range(len(request.POST.getlist('is_present'))):
@@ -26,13 +28,8 @@ def index(request, template_name='Training_Attendance.html'):
                     print(sub_form_1.errors)
                     print("Sub Part Invalid")
             return redirect('Training_Rescue_Accident:manage_training_attendance')
-        else:
-            print(form.errors)
-            print("Invalid")
-    else:
-        form = Training_Form()
-        form.fields['shift_id'].queryset = MineShift.objects.filter(mine_id=-1)
     return render(request, template_name, {'form': form})
+
 from accounts.models import profile_extension
 def manage_training_attendance(request, template_name='manage_training_attendance.html'):
     if request.user.is_superuser:
@@ -206,11 +203,9 @@ def fetch_employee_list(request):
 
 @login_required
 def Rescue_index(request, template_name='Rescue_index.html'):
-    print('hello world')
     if request.method == "POST":
         form = Rescue_Form(request.POST or None)
         if form.is_valid():
-            print(request.POST)
             form.save()
             return redirect('Training_Rescue_Accident:Rescue_Manage')
         else:

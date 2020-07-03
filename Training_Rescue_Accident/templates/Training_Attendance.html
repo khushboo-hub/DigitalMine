@@ -15,9 +15,13 @@
                             <label> Select Mine </label><span id="mine_id_span">{{ form.mine_id }}</span><br>
                         </div>
                         <div class="col-md-3">
-                            <label> Choose Shift </label> <span id="shift_id_span">
-                        {{ form.shift_id }}
-                    </span><br>
+                            <label> Choose Shift </label>
+                            <span id="shift_id_span">
+                                <select name="shift_id" id="shift_id" class="form-control">
+                                    <option value="0">  --------- </option>
+                                </select>
+                            </span>
+                            <br>
                         </div>
                         <div class="col-md-3">
                             <label>Date</label>
@@ -29,41 +33,36 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <label> Training Tittle </label><br>
                             {{ form.training_tittle }}
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-7">
                             <label> Training Description </label><br>
                             {{ form.training_desc }}
-                        </div>
-                        <div class="col-md-3">
-                            <label> Action </label><br>
-                            <input type="button" id="show_emp" class="btn btn-primary" value="show employee"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row" style="margin-top: 20px;">
                 <div class="col-md-12">
-{#                    <div class="table-responsive">#}
-                         <table class="table table-bordered" id="dataTable1">
-                            <thead>
-                            <tr>
-                                <th>SL No.</th>
-                                <th><input type="checkbox" id="checkAll"> Present All</th>
-                                <th>Employee Name</th>
-                                <th>Designation</th>
-                                <th>Father's Name</th>
-                                <th>Mobile</th>
-                                <th>Email</th>
-                            </tr>
-                            </thead>
-                            <tbody id="table_att">
+                    {#                    <div class="table-responsive">#}
+                    <table class="table table-bordered" id="dataTable1">
+                        <thead>
+                        <tr>
+                            <th>SL No.</th>
+                            <th><input type="checkbox" id="checkAll"> Present All</th>
+                            <th>Employee Name</th>
+                            <th>Designation</th>
+                            <th>Father's Name</th>
+                            <th>Mobile</th>
+                            <th>Email</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table_att">
 
-                            </tbody>
-                        </table>
-{#                    </div>#}
+                        </tbody>
+                    </table>
                     <input type="submit" id="btn_show" class="btn btn-primary" value="Submit Attendance"/>
                 </div>
             </div>
@@ -73,7 +72,6 @@
 
         $(document).ready(function () {
 
-            $('#id_mine').addClass('form-control');
             $('#id_training_date').datetimepicker({
                 format: 'YYYY-MM-DD'
             });
@@ -81,96 +79,103 @@
             $("#checkAll").click(function () {
                 $('input:checkbox').not(this).prop('checked', this.checked);
             });
-        });
-        $(document.body).on('blur', '#id_date_parent', function () {
-            $(".date_fill").val($(this).val());
-        });
-
-        //FETCH MINE DETAILS
-        $("#id_mine_id").change(function () {
-            mine_id = $(this).val();
-            $.ajax({
-                type: "get",
-                url: "{% url 'attendance:fetch_shift' %}",
-                data: {
-                    'id': mine_id
-                },
-                success: function (data) {
-                    //console.log(data.result);
-                    //alert(data.result);
-                    fill_dropdown_shift(data.result, "id_shift_id");
-                    return data;
-                },
-                error: function () {
-                    //console.log("Error!");
-                }
+            $(document.body).on('blur', '#id_date_parent', function () {
+                $(".date_fill").val($(this).val());
             });
 
-        });
+            //FETCH MINE DETAILS
+            $("#id_mine_id").change(function () {
+                let mine_id = $(this).val();
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'attendance:fetch_shift' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        if (data.hasOwnProperty('result')) {
+                            let Shift = data.result;
+                            fill_dropdown_shift(Shift);
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        //console.log("Error!");
+                    }
+                });
 
-        //POPULATE SHIFT DROP DOWN
-        function fill_dropdown_shift(result, id) {
-            $("#" + id).html("<option value='0'>--Choose Shift--</option>");
-            for (index = 0; index < result.length; index++) {
-                $("#" + id).append($("<option />").val(result[index].id).text(result[index].shift_name));
-            }
-        }
+            });
 
-        //POPULATE TABLE ON SHIFT SELECT - JQUERY
-        $("#show_emp").click(function () {
-            shift_id = $("#id_shift_id").val();
-            $.ajax({
-                type: "get",
-                url: "{% url 'attendance:fetch_employee_list' %}",
-                data: {
-                    'id': shift_id
-                },
-                success: function (data) {
-                    console.log(data.result);
-                    //alert(data.result);
-                    fill_details_table(data.result);
-                    return data;
-                },
-                error: function () {
-                    console.log("Error!");
+            //POPULATE SHIFT DROP DOWN
+            function fill_dropdown_shift(Shift) {
+                $("#shift_id:not(:first-child)").empty();
+                for (let Sh in Shift) {
+                    if (Shift.hasOwnProperty(Sh)) {
+                        $("#shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+                    }
                 }
+            }
+
+            //POPULATE TABLE ON SHIFT SELECT - JQUERY
+            $("#shift_id").change(function () {
+                let shift_id = $(this).val();
+                let mine_id = $("#id_mine_id").val();
+                console.log(mine_id, shift_id);
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'attendance:fetch_employee_list' %}",
+                    data: {
+                        'mine_id': mine_id,
+                        'shift_id': shift_id
+                    },
+                    beforeSend: function () {
+                    },
+                    success: function (data) {
+                        console.log('data', data);
+                        if (data.hasOwnProperty('result')) {
+                            fill_details_table(data.result);
+                            $('.leave').prop('disabled', true);
+                            $('.leave_no').prop('disabled', true);
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Something Went Wrong!");
+                    }
+                });
+
+            });
+
+            function fill_details_table(Employee) {
+                $("#details_table").html("<div></div>");
+                let sl = 1;
+                for (let emp in Employee) {
+                    if (Employee.hasOwnProperty(emp)) {
+                        $("#table_att").append("<tr>" +
+                            "<td>" + sl + "</td>" +
+                            "<td><div class=\"checkbox\">" +
+                            "<label><input class='present' type='checkbox' class='is_present' name='is_present'  value='Yes'>Present</label>" +
+                            "</div>" +
+                            "</td>" +
+                            "<td><input type='hidden' name='emp_id' value=" + Employee[emp].emp_id + ">" + Employee[emp].emp_name + "</td>" +
+                            "<td>" + Employee[emp].designation + "</td>" +
+                            "<td>" + Employee[emp].father_name + "</td>" +
+                            "<td>" + Employee[emp].mobile + "</td>" +
+                            "<td>" + Employee[emp].email + "</td>" +
+                            "</tr>");
+                        sl++;
+                    }
+                }
+            }
+            $(document).on('submit', '#form_submit', function () {
+                var $chbx = $("input[name='is_present']");
+                $chbx.each(function () {
+                    if ($(this).is(":checkbox:not(:checked)")) {
+                        $(this).attr("value", "No");
+                        $(this).attr("type", "hidden");
+                    }
+                });
             });
         });
-
-        function fill_details_table(result) {
-            $("#details_table").html("<div></div>");
-            sl = 1;
-            for (index = 0; index < result.length; index++) {
-                $("#table_att").append("<tr>" +
-                    "<td>" + sl + "</td>" +
-                    "<td>" +
-                    "<div class=\"checkbox\">" +
-                    "<label><input class='present' type='checkbox' class='is_present' name='is_present'  value='Present'>Present</label>" +
-                    "</div>" +
-                    "</td>" +
-                    "<td><input type='hidden' name='emp_id' value=" + result[index].emp_id + ">" + result[index].emp_name + "</td>" +
-                    "<td>" + result[index].emp_designation + "</td>" +
-                    "<td>" + result[index].emp_father_name + "</td>" +
-                    "<td>" + result[index].emp_mob + "</td>" +
-                    "<td>" + result[index].emp_email + "</td>" +
-                    "</tr>");
-                sl++;
-            }
-        }
-
-        $("#mine_id_span, #show_emp").click(function () {
-            $("#table_att").empty();
-        });
-
-    $(document).on('submit','#form_submit',function(){
-        var $chbx = $("input[name='is_present']");
-        $chbx.each(function() {
-            if ($(this).is(":checkbox:not(:checked)")) {
-                $(this).attr("value","Absent");
-                $(this).attr("type","hidden");
-            }
-        });
-
-    });
     </script>
 {% endblock %}
