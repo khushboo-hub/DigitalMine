@@ -1,16 +1,15 @@
 {% load static i18n %}
 <!doctype html>
 <html lang="hi-IN">
+{% load pwa %}
+ {% load static %}
 <head>
+    {% progressive_web_app_meta %}
     <title>CSIR-CIMFR | Digital Mine Using IOT</title>
 
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block content %}
-        {% load static %}
-        {% load i18n %}
-
         <!-- Canonical SEO -->
         <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>
         <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
@@ -63,8 +62,8 @@
         <link href='https://fonts.googleapis.com/css?family=Grand+Hotel' rel='stylesheet' type='text/css'>
         <script src="{% static 'js/toastr.min.js' %}"></script>
         <script src="{% static 'js/ripple-effect.js' %}"></script>
-
-        <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>
+        <script src="{% static 'js/material.min.js' %}"></script>
+{#        <script src="https://storage.googleapis.com/code.getmdl.io/1.0.1/material.min.js"></script>#}
         
 
         <style>
@@ -542,8 +541,6 @@
                 </main>
             </div>
         </div>
-
-
         <p class="text-center">Powered By <a href="http://www.cimfr.nic.in/" target="_blank">CSIR-CIMFR</a> | Copyright
             &copy; Protected | All Rights Reserved.</p>
         <!-- Logout Modal-->
@@ -628,4 +625,3 @@
             });
         </script>
         </html>
-    {% endblock %}

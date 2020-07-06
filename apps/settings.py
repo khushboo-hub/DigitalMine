@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'setting',
     'wm_test',
     'Slope',
+    'pwa',
 
 ]
 
@@ -86,10 +87,10 @@ MIDDLEWARE = [
 
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
-    'htmlmin.middleware.HtmlMinifyMiddleware',
+    # 'htmlmin.middleware.HtmlMinifyMiddleware',
     # other middleware classes
-    'django.middleware.cache.FetchFromCacheMiddleware',
-    'htmlmin.middleware.MarkRequestMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'htmlmin.middleware.MarkRequestMiddleware',
     # 'django_hosts.middleware.HostsResponseMiddleware',
 ]
 HTML_MINIFY = True
@@ -251,3 +252,5 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 # GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE ='my-project-1549610242332-d51f9c84fd50.json'
 # X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')

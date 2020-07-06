@@ -1,16 +1,12 @@
-{% load static i18n %}
 <!doctype html>
 <html lang="hi-IN">
+{% load static %}
 <head>
     <title>CSIR-CIMFR | Digital Mine Using IOT</title>
 
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    {% block content %}
-        {% load staticfiles %}
-        {% load i18n %}
-
         <!-- Canonical SEO -->
         <link rel="canonical" href="https://www.creative-tim.com/product/navbar-with-icons"/>
         <link rel="icon" href="{% static 'image/csir_logo.ico' %}" type="image/icon type">
@@ -624,8 +620,7 @@
                 });
 
                 $(document).on("click", "a.newsClass", function () {
-                    var news_id = this.id;
-                    console.log(news_id);
+                    let news_id = this.id;
                     $.ajax({
 
                         url: "{% url 'news:update_news_download_number_ajax' %}",
@@ -643,4 +638,3 @@
             });
         </script>
         </html>
-    {% endblock %}

@@ -73,42 +73,42 @@ def user_from_session_key(session_key):
 
     return AnonymousUser()
 
-@login_required
-def front_page(request, template_name='front_page.html'):
-    profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
-    carousal=Carousal.objects.filter(mine_id=profile_ex.mine_id,active='1')
-    C = []
-    for c in carousal:
-        C.append(c.file)
-        print('Carousal Image=>',c.file)
+# @login_required
+# def front_page(request, template_name='front_page.html'):
+#     profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
+#     carousal=Carousal.objects.filter(mine_id=profile_ex.mine_id,active='1')
+#     C = []
+#     for c in carousal:
+#         C.append(c.file)
+#         print('Carousal Image=>',c.file)
+#
+#     return render(request, template_name,{'Carousal':C})
 
-    return render(request, template_name,{'Carousal':C})
 
-
-@login_required
-def upload_picture(request, uid=None):
-    """
-    Photo upload / dropzone handler
-    :param request:
-    :param uid: Optional picture UID when re-uploading a file.
-    :return:
-    """
-    form = CarousalPhotoUploadForm(request.POST, request.FILES or None)
-    if form.is_valid():
-        pic = request.FILES['file']
-        # [...] Process whatever you do with that file there. I resize it, create thumbnails, etc.
-        # Get an instance of picture model (defined below)
-        picture = Carousal()
-        picture.file = pic
-        picture.user_id = request.user
-
-        profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
-        picture.mine = profile_ex.mine_id
-        print('Profile Ex',profile_ex.mine_id)
-        picture.save()
-        return HttpResponse('Image upload succeeded.')
-    return HttpResponseBadRequest("Image is not valid.")
-
+# @login_required
+# def upload_picture(request, uid=None):
+#     """
+#     Photo upload / dropzone handler
+#     :param request:
+#     :param uid: Optional picture UID when re-uploading a file.
+#     :return:
+#     """
+#     form = CarousalPhotoUploadForm(request.POST, request.FILES or None)
+#     if form.is_valid():
+#         pic = request.FILES['file']
+#         # [...] Process whatever you do with that file there. I resize it, create thumbnails, etc.
+#         # Get an instance of picture model (defined below)
+#         picture = Carousal()
+#         picture.file = pic
+#         picture.user_id = request.user
+#
+#         profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
+#         picture.mine = profile_ex.mine_id
+#         print('Profile Ex',profile_ex.mine_id)
+#         picture.save()
+#         return HttpResponse('Image upload succeeded.')
+#     return HttpResponseBadRequest("Image is not valid.")
+#
 
 @login_required
 def get_upload_path(instance, filename):
@@ -124,55 +124,59 @@ def get_upload_path(instance, filename):
     )
 
 
-@login_required
-def get_all_carousal_images_ajax(request):
-    data = {}
-    if request.is_ajax():
-        carousal = Carousal.objects.filter(user_id=request.user)
-        data['result'] = serializers.serialize('json', carousal, fields=('id', 'file', 'active'))
+# @login_required
+# def get_all_carousal_images_ajax(request):
+#     data = {}
+#     if request.is_ajax():
+#         carousal = Carousal.objects.filter(user_id=request.user)
+#         data['result'] = serializers.serialize('json', carousal, fields=('id', 'file', 'active'))
+#
+#         return JsonResponse(data)
+#
+#     data['error'] = "Something Went Wrong!"
+#     return JsonResponse(data)
+#
 
-        return JsonResponse(data)
-
-    data['error'] = "Something Went Wrong!"
-    return JsonResponse(data)
-
-
-@login_required
-def activate_carousal(request):
-    data = {}
-    try:
-        if request.is_ajax():
-            selected_images = request.GET.getlist('selected_images[]')
-            profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
-            Carousal.objects.filter(mine_id=profile_ex.mine_id).update(active=0)
-            for selected in selected_images:
-                carousal = get_object_or_404(Carousal, pk=selected)
-                carousal.active = '1'
-                carousal.save()
-            data['success'] = 'Activated Successfully!'
-            return JsonResponse(data)
-    except:
-        pass
-    data['error'] = 'Something Went Wrong!'
-    return JsonResponse(data)
-
-
-@login_required
-def delete_carousal(request):
-    data = {}
-    if request.is_ajax():
-        id = request.POST.get('id')
-        try:
-            Carousal.objects.filter(pk=id).delete()
-            data['success'] = "Success"
-            return JsonResponse(data)
-        except:
-            pass
-
-    data['error'] = 'Something Went Wrong!'
-    return JsonResponse(data)
+# @login_required
+# def activate_carousal(request):
+#     data = {}
+#     try:
+#         if request.is_ajax():
+#             selected_images = request.GET.getlist('selected_images[]')
+#             profile_ex = get_object_or_404(profile_extension, user_id=request.user.id)
+#             Carousal.objects.filter(mine_id=profile_ex.mine_id).update(active=0)
+#             for selected in selected_images:
+#                 carousal = get_object_or_404(Carousal, pk=selected)
+#                 carousal.active = '1'
+#                 carousal.save()
+#             data['success'] = 'Activated Successfully!'
+#             return JsonResponse(data)
+#     except:
+#         pass
+#     data['error'] = 'Something Went Wrong!'
+#     return JsonResponse(data)
+#
+#
+# @login_required
+# def delete_carousal(request):
+#     data = {}
+#     if request.is_ajax():
+#         id = request.POST.get('id')
+#         try:
+#             Carousal.objects.filter(pk=id).delete()
+#             data['success'] = "Success"
+#             return JsonResponse(data)
+#         except:
+#             pass
+#
+#     data['error'] = 'Something Went Wrong!'
+#     return JsonResponse(data)
 
 
 def start_background_tast(request):
     os.system('manage.py process_tasks')
     return redirect(request.META.get('HTTP_REFERER'))
+
+def base_layout(request):
+	template='home.html'
+	return render(request,template)
