@@ -70,7 +70,7 @@ INSTALLED_APPS = [
     'setting',
     'wm_test',
     'Slope',
-    'pwa',
+    # 'pwa',
 
 ]
 

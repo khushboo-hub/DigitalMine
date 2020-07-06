@@ -13,7 +13,7 @@
                                     <div class="col-md-4">
                                         <label>Select Mine</label>
                                     </div>
-                                    <div class="col-md-8"><span id="mine_id_span">{{ form.mine }}</span>
+                                    <div class="col-md-8"><span id="mine_id_span">{{ form1.mine }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -32,14 +32,14 @@
                                     <div class="col-md-4">
                                         <label>Situation of Mines</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.situation_mines }}</span>
+                                    <div class="col-md-8"><span>{{ form1.situation_mines }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label>Name and postal address of owner</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.name_address }}</span>
+                                    <div class="col-md-8"><span>{{ form1.name_address }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                         <label>Village Post Office Police Station Sub-Division(Taluqa) District
                                             Pin</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.vil_pin }}</span>
+                                    <div class="col-md-8"><span>{{ form1.vil_pin }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -58,11 +58,13 @@
                                     </div>
                                     <div class="col-md-8">
                                         <div class="form-group">
+
                                             <div class='input-group date' id='datetimepicker'>
-                                                <input type='text' class="form-control"/> <span
-                                                    class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-											</span>
+{#                                                <input type='text' class="form-control"/> #}
+                                                {{ form1.date_hour_accident }}
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+											    </span>
                                             </div>
                                         </div>
                                     </div>
@@ -73,7 +75,7 @@
                                     <div class="col-md-4">
                                         <label>Place of location of accident in mine/rescue station/rescue room*</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.accident_location }}</span>
+                                    <div class="col-md-8"><span>{{ form1.accident_location }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -81,8 +83,7 @@
                                         <label>Number of person(s) Killed</label>
                                     </div>
                                     <div class="col-md-8">
-                                        <!--<span class="ui-widget">--> <span>{{ form.killed_num }}</span>
-                                        <!--</span>-->
+                                      <span>{{ form1.killed_num }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -91,63 +92,148 @@
                                     <div class="col-md-4">
                                         <label>Number of person(s) Seriously Injured</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.injured_num }}</span>
+                                    <div class="col-md-8"><span>{{ form1.injured_num }}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label>Cause and description of accident</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.accident_cause_description }}</span>
+                                    <div class="col-md-8"><span>{{ form1.accident_cause_description }}</span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Name of person(s) killed/injured</label>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; ">Employees</span>
+                                </legend>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-3">
+                                        <label>Person Name(s)</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.person_names }}</span>
+                                    <div class="col-md-2">
+                                        <label>Killed or Injured</label>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Nature of employment</label>
-                                    </div>
-                                    <div class="col-md-8"><span>{{ form.emp_nat }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Age</label>
-                                    </div>
-                                    <div class="col-md-8"><span>{{ form.age }}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label>Sex</label>
-                                    </div>
-                                    <div class="col-md-8"><span>{{ form.sex }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group col-md-12">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <label>Nature of injured/cause of death</label>
                                     </div>
-                                    <div class="col-md-8"><span>{{ form.injury_death_cause }}</span>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-3">
+                                        {{ form2.employee_name }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="employee_killed_or_injured"
+                                                   id="exampleRadios1" value="KILLED" checked>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                Killed
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="employee_killed_or_injured"
+                                                   id="exampleRadios2" value="INJURED">
+                                            <label class="form-check-label" for="exampleRadios2">
+                                                Injured
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form2.employee_cause }}
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-primary" id="add_employee_row">Add Row
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div style="text-align:center;margin-left:auto; margin-right:auto">
+                                <div id="employee_data"></div>
+
+                            </fieldset>
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border"><span style="color: blue; ">Others</span>
+                                </legend>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-2">
+                                        <label>Person Name(s)</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Killed or Injured</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label>Sex</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label>Age</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Nature of employment</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Nature of injured/cause of death</label>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <div class="col-md-2">
+                                       {{ form3.person_name }}
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="killed_or_injured"
+                                                   id="exampleRadios1" value="KILLED" checked>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                Killed
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="killed_or_injured"
+                                                   id="exampleRadios2" value="INJURED">
+                                            <label class="form-check-label" for="exampleRadios2">
+                                                Injured
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sex"
+                                                   id="exampleRadios1" value="M" checked>
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                M
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="sex"
+                                                   id="exampleRadios2" value="F">
+                                            <label class="form-check-label" for="exampleRadios2">
+                                                F
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1">
+                                        {{ form3.age }}
+                                    </div>
+                                    <div class="col-md-2">
+                                       {{ form3.nature_of_employment }}
+                                    </div>
+                                    <div class="col-md-3">
+                                       {{ form3.others_cause }}
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button type="button" class="btn btn-primary" id="add_others_row">Add Row
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="others_data"></div>
+
+                            </fieldset>
+                            <div class="text-center">
                                 <button type="submit" id="Rescue_Record_Submit" class="btn btn-primary"
                                         value="Submit Records">Submit Records
-                                </button>&nbsp;&nbsp;&nbsp;<a href="{% url 'Training_Rescue_Accident:Accident_Manage' %}"
-                                                              class="btn btn-primary" role="button">Show Records</a>
+                                </button>
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="{% url 'Training_Rescue_Accident:Accident_Manage' %}" class="btn btn-primary"
+                                   role="button">Show Records</a>
                             </div>
                         </form>
                     </div>
@@ -163,6 +249,7 @@
                     format: 'YYYY-MM-DD HH:mm:ss'
                 });
             });
+            $('.js-example-basic-multiple').select2();
             toastr.options = {
                 "closeButton": false,
                 "debug": false,
@@ -180,140 +267,221 @@
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut",
             }
-        });
-        $(document.body).on('blur', '#id_date_parent', function () {
-            $(".date_fill").val($(this).val());
-        });
-        //FETCH MINE DETAILS
-        $("#id_mine").change(function () {
-            mine_id = $(this).val();
-            var list = [];
-            $('#id_rescue_person_name').empty();
-            $('#id_rescued_employees_name').empty();
-            $(".js-example-basic-multiple").select2({
-                data: null
-            });
-            Fetch_Miners(mine_id);
-            $.ajax({
-                type: "get",
-                url: "{% url 'attendance:fetch_shift' %}",
-                data: {
-                    'id': mine_id
-                },
-                success: function (data) {
-                    console.log(data);
-                    fill_dropdown_shift(data.result);
-                    return data;
-                },
-                error: function () {
-                    //console.log("Error!");
-                }
-            });
-        });
 
-        //POPULATE SHIFT DROP DOWN
-        function fill_dropdown_shift(Shift) {
-            $("#id_shift_id:not(:first-child)").empty();
-            for (let Sh in Shift) {
-                if (Shift.hasOwnProperty(Sh)) {
-                    $("#id_shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+            $(document.body).on('blur', '#id_date_parent', function () {
+                $(".date_fill").val($(this).val());
+            });
+            //FETCH MINE DETAILS
+            $("#id_mine").change(function () {
+                let mine_id = $(this).val();
+                Fetch_Miners(mine_id);
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'attendance:fetch_shift' %}",
+                    data: {
+                        'id': mine_id
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        fill_dropdown_shift(data.result);
+                        return data;
+                    },
+                    error: function () {
+                        //console.log("Error!");
+                    }
+                });
+            });
+
+            //POPULATE SHIFT DROP DOWN
+            function fill_dropdown_shift(Shift) {
+                $("#id_shift_id:not(:first-child)").empty();
+                for (let Sh in Shift) {
+                    if (Shift.hasOwnProperty(Sh)) {
+                        $("#id_shift_id").append($("<option />").val(Shift[Sh].id).text(Shift[Sh].shift_name));
+                    }
                 }
             }
-        }
 
-        function Fetch_Miners(mine_id) {
-            $(".js-example-basic-multiple").select2({
-                data: null
-            });
-            $.ajax({
-                type: "get",
-                url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
-                data: {
-                    'mine_id': mine_id
-                },
-                success: function (data) {
-                    list = data.result;
-                    console.log(data.result);
-                    $(".js-example-basic-multiple").select2({
-                        data: list,
-                        tags: true,
-                        tokenSeparators: [',']
-                    });
-                    return data;
-                },
-                error: function () {
-                    //console.log("Error!");
-                }
-            });
-        }
-        function SubmitForm() {
-            let mine_id = $('#id_mine').val();
-            let shift_id = $('#shift_id').val();
-            let situation = $('#id_situation_mines').val();
-            let name_address = $('#id_name_address').val();
-            let vill_pin = $('#id_vil_pin').val();
-            let date_time = $('#datetimepicker>input').val();
-            let accident_location = $('#id_accident_location').val();
-            let killed_num = $('#id_killed_num').val();
-            let injured_num = $('#id_injured_num').val();
-            let accident_cause_description = $('#id_accident_cause_description').val();
-            let person_names = $('#id_person_names').val();
-            let nature_of_employment = $('#id_emp_nat').val();
-            let age = $('#id_age').val();
-            let sex = $('#id_sex').val();
-            let cause_of_death_or_injury = $('#id_injury_death_cause').val();
-            d = {
-                mine_id,
-                shift_id,
-                situation,
-                name_address,
-                vill_pin,
-                date_time,
-                accident_location,
-                killed_num,
-                injured_num,
-                accident_cause_description,
-                person_names,
-                nature_of_employment,
-                age,
-                sex,
-                cause_of_death_or_injury
-            };
-            console.log(d);
-            $.ajax({
-                type: "POST",
-                url: "{% url 'Training_Rescue_Accident:accident_record_submit_ajax' %}",
-                data: {
-                    csrfmiddlewaretoken: "{{ csrf_token }}",
-                    mine_id: mine_id,
-                    shift_id: shift_id,
-                    situtation: situation,
-                    name_address: name_address,
-                    vill_pin: vill_pin,
-                    date_time: date_time,
-                    accident_location: accident_location,
-                    killed_num: killed_num,
-                    injured_num: injured_num,
-                    accident_cause_description: accident_cause_description,
-                    persion_names: person_names,
-                    nature_of_employment: nature_of_employment,
-                    age: age,
-                    sex: sex,
-                    cause_of_death_or_injury: cause_of_death_or_injury
-                },
-                success: function (json) {
-                    if (json.hasOwnProperty("success")) {
-                        toastr.success(json.success);
-                    } else {
-                        toastr.error(json.error);
+            function Fetch_Miners(mine_id) {
+                $.ajax({
+                    type: "get",
+                    url: "{% url 'Training_Rescue_Accident:fetch_miners_ajax' %}",
+                    data: {
+                        'mine_id': mine_id
+                    },
+                    success: function (data) {
+
+                        if (data.hasOwnProperty('result')) {
+                            let employees = data.result;
+                            $("select#id_injured_person_name").empty();
+                            $("select#id_killed_employees_name").empty();
+                            for (let emp in employees) {
+                                if (employees.hasOwnProperty(emp)) {
+                                    $("select#id_injured_person_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                                    $("select#id_killed_employees_name").append($("<option />").val(employees[emp].id).text(employees[emp].name));
+                                }
+                            }
+
+                        }
+                        return data;
+                    },
+                    error: function () {
+                        console.log("Error!");
                     }
-                    return json;
-                },
-                error: function () {
-                    console.log("Error!");
-                    toastr.error('Something Went wrong!');
-                }
+                });
+            }
+
+            function SubmitForm() {
+                let mine_id = $('#id_mine').val();
+                let shift_id = $('#shift_id').val();
+                let situation = $('#id_situation_mines').val();
+                let name_address = $('#id_name_address').val();
+                let vill_pin = $('#id_vil_pin').val();
+                let date_time = $('#datetimepicker>input').val();
+                let accident_location = $('#id_accident_location').val();
+                let killed_num = $('#id_killed_num').val();
+                let injured_num = $('#id_injured_num').val();
+                let accident_cause_description = $('#id_accident_cause_description').val();
+                let person_names = $('#id_person_names').val();
+                let nature_of_employment = $('#id_emp_nat').val();
+                let age = $('#id_age').val();
+                let sex = $('#id_sex').val();
+                let cause_of_death_or_injury = $('#id_injury_death_cause').val();
+                d = {
+                    mine_id,
+                    shift_id,
+                    situation,
+                    name_address,
+                    vill_pin,
+                    date_time,
+                    accident_location,
+                    killed_num,
+                    injured_num,
+                    accident_cause_description,
+                    person_names,
+                    nature_of_employment,
+                    age,
+                    sex,
+                    cause_of_death_or_injury
+                };
+                console.log(d);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'Training_Rescue_Accident:accident_record_submit_ajax' %}",
+                    data: {
+                        csrfmiddlewaretoken: "{{ csrf_token }}",
+                        mine_id: mine_id,
+                        shift_id: shift_id,
+                        situtation: situation,
+                        name_address: name_address,
+                        vill_pin: vill_pin,
+                        date_time: date_time,
+                        accident_location: accident_location,
+                        killed_num: killed_num,
+                        injured_num: injured_num,
+                        accident_cause_description: accident_cause_description,
+                        persion_names: person_names,
+                        nature_of_employment: nature_of_employment,
+                        age: age,
+                        sex: sex,
+                        cause_of_death_or_injury: cause_of_death_or_injury
+                    },
+                    success: function (json) {
+                        if (json.hasOwnProperty("success")) {
+                            toastr.success(json.success);
+                        } else {
+                            toastr.error(json.error);
+                        }
+                        return json;
+                    },
+                    error: function () {
+                        console.log("Error!");
+                        toastr.error('Something Went wrong!');
+                    }
+                });
+
+            }
+
+            let previousdata = "";
+            $('button#add_employee_row').click(function () {
+                let name_id = $("#id_employee_name").val();
+                let name_text = $("#id_employee_name option:selected").text();
+                let killed_or_injured = $('input[name=employee_killed_or_injured]:checked').val();
+                let cause = $('#id_employee_cause').val();
+                let currendata = name_id + name_text + killed_or_injured + cause;
+                if (previousdata == currendata) return false;
+                previousdata = currendata;
+                if (isEmpty(name_id) || isEmpty(killed_or_injured) || isEmpty(cause)) return false;
+                let markup = '<div class="form-group col-md-12">' +
+                    '<div class="col-md-3">' +
+                    '<input type="text" name="employee_name_post" value="' + name_text + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" name="employee_killed_or_injured_post" value="' + killed_or_injured + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-6">' +
+                    '<input type="text" name="employee_cause_post" class="form-control" value="' + cause + '" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<span class="glyphicon glyphicon-trash delete-row" data-toggle="tooltip" title="" data-original-title="Click here to delete employee"></span>' +
+                    '</div></div>';
+                $("#employee_data").append(markup);
+
+
+                $("span.delete-row").click(function () {
+                    $(this).parent().parent().remove();
+                    previousdata = "";
+
+                });
             });
-        }
+
+            $('button#add_others_row').click(function () {
+                let name_text = $("#id_person_name").val();
+                let killed_or_injured = $('input[name=killed_or_injured]:checked').val();
+                let cause = $('#id_others_cause').val();
+                let sex = $('input[name=sex]:checked').val()
+                let age = $('#id_age').val();
+
+                let nature_of_employment = $('#id_nature_of_employment').val();
+                let currendata = name_text + killed_or_injured + cause + sex + age + nature_of_employment;
+
+                if (previousdata == currendata) return false;
+
+                previousdata = currendata;
+
+                if (isEmpty(name_text) || isEmpty(age) || isEmpty(cause) || isEmpty(nature_of_employment)) return false;
+
+                let markup = '<div class="form-group col-md-12">' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" name="person_name_post" value="' + name_text + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" name="others_killed_or_injured_post" value="' + killed_or_injured + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<input type="text" name="sex_post" class="form-control" value="' + sex + '" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<input type="text" name="age_post" class="form-control" value="' + age + '" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-2">' +
+                    '<input type="text" name="nature_of_employment_post" class="form-control" value="' + nature_of_employment + '" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-3">' +
+                    '<input type="text" name="others_cause_post" class="form-control" value="' + cause + '" required=""id="id_accident_location" autocomplete="off">' +
+                    '</div>' +
+                    '<div class="col-md-1">' +
+                    '<span class="glyphicon glyphicon-trash delete-row" data-toggle="tooltip" title="" data-original-title="Click here to delete employee"></span>' +
+                    '</div></div>';
+                $("#others_data").append(markup);
+
+
+                $("span.delete-row").click(function () {
+                    $(this).parent().parent().remove()
+                    previousdata = "";
+                });
+            });
+        });
+
     </script>
 {% endblock %}

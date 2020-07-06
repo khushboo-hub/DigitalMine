@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import training_attendance,training_attendance_details, Rescue_Records, Accident_Records, Employee, MineShift, \
     EmployeeShiftAssign, MineDetails
 from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
-    training_attendance_details_form
+    training_attendance_details_form,Accident_EmployeeForm,Accident_OthersForm
 # S S MISHRA
 @login_required
 def index(request, template_name='Training_Attendance.html'):
@@ -227,16 +227,29 @@ def Rescue_Manage(request, template_name='Rescue_Manage.html'):
 @login_required
 def Accident_index(request, template_name='Accident_index.html'):
     if request.method == "POST":
-        form = Accident_Form(request.POST or None)
-        if form.is_valid():
+        form1 = Accident_Form(request.POST or None)
+        employee_names=request.POST.getlist('employee_name_post')
+        employee_killed_or_injured_post = request.POST.getlist('employee_killed_or_injured_post')
+        employee_cause_post = request.POST.getlist('employee_cause_post')
+        person_name_post = request.POST.getlist('person_name_post')
+        others_killed_or_injured_post = request.POST.getlist('others_killed_or_injured_post')
+        sex_post = request.POST.getlist('sex_post')
+        age_post = request.POST.getlist('age_post')
+        nature_of_employment_post = request.POST.getlist('nature_of_employment_post')
+        others_cause_post = request.POST.getlist('others_cause_post')
+
+        if form1.is_valid():
             print("valid")
-            form.save()
+            formid=form1.save()
+
             return redirect('Training_Rescue_Accident:Accident_Manage')
         else:
             print("Invalid!")
     else:
-        form = Accident_Form()
-        return render(request, template_name, {'form': form})
+        form1 = Accident_Form()
+        form2=Accident_EmployeeForm()
+        form3 = Accident_OthersForm()
+        return render(request, template_name, {'form1': form1,'form2':form2,'form3':form3})
 
 
 @login_required
@@ -261,11 +274,11 @@ def Accident_Manage(request, template_name='Accident_Manage.html'):
         employee['accident_location'] = str(emp.accident_location)
         employee['killed_num'] = str(emp.killed_num)
         employee['injured_num'] = str(emp.injured_num)
-        employee['person_names'] = str(emp.person_names)
-        employee['emp_nat'] = str(emp.emp_nat)
-        employee['age'] = str(emp.age)
-        employee['sex'] = str(emp.sex)
-        employee['injury_death_cause'] = str(emp.injury_death_cause)
+        # employee['person_names'] = str(emp.person_names)
+        # employee['emp_nat'] = str(emp.emp_nat)
+        # employee['age'] = str(emp.age)
+        # employee['sex'] = str(emp.sex)
+        # employee['injury_death_cause'] = str(emp.injury_death_cause)
         employee['accident_cause_description'] = str(emp.accident_cause_description)
 
         employee_data[str(emp.id)] = employee
