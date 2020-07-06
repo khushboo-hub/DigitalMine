@@ -41,36 +41,33 @@
                     visibility: hidden;
                 }
 
-                button.close {
-                    visibility: hidden !important;
-                }
 
-                #printSection * {
-                    visibility: visible !important;
-                    overflow: visible !important;
-                }
+            button.close {
+                visibility: hidden !important;
+            }
 
-                .header {
-                {#background-color: #f1e6d6 !important;#}
+            #printSection * {
+                visibility: visible !important;
+                overflow: visible !important;
+            }
 
-                }
+            .header {
+            background-color: #f1e6d6 !important;
+            }
 
                 .modal {
-
+                    position: absolute;
                     left: 0;
                     top: 0;
                     margin: 0;
                     padding: 0;
-                    min-height: 0px;
-                {#visibility: visible !important;#}
-                    /**Remove scrollbar for printing.**/
-                {#overflow: visible !important;#}
+                    overflow: visible !important;
                 }
 
                 .modal-dialog {
                     visibility: visible !important;
                     /**Remove scrollbar for printing.**/
-                {#overflow: visible !important;#}
+                    overflow: visible !important;
                 }
 
                 fieldset {
@@ -151,7 +148,8 @@
                                         </td>
                                         <!--                                "{% url 'employee:update_shift_link' book.id %}-->
                                         <td class="text-center">
-                                            <span class="btn  {%  if book.get_shift %} btn-success {% else %}btn-warning{% endif %} btn-sm update_shift" data-toggle="tooltip"
+                                            <span class="btn  {% if book.get_shift %} btn-success {% else %}btn-warning{% endif %} btn-sm update_shift"
+                                                  data-toggle="tooltip"
                                                   data-url="{% url 'employee:update_shift_link_ajax' %}"
                                                   id="{{ book.id }}"
                                                   mode="0"
@@ -204,7 +202,7 @@
              aria-hidden="true">
             <div id="printThis" class="modal-dialog modal-lg" role="document">
                 <!-- Modal content-->
-                <div class="modal-content">
+                <div class="modal-content" id="employee_information_modal">
                     <div class="modal-header employee_details">
                         <button class="close" class="button" data-dismiss="modal" type="button">&times;</button>
                         <div class="text-center" style="padding-left:10px;">
@@ -528,27 +526,19 @@
             }
 
             document.getElementById("btnPrint").onclick = function () {
-                printElement(document.getElementById("printThis"));
-                window.print();
+                $("#myModal").printThis({
+                    debug: false,
+                    importCSS: true,
+                    importStyle: true,
+                    printContainer: true,
+                    loadCSS: false,
+                    pageTitle: null,
+                    removeInline: false,
+                    printDelay: 333,
+                    header: null,
+                    formValues: true
+                });
             };
-
-            function printElement(elem, append, delimiter) {
-
-                let domClone = elem.cloneNode(true);
-                console.log(domClone);
-                let $printSection = document.getElementById("printSection");
-
-
-                if (!$printSection) {
-                    $printSection = document.createElement("div");
-                    $printSection.id = "printSection";
-                    document.body.appendChild($printSection);
-                }
-                $printSection.innerHTML = "";
-                $printSection.appendChild(domClone);
-
-            }
-
             $(document.body).on('click', ".generate_login", function (e) {
                 let url = $(this).data('url');
                 let email = $(this).data('email');
@@ -625,7 +615,7 @@
                         }
                         $('input#MinerIdUpdateShift').val(id);
 
-                        if (isEmpty(Y.assigned_shift)) {
+                        if (isEmpty(Y.assigned_shift) || Y.assigned_shift == 'None') {
                             $('#status_msg').html('<div class="alert alert-warning">Shift not assigned yet!</div>');
                         }
                         $('#UpdateEmployeeTitle').text('Employee shift update' + Y.employee_name);
@@ -645,13 +635,15 @@
                     let url = $('.update_shift').data('url');
                     let mode = $(this).attr('mode');
                     let mine_shift_id = $('input[name=mine_shift_id]:checked').val();
+                    let miner_id = $('input#MinerIdUpdateShift').val();
+
                     var $btn = $(this);
                     e.preventDefault();
                     $.ajax({
                         type: "GET",
                         url: url,
                         data: {
-                            'miner_id': $('input#MinerIdUpdateShift').val(),
+                            'miner_id': miner_id,
                             'mode': mode,
                             'mine_shift_id': mine_shift_id,
 
@@ -660,8 +652,12 @@
                             $btn.button('loading');
                         },
                         success: function (response) {
+                            console.log('ids', miner_id, mine_shift_id);
                             if (response.hasOwnProperty('success')) {
                                 $('#status_msg').html('<div class="alert alert-success">Shift updated successfully!</div>');
+                                if (!$('span#' + miner_id + '.update_shift').hasClass("btn-success")) {
+                                    $('span#' + miner_id + '.update_shift').removeClass('btn-warning').addClass('btn-success');
+                                }
                                 return response
                             }
                             $('#status_msg').html('<div class="alert alert-danger">Something Went Wrong!!</div>');

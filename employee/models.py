@@ -324,12 +324,13 @@ from accounts.models import profile_extension
 #################Reciever for Shift Change####################
 @receiver(models.signals.post_save, sender=EmployeeShiftAssign, dispatch_uid="employee_shift_assign")
 def auto_update_employee_shift_on_insert(sender, instance, **kwargs):
+
     if not instance.pk:
         return False
-
+    print('Inside Shift Assign Signal')
     try:
-        employee = Employee.objects.get(id=instance.employee_id)
-        employee.shift_id_id = instance.mine_shift_id
+        employee = Employee.objects.get(pk=instance.employee_id_id)
+        employee.shift_id_id = instance.shift_id_id
         employee.save()
     except Employee.DoesNotExist:
         return False

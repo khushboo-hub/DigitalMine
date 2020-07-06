@@ -551,12 +551,11 @@ def update_shift_link(request, pk):
 @login_required
 def update_shift_link_ajax(request):
     data = {}
-    if not request.is_ajax():
+    if request.is_ajax():
         miner_id = request.GET.get('miner_id')
         miner = Employee.objects.get(id=miner_id)
         mode = request.GET.get('mode')
         mine_shift_id = request.GET.get('mine_shift_id')
-        shift_id = MineShift.objects.get(pk=mine_shift_id)
         if mode == '0':
             try:
                 emp_table = Employee.objects.get(id=miner_id)
@@ -572,8 +571,7 @@ def update_shift_link_ajax(request):
                                                                                                                   'description',
                                                                                                                   'created_date'))
 
-                EmployeeShift = EmployeeShiftAssign.objects.filter(employee_id=miner_id).order_by('-id')[0]
-                data['assigned_shift'] = str(EmployeeShift.mine_shift_id)
+                data['assigned_shift'] = str(emp_table.shift_id_id)
 
                 return JsonResponse(data)
             except Exception as e:
@@ -581,6 +579,7 @@ def update_shift_link_ajax(request):
                 data['error'] = "Something Went Wrong!"
                 return JsonResponse(data)
         elif mode == '1':
+            shift_id = MineShift.objects.get(pk=mine_shift_id)
             try:
                 obj = EmployeeShiftAssign()
                 obj.employee_id = miner
