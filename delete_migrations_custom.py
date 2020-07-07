@@ -8,6 +8,7 @@ class Clean:
      
 
     def __init__(self, exception=None):
+        print('INit')
         if exception is not None:
             for e in exception:
                 self.file_exceptions.append(e)
@@ -15,10 +16,14 @@ class Clean:
         
         self.delete()
     def delete(self):
+        print('delete started',self.ROOT_DIR)
         for folders in os.listdir(self.ROOT_DIR):
-            appFolder = self.ROOT_DIR + "\\" + folders
-            if os.path.isdir(self.ROOT_DIR + "\\" + folders) and not folders.endswith(tuple(self.module_exceptions)):
-                migrationFolder = self.ROOT_DIR + "\\" + folders+ "\\"+ 'migrations'
+
+            appFolder = self.ROOT_DIR + "//" + folders
+            print(appFolder)
+            if os.path.isdir(self.ROOT_DIR + "//" + folders) and not folders.endswith(tuple(self.module_exceptions)):
+                migrationFolder = self.ROOT_DIR + "//" + folders+ "//"+ 'migrations'
+                print(migrationFolder)
                 if os.path.isdir(migrationFolder):
                     isFile = os.path.isfile(os.path.join(migrationFolder,self.file_exceptions[0]))
                     if not isFile:
@@ -28,8 +33,8 @@ class Clean:
                     for files in os.listdir(migrationFolder):
                         if not files.endswith(tuple(self.file_exceptions)):
                             try:
-                                print(migrationFolder+"\\"+files+ "removed!")
-                                os.remove(migrationFolder+"\\"+files)
+                                print(migrationFolder+"//"+files+ "removed!")
+                                os.remove(migrationFolder+"//"+files)
                             except:
                                 pass
                 else:

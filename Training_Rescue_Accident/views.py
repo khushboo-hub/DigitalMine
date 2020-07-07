@@ -242,6 +242,7 @@ def Accident_index(request, template_name='Accident_index.html'):
         others_cause_post = request.POST.getlist('others_cause_post')
         employee_obj=[]
         others_obj=[]
+        print('form errors',form1.errors)
         if form1.is_valid():
             print("valid")
             form_id=form1.save()

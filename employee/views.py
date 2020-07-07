@@ -81,7 +81,6 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
 
 @login_required
-@manager
 def get_dropdownlist(request):
     data = {}
     if request.is_ajax():
@@ -632,7 +631,8 @@ def save_updated_shift(request):
 @login_required
 def details_employee_shift_assign(request, emp_id, template_name="employee/shift_assign_report.html"):
     data = {}
-    shiftassign_table = EmployeeShiftAssign.objects.filter(employee_id=emp_id)
+    shiftassign_table = EmployeeShiftAssign.objects.all()
+    print('Shift Assign Table',shiftassign_table)
     data['result'] = shiftassign_table
 
     return render(request, template_name, data)
@@ -769,4 +769,4 @@ def notify_user():
 # for search employee
 def search_emp(request):
     form = search_employee_form()
-    return render(request,"employee/search_emp.html",form)
+    return render(request,"employee/search_emp.html",{'form':form})

@@ -3,7 +3,7 @@ from dateutil.utils import today
 from employee.models import MineDetails, MineShift
 from employee.models import Employee
 from .models import training_attendance,training_attendance_details
-from .models import Rescue_Records, Accident_Records
+from .models import Rescue_Records, Accident_Records,Accident_Records_others,Accident_Records_employees
 from django import forms
 from datetime import date
 
@@ -118,10 +118,10 @@ class Accident_Form(forms.ModelForm):
                                      widget=forms.Select(attrs={
                                          'class': 'form-control'}),
                                      empty_label="------Select Mine------")
-    shift_id = forms.CharField(widget=forms.Select(attrs=
-    {
-        'class': 'form-control'
-    }))
+    # shift_id = forms.CharField(widget=forms.Select(attrs=
+    # {
+    #     'class': 'form-control'
+    # }))
 
     situation_mines = forms.CharField(widget=forms.TextInput(attrs=
     {
@@ -169,11 +169,12 @@ class Accident_Form(forms.ModelForm):
         fields = '__all__'
 
 class Accident_EmployeeForm(forms.ModelForm):
-
-
+    print('LISt of Employees',Employee.objects.all())
     employee_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.Select(attrs={
                                                             'class': 'form-control js-example-basic-multiple'}))
+
+
 
     employee_cause = forms.CharField(widget=forms.TextInput(attrs=
     {
@@ -181,7 +182,7 @@ class Accident_EmployeeForm(forms.ModelForm):
     }))
 
     class Meta():
-        model = Accident_Records
+        model = Accident_Records_employees
         fields = '__all__'
 
 class Accident_OthersForm(forms.ModelForm):
@@ -206,5 +207,5 @@ class Accident_OthersForm(forms.ModelForm):
     }))
 
     class Meta():
-        model = Accident_Records
+        model = Accident_Records_others
         fields = '__all__'
