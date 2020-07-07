@@ -36,7 +36,7 @@ def add_att(request):
         try:
             inst.save()
         except Exception as e:
-            print('Exception',e)
+            print('Exception', e)
             pass
 
     return redirect('attendance:attendance_manage')
@@ -45,7 +45,7 @@ def add_att(request):
 @login_required
 def attendance_manage(request, template_name='attendance_manage.html'):
     emp_show = EmployeeAttendance.objects.all()
-    #print('emp show',emp_show)
+    # print('emp show',emp_show)
     emp_data = {}
     employee_data = {}
 
@@ -100,7 +100,7 @@ def ajax_show_attendence(request):
                     '-id')
             counter = 0
             for attendance in attendance_details:
-                print('ateen',attendance)
+                print('ateen', attendance)
                 attend = {}
                 mine_details = MineDetails.objects.get(id=attendance.mine_id_id)
                 mine_name = mine_details.name
@@ -115,14 +115,14 @@ def ajax_show_attendence(request):
                     data['absent'] += 1
                 counter += 1
                 attendance_records.append({'id': counter,
-                          'mine_name': mine_name,
-                          'emp_name': emp_name,
-                          'shift_name': shift_name,
-                          'date': attendance.ab_pr_date,
-                          'ab_pr': attendance.ab_pr,
-                          'leave_type': attendance.leave_type,
-                          'leave_no': str(attendance.leave_no),
-                          })
+                                           'mine_name': mine_name,
+                                           'emp_name': emp_name,
+                                           'shift_name': shift_name,
+                                           'date': attendance.ab_pr_date,
+                                           'ab_pr': attendance.ab_pr,
+                                           'leave_type': attendance.leave_type,
+                                           'leave_no': str(attendance.leave_no),
+                                           })
 
                 # attendance_records[str(attendance.id)] = attend
 
@@ -131,7 +131,7 @@ def ajax_show_attendence(request):
             data['present']
             return JsonResponse(data)
         except Exception as e:
-            print('Exception',e)
+            print('Exception', e)
             pass
 
     data['result'] = "Not Ajax"
@@ -144,7 +144,7 @@ def fetch_shift(request):
     if request.is_ajax():
         mine_id = request.GET.get('id', None)
         employee_shift = MineShift.objects.filter(mine_id=mine_id)
-        #print(employee_shift.query)
+        # print(employee_shift.query)
         emp_data = []
         for r in employee_shift:
             emp_data.append({'id': r.id, 'shift_name': r.shift_name + "(" + r.time_from + "-" + r.time_to + ")"})
@@ -159,34 +159,26 @@ def fetch_shift(request):
 @login_required
 def fetch_employee_list(request):
     data = {}
+    employee = []
     if request.is_ajax():
-        mine_shift_id = request.GET.get('id', None)
-        shift_table = MineShift.objects.get(id=mine_shift_id)
-        mine_table = MineDetails.objects.get(id=shift_table.mine_id)
-        employee_shift_assign = EmployeeShiftAssign.objects.filter(mine_shift_id=mine_shift_id).distinct('employee_id')
-        #print(employee_shift_assign.query)
-        # print("mine shift id:" + employee_shift_assign[0].mine_shift_id)
-        # print("Employee id:" + employee_shift_assign[0] .employee_id)
-        data = {}
-        i = 0
-        assigned_data = []
-        for r in employee_shift_assign:  ##### 0-id
-            emp_table = Employee.objects.get(id=str(r.employee_id))
-            assigned_data.append({'id': r.id,
-                                  'mine_id': mine_table.id,
-                                  'mine_name':mine_table.name,
-                                  'shift_id':shift_table.id,
-                                  'shift_name': shift_table.shift_name + "(" + shift_table.time_from + " - " + shift_table.time_to + ")",
-                                  'emp_id':emp_table.id,
-                                  'emp_name':emp_table.name,
-                                  'emp_father_name':emp_table.father_name,
-                                  'emp_mob':emp_table.mob,
-                                  'emp_email':emp_table.email,
-                                  'emp_designation':emp_table.designation,
-                                  })
-            # assigned_data.append(str(r[0]) + ',' + str(r[1]) + ',' + str(r[2]) + ',' + str(mine_table.name)+','+str(emp_table.name) + ',' + str(emp_table.id) + ',' + str(mine_table.id) + ','+ str(shift_table.shift_name) + '('+ str(shift_table.time_from) + '--'+ str(shift_table.time_to)+')')  # 0-mine_shift_id 1-employee_id,2-shift_name
-            # i = i + 1
-        data['result'] = assigned_data
+        mine_id = request.GET.get('mine_id', None)
+        shift_id = request.GET.get('shift_id', None)
+        employees = Employee.objects.filter(mine_id=mine_id, shift_id=shift_id)
+        for emp in employees:
+            employee.append({
+                'mine_id': emp.mine_id,
+                'mine_name': emp.mine.name,
+                'shift_id': emp.shift_id_id,
+                'shift_name': emp.shift_id.shift,
+                'emp_id': emp.id,
+                'emp_name': emp.name,
+                'designation':emp.designation,
+                'father_name':emp.father_name,
+                'mobile':emp.mob,
+                'email':emp.email
+
+            })
+        data['result'] = employee
         # print(assigned_data)
     else:
         data['result'] = "Something Wen't Wrong!"

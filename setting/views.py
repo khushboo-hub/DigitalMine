@@ -316,6 +316,7 @@ def push_mail(mail_subject="", mail_html_content=""):
 
 
 def change_language(request, lang):
+    print('Language Change view',lang)
     request.session['lang'] = str(lang)
     return redirect(request.META.get('HTTP_REFERER'))
 

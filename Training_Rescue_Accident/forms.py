@@ -15,10 +15,6 @@ class Training_Form(forms.ModelForm):
                                     'class': 'form-control'}),
                                     empty_label="Select Mine")
 
-    shift_id = forms.CharField(widget=forms.Select(attrs={
-                           'class': 'form-control',
-                           'required':False
-                       }))
 
     training_date = forms.DateField(widget=forms.TextInput(attrs={
         'class': 'form-control datepicker',
@@ -54,16 +50,6 @@ class training_attendance_details_form(forms.ModelForm):
         ("No", 'No')
     )
 
-    training_attendance_id = forms.CharField(widget=forms.Select(attrs={
-            'class': 'form-control',
-            'required':False
-        }))
-
-
-    emp_id = forms.CharField(widget=forms.TextInput(attrs={
-                           'class': 'form-control',
-                           'required':False
-                       }))
     is_present = forms.ChoiceField(choices = TRUE_FALSE_CHOICES,widget=forms.Select(), required=True)
     class Meta():
         model = training_attendance_details
@@ -111,14 +97,14 @@ class Rescue_Form(forms.ModelForm):
         'required': 'true'
     }))
 
-    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
-                                                        widget=forms.SelectMultiple(attrs={'class':'form-control js-example-basic-multiple'}))
-
     incident_type = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control',
         'required': 'true'
     }))
+    rescue_person_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                            widget=forms.SelectMultiple(attrs={
+                                                                'class': 'form-control js-example-basic-multiple'}))
     rescued_employees_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.SelectMultiple(attrs={'class': 'form-control js-example-basic-multiple'}))
 
@@ -128,6 +114,10 @@ class Rescue_Form(forms.ModelForm):
 
 
 class Accident_Form(forms.ModelForm):
+    mine= forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="------Select Mine------")
     shift_id = forms.CharField(widget=forms.Select(attrs=
     {
         'class': 'form-control'
@@ -173,30 +163,47 @@ class Accident_Form(forms.ModelForm):
         'class': 'form-control'
     }))
 
-    person_names = forms.CharField(widget=forms.TextInput(attrs=
+
+    class Meta():
+        model = Accident_Records
+        fields = '__all__'
+
+class Accident_EmployeeForm(forms.ModelForm):
+
+
+    employee_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
+                                                        widget=forms.Select(attrs={
+                                                            'class': 'form-control js-example-basic-multiple'}))
+
+    employee_cause = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control'
     }))
-    emp_nat = forms.CharField(widget=forms.TextInput(attrs=
-    {
-        'class': 'form-control'
+
+    class Meta():
+        model = Accident_Records
+        fields = '__all__'
+
+class Accident_OthersForm(forms.ModelForm):
+
+
+    person_name = forms.CharField(widget=forms.TextInput(attrs={
+        'class':'form-control'
     }))
+
 
     age = forms.IntegerField(widget=forms.NumberInput(attrs=
     {
         'class': 'form-control'
     }))
-
-    sex = forms.CharField(widget=forms.TextInput(attrs=
+    nature_of_employment = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control'
     }))
-
-    injury_death_cause = forms.CharField(widget=forms.TextInput(attrs=
+    others_cause = forms.CharField(widget=forms.TextInput(attrs=
     {
         'class': 'form-control'
     }))
-
 
     class Meta():
         model = Accident_Records

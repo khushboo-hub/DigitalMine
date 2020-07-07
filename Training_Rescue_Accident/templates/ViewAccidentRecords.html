@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load staticfiles %}
+    <style>
+        .container_width {
+            width: 95% !important;
+        }
+    @media print {
+        h3.page-header,button.print,button#print,a.btn,.extra,hr{
+            display: none;
+        }
+    }
+    </style>
+    <div class="container container_width">
+        <div class="row" id="printThis">
+            <h3 class="page-header text-center">Accident Record Management</h3>
+        <div id="comman">
+            <div class="form-group col-md-12">
+                <div class="col-md-4"><label>Mine: </label>     {{ accident.mine.name }}</div>
+                <div class="col-md-4"><label>Shift: </label>    {{ accident.shift_id.shift }}</div>
+                <div class="col-md-4"><label>Date: </label>     {{ accident.date_hour_accident }}</div>
+            </div>
+            <div class="form-group col-md-12">
+                <div class="col-md-4"><label>Situation of Mines: </label>       {{ accident.situation_mines }}</div>
+                <div class="col-md-4"><label>Name and postal address of owner: </label>     {{ accident.name_address }}</div>
+                <div class="col-md-4"><label>Place of location of accident in mine/rescue station/rescue
+                    room: </label>      {{ accident.accident_location }}</div>
+            </div>
+            <div class="form-group col-md-12">
+
+                <div class="col-md-4"><label>Number of person(s) Killed: </label>       {{ accident.killed_num }}</div>
+                <div class="col-md-4"><label>Number of person(s) Seriously Injured: </label>        {{ accident.injured_num }}
+                </div>
+                <div class="col-md-4"><label>Cause and description of
+                    accident: </label>      {{ accident.accident_cause_description }}</div>
+
+            </div>
+        </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-condensed" id="att_table">
+                        <thead>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td id="blank"><label>Employees</label></td>
+                        <tr>
+                        <tr class="table-header">
+                            <th>SL No.</th>
+                            <th>Name</th>
+                            <th>Killed or Injured</th>
+                            <th>Sex</th>
+                            <th>Age</th>
+                            <th>Nature of employment</th>
+                            <th>Nature of injured/cause of death</th>
+                            <th class="extra"></th>
+                        </tr>
+
+                        {% for employee in employees %}
+                            <tr id="table-header">
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ employee.employee_name }}</td>
+                                <td>{{ employee.killed_or_injured }}</td>
+                                <td>{{ employee.employee_id.gender }}</td>
+                                <td>{{ employee.employee_id.age }}</td>
+                                <td>{{ employee.employee_id.designation }}</td>
+                                <td>{{ employee.cause }}</td>
+                                 <td class="extra"><button type="button" class="btn btn-success print"><span class="glyphicon glyphicon-print"></span></button></td>
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td id="blank"><label>Others</label></td>
+                        <tr>
+                        <tr>
+                            <th>SL No.</th>
+                            <th>Name</th>
+                            <th>Killed or Injured</th>
+                            <th>Sex</th>
+                            <th>Age</th>
+                            <th>Nature of employment</th>
+                            <th>Nature of injured/cause of death</th>
+                            <th class="extra"></th>
+                        </tr>
+                        {% for employee in others %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ employee.name }}</td>
+                                <td>{{ employee.killed_or_injured }}</td>
+                                <td>{{ employee.sex }}</td>
+                                <td>{{ employee.age }}</td>
+                                <td>{{ employee.nature_of_employment }}</td>
+                                <td>{{ employee.cause }}</td>
+                                <td class="extra"><button type="button" class="btn btn-success print"><span class="glyphicon glyphicon-print"></span></button></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center"><button type="button" class="btn btn-success" id="print">Print</button></div>
+                <div class="text-center">
+                    <hr>
+                    <a href="{% url 'Training_Rescue_Accident:Accident_index' %}" class="btn btn-primary print" role="button">Go
+                        Back</a>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+          $('button#print').click(function(){
+              $("#printThis").printThis({
+                    debug: false,
+                    importCSS: true,
+                    importStyle: true,
+                    printContainer: true,
+                    loadCSS: false,
+                    pageTitle: 'Accident Record Management',
+                    removeInline: false,
+                    printDelay: 333,
+                    header: null,
+                    formValues: true
+                });
+          });
+
+           $('button.print').click(function(){
+               let row=$(this).parent().parent().html();
+               let header='<tr>'+$(this).parent().parent().parent().parent().find('tr.table-header').html()+'</tr>';
+               console.log('header',header);
+               let markup=$('<div></div>');
+               markup.append($('div#comman').html());
+               markup.append('<div class="table-responsive"><table class="table table-striped table-bordered">'+header+row);
+               markup.append('</table></div>');
+               console.log(markup.html())
+             markup.printThis({
+                    debug: false,
+                    importCSS: true,
+                    importStyle: true,
+                    printContainer: true,
+                    loadCSS: false,
+                    pageTitle: 'Accident Record Management',
+                    removeInline: false,
+                    printDelay: 333,
+                    header: null,
+                    formValues: true
+                });
+          });
+        });
+
+
+    </script>
+{% endblock %}

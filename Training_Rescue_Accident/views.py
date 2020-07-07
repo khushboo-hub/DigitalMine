@@ -1,15 +1,18 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .models import training_attendance,training_attendance_details, Rescue_Records, Accident_Records, Employee, MineShift, \
-    EmployeeShiftAssign, MineDetails
-from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
-    training_attendance_details_form
+from .models import training_attendance, training_attendance_details, Rescue_Records, Accident_Records, Employee, \
+    MineShift, \
+    EmployeeShiftAssign, MineDetails, Accident_Records_employees, Accident_Records_others
+from .forms import Rescue_Form, Accident_Form, Training_Form, \
+    training_attendance_details_form,Accident_EmployeeForm,Accident_OthersForm
 # S S MISHRA
 @login_required
 def index(request, template_name='Training_Attendance.html'):
-    if request.POST:
-        form = Training_Form(request.POST)
+    print('Training Attendance.........')
+    form = Training_Form()
+    if request.method=="POST":
+        form = Training_Form(request.POST or None)
         if form.is_valid():
             my_id = form.save()
             for key_value in range(len(request.POST.getlist('is_present'))):
@@ -26,13 +29,8 @@ def index(request, template_name='Training_Attendance.html'):
                     print(sub_form_1.errors)
                     print("Sub Part Invalid")
             return redirect('Training_Rescue_Accident:manage_training_attendance')
-        else:
-            print(form.errors)
-            print("Invalid")
-    else:
-        form = Training_Form()
-        form.fields['shift_id'].queryset = MineShift.objects.filter(mine_id=-1)
     return render(request, template_name, {'form': form})
+
 from accounts.models import profile_extension
 def manage_training_attendance(request, template_name='manage_training_attendance.html'):
     if request.user.is_superuser:
@@ -80,6 +78,7 @@ def DeleteEmployeeTrainingAttendance(request,id):
     subTable1 = training_attendance_details.objects.filter(
         training_attendance_id=id)
     subTable1.delete()
+
     return redirect('Training_Rescue_Accident:manage_training_attendance')
 
 # @login_required
@@ -205,11 +204,9 @@ def fetch_employee_list(request):
 
 @login_required
 def Rescue_index(request, template_name='Rescue_index.html'):
-    print('hello world')
     if request.method == "POST":
         form = Rescue_Form(request.POST or None)
         if form.is_valid():
-            print(request.POST)
             form.save()
             return redirect('Training_Rescue_Accident:Rescue_Manage')
         else:
@@ -221,84 +218,80 @@ def Rescue_index(request, template_name='Rescue_index.html'):
 
 @login_required
 def Rescue_Manage(request, template_name='Rescue_Manage.html'):
+    emp_data={}
     emp_show = Rescue_Records.objects.all()
-    employee_data = {}
-    emp_data = {}
-    for emp in emp_show:
-        employee = {}
-        mine_details = MineDetails.objects.filter(id=emp.mine_id)
-        for mine in mine_details:
-            employee['mine_name'] = str(mine.name)
 
-        employee['shift_id'] = str(emp.shift_id)
-        print('ShiftID=' + str(emp.shift_id))
-        shift_table = MineShift.objects.get(id=emp.shift_id)
-        employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
-            shift_table.time_to) + ')'
-        employee['area'] = str(emp.area)
-        employee['date_fr'] = str(emp.date_fr)
-        employee['date_to'] = str(emp.date_to)
-        employee['rescue_dep_num'] = str(emp.rescue_dep_num)
-        employee['rescue_person_name'] = str(emp.rescue_person_name)
-        employee['incident_type'] = str(emp.incident_type)
-        employee['employee_rescued_num'] = str(emp.employee_rescued_num)
-        employee['rescued_employees_name'] = str(emp.rescued_employees_name)
-
-        employee_data[str(emp.id)] = employee
-    emp_data['dt_store'] = employee_data
-    print(employee_data)
+    emp_data['dt_store'] = emp_show
     return render(request, template_name, emp_data)
 
 
 @login_required
 def Accident_index(request, template_name='Accident_index.html'):
     if request.method == "POST":
-        form = Accident_Form(request.POST or None)
-        if form.is_valid():
+        form1 = Accident_Form(request.POST or None)
+        employee_id = request.POST.getlist('employee_id_post')
+        employee_names=request.POST.getlist('employee_name_post')
+        employee_killed_or_injured_post = request.POST.getlist('employee_killed_or_injured_post')
+        employee_cause_post = request.POST.getlist('employee_cause_post')
+
+        person_name_post = request.POST.getlist('person_name_post')
+        others_killed_or_injured_post = request.POST.getlist('others_killed_or_injured_post')
+        sex_post = request.POST.getlist('sex_post')
+        age_post = request.POST.getlist('age_post')
+        nature_of_employment_post = request.POST.getlist('nature_of_employment_post')
+        others_cause_post = request.POST.getlist('others_cause_post')
+        employee_obj=[]
+        others_obj=[]
+        if form1.is_valid():
             print("valid")
-            form.save()
+            form_id=form1.save()
+
+            for i in range(0,len(employee_id)):
+                employee_obj.append(Accident_Records_employees(accident_record=form_id,
+                                                               employee_id_id=employee_id[i],
+                                                               employee_name=employee_names[i],
+                                                               killed_or_injured=employee_killed_or_injured_post[i],
+                                                               cause=employee_cause_post[i]))
+
+
+            for i in range(0,len(person_name_post)):
+                others_obj.append(Accident_Records_others(accident_id=form_id,
+                                                          killed_or_injured=others_killed_or_injured_post[i],
+                                                          name= person_name_post[i],
+                                                          age=age_post[i],
+                                                          sex=sex_post[i],
+                                                          nature_of_employment=nature_of_employment_post[i],
+                                                          cause=others_cause_post[i]))
+
+            Accident_Records_employees.objects.bulk_create(employee_obj)
+            Accident_Records_others.objects.bulk_create(others_obj)
+
+
             return redirect('Training_Rescue_Accident:Accident_Manage')
         else:
             print("Invalid!")
     else:
-        form = Accident_Form()
-        return render(request, template_name, {'form': form})
+        form1 = Accident_Form()
+        form2=Accident_EmployeeForm()
+        form3 = Accident_OthersForm()
+        return render(request, template_name, {'form1': form1,'form2':form2,'form3':form3})
 
 
 @login_required
 def Accident_Manage(request, template_name='Accident_Manage.html'):
+    emp_data={}
     emp_show = Accident_Records.objects.all()
-    employee_data = {}
-    emp_data = {}
-    for emp in emp_show:
-        employee = {}
-        mine_details = MineDetails.objects.filter(id=emp.mine_id)
-        for mine in mine_details:
-            employee['mine_name'] = str(mine.name)
 
-        employee['shift_id'] = str(emp.shift_id)
-        shift_table = MineShift.objects.get(id=emp.shift_id)
-        employee['shift_name'] = str(shift_table.shift_name) + '(' + str(shift_table.time_from) + '--' + str(
-            shift_table.time_to) + ')'
-        employee['situation_mines'] = str(emp.situation_mines)
-        employee['name_address'] = str(emp.name_address)
-        employee['vil_pin'] = str(emp.vil_pin)
-        employee['date_hour_accident'] = str(emp.date_hour_accident)
-        employee['accident_location'] = str(emp.accident_location)
-        employee['killed_num'] = str(emp.killed_num)
-        employee['injured_num'] = str(emp.injured_num)
-        employee['person_names'] = str(emp.person_names)
-        employee['emp_nat'] = str(emp.emp_nat)
-        employee['age'] = str(emp.age)
-        employee['sex'] = str(emp.sex)
-        employee['injury_death_cause'] = str(emp.injury_death_cause)
-        employee['accident_cause_description'] = str(emp.accident_cause_description)
+    emp_data['dt_store'] = emp_show
 
-        employee_data[str(emp.id)] = employee
-    emp_data['dt_store'] = employee_data
-    print(employee_data)
     return render(request, template_name, emp_data)
 
+@login_required
+def ViewAccidentRecords(request,pk,template_name='ViewAccidentRecords.html'):
+    acccident=Accident_Records.objects.get(pk=pk)
+    employees=Accident_Records_employees.objects.filter(accident_record=acccident)
+    others=Accident_Records_others.objects.filter(accident_id=acccident)
+    return render(request,template_name,{'accident':acccident,'employees':employees,'others':others})
 
 @login_required
 def fetch_miners_ajax(request):
@@ -308,7 +301,7 @@ def fetch_miners_ajax(request):
         miners = Employee.objects.filter(mine_id=mine_id)
         mn = []
         for m in miners:
-            mn.append({'id': m.name, 'text': str(m.name)})
+            mn.append({'id': m.id, 'name': str(m.name_with_email())})
         data['result'] = mn
         return JsonResponse(data)
     data['result'] = "Not Ajax"

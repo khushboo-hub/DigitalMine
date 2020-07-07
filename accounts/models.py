@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-from employee.models import MineDetails
+from employee.models import MineDetails,MineShift
 from django.contrib.sessions.models import Session
 from django.conf import settings
 
@@ -28,7 +28,6 @@ class profile_extension(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     profile_avatar = models.ImageField(upload_to='employee_image/', null=True, blank=True)
     mine_id=models.ForeignKey(MineDetails,on_delete=models.CASCADE,blank=True,null=True)
-
     def __str__(self):
         return self.user_id
 

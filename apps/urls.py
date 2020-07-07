@@ -8,6 +8,7 @@ from theme import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home),
+    path('base_layout',views.base_layout,name='base_layout'),
 
     path('employee/',include('employee.urls',namespace='employee')),
     path('MinersTracking/',include('MinersTracking.urls',namespace='MinersTracking')),
@@ -38,6 +39,7 @@ urlpatterns = [
     path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
     path('setting/', include('setting.urls', namespace='setting')),
     path('Slope/', include('Slope.urls', namespace='Slope')),
+    # path('',include('pwa.urls')),
 ]
 
 # notify_user()

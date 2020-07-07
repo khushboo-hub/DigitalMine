@@ -161,17 +161,17 @@ function FillRouters(mine_id){
                      'id': mine_id
                    },
             success: function(data) {
-
-                fill_map_with_routers(data.mine,data.routers);
+                setTimeout(fill_map_with_routers(data.mine,data.routers),2000);
                 return data;
                     },
             error: function(){
+                    setTimeout(FillRouters(mine_id),2000);
                     console.log("Something Went Wrong :(");
-                 }, timeout: 3000
+                 }
             });
 }
 function setImageData(mine_id){
-    url=$("#get_url").data('url');
+    let url=$("#get_url").data('url');
 
         $.ajax({
             type:"get",
@@ -219,7 +219,7 @@ function setImageData(mine_id){
 function fill_dropdown(result){
 
     $("#id_miner_id").html("<option>--Select Miner--</option>");
-    for (x in result) {
+    for (let x in result) {
     $("#id_miner_id").append($("<option></option>")
                     .attr("value",result[x].rfid)
                     .text(result[x].name));
@@ -266,7 +266,7 @@ function Get_All_Miners_Data(){
                 HashDataPrev=HashDataCurr;
 
                 HashDataCurr="";
-                for(h in data){HashDataCurr+=data[h].router_id;}
+                for(let h in data){HashDataCurr+=data[h].router_id;}
 
                 if(HashDataPrev==HashDataCurr){
 
@@ -286,7 +286,7 @@ function Get_All_Miners_Data(){
                     }
                     flag1++;
                     tempData=data;
-                    for(miner_id in data){
+                    for(let miner_id in data){
                         $('.KBmap__marker.'+miner_id).remove();
                         if(KB_flag!=0)KBtestmap.mapMarkers[miner_id].removeMarker();
 
@@ -312,7 +312,7 @@ function Get_All_Miners_Data(){
 var X;
 //var elem = document.getElementById("KBtestmap");
 function WARNINGMINER(data){
-       for(miner_id in data){
+       for(let miner_id in data){
                 //    console.log(miner_id);
                     if(data[miner_id].emergency=='1'){
                       //  $('p#MinerName').html(data[miner_id].modal.title);

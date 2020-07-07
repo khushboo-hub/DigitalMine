@@ -16,6 +16,7 @@ urlpatterns = [
     #path('Training_Rescue_Accident_Manage', views.Training_Rescue_Accident_Manage, name='Training_Rescue_Accident_Manage'),# delete
     path('Accident_index', views.Accident_index, name='Accident_index'),
     path('Accident_Manage', views.Accident_Manage, name='Accident_Manage'),
+    path('ViewAccidentRecords/<int:pk>',views.ViewAccidentRecords,name='ViewAccidentRecords'),
     path('Rescue_index', views.Rescue_index, name='Rescue_index'),
     path('Rescue_Manage', views.Rescue_Manage, name='Rescue_Manage'),
     path('fetch_miners_ajax',views.fetch_miners_ajax,name='fetch_miners_ajax'),

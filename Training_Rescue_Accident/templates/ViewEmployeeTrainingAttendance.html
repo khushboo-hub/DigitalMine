@@ -1,17 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
+    <style>
+     @media screen {
+
+      }
+
+      @media print {
+        div.spacer,div.print{
+            display: none;
+        }
+          div.main{
+              padding-top: 0%;
+          }
+      }
+      @media screen, print {
+         p.bodyText {font-size:10pt}
+      }
+    </style>
     <div class="container">
+        <hr/>
         <div class="row">
             <div class="col-md-12">
-                <h3 class="page-header">View Employee Training Attendance
+                <h3 class="page-header"><b>View Employee Training Attendance</b>
                     <small> Here we can view training attendance of employee</small>
                 </h3>
                 <div class="row">
                     <div class="col-md-4">
-                        <label> Select Mine </label> : {{ form.mine_id }}
+                        <label>Mine </label> : {{ form.mine_id.name }}
                     </div>
                     <div class="col-md-4">
-                        <label> Choose Shift </label> :  {{ form.shift_id }}
+                        <label>Shift </label> : {{ form.shift_id.shift }}
                     </div>
                     <div class="col-md-4">
                         <label>Date</label> : {{ form.training_date }}
@@ -36,40 +54,50 @@
                     <table class="table table-striped table-bordered responsive" id="content">
                         <thead>
                         <tr>
-                            <th>SL No.</th>
-                            <th>Status</th>
-                            <th>Employee Name</th>
-                            <th>Designation</th>
-                            <th>Father's Name</th>
-                            <th>Mobile</th>
-                            <th>Email</th>
+                            <th class="text-center">SL No.</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Employee Name</th>
+                            <th class="text-center">Designation</th>
+                            <th class="text-center">Father's Name</th>
+                            <th class="text-center">Mobile</th>
+                            <th class="text-center">Email</th>
                         </tr>
                         </thead>
                         <tbody id="table_att">
-                            {% for obj in subTable1 %}
-                                <tr>
-                                    <td>{{forloop.counter}}</td>
-                                    <td>{{ obj.is_present }} </td>
-                                    <td><input type='hidden' name='emp_id' value="{{obj.emp_id_id}}">{{ obj.emp_id.name }}</td>
-                                    <td>{{ obj.emp_id.designation }}</td>
-                                    <td>{{ obj.emp_id.father_name }}</td>
-                                    <td>{{ obj.emp_id.mob }}</td>
-                                    <td>{{ obj.emp_id.email }}</td>
+                        {% for obj in subTable1 %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td class="text-center">
+                                    {% if obj.is_present == "Yes" %}
+                                        <span class="label label-success">Present</span>
+                                    {% else %}
+                                        <span class="label label-danger">Absent</span>
+                                    {% endif %}
+                                </td>
+                                <td><input type='hidden' name='emp_id' value="{{ obj.emp_id_id }}">{{ obj.emp_id.name }}
+                                </td>
+                                <td>{{ obj.emp_id.designation }}</td>
+                                <td>{{ obj.emp_id.father_name }}</td>
+                                <td>{{ obj.emp_id.mob }}</td>
+                                <td>{{ obj.emp_id.email }}</td>
 
-                                </tr>
-                            {% endfor %}
+                            </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
                 <input type="button" id="print" class="btn btn-primary" value="Print Attendance"/>
             </div>
         </div>
+        <div class="text-center print">
+            <a href="{% url 'Training_Rescue_Accident:manage_training_attendance' %}"><span class="btn btn-success">Go Back To Mananage Employee Attendance</span></a>
+        </div>
     </div>
     <script>
-    $(document.body).on('click','#print',function(key){
-    $("#print").hide();
-     window.print();
-     $("#print").show();
-    });
+        $(document.body).on('click', '#print', function (key) {
+            $("#print").hide();
+            window.print();
+            $("#print").show();
+        });
     </script>
 {% endblock %}

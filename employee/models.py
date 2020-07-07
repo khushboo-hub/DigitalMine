@@ -5,9 +5,8 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
-from datetime import date, datetime,timedelta
+from datetime import date, datetime, timedelta
 from django.dispatch import receiver
-from django.utils import timezone
 
 
 class MineDetails(models.Model):
@@ -61,6 +60,27 @@ class MiningRole(models.Model):
     class Meta:
         db_table = "MiningRole"
         unique_together = ('mine', 'name')
+
+
+class MineShift(models.Model):
+    objects = None
+    shift_name = models.CharField(max_length=200)
+    mine_id = models.IntegerField()
+    time_from = models.CharField(max_length=20)
+    time_to = models.CharField(max_length=20)
+    description = models.TextField(null=True, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    modified_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.pk) + "-" + self.shift_name
+
+    @property
+    def shift(self):
+        return self.shift_name + "(" + self.time_from + "-" + self.time_to + ")"
+
+    class Meta:
+        db_table = "MineShift"
 
 
 class Employee(models.Model):
@@ -156,51 +176,37 @@ class Employee(models.Model):
 
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
+    shift_id = models.ForeignKey(MineShift, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def mine_name(self):
         return "Hello"
+
     def name_with_email(self):
-        return self.name+'('+self.email+')'
+        return self.name + '(' + self.email + ')'
+
+    def get_shift(self):
+        return self.shift_id
+
+    def age(self):
+        dob = self.dob
+        dob = dob.strftime("%Y-%m-%d")
+        dob_year = str(dob[:4])
+        now = datetime.now()
+        curr_date = now.strftime("%Y-%m-%d")
+        curr_date_year = str(curr_date[:4])
+        age = (int(curr_date_year) - int(dob_year))
+        return age
 
     class Meta:
         db_table = "employee"
 
 
-class SensorData(models.Model):
-    data1 = models.CharField(max_length=200, null=True, blank=True)
-    created_date = models.DateTimeField(default=datetime.now, blank=True)
-
-    class Meta:
-        db_table = "SensorData"
-
-
-class MineShift(models.Model):
-    objects = None
-    shift_name = models.CharField(max_length=200)
-    mine_id = models.IntegerField()
-    time_from = models.CharField(max_length=20)
-    time_to = models.CharField(max_length=20)
-    description = models.TextField(null=True, blank=True)
-    created_date = models.DateTimeField(default=datetime.now, blank=True)
-    modified_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return str(self.pk) + "-" + self.shift_name
-
-    @property
-    def shift(self):
-        return self.shift_name+"("+self.time_from+"-"+self.time_to+")"
-    class Meta:
-        db_table = "MineShift"
-
-
 class EmployeeShiftAssign(models.Model):
-    employee_id = models.IntegerField()
-    mine_shift_id = models.IntegerField()
-    shift_time = models.CharField(max_length=200)
+    employee_id = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True)
+    shift_id = models.ForeignKey(MineShift, on_delete=models.CASCADE, null=True, blank=True)
     assign_date = models.DateField(default=datetime.now, blank=True)
     created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
@@ -210,6 +216,14 @@ class EmployeeShiftAssign(models.Model):
 
     class Meta:
         db_table = "EmployeeShiftAssign"
+
+
+class SensorData(models.Model):
+    data1 = models.CharField(max_length=200, null=True, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
+
+    class Meta:
+        db_table = "SensorData"
 
 
 class RateOfMinimumWages(models.Model):
@@ -237,10 +251,8 @@ class MedicalReport(models.Model):
     report = models.CharField(max_length=200, null=True)
     file = models.FileField(upload_to='medical')
 
-
-
-    def age(self,id):
-        dob = self.dob(self,str(id))
+    def age(self, id):
+        dob = self.dob(self, str(id))
         dob_year = str(dob[:4])
         now = datetime.now()
         curr_date = now.strftime("%Y-%m-%d")
@@ -248,30 +260,31 @@ class MedicalReport(models.Model):
         age = (int(curr_date_year) - int(dob_year))
         return age
 
-    def dob(self,id):
+    def dob(self, id):
         emp_table = Employee.objects.get(id=id)
         dob = str(emp_table.dob)
         return dob
-    def nextdate(self,id):
-        age = self.age(self,id)
-        try:
-            medical=MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
-            now=medical.date
-        except:
-            now=-1
 
-        if age >=45:
-            return "" if(now == -1) else (now.replace(year = now.year + 1)).strftime("%Y-%m-%d")
+    def nextdate(self, id):
+        age = self.age(self, id)
+        try:
+            medical = MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            now = medical.date
+        except:
+            now = -1
+
+        if age >= 45:
+            return "" if (now == -1) else (now.replace(year=now.year + 1)).strftime("%Y-%m-%d")
         else:
-            return "" if(now == -1) else now.replace(year = now.year + 5).strftime("%Y-%m-%d")
+            return "" if (now == -1) else now.replace(year=now.year + 5).strftime("%Y-%m-%d")
 
-    def lastdate(self,id):
+    def lastdate(self, id):
         try:
-            medical=MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
-            now=medical.date
-            now=now.strftime("%Y-%m-%d")
+            medical = MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            now = medical.date
+            now = now.strftime("%Y-%m-%d")
         except:
-            now=""
+            now = ""
 
         return now
 
@@ -289,6 +302,7 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance:
         if os.path.isfile(instance.file):
             os.remove(instance.file.path)
+
 
 @receiver(models.signals.pre_save, sender=MedicalReport)
 def auto_delete_file_on_change(sender, instance, **kwargs):
@@ -311,4 +325,22 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
         if os.path.isfile(old_file.path):
             os.remove(old_file.path)
 
+
 ################# Reciever for Sensor Node END #################
+
+from accounts.models import profile_extension
+
+
+#################Reciever for Shift Change####################
+@receiver(models.signals.post_save, sender=EmployeeShiftAssign, dispatch_uid="employee_shift_assign")
+def auto_update_employee_shift_on_insert(sender, instance, **kwargs):
+
+    if not instance.pk:
+        return False
+    print('Inside Shift Assign Signal')
+    try:
+        employee = Employee.objects.get(pk=instance.employee_id_id)
+        employee.shift_id_id = instance.shift_id_id
+        employee.save()
+    except Employee.DoesNotExist:
+        return False
