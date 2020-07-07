@@ -33,11 +33,11 @@ class Rescue_Records(models.Model):
     date_to = models.DateTimeField(max_length=255, null=True, blank=True)
     # rescue_dep_num = models.IntegerField(null=True, blank=True)
     # rescue_person_name = models.CharField(max_length=255, null=True, blank=True)
-    rescue_person_name = models.ManyToManyField(Employee, null=True, blank=True,related_name='rescue')
+    rescue_person_name = models.ManyToManyField(Employee, blank=True,related_name='rescue')
     incident_type = models.CharField(max_length=255, null=True, blank=True)
     # employee_rescued_num = models.IntegerField(null=True, blank=True)
     # rescued_employees_name = models.CharField(max_length=255, null=True, blank=True)
-    rescued_employees_name = models.ManyToManyField(Employee, null=True, blank=True,related_name='rescued')
+    rescued_employees_name = models.ManyToManyField(Employee, blank=True,related_name='rescued')
 
     class Meta:
         db_table = "rescue_records"

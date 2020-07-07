@@ -52,4 +52,6 @@ urlpatterns = [
     path('checkifuserfieldempty',views.checkifuserfieldempty,name='checkifuserfieldempty'),
     path('profile_ajax/',views.profile_ajax,name='profile_ajax'),
     path('validate_token',views.validate_token,name='validate_token'),
+
+    path('search_emp',views.search_emp,name='search_emp'),
 ]

@@ -80,7 +80,6 @@ def DeleteEmployeeTrainingAttendance(request,id):
     subTable1 = training_attendance_details.objects.filter(
         training_attendance_id=id)
     subTable1.delete()
-
     return redirect('Training_Rescue_Accident:manage_training_attendance')
 
 # @login_required

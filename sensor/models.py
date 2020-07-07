@@ -255,7 +255,5 @@ def auto_delete_file_on_change(sender, instance, **kwargs):
     if not old_file3 == new_file:
         if os.path.isfile(old_file3.path):
             os.remove(old_file3.path)
-
-
 ################# Reciever for Sensor Node END #################
 

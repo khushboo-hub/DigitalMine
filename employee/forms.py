@@ -453,3 +453,17 @@ class MedicalReportForm(forms.ModelForm):
     class Meta():
         model = MedicalReport
         fields = ['report', 'file']
+
+class search_employee_form(forms.ModelForm):
+    mine_id = forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="Select Mine")
+
+    shift_id = forms.CharField(widget=forms.Select(attrs={
+        'class': 'form-control',
+        'required': False
+    }))
+    class Meta():
+        model = ""
+        fields = "__all__"
