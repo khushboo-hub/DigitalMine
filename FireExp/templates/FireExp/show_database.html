@@ -98,11 +98,11 @@
                                     <td>{{ book.h2 }}</td>
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
-                                    <td>({{ book.findExplosibility.graham_ratio }})<br>{{ book.findExplosibility.graham }}</td>
-                                    <td>({{ book.findExplosibility.young_ratio }})<br>{{ book.findExplosibility.young }}</td>
-                                    <td>({{ book.findExplosibility.coco2_ratio }})<br>{{ book.findExplosibility.coco2 }}</td>
-                                    <td>({{ book.findExplosibility.jtr_ratio }})<br>{{ book.findExplosibility.jtr }}</td>
-                                    <td>({{ book.findExplosibility.chra_ratio }})<br>{{ book.findExplosibility.chra }}</td>
+                                     <td>{{ book.findExplosibility.graham }}<br>({{ book.findExplosibility.graham_ratio|floatformat:2 }})</td>
+                                    <td>{{ book.findExplosibility.young }}<br>({{ book.findExplosibility.young_ratio|floatformat:2 }})</td>
+                                    <td>{{ book.findExplosibility.coco2 }}<br>({{ book.findExplosibility.coco2_ratio|floatformat:2 }})</td>
+                                    <td>{{ book.findExplosibility.jtr }}<br>({{ book.findExplosibility.jtr_ratio|floatformat:2 }})</td>
+                                    <td>{{ book.findExplosibility.chra }}<br>({{book.findExplosibility.chra_ratio|floatformat:2 }})</td>
                                     <td>{{ book.findExplosibility.explosibility }}</td>
                                 <td>{{ book.graph.x }}</td>
                                     <td>{{ book.graph.y }}</td>
