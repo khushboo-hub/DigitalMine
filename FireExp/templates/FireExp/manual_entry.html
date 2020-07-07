@@ -4,7 +4,6 @@
     <div class="container">
     <div class="row">
         <section class="col-md-12">
-
             <h2 class="page-header">Determine Fire Status and Explosibility in Sealed Off Areas in Mines(Manual
                 Entry)</h2>
 
@@ -61,11 +60,11 @@
                         </div>
                         <div class="col-md-4">
                              <div class="col-md-6">
-                                <a href="/FireExp/import" title="Ellicott's Extension."><span
+                                <a href="{% url 'FireExp:import_from_file' %}" title="Ellicott's Extension."><span
                                         class="btn btn-danger">Import</span></a>
                             </div>
                             <div class="col-md-6">
-                                <a href="/FireExp/show_database" title="Display Database."><span
+                                <a href="{% url 'FireExp:show_database' %}" title="Display Database."><span
                                         class="btn btn-warning">Show Table</span></a>
                             </div>
 
@@ -73,7 +72,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="col-md-6">
-                                <a href="/FireExp/analysis_button" title="Ellicott's Extension."><span
+                                <a href="{% url 'FireExp:analysis_button' %}" title="Ellicott's Extension."><span
                                         class="btn btn-danger">Ellicott's Extension</span></a>
                             </div>
                            <div class="col-md-6">
