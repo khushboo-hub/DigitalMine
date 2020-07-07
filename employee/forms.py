@@ -141,7 +141,7 @@ class EmployeeForm(forms.ModelForm):
     mining_role = forms.ModelChoiceField(required=True, queryset=MiningRole.objects.all(),
                                          widget=forms.Select(attrs={'class': 'form-control', }))
 
-    immediate_staff = forms.ModelChoiceField(required=True, queryset=Employee.objects.all(),
+    immediate_staff = forms.ModelChoiceField(required=False, queryset=Employee.objects.all(),
                                              widget=forms.Select(attrs={'class': 'form-control'}))
     city = forms.CharField(required=True, widget=forms.TextInput(attrs={
         'class': 'form-control',
@@ -453,3 +453,17 @@ class MedicalReportForm(forms.ModelForm):
     class Meta():
         model = MedicalReport
         fields = ['report', 'file']
+
+class search_employee_form(forms.Form):
+    mine_id = forms.ModelChoiceField(queryset=MineDetails.objects.all(),
+                                     widget=forms.Select(attrs={
+                                         'class': 'form-control'}),
+                                     empty_label="Select Mine")
+
+    shift_id = forms.CharField(widget=forms.Select(attrs={
+        'class': 'form-control',
+        'required': False
+    }))
+    # class Meta():
+    #     model = ""
+    #     fields = "__all__"

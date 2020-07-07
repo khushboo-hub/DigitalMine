@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import training_attendance, training_attendance_details, Rescue_Records, Accident_Records, Employee, \
     MineShift, \
     EmployeeShiftAssign, MineDetails, Accident_Records_employees, Accident_Records_others
-from .forms import Training_Rescue_Accident_Form, Rescue_Form, Accident_Form, Training_Form, \
+from .forms import Rescue_Form, Accident_Form, Training_Form, \
     training_attendance_details_form,Accident_EmployeeForm,Accident_OthersForm
 # S S MISHRA
 @login_required
@@ -242,6 +242,7 @@ def Accident_index(request, template_name='Accident_index.html'):
         others_cause_post = request.POST.getlist('others_cause_post')
         employee_obj=[]
         others_obj=[]
+        print('form errors',form1.errors)
         if form1.is_valid():
             print("valid")
             form_id=form1.save()

@@ -1,12 +1,3 @@
-##################################################################################
-#     Created By: DEWANGSHU PANDIT
-#     Created On: Apr/-/July -2018
-#     Purpose :Mine Management,Role,Heirarchy,Medical, Employee Management etc
-#     Any Description:
-#     Last Modified:
-#     Modified function,any:
-##################################################################################
-
 import datetime
 
 import requests
@@ -22,7 +13,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView
 
 from accounts.utils import manager
-from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm
+from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm, search_employee_form
 from setting.utils import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
 from .models import MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
@@ -36,8 +27,8 @@ from django.utils.encoding import force_bytes
 from accounts.models import profile_extension, User
 from employee.models import Employee
 from django.db import IntegrityError
+from django.utils.crypto import get_random_string
 from django.template.defaulttags import register
-
 
 # Create your views here.
 @login_required
@@ -90,7 +81,6 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
 
 @login_required
-@manager
 def get_dropdownlist(request):
     data = {}
     if request.is_ajax():
@@ -641,7 +631,8 @@ def save_updated_shift(request):
 @login_required
 def details_employee_shift_assign(request, emp_id, template_name="employee/shift_assign_report.html"):
     data = {}
-    shiftassign_table = EmployeeShiftAssign.objects.filter(employee_id=emp_id)
+    shiftassign_table = EmployeeShiftAssign.objects.all()
+    print('Shift Assign Table',shiftassign_table)
     data['result'] = shiftassign_table
 
     return render(request, template_name, data)
@@ -748,10 +739,6 @@ def profile_ajax(request):
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
 
-
-from django.utils.crypto import get_random_string
-
-
 @login_required
 def validate_token(request):
     data = {}
@@ -778,3 +765,8 @@ def validate_token(request):
 def notify_user():
     # lookup user by id and send them a message
     print('NOTIFTY USER')
+#-------------------------------------------------------------------------------------------------
+# for search employee
+def search_emp(request):
+    form = search_employee_form()
+    return render(request,"employee/search_emp.html",{'form':form})

@@ -147,7 +147,7 @@ def fetch_shift(request):
         # print(employee_shift.query)
         emp_data = []
         for r in employee_shift:
-            emp_data.append({'id': r.id, 'shift_name': r.shift_name + "(" + r.time_from + "-" + r.time_to + ")"})
+            emp_data.append({'id': r.pk, 'shift_name': r.shift_name + "(" + r.time_from + "-" + r.time_to + ")"})
 
         data['result'] = emp_data
     else:

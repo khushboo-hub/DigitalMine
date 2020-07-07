@@ -17,6 +17,7 @@ class Install:
     libs = []
     wheels=[]
     def __init__(self,libs=None):
+    	print('Initialization')
         for l in libs:
             self.libs.append(l)
         self.getWheel()
@@ -67,6 +68,7 @@ class Install:
 
 
 if __name__ == "__main__":
+    print('Init')
     arguments = []
     exceptions=[]
     fileName=sys.argv[0]

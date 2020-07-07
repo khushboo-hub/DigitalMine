@@ -20,7 +20,8 @@
                                     <div class="col-md-4">
                                         <label>Choose Shift</label>
                                     </div>
-                                    <div class="col-md-8"> <span id="shift_id_span"><select required name="shift_id"
+                                    <div class="col-md-8"> <span id="shift_id_span">
+                                        <select required name="shift_id"
                                                                                             id="id_shift_id"
                                                                                             class="form-control"><option
                                             value="">------------------Select Shift------------------</option></select></span>
@@ -119,7 +120,7 @@
                                 </div>
                                 <div class="form-group col-md-12">
                                     <div class="col-md-3">
-                                        {{ form2.employee_name }}
+                                        {{ form2.employee_name}}
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
@@ -273,6 +274,7 @@
             });
             //FETCH MINE DETAILS
             $("#id_mine").change(function () {
+                console.log('shits here');
                 let mine_id = $(this).val();
                 Fetch_Miners(mine_id);
                 $.ajax({
@@ -282,7 +284,7 @@
                         'id': mine_id
                     },
                     success: function (data) {
-                        console.log(data);
+                        console.log('shits',data);
                         fill_dropdown_shift(data.result);
                         return data;
                     },

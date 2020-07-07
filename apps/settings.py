@@ -121,33 +121,33 @@ WSGI_APPLICATION = 'apps.wsgi.application'
 
 DATABASES = {
     #To use postgresl pip install psycopg2
-    # 'default': {
-
-        # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        # 'NAME': 'digi_mine',
-
-        # 'USER': 'postgres',
-
-        # 'PASSWORD': '$Password#',
-
-        # 'HOST': '127.0.0.1',
-
-        # 'PORT': '5432',
-
-    # }
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'iot',
-        'USER': 'csir',
-        'PASSWORD': 'tpo4pf9KlQEBGkNo',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'cimfr',
+
+        'USER': 'postgres',
+
+        'PASSWORD': '$Password#',
+
         'HOST': '127.0.0.1',
-        'OPTIONS':{
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
-        }
+
+        'PORT': '5432',
+
     }
+    # 'default': {
+    #     # 'ENGINE': 'django.db.backends.sqlite3',
+    #     # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'iot',
+    #     'USER': 'csir',
+    #     'PASSWORD': 'tpo4pf9KlQEBGkNo',
+    #     'HOST': '127.0.0.1',
+    #     'OPTIONS':{
+    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+    #     }
+    # }
 }
 
 # DATABASES = {

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load staticfiles %}
+    <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-header">Search Employee
+                        <small> Here we can search employee</small>
+                    </h3>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> From Date </label><span id="mine_id_span"></span><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label> To Date</label> <span id="shift_id_span">
+                                {{ form.shift_id }}
+                            </span><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> Select Mine </label><span id="mine_id_span">{{ form.mine_id }}</span><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label> Choose Shift </label> <span id="shift_id_span">
+                        {{ form.shift_id }}
+                            </span><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Trained Status</label><span id="mine_id_span">{{ form.mine_id }}</span><br>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Present Status </label> <span id="shift_id_span">
+                                {{ form.shift_id }}
+                            </span><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="fill_data"></div>
+                </div>
+            </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#id_training_date').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+        });
+    </script>
+{% endblock %}
