@@ -42,7 +42,7 @@ class Rescue_Records(models.Model):
 
 class Accident_Records(models.Model):
     mine = models.ForeignKey(MineDetails, on_delete=models.CASCADE, null=True, blank=True)
-    shift_id = models.IntegerField(null=True, blank=True)
+    shift_id = models.ForeignKey(MineShift,on_delete=models.CASCADE,null=True,blank=True)
     situation_mines = models.CharField(max_length=255, null=True, blank=True)
     name_address = models.CharField(max_length=255, null=True, blank=True)
     vil_pin = models.CharField(max_length=255, null=True, blank=True)
@@ -51,6 +51,8 @@ class Accident_Records(models.Model):
     killed_num = models.IntegerField(null=True, blank=True)
     injured_num = models.IntegerField(null=True, blank=True)
     accident_cause_description = models.CharField(max_length=255, null=True, blank=True)
+    def persons(self):
+        return Accident_Records_employees.objects.filter(accident_record=self.pk)
 
     class Meta:
         db_table = "accident_records"

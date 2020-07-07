@@ -190,6 +190,16 @@ class Employee(models.Model):
     def get_shift(self):
         return self.shift_id
 
+    def age(self):
+        dob = self.dob
+        dob = dob.strftime("%Y-%m-%d")
+        dob_year = str(dob[:4])
+        now = datetime.now()
+        curr_date = now.strftime("%Y-%m-%d")
+        curr_date_year = str(curr_date[:4])
+        age = (int(curr_date_year) - int(dob_year))
+        return age
+
     class Meta:
         db_table = "employee"
 

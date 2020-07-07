@@ -414,6 +414,7 @@
                 if (isEmpty(name_id) || isEmpty(killed_or_injured) || isEmpty(cause)) return false;
                 let markup = '<div class="form-group col-md-12">' +
                     '<div class="col-md-3">' +
+                    '<input type="hidden" name="employee_id_post"  value="' + name_id + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
                     '<input type="text" name="employee_name_post" value="' + name_text + '" class="form-control" required=""id="id_accident_location" autocomplete="off">' +
                     '</div>' +
                     '<div class="col-md-2">' +
