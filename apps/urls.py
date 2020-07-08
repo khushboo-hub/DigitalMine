@@ -39,6 +39,7 @@ urlpatterns = [
     path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
     path('setting/', include('setting.urls', namespace='setting')),
     path('Slope/', include('Slope.urls', namespace='Slope')),
+    path('safety/', include('safety.urls', namespace='safety')),
     # path('',include('pwa.urls')),
 ]
 

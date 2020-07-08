@@ -4,7 +4,7 @@
     <style>
     @media print {
         body{
-            height: 0%;
+            height: 0% !important;
         }
     }
     </style>
@@ -23,7 +23,7 @@
                             <div class="col-md-4">
                                 <div class="input-group date" id="date_from_time_picker">
                                     <input type="text" name="from_date" class="form-control" placeholder="From Date"
-                                           id="id_date_fr"  autocomplete="off">
+                                           id="id_date_fr" autocomplete="off">
 
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
@@ -167,7 +167,7 @@
                         exportOptions: {
                             columns: [0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14]
                         },
-                        autoPrint: false
+                        autoPrint: true
                     },
                     {
                         extend: 'print',
