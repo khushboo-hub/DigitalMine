@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+    <style>
+    @media print {
+        body{
+            height: 0%;
+        }
+    }
+    </style>
     <div class="container">
         <div class="row">
             <section class="col-md-12">
@@ -17,7 +23,7 @@
                             <div class="col-md-4">
                                 <div class="input-group date" id="date_from_time_picker">
                                     <input type="text" name="from_date" class="form-control" placeholder="From Date"
-                                           id="id_date_fr" required="" autocomplete="off">
+                                           id="id_date_fr"  autocomplete="off">
 
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
@@ -26,7 +32,7 @@
                             <div class="col-md-4">
                                 <div class="input-group date" id="date_to_time_picker">
                                     <input type="text" name="to_date" class="form-control" placeholder="To Date"
-                                           id="id_date_to" required="" autocomplete="off">
+                                           id="id_date_to" autocomplete="off">
 
                                     <span class="input-group-addon"><span
                                             class="glyphicon glyphicon-calendar"></span></span>
@@ -98,13 +104,18 @@
                                     <td>{{ book.h2 }}</td>
                                     <td>{{ book.n2 }}</td>
                                     <td>{{ book.c2h4 }}</td>
-                                     <td>{{ book.findExplosibility.graham }}<br>({{ book.findExplosibility.graham_ratio|floatformat:2 }})</td>
-                                    <td>{{ book.findExplosibility.young }}<br>({{ book.findExplosibility.young_ratio|floatformat:2 }})</td>
-                                    <td>{{ book.findExplosibility.coco2 }}<br>({{ book.findExplosibility.coco2_ratio|floatformat:2 }})</td>
-                                    <td>{{ book.findExplosibility.jtr }}<br>({{ book.findExplosibility.jtr_ratio|floatformat:2 }})</td>
-                                    <td>{{ book.findExplosibility.chra }}<br>({{book.findExplosibility.chra_ratio|floatformat:2 }})</td>
+                                    <td>{{ book.findExplosibility.graham }}<br>({{ book.findExplosibility.graham_ratio|floatformat:2 }})
+                                    </td>
+                                    <td>{{ book.findExplosibility.young }}<br>({{ book.findExplosibility.young_ratio|floatformat:2 }})
+                                    </td>
+                                    <td>{{ book.findExplosibility.coco2 }}<br>({{ book.findExplosibility.coco2_ratio|floatformat:2 }})
+                                    </td>
+                                    <td>{{ book.findExplosibility.jtr }}<br>({{ book.findExplosibility.jtr_ratio|floatformat:2 }})
+                                    </td>
+                                    <td>{{ book.findExplosibility.chra }}<br>({{ book.findExplosibility.chra_ratio|floatformat:2 }})
+                                    </td>
                                     <td>{{ book.findExplosibility.explosibility }}</td>
-                                <td>{{ book.graph.x }}</td>
+                                    <td>{{ book.graph.x }}</td>
                                     <td>{{ book.graph.y }}</td>
                                     <td>{{ book.graph.quadrant }}</td>
                                     <td>{{ book.graph.color }}</td>
@@ -114,14 +125,16 @@
                         </table>
                     </div><!--end Table content -->
                 </div>
-             <hr>
+                <hr>
                 <div class="text-center">
-                    <a href="{% url 'FireExp:manual_entry' %}"><button type="button" class="btn btn-success">Go Back</button></a>
+                    <a href="{% url 'FireExp:manual_entry' %}">
+                        <button type="button" class="btn btn-success">Go Back</button>
+                    </a>
                 </div>
             </section>
         </div>
     </div>
-      <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -147,7 +160,24 @@
             $('table#content').DataTable({
                 dom: 'Bflrtip',
                 buttons: [
-                    'copy', 'excel', 'pdf', 'csv', {
+                    'copy',
+                    'excel',
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14]
+                        },
+                        autoPrint: false
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3,4,5,6,7,8,9,10,11,12,13,14]
+                        },
+                        autoPrint: true
+                    },
+                    'csv',
+                    {
                         text: 'Graph',
                         action: function (e, dt, node, config) {
 
@@ -159,14 +189,15 @@
                     let tabledata = settings.aoData;
                     GenerateGraph(tabledata);
                 },
-                 "columnDefs": [
+                "columnDefs": [
                     {
                         "targets": [15, 16, 17, 18],
                         "visible": false
                     }
                 ]
 
-            })
+            });
+
             function GenerateGraph(tabledata) {
 
                 var x_list = [[0], [0], [0], [0]];

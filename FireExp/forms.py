@@ -1,7 +1,7 @@
 from django import forms
-from .models import  Fire_exp_gases
+from .models import  Gasdb
 
-class FireForm(forms.Form):
+class FireForm(forms.ModelForm):
     o2 = forms.FloatField(label=' O2%',widget=forms.NumberInput(attrs={
         'class':'form-control',
         'min':0,
@@ -37,7 +37,7 @@ class FireForm(forms.Form):
         }))
 
     class Meta():
-        model = Fire_exp_gases
+        model = Gasdb
         fields = ['o2', 'co', 'ch4', 'co2', 'h2', 'n2', 'c2h4', 'date']
 
 
