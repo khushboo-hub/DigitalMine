@@ -1,21 +1,17 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render, HttpResponse, get_object_or_404
-from accounts.models import profile_extension, User
+from accounts.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CarousalPhotoUploadForm
-from django.core import serializers
-from employee.models import MineDetails
+
+from employee.views import notify_user
 from accounts.models import profile_extension
 import datetime
-from django.conf import settings
-from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
 from django.core.cache import cache
 
 @login_required
 def home(request):
+    notify_user()
     template_name = "home.html"
     try:
         if request.session['lang'] == 'in':

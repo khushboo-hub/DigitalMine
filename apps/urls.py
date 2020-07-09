@@ -3,7 +3,6 @@ from django.conf.urls.static import static
 from django.urls import include, path
 from django.contrib import admin
 from theme import views
-# from employee.views import notify_user
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,7 +42,7 @@ urlpatterns = [
     # path('',include('pwa.urls')),
 ]
 
-# notify_user()
+
 
 if settings.DEBUG:
     import debug_toolbar

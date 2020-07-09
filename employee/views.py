@@ -768,9 +768,14 @@ def validate_token(request):
     return JsonResponse(data)
 
 
-@background(schedule=10)
+@background(schedule=60)
 def notify_user():
     # lookup user by id and send them a message
+    employees=Employee.objects.all()
+
+    for emp in employees:
+        medical=MedicalReport.objects.filter(pk=emp).order_by('-id')[0]
+        print('medical',medical)
     print('NOTIFTY USER')
 #-------------------------------------------------------------------------------------------------
 # for search employee
