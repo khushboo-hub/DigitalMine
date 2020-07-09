@@ -157,7 +157,7 @@ class Employee(models.Model):
     medical_ins_no = models.CharField(max_length=30, blank=True, null=True)
     date_of_exit = models.DateField(blank=True, null=True)  # new
     reason_of_exit = models.CharField(max_length=50, null=True, blank=True)  # new
-    uan = models.CharField(max_length=50, null=True, blank=True)  # new
+    uan = models.CharField(max_length=100,null=True,blank=True)  # new
 
     #########  Bank Details   #################
     bank_name = models.CharField(max_length=50, blank=True, null=True)

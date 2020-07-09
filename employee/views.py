@@ -67,7 +67,8 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST or None, request.FILES or None)
-        # form.fields['mine'].widget.attrs['disabled'] = False
+        print(form.fields['uan'].value)
+        print('form errors',form.errors)
         if form.is_valid():
             employee = form.save()
             # fs=profile_extension()
@@ -107,12 +108,14 @@ def employee_edit(request, pk, template_name='employee/employee_add.html'):
     form = EmployeeForm(request.POST or None, request.FILES or None, instance=book)
     form.fields['mine'].widget.attrs['readonly'] = True
     form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
-    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id)
+    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id).exclude(pk=book.pk)
     if form.is_valid():
         try:
             form.save()
+            messages.success(request,"Successful")
             return redirect('employee:employee_manage')
         except Exception as e:
+            messages.error(request,str(e))
             print("error msg-->", e)
 
     return render(request, template_name, {'form': form})
@@ -192,6 +195,10 @@ def more_details_ajax(request):
     data['error'] = "Something Went Wrong"
     return JsonResponse(data)
 
+
+def employee_view(request,pk,template_name='employee/employeeView.html'):
+    employee=Employee.objects.get(pk=pk)
+    return render(request,template_name,{'form':employee})
 
 @login_required
 def generate_login_details_ajax(request):
@@ -770,3 +777,5 @@ def notify_user():
 def search_emp(request):
     form = search_employee_form()
     return render(request,"employee/search_emp.html",{'form':form})
+
+

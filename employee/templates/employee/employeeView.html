@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% block content %}
+    <style>
+        @media print {
+            body {
+                height: 0%;
+            }
+
+            div.main {
+                padding-top: 0%;
+            }
+
+            button, a#go-back, input#print, div.spacer, div#form-not-print {
+                display: none !important;
+            }
+
+            tr.header {
+                background-color: #f1e6d6 !important;
+                font-size: 1.0em !important;
+            }
+        }
+
+        tr.header {
+            background-color: #f1e6d6 !important;
+            font-size: 1.0em !important;
+        }
+
+        .table-data {
+            font-size: 1.0em;
+        }
+
+    </style>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header text-center"><b>EMPLOYEE DETAILS</b></h3>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Personal Details</span></legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Employee Name</th>
+                                        <th class="text-center">Employee Id</th>
+                                        <th class="text-center">Fathers Name</th>
+                                        <th class="text-center">Email</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.name }}</td>
+                                        <td class="text-center">{{ form.empid }}</td>
+                                        <td class="text-center">{{ form.father_name }}</td>
+                                        <td class="text-center">{{ form.email }}</td>
+                                    </tr>
+
+                                    <tr class="header">
+                                        <th class="text-center"><span id="permanent_address">Date of birth</span></th>
+                                        <th class="text-center"><span id="state">Mobile No</span></th>
+                                        <th class="text-center">Blood Group</th>
+                                        <th class="text-center">Identification Mark</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.dob }}</td>
+                                        <td class="text-center">{{ form.mob }}</td>
+                                        <td class="text-center">{{ form.blood_group }}</td>
+                                        <td class="text-center">{{ form.identification_mark }}</td>
+                                    </tr>
+
+                                    <tr class="header">
+
+                                        <th class="text-center">Gender</th>
+                                        <th class="text-center">Marital Status</th>
+                                        <th class="text-center"><span id="present_address">Spouse</span></th>
+                                        <th class="text-center"><span id="permanent_address">Nationality</span></th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.gender }}</td>
+                                        <td class="text-center">{{ form.marital_status }}</td>
+                                        <td class="text-center">{{ form.spouse }}</td>
+                                        <td class="text-center">{{ form.nationality }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Address</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Present Address</th>
+                                        <th class="text-center">Permanent Address</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">
+                                            {{ form.present_address }}
+                                        </td>
+                                        <td class="text-center">{{ form.permanent_address }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                     <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                     <tr class="header">
+                                        <th class="text-center">State</th>
+                                        <th class="text-center">City</th>
+                                         <th class="text-center">Pin</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.state }}</td>
+                                        <td class="text-center">{{ form.city }}</td>
+                                         <td class="text-center">{{ form.pin }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Mining Info</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Mine</th>
+                                        <th class="text-center">RFID</th>
+                                        <th class="text-center">Mining Role</th>
+                                        <th class="text-center">Immediate Staff</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.mine.name }}</td>
+                                        <td class="text-center">{{ form.rfid }}</td>
+                                        <td class="text-center">{{ form.role }}</td>
+                                        <td class="text-center">{{ form.immediate_staff }}</td>
+                                    </tr>
+
+                                    <tr class="header">
+                                        <th class="text-center"><span id="permanent_address">Date of Joining</span></th>
+                                        <th class="text-center"><span id="state">Retirement Date</span></th>
+                                        <th class="text-center">Job Type</th>
+                                        <th class="text-center">Category Address</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.date_of_joining }}</td>
+                                        <td class="text-center">{{ form.retirement_date }}</td>
+                                        <td class="text-center">{{ form.job_type }}</td>
+                                        <td class="text-center">{{ form.category_address }}</td>
+                                    </tr>
+
+                                    <tr class="header">
+
+                                        <th class="text-center">Token No</th>
+                                        <th class="text-center">Mining Type/Category</th>
+                                        <th class="text-center"><span id="present_address">Designation</span></th>
+                                        <th class="text-center"><span id="permanent_address">is Rescue</span></th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.token_no }}</td>
+                                        <td class="text-center">{{ form.cat_type }}</td>
+                                        <td class="text-center">{{ form.designation }}</td>
+                                        <td class="text-center">{{ form.is_rescue }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Additional Info</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Aadhaar No</th>
+                                        <th class="text-center">PAN No</th>
+                                        <th class="text-center">Medical Status/Description</th>
+                                        <th class="text-center">Medical Ins. No</th>
+
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.aadhaar_no }}</td>
+                                        <td class="text-center">{{ form.pan_no }}</td>
+                                        <td class="text-center">{{ form.medical_status }}</td>
+                                        <td class="text-center">{{ form.medical_ins_no }}</td>
+                                    </tr>
+
+                                    <tr class="header">
+                                        <th class="text-center">ESIC IP</th>
+                                        <th class="text-center">LWF</th>
+                                        <th class="text-center">Service Book No</th>
+                                        <th class="text-center">UAN</th>
+
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.esic_ip }}</td>
+                                        <td class="text-center">{{ form.lwf }}</td>
+                                        <td class="text-center">{{ form.service_book_no }}</td>
+                                        <td class="text-center">{{ form.uan }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                 <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Voter ID No</th>
+                                        <th class="text-center">Remarks</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.voter_id_no }}</td>
+                                        <td class="text-center">{{ form.remarks }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br><br>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Exit</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Date of Exit</th>
+                                        <th class="text-center">Reason of Exit</th>
+
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.date_of_exit }}</td>
+                                        <td class="text-center">{{ form.reason_of_exit }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br><br>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Last Qualification</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Course/Exam/Degree Name</th>
+                                        <th class="text-center">Board/University Name</th>
+                                        <th class="text-center">Passing Year</th>
+                                        <th class="text-center">Percentage</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.edu_course_name }}</td>
+                                        <td class="text-center">{{ form.edu_board_name }}</td>
+                                        <td class="text-center">{{ form.edu_year }}</td>
+                                        <td class="text-center">{{ form.edu_percent }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+
+                        <br/><br/>
+                        <fieldset class="scheduler-border">
+                            <legend class="scheduler-border"><span style="color: blue; ">Bank Details</span>
+                            </legend>
+                            <div class="table-responsive">
+                                <table style="width: 100%;"
+                                       class="table-striped table-bordered table-hover table-condensed">
+                                    <tbody>
+                                    <tr class="header">
+                                        <th class="text-center">Bank Name</th>
+                                        <th class="text-center">A/C No</th>
+                                        <th class="text-center">IFSC Code</th>
+                                        <th class="text-center">PF No</th>
+                                    </tr>
+                                    <tr class="table-data">
+                                        <td class="text-center">{{ form.bank_name }}</td>
+                                        <td class="text-center">{{ form.bank_ac_no }}</td>
+                                        <td class="text-center">{{ form.bank_ifsc }}</td>
+                                        <td class="text-center">{{ form.bank_pf_no }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                        <br/><br/>
+                        <div class="text-center">
+                            <input class="btn btn-primary" id="print" type="submit" value="Print"/>
+                        </div>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+    </div>
+    <style>
+        fieldset.scheduler-border {
+            padding: 0 10px 10px 10px;
+            border: 1px solid #DDD !important;
+        }
+
+        legend.scheduler-border {
+            width: auto !important;
+            border: none;
+        }
+
+        legend.scheduler-border {
+            font-size: 14px;
+        }
+
+        fieldset ul {
+            list-style: none
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('input#print').click(function () {
+                window.print();
+            });
+        });
+
+    </script>
+    <style>
+        .red-tooltip + .tooltip > .tooltip-inner {
+            background-color: #fff;
+        }
+
+        .red-tooltip + .tooltip > .tooltip-arrow {
+            border-bottom-color: #fff;
+        }
+
+        .highlight-error {
+            border-color: red;
+        }
+
+    </style>
+{% endblock %}
+

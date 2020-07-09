@@ -153,7 +153,7 @@ class EmployeeForm(forms.ModelForm):
     }))
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect())
     marital_status = forms.ChoiceField(choices=MARITAL_STATUS, widget=forms.RadioSelect())
-    spouse_name = forms.CharField(required=True, widget=forms.TextInput(attrs={
+    spouse_name = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'Spouse Name'
     }))
@@ -174,7 +174,7 @@ class EmployeeForm(forms.ModelForm):
         'class': 'form-control',
         'placeholder': 'LWF '
     }))
-    uan = forms.CharField(required=True, widget=forms.TextInput(attrs={
+    uan = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'class': 'form-control',
         'placeholder': 'UAN '
     }))
@@ -306,7 +306,7 @@ class EmployeeForm(forms.ModelForm):
                   'bank_name', 'bank_ac_no', 'bank_ifsc', 'bank_pf_no', 'edu_course_name', 'edu_board_name', 'edu_year',
                   'edu_percent',
                   'spouse_name', 'nationality', 'identification_mark', 'signature', 'category_address', 'esic_ip',
-                  'lwf', 'date_of_exit',
+                  'lwf', 'date_of_exit','uan',
                   'reason_of_exit', 'service_book_no', 'remarks']
         widgets = {
             'date_of_joining': forms.DateInput(attrs={'class': 'datepicker'}),

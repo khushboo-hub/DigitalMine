@@ -42,18 +42,18 @@
                 }
 
 
-            button.close {
-                visibility: hidden !important;
-            }
+                button.close {
+                    visibility: hidden !important;
+                }
 
-            #printSection * {
-                visibility: visible !important;
-                overflow: visible !important;
-            }
+                #printSection * {
+                    visibility: visible !important;
+                    overflow: visible !important;
+                }
 
-            .header {
-            background-color: #f1e6d6 !important;
-            }
+                .header {
+                    background-color: #f1e6d6 !important;
+                }
 
                 .modal {
                     position: absolute;
@@ -129,20 +129,25 @@
                                         </td>
 
 
-                                        <td class="text-center"><span class="btn btn-info btn-sm more_details"
-                                                                      data-toggle="tooltip"
-                                                                      data-url="{% url 'employee:more_details_ajax' %}"
+                                        <td class="text-center">
 
-                                                                      id="{{ book.id }}"
-                                                                      title="Click here to get more details">More Details</span>
-                                            <br>
-                                            <br>
-                                            <span class="btn btn-info btn-sm generate_login"
-                                                  data-toggle="tooltip"
-                                                  data-url="{% url 'employee:generate_login_details_ajax' %}"
-                                                  data-email="{{ book.email }}"
-                                                  id="{{ book.id }}"
-                                                  title="Click here generate Login">Generate Login</span>
+                                            <a href="{% url 'employee:employee_view' book.id %}" target="_blank"><span
+                                                    class="btn btn-info btn-sm more_details"
+                                                    title="Click here to get more details">More Details</span></a>
+                                                {#                                            <span class="btn btn-info btn-sm more_details"#}
+                                                {#                                                                      data-toggle="tooltip"#}
+                                                {#                                                                      data-url="{% url 'employee:more_details_ajax' %}"#}
+                                                {##}
+                                                {#                                                                      id="{{ book.id }}"#}
+                                                {#                                                                      title="Click here to get more details">More Details</span>#}
+                                                <br>
+                                                <br>
+                                                <span class="btn btn-info btn-sm generate_login"
+                                                      data-toggle="tooltip"
+                                                      data-url="{% url 'employee:generate_login_details_ajax' %}"
+                                                      data-email="{{ book.email }}"
+                                                      id="{{ book.id }}"
+                                                      title="Click here generate Login">Generate Login</span>
 
 
                                         </td>
