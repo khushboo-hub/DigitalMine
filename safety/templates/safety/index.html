@@ -1,235 +1,238 @@
 {% extends "base.html" %}
 {% block content %}
-{% load static %}
-<div class="container">
-    <div class="row">
-        <section class="col-md-12">
-            <div class="row text-center">
-                <h3 class="page-header"><b>STATUS REPORT ON PROGRESS MADE INTO MITIGATION OF ALL THE IDENTIFIED
+    {% load static %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <div class="row text-center">
+                    <h3 class="page-header"><b>STATUS REPORT ON PROGRESS MADE INTO MITIGATION OF ALL THE IDENTIFIED
                         PRINCIPAL HAZARDS</b>
-                    <small>Here you can add/edit status report</small></h3>
-            </div>
-            <!-- Table content -->
-            <div class="row">
-                <div class="form-group">
-                    <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
-                        <fieldset class="scheduler-border">
-                            <legend class="scheduler-border">
-                                <span style="color: blue; "> Mine Details</span>
-                            </legend>
-                            <div class="row">
+                        <small>Here you can add/edit status report</small>
+                    </h3>
+                </div>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                        <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
+                            <fieldset class="scheduler-border">
+                                <legend class="scheduler-border">
+                                    <span style="color: blue; "> Mine Details</span>
+                                </legend>
+                                <div class="row">
 
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_empid" class="" id="emp">Name of the Mine :<span
-                                                style="color: red; ">*
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_empid" class="" id="emp">Name of the Mine :<span
+                                                    style="color: red; ">*
                                             </span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form1.mine}}
-                                        <span style="color:red">{{form1.Mine.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_own" class="" id="own">Name of the Owner: <span
-                                                style="color: red; ">*
-                                            </span></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form1.owner}}
-                                        <span style="color:red">{{form1.owner.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_agent" class="" id="agent1"> Name of the Agent: <span
-                                                style="color: red; ">
-                                                *</span></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form1.agent}}
-                                        <span style="color:red">{{form1.agent.errors|striptags}}</span>
-
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_own" class="" id="manag">Name of the Manager:<span
-                                                style="color: red; ">*
-                                            </span></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        {{form1.manager}}
-                                        <span style="color:red">{{form1.manager.errors|striptags}}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="col-md-4">
-                                        <label for="id_status" class="" id=""> Status report for the quarter ending on:
-                                            <span style="color: red; ">*</span></label>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class='input-group date' id='doo_date_time_picker'>
-                                            {{form1.status_report}}
-
-                                            <span class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
-                                            </span>
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form1.mine }}
+                                            <span style="color:red">{{ form1.Mine.errors|striptags }}</span>
                                         </div>
                                     </div>
-                                    <span style="color:red">{{form1.status_report.errors|striptags}}</span>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_own" class="" id="own">Name of the Owner: <span
+                                                    style="color: red; ">*
+                                            </span></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form1.owner }}
+                                            <span style="color:red">{{ form1.owner.errors|striptags }}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <br>
-                        
-                            <div class=table-table-resposive>
-                                <table class="table table-striped table-bordered" id="test">
-                                    <thead>
-                                            <th>List of Principal Hazard
-                                                Identified.</th>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_agent" class="" id="agent1"> Name of the Agent: <span
+                                                    style="color: red; ">
+                                                *</span></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form1.agent }}
+                                            <span style="color:red">{{ form1.agent.errors|striptags }}</span>
 
-                                            <th>Mitigation Date as per
-                                                formulated SMP.</th>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_own" class="" id="manag">Name of the Manager:<span
+                                                    style="color: red; ">*
+                                            </span></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ form1.manager }}
+                                            <span style="color:red">{{ form1.manager.errors|striptags }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="id_status" class="" id=""> Status report for the quarter ending
+                                                on:
+                                                <span style="color: red; ">*</span></label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class='input-group date' id='doo_date_time_picker'>
+                                                {{ form1.status_report }}
 
-                                            <th>Details of auditable
-                                                work plans made for mitigation.</th>
+                                                <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </span>
+                                            </div>
+                                        </div>
+                                        <span style="color:red">{{ form1.status_report.errors|striptags }}</span>
+                                    </div>
+                                </div>
+                                <br>
 
-                                            <th>Actual date of completion
-                                                as per workplan.</th>
-                                            <th>Remarks, if any</th>
-                                            <th></th>
-                                    </thead>
-                                    <tbody>
+                                <div class=table-table-resposive>
+                                    <table class="table table-striped table-bordered" id="test">
+                                        <thead>
+                                        <th>List of Principal Hazard
+                                            Identified.
+                                        </th>
+
+                                        <th>Mitigation Date as per
+                                            formulated SMP.
+                                        </th>
+
+                                        <th>Details of auditable
+                                            work plans made for mitigation.
+                                        </th>
+
+                                        <th>Actual date of completion
+                                            as per workplan.
+                                        </th>
+                                        <th>Remarks, if any</th>
+                                        <th></th>
+                                        </thead>
+                                        <tbody>
                                         {% for f in form2 %}
-                                        <tr>
-                                                <input type="hidden" name="safetytable_id" value="{{f.instance.id}}"  />
-                                            <td>{{f.print_hazard}}
-                                                <span style="color:red">{{form2.print_hazard.errors|striptags}}</span>
-                                            </td>
-                                            <td>
-                                                <div class='input-group date' id='doo2_date_time_picker'>
-                                                    {{f.mit_date}}
-                                                    <span class="input-group-addon">
+                                            <tr>
+                                                <input type="hidden" name="safetytable_id" value="{{ f.instance.id }}"/>
+                                                <td>{{ f.print_hazard }}
+                                                    <span style="color:red">{{ form2.print_hazard.errors|striptags }}</span>
+                                                </td>
+                                                <td>
+                                                    <div class='input-group date' id='doo2_date_time_picker'>
+                                                        {{ f.mit_date }}
+                                                        <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
-                                                </div>
-                                            </td>
+                                                    </div>
+                                                </td>
 
-                                            <td>{{f.auditable_work}}
-                                                <span style="color:red">{{form2.auditable_work.errors|striptags}}</span>
-                                            </td>
-                                            <td>
-                                                <div class='input-group date' id='doo_date_time_picker'>
-                                                    {{f.comp_date}}
-                                                    <span class="input-group-addon">
+                                                <td>{{ f.auditable_work }}
+                                                    <span style="color:red">{{ form2.auditable_work.errors|striptags }}</span>
+                                                </td>
+                                                <td>
+                                                    <div class='input-group date' id='doo_date_time_picker'>
+                                                        {{ f.comp_date }}
+                                                        <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
-                                                </div>
-                                            </td>
-                                            <td>{{f.remarks}}</td>
-                                            <td><a href="#"><span id="delete-row" class="glyphicon glyphicon-trash"></span></a></td>
-                                        </tr>
+                                                    </div>
+                                                </td>
+                                                <td>{{ f.remarks }}</td>
+                                                <td><a href="#"><span id="delete-row"
+                                                                      class="glyphicon glyphicon-trash delete-row"></span></a>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
-                                    </tbody>
-                                    <br>
+                                        </tbody>
+                                        <br>
 
-                                </table>
-                            </div>
-                            <button id="btnAdd" type="button" class="btn btn-primary add_field_button"
-                                data-toggle="tooltip" data-original-title="Add more controls"><i
-                                    class="glyphicon glyphicon-plus-sign"></i>&nbsp;
-                                Add&nbsp;</button>
-                            <button id="btnRemove" type="button" class="btn btn-primary remove_field_button"
-                                remove-button data-toggle="tooltip" data-original-title="Remove more controls"><i
-                                    class="glyphicon glyphicon-minus-sign"></i>&nbsp; Remove&nbsp;</button>
-                            <br>
-                            <br>
-                            <div class="text-center">
-                                <input type="submit" class="btn btn-primary" value="Submit" />
-                            </div>
-                        </fieldset>
-                    </form>
+                                    </table>
+                                </div>
+                                <button id="btnAdd" type="button" class="btn btn-primary add_field_button"
+                                        data-toggle="tooltip" data-original-title="Add more controls">Add <i
+                                        class="glyphicon glyphicon-plus-sign"></i>&nbsp;
+                                </button>
+                                <br>
+                                <br>
+                                <div class="text-center">
+                                    <input type="submit" class="btn btn-primary" value="Submit"/>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <!--end Table content -->
-        </section>
+                <!--end Table content -->
+            </section>
+        </div>
     </div>
-</div>
-<style>
-    fieldset.scheduler-border {
-        border: solid 1px #DDD !important;
-        padding: 0 10px 10px 10px;
-        border-bottom: none;
-    }
-
-    legend.scheduler-border {
-        width: auto !important;
-        border: none;
-        font-size: 14px;
-    }
-
-    fieldset ul {
-        list-style: none
-    }
-    .red-tooltip+.tooltip>.tooltip-inner {
-        background-color: #fff;
-    }
-
-    .red-tooltip+.tooltip>.tooltip-arrow {
-        border-bottom-color: #fff;
-    }
-</style>
-<script>
-    $(document).ready(function () {
-      $(function () {
-
-            var date_from = $('.date').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-            date_from.children()[0].id = "id_date_fr";
-            date_from.children()[0].required = "true";
-        });
-        var max_fields = 100;
-        var wrapper = $("#fields");
-        $('button#btnAdd').click(function (e) {
-            e.preventDefault();
-            $('#test').append(
-                '<tr>' +
-                '<td><input type="text" name="print_hazard"  maxlength="500" required="" id="id_print_hazard"></td>' +
-                '<td><div class="input-group date" id="doo2_date_time_picker">' +
-                '<input type="text" name="mit_date" required="" id="id_mit_date"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>' +
-                '</div></td>' +
-                '<td><input type="text" name="auditable_work" maxlength="1000" required="" id="id_auditable_work"></td>' +
-                '<td><div class="input-group date" id="doo_date_time_picker">' +
-                '<input type="text" name="comp_date" required="" id="id_comp_date">' +
-                ' <span class="input-group-addon">' +
-                '<span class="glyphicon glyphicon-calendar">' + '</span>' +
-                '</span></div></td>' +
-                '<td><input type="text" name="remarks" maxlength="200" required="" id="id_remarks"></td></tr>');
-            var date_from = $('.date').datetimepicker({
-                format: 'YYYY-MM-DD'
-            });
-
-        });
-        $('button#btnRemove').click(function (e) {
-            e.preventDefault();
-           // console.log('button clicked')
-        //    $('table#test').find("tr:gt(1)").remove();
-        if($('table#test tbody>tr').length>1){
-           $('table#test').find("tr:last").remove();
+    <style>
+        fieldset.scheduler-border {
+            border: solid 1px #DDD !important;
+            padding: 0 10px 10px 10px;
+            border-bottom: none;
         }
+
+        legend.scheduler-border {
+            width: auto !important;
+            border: none;
+            font-size: 14px;
+        }
+
+        fieldset ul {
+            list-style: none
+        }
+
+        .red-tooltip + .tooltip > .tooltip-inner {
+            background-color: #fff;
+        }
+
+        .red-tooltip + .tooltip > .tooltip-arrow {
+            border-bottom-color: #fff;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $(function () {
+
+                var date_from = $('.date').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+                date_from.children()[0].id = "id_date_fr";
+                date_from.children()[0].required = "true";
+            });
+            var max_fields = 100;
+            var wrapper = $("#fields");
+            $('button#btnAdd').click(function (e) {
+                e.preventDefault();
+                $('#test').append(
+                    '<tr>' +
+                    '<td><input type="text" name="print_hazard"  maxlength="500" required="" id="id_print_hazard"></td>' +
+                    '<td><div class="input-group date" id="doo2_date_time_picker">' +
+                    '<input type="text" name="mit_date" required="" id="id_mit_date"><span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>' +
+                    '</div></td>' +
+                    '<td><input type="text" name="auditable_work" maxlength="1000" required="" id="id_auditable_work"></td>' +
+                    '<td><div class="input-group date" id="doo_date_time_picker">' +
+                    '<input type="text" name="comp_date" required="" id="id_comp_date">' +
+                    ' <span class="input-group-addon">' +
+                    '<span class="glyphicon glyphicon-calendar">' + '</span>' +
+                    '</span></div></td>' +
+                    '<td><input type="text" name="remarks" maxlength="200" required="" id="id_remarks"></td>' +
+                    '<td><a href="#"><span id="delete-row" class="glyphicon glyphicon-trash delete-row"></span></a></td></tr>');
+                var date_from = $('.date').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+
+            });
+            $("body").delegate("span.delete-row", "click", function () {
+                let row = $(this).parent().parent().parent();
+                if (confirm("R u sure you want to delete this row")) {
+                    row.remove();
+                }
+            });
         });
-        $('span#delete-row').click(function(){
-           $(this).parent().parent().parent().remove();
-        });
-    });
-</script>
+        var x;
+    </script>
 {% endblock %}
