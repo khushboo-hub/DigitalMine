@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from safety.forms import SafetyForm, SafetyTableForm
 from safety.models import Safety, SafetyTable
@@ -33,29 +34,12 @@ def safe(request):
     return render(request, 'safety/index.html', {'form1': form1, 'form2': form2})
 
 
-def show(request):
-    form = SafetyForm()
-    safety = []
-    mine = ""
-    owner = ""
-    agent = ""
-    manager = ""
-    status_report = ""
-    safetytable = []
-    if request.method == "POST":
-        mine = request.POST.get('mine')
-        owner = request.POST.get('owner')
-        agent = request.POST.get('agent')
-        manager = request.POST.get('manager')
-        status_report = request.POST.get('status_report')
-        safety = Safety.objects.filter(mine=mine, owner=owner, agent=agent, manager=manager)
-        for s in safety:
-            safetytable.append(SafetyTable.objects.filter(safety_id=s))
+def show(request,pk,template_name='safety/show.html'):
+    safetytable=[]
+    safety = Safety.objects.get(pk=pk)
+    safetytable.append(SafetyTable.objects.filter(safety_id=safety))
 
-    return render(request, 'safety/show.html',
-                  {'form': form, 'safetytable': safetytable, 'mine': mine, 'owner': owner, 'agent': agent,
-                   'manager': manager,
-                   'status_report': status_report})
+    return render(request, template_name,{'safetytable': safetytable,'safety':safety})
 
 
 def manage(request):
@@ -76,21 +60,21 @@ def edit(request, pk, template_name='safety/index.html'):
 
     if request.method=="POST":
         print('present_ids',present_ids)
+        try:
+            form2=[]
+            print_hazard = request.POST.getlist('print_hazard')
+            mit_date = request.POST.getlist('mit_date')
+            auditable_work = request.POST.getlist('auditable_work')
+            comp_date = request.POST.getlist('comp_date')
+            remarks = request.POST.getlist('remarks')
+            safety_ids=request.POST.getlist('safetytable_id')
+            print('safety_ids',safety_ids)
+            if form1.is_valid():
+                form1.save()
+            i=0
+            for id in safety_ids: # 1 2 3 1 2
+                current_ids.append(int(id))
 
-        form2=[]
-        print_hazard = request.POST.getlist('print_hazard')
-        mit_date = request.POST.getlist('mit_date')
-        auditable_work = request.POST.getlist('auditable_work')
-        comp_date = request.POST.getlist('comp_date')
-        remarks = request.POST.getlist('remarks')
-        safety_ids=request.POST.getlist('safetytable_id')
-        print('safety_ids',safety_ids)
-        if form1.is_valid():
-            form1.save()
-        i=0
-        for id in safety_ids: # 1 2 3 1 2
-            current_ids.append(int(id))
-            try:
                 instance = SafetyTable.objects.get(pk=id)
                 instance.print_hazard=print_hazard[i]
                 instance.mit_date=mit_date[i]
@@ -100,28 +84,28 @@ def edit(request, pk, template_name='safety/index.html'):
                 instance.save()
                 print('instance',instance.remarks)
                 form2.append(SafetyTableForm(instance=instance))
-            except Exception as e:
-                print('exception',e)
-            i+=1
-        try:
-            print('current_ids',present_ids[len(current_ids)])
-            cc=present_ids[len(current_ids):]
-            print('cc',cc)
+                i+=1
+            cc=list(set(present_ids).difference(current_ids))
 
             for c in cc:
                 instance = SafetyTable.objects.get(pk=c)
                 instance.delete()
-        except:
+
+            for j in range(i, len(print_hazard)):
+                safety_table=SafetyTable(safety_id=safety_instance,
+                                                print_hazard=print_hazard[j],
+                                                mit_date=mit_date[j],
+                                                auditable_work=auditable_work[j],
+                                                comp_date=comp_date[j],
+                                                remarks=remarks[j])
+                safety_table.save()
+                form2.append(SafetyTableForm(instance=safety_table))
+            messages.success(request,"Successfully Updated")
+            return redirect('safety:manage')
+        except Exception as e:
+
+            messages.error(request,"Something Went Wrong "+str(e))
             pass
-        for j in range(i, len(print_hazard)):
-            safety_table=SafetyTable(safety_id=safety_instance,
-                                            print_hazard=print_hazard[j],
-                                            mit_date=mit_date[j],
-                                            auditable_work=auditable_work[j],
-                                            comp_date=comp_date[j],
-                                            remarks=remarks[j])
-            safety_table.save()
-            form2.append(SafetyTableForm(instance=safety_table))
     return render(request, template_name, {'form1': form1,'form2':form2})
 
 

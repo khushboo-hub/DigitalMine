@@ -5,7 +5,7 @@ app_name='safety'
 urlpatterns=[
     path('',views.safe,name='safe'),
    # path('index',views.index),
-    path('show',views.show,name='show'),
+    path('show/<int:pk>',views.show,name='show'),
     path('fetch_dropdownlist',views.fetch_dropdownlist,name='fetch_dropdownlist'),
     path('edit/<int:pk>',views.edit,name='edit'),
     path('manage',views.manage,name='manage'),

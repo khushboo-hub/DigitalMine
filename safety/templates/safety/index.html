@@ -7,11 +7,7 @@
             <div class="row text-center">
                 <h3 class="page-header"><b>STATUS REPORT ON PROGRESS MADE INTO MITIGATION OF ALL THE IDENTIFIED
                         PRINCIPAL HAZARDS</b>
-                    <small>Here you can add/edit status report</small>
-            </div>
-            </h3>
-
-            <div class="row text-center">
+                    <small>Here you can add/edit status report</small></h3>
             </div>
             <!-- Table content -->
             <div class="row">
@@ -19,14 +15,15 @@
                     <form class="form-horizontal" method="post" enctype="multipart/form-data">{% csrf_token %}
                         <fieldset class="scheduler-border">
                             <legend class="scheduler-border">
-                                <font color="blue"> Mine Details</font>
+                                <span style="color: blue; "> Mine Details</span>
                             </legend>
                             <div class="row">
 
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="id_empid" class="" id="emp">Name of the Mine :<font color="red">*
-                                            </font>
+                                        <label for="id_empid" class="" id="emp">Name of the Mine :<span
+                                                style="color: red; ">*
+                                            </span>
                                         </label>
                                     </div>
                                     <div class="col-md-8">
@@ -36,8 +33,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="id_own" class="" id="own">Name of the Owner: <font color="red">*
-                                            </font></label>
+                                        <label for="id_own" class="" id="own">Name of the Owner: <span
+                                                style="color: red; ">*
+                                            </span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{form1.owner}}
@@ -49,8 +47,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="id_agent" class="" id="agent1"> Name of the Agent: <font color="red">
-                                                *</font></label>
+                                        <label for="id_agent" class="" id="agent1"> Name of the Agent: <span
+                                                style="color: red; ">
+                                                *</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{form1.agent}}
@@ -60,8 +59,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="col-md-4">
-                                        <label for="id_own" class="" id="manag">Name of the Manager:<font color="red">*
-                                            </font></label>
+                                        <label for="id_own" class="" id="manag">Name of the Manager:<span
+                                                style="color: red; ">*
+                                            </span></label>
                                     </div>
                                     <div class="col-md-8">
                                         {{form1.manager}}
@@ -74,7 +74,7 @@
                                 <div class="col-md-6">
                                     <div class="col-md-4">
                                         <label for="id_status" class="" id=""> Status report for the quarter ending on:
-                                            <font color="red">*</font></label>
+                                            <span style="color: red; ">*</span></label>
                                     </div>
                                     <div class="col-md-8">
                                         <div class='input-group date' id='doo_date_time_picker'>
@@ -105,6 +105,7 @@
                                             <th>Actual date of completion
                                                 as per workplan.</th>
                                             <th>Remarks, if any</th>
+                                            <th></th>
                                     </thead>
                                     <tbody>
                                         {% for f in form2 %}
@@ -134,6 +135,7 @@
                                                 </div>
                                             </td>
                                             <td>{{f.remarks}}</td>
+                                            <td><a href="#"><span id="delete-row" class="glyphicon glyphicon-trash"></span></a></td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -224,6 +226,9 @@
         if($('table#test tbody>tr').length>1){
            $('table#test').find("tr:last").remove();
         }
+        });
+        $('span#delete-row').click(function(){
+           $(this).parent().parent().parent().remove();
         });
     });
 </script>

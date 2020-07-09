@@ -31,7 +31,7 @@
                                 <td>{{ s.agent }}</td>
                                 <td>{{ s.manager }}</td>
                                 <td>{{ s.status_report }}</td>
-                                <td><a class="btn btn-info" href="{% url 'safety:show' %}"> View <span
+                                <td><a class="btn btn-info" href="{% url 'safety:show' s.id %}"> View <span
                                         class="glyphicon glyphicon-list"></span></a></td>
                                 <td><a class="btn btn-warning"href="{% url 'safety:edit' s.id %}"> Edit <span
                                         class="glyphicon glyphicon-pencil"></span></a></td>
