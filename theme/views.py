@@ -4,14 +4,19 @@ from django.contrib.auth.decorators import login_required
 from accounts.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 
+from employee.models import MedicalReport
 from employee.views import notify_user
 from accounts.models import profile_extension
 import datetime
 from django.core.cache import cache
 
+from setting.models import Notification
+from django.utils import timezone
+
 @login_required
 def home(request):
     notify_user()
+    data={}
     template_name = "home.html"
     try:
         if request.session['lang'] == 'in':
@@ -34,7 +39,9 @@ def home(request):
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
 
-    return render(request, template_name, {'profile_avatar': cache.get('profile_avatar')})
+    data['notification']={'medical':Notification.objects.filter(type=10)}
+    data['profile_avatar']=cache.get('profile_avatar')
+    return render(request, template_name, data)
 
 
 def get_client_ip(request):

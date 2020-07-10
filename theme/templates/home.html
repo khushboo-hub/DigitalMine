@@ -254,9 +254,12 @@
 
                                 <li class="text-center" ><a href="#" class="" style="color: #0a7e07">Notification</a></li>
                                 <ul class="scrollable-menu">
-                                    <li class="divider"></li>
-                                    <li><span>bound_mine_image/underground_mine00.png HTTP/1.1" 200 170335</span></li>
+                                    {% for medical in notification.medical %}
+                                        <li><span class="label">Medical</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="label label-success" style="color: #0e83cd">{{ medical.message }}</span></li>
                                      <li class="divider"></li>
+
+                                    {% endfor %}
+
                                     <li>"GET /static/image/underground_mine_image/undergrou</li>
                                      <li class="divider"></li>
                                     <li>"GET /static/image/underground_mine_image/underground_mine00.png</li>
