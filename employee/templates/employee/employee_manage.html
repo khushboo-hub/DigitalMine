@@ -111,9 +111,20 @@
                                 {% for book in object_list %}
                                     <tr>
                                         <td>{{ forloop.counter }}
+
                                         </td>
                                         <!--                                <td>{{ book.id }}</td>-->
-                                        <td>{{ book.name }}</td>
+                                        <td>
+                                            {{ book.name }}<br>
+                                            {% if book.medicalreport_set.get.days_left_for_next_date %}
+                                                <span class="label label-warning">{% if book.medicalreport_set.get.days_left_for_next_date > 10 %}
+                                                    only
+                                                    <b>{{ book.medicalreport_set.get.days_left_for_next_date }}<b> left for
+                                                    next medical date{% endif %}</span>
+                                                {% else %}
+                                                <span class="label label-warning">no medical history found</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ book.mine.name }}</td>
                                         <!--                                <td>{{ book.father_name }}</td>-->
                                         <td>{{ book.email }}</td>
@@ -134,20 +145,20 @@
                                             <a href="{% url 'employee:employee_view' book.id %}" target="_blank"><span
                                                     class="btn btn-info btn-sm more_details"
                                                     title="Click here to get more details">More Details</span></a>
-                                                {#                                            <span class="btn btn-info btn-sm more_details"#}
-                                                {#                                                                      data-toggle="tooltip"#}
-                                                {#                                                                      data-url="{% url 'employee:more_details_ajax' %}"#}
-                                                {##}
-                                                {#                                                                      id="{{ book.id }}"#}
-                                                {#                                                                      title="Click here to get more details">More Details</span>#}
-                                                <br>
-                                                <br>
-                                                <span class="btn btn-info btn-sm generate_login"
-                                                      data-toggle="tooltip"
-                                                      data-url="{% url 'employee:generate_login_details_ajax' %}"
-                                                      data-email="{{ book.email }}"
-                                                      id="{{ book.id }}"
-                                                      title="Click here generate Login">Generate Login</span>
+                                            {#                                            <span class="btn btn-info btn-sm more_details"#}
+                                            {#                                                                      data-toggle="tooltip"#}
+                                            {#                                                                      data-url="{% url 'employee:more_details_ajax' %}"#}
+                                            {##}
+                                            {#                                                                      id="{{ book.id }}"#}
+                                            {#                                                                      title="Click here to get more details">More Details</span>#}
+                                            <br>
+                                            <br>
+                                            <span class="btn btn-info btn-sm generate_login"
+                                                  data-toggle="tooltip"
+                                                  data-url="{% url 'employee:generate_login_details_ajax' %}"
+                                                  data-email="{{ book.email }}"
+                                                  id="{{ book.id }}"
+                                                  title="Click here generate Login">Generate Login</span>
 
 
                                         </td>

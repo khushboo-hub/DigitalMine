@@ -43,6 +43,8 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
         book = Employee.objects.filter(mine_id=profile.mine_id.id)
 
     data['object_list'] = book
+    data['medical']=MedicalReport.objects.all()
+
     return render(request, template_name, data)
 
 
@@ -67,8 +69,7 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST or None, request.FILES or None)
-        print(form.fields['uan'].value)
-        print('form errors',form.errors)
+
         if form.is_valid():
             employee = form.save()
             # fs=profile_extension()
@@ -772,10 +773,12 @@ def validate_token(request):
 def notify_user():
     # lookup user by id and send them a message
     employees=Employee.objects.all()
-
+    print('Employees',employees)
     for emp in employees:
-        medical=MedicalReport.objects.filter(pk=emp).order_by('-id')[0]
+        print('emp',emp)
+        medical = MedicalReport.objects.filter(employee_id_id=emp.pk).order_by('-id')[0]
         print('medical',medical)
+        print('next date', medical.nextdate())
     print('NOTIFTY USER')
 #-------------------------------------------------------------------------------------------------
 # for search employee
