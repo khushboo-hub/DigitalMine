@@ -1,11 +1,15 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.models import User
 from django.urls import include, path
 from django.contrib import admin
+
+
 from theme import views
-# from employee.views import notify_user
+
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
     path('', views.home),
     path('base_layout',views.base_layout,name='base_layout'),
@@ -39,7 +43,6 @@ urlpatterns = [
     path('wm_test/', include('wm_test.urls', namespace='weather_monitoring')),
     path('setting/', include('setting.urls', namespace='setting')),
     path('Slope/', include('Slope.urls', namespace='Slope')),
-    # path('',include('pwa.urls')),
 ]
 
 # notify_user()

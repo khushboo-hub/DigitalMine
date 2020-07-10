@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'gdstorage',
     # 'debug_toolbar',
-
     'theme',
     'employee',
     'MinersTracking',
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'background_task',
     'gasmonitoring_wifi',
     'inventory_management',
+
     'attendance',
     'Training_Rescue_Accident',
     'ProductionMonitoring',
@@ -70,6 +71,8 @@ INSTALLED_APPS = [
     'setting',
     'wm_test',
     'Slope',
+
+
     # 'pwa',
 
 ]
@@ -254,3 +257,9 @@ DEBUG_TOOLBAR_CONFIG = {
 # X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.IsAuthenticated',
+#     ]
+# }

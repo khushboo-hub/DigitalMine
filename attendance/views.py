@@ -1,12 +1,13 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from .models import EmployeeAttendance, Employee, MineShift, EmployeeShiftAssign, MineDetails
 from .forms import AttendenceForm
-from django.core import serializers
-
-
-# MM
+from .serializers import AttendanceSerializer
 @login_required
 def index(request, template_name='attendance_index.html'):
     form = AttendenceForm()
@@ -184,3 +185,10 @@ def fetch_employee_list(request):
         data['result'] = "Something Wen't Wrong!"
 
     return JsonResponse(data)
+#========================================================================================================
+class AttendanceAPIView(APIView):
+    def post(self, request):
+        serializer = AttendanceSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_201_CREATED)

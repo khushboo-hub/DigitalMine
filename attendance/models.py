@@ -1,8 +1,6 @@
 from django.db import models
-
 # Create your models here.
 from employee.models import MineDetails, EmployeeShiftAssign, Employee, MineShift,MiningRole
-
 
 class EmployeeAttendance(models.Model):
 
@@ -20,4 +18,12 @@ class EmployeeAttendance(models.Model):
     class Meta:
         db_table = "attendance_emp"
         unique_together = ('mine_id', 'shift_id','emp_id','ab_pr_date')
+
+class SetAttendanceFromAPIModel(models.Model):
+    emp_id = models.ForeignKey(Employee, on_delete=models.CASCADE, null=False, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "employee_attendance"
 
