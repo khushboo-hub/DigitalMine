@@ -787,3 +787,6 @@ def search_emp(request):
     return render(request,"employee/search_emp.html",{'form':form})
 
 
+@register.filter(name='abs')
+def abs_filter(value):
+    return abs(value)

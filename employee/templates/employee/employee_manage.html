@@ -116,12 +116,20 @@
                                         <!--                                <td>{{ book.id }}</td>-->
                                         <td>
                                             {{ book.name }}<br>
-                                            {% if book.medicalreport_set.get.days_left_for_next_date %}
-                                                <span class="label label-warning">{% if book.medicalreport_set.get.days_left_for_next_date > 10 %}
-                                                    only
-                                                    <b>{{ book.medicalreport_set.get.days_left_for_next_date }}<b> left for
-                                                    next medical date{% endif %}</span>
-                                                {% else %}
+                                            {% if book.medicalreport_set.get.days_left_for_next_date == 0 %}
+                                                        <span class="label label-danger">Today is the medical date</span>
+
+                                            {% elif book.medicalreport_set.get.days_left_for_next_date %}
+
+                                                {% if book.medicalreport_set.get.days_left_for_next_date < 14 %}
+                                                    {% if book.medicalreport_set.get.days_left_for_next_date <= 0 %}
+                                                        <span class="label label-danger">Medical Date has expired <b>{{ book.medicalreport_set.get.days_left_for_next_date|abs }}</b> days ago</span>
+                                                    {% else %}
+                                                        <span class="label label-warning">only <b>{{ book.medicalreport_set.get.days_left_for_next_date }}</b> left for next medical date</span>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                            {% else %}
                                                 <span class="label label-warning">no medical history found</span>
                                             {% endif %}
                                         </td>
