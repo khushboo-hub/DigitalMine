@@ -11,6 +11,8 @@ from django.db import models
 #          value="shyam@gmail.com,rohit@gmail.com",
 #          desc="List of email-id which will be receive mail",
 #          ).save()
+from employee.models import Employee
+
 
 class setting(models.Model):
     name = models.CharField(max_length=500, default="", null=True, blank=True)
@@ -30,13 +32,14 @@ class setting(models.Model):
 #     operations = [
 #         migrations.RunPython(load_data)
 #     ]
-
+from django.utils.timezone import now
 class Notification(models.Model):
+    employee_id=models.ForeignKey(Employee,on_delete=models.CASCADE,null=True,blank=True)
     type = models.IntegerField()
-    message = models.CharField(db_column='Message', max_length=100)  # Field name made lowercase.
-    time = models.DateTimeField()
-    isread = models.IntegerField(default=False)
+    message = models.CharField(max_length=100,null=True,blank=True)  # Field name made lowercase.
+    created_date = models.DateTimeField(default=now)
+    isread = models.IntegerField(default=0)
 
     class Meta:
-        managed = False
         db_table = 'notification'
+        unique_together = ('type', 'message')

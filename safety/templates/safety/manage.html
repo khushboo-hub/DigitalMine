@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <h3 class="page-header text-center"><b>MANAGE SAFETY</b></h3>
+                <div class="row">
+
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered" id=safety>
+                        <thead>
+                        <tr>
+                            <th>Sl.No</th>
+                            <th>Name of the Mine</th>
+                            <th>Name of the Owner</th>
+                            <th>Name of the Agent</th>
+                            <th>Name of the Manager</th>
+                            <th>Status report for the quarter ending On</th>
+                            <th>View</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for s in safety %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ s.mine }}</td>
+                                <td>{{ s.owner }}</td>
+                                <td>{{ s.agent }}</td>
+                                <td>{{ s.manager }}</td>
+                                <td>{{ s.status_report }}</td>
+                                <td><a class="btn btn-info" href="{% url 'safety:show' s.id %}"> View <span
+                                        class="glyphicon glyphicon-list"></span></a></td>
+                                <td><a class="btn btn-warning"href="{% url 'safety:edit' s.id %}"> Edit <span
+                                        class="glyphicon glyphicon-pencil"></span></a></td>
+                                <td>
+                                    <div class="btn btn-danger delete" data-url="{% url 'safety:delete' s.id %}">
+                                        Delete
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script>
+    $(document.body).on("click", ".delete", function () {
+
+        $("#sureDelete").attr("href", $(this).data('url'));
+        $('#update_info').modal('show');
+
+    });
+    </script>
+{% endblock %}

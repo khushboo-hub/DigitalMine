@@ -7,6 +7,7 @@ from django.db import models
 from django.db import models
 from datetime import date, datetime, timedelta
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 class MineDetails(models.Model):
@@ -157,7 +158,7 @@ class Employee(models.Model):
     medical_ins_no = models.CharField(max_length=30, blank=True, null=True)
     date_of_exit = models.DateField(blank=True, null=True)  # new
     reason_of_exit = models.CharField(max_length=50, null=True, blank=True)  # new
-    uan = models.CharField(max_length=50, null=True, blank=True)  # new
+    uan = models.CharField(max_length=100, null=True, blank=True)  # new
 
     #########  Bank Details   #################
     bank_name = models.CharField(max_length=50, blank=True, null=True)
@@ -251,8 +252,9 @@ class MedicalReport(models.Model):
     report = models.CharField(max_length=200, null=True)
     file = models.FileField(upload_to='medical')
 
-    def age(self, id):
-        dob = self.dob(self, str(id))
+    def age(self):
+        emp = Employee.objects.get(id=self.employee_id.pk)
+        dob = str(emp.dob)
         dob_year = str(dob[:4])
         now = datetime.now()
         curr_date = now.strftime("%Y-%m-%d")
@@ -260,17 +262,13 @@ class MedicalReport(models.Model):
         age = (int(curr_date_year) - int(dob_year))
         return age
 
-    def dob(self, id):
-        emp_table = Employee.objects.get(id=id)
-        dob = str(emp_table.dob)
-        return dob
-
-    def nextdate(self, id):
-        age = self.age(self, id)
+    def nextdate(self):
+        age = self.age()
         try:
-            medical = MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            medical = MedicalReport.objects.filter(employee_id=self.employee_id).order_by('-id')[0]
             now = medical.date
-        except:
+        except Exception as e:
+            print(e)
             now = -1
 
         if age >= 45:
@@ -278,15 +276,21 @@ class MedicalReport(models.Model):
         else:
             return "" if (now == -1) else now.replace(year=now.year + 5).strftime("%Y-%m-%d")
 
-    def lastdate(self, id):
+    def lastdate(self):
         try:
-            medical = MedicalReport.objects.filter(employee_id=id).order_by('-id')[0]
+            medical = MedicalReport.objects.filter(employee_id=self.employee_id).order_by('-id')[0]
             now = medical.date
             now = now.strftime("%Y-%m-%d")
         except:
             now = ""
 
         return now
+
+    def days_left_for_next_date(self):
+        now = timezone.now()
+        nextdate = datetime.strptime(self.nextdate(), '%Y-%m-%d')
+        diff = nextdate-now
+        return diff.days
 
     class Meta:
         db_table = "medical_report"
@@ -334,7 +338,6 @@ from accounts.models import profile_extension
 #################Reciever for Shift Change####################
 @receiver(models.signals.post_save, sender=EmployeeShiftAssign, dispatch_uid="employee_shift_assign")
 def auto_update_employee_shift_on_insert(sender, instance, **kwargs):
-
     if not instance.pk:
         return False
     print('Inside Shift Assign Signal')

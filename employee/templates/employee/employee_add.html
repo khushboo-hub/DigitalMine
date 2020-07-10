@@ -6,7 +6,6 @@
             float: left;
             margin-right: 5px;
             min-height: 50px;
-            position: fixed;
         }
          .form-control-feedback{
             top:0px !important;
@@ -741,8 +740,8 @@
                     placement: 'bottom',
                     html: true
                 });
-            }
-            ;
+            };
+
             if ($('div#CurrentSignatureCheck').children('a').length > 0) {
                 $("div#CurrentSignatureCheck").has("a").children('a').attr('id', 'CurrentSignatureCheckOnHover')
                 $('<img id="CurrentSignatureCheckOnHover" width="40px" height="40px" src="' + $('#CurrentSignatureCheckOnHover').attr("href") + '" />').insertAfter('#CurrentSignatureCheckOnHover');
@@ -757,8 +756,7 @@
                     placement: 'bottom',
                     html: true
                 });
-            }
-            ;
+            };
 
             $('#id_present_address').on('input', function () {
                 let checked = $('#same_address').prop('checked');

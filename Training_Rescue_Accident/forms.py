@@ -169,7 +169,6 @@ class Accident_Form(forms.ModelForm):
         fields = '__all__'
 
 class Accident_EmployeeForm(forms.ModelForm):
-    print('LISt of Employees',Employee.objects.all())
     employee_name = forms.ModelMultipleChoiceField(queryset=Employee.objects.all(),
                                                         widget=forms.Select(attrs={
                                                             'class': 'form-control js-example-basic-multiple'}))

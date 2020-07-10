@@ -1,21 +1,22 @@
 import os
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render, HttpResponse, get_object_or_404
-from accounts.models import profile_extension, User
+from accounts.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import CarousalPhotoUploadForm
-from django.core import serializers
-from employee.models import MineDetails
+
+from employee.models import MedicalReport
+from employee.views import notify_user
 from accounts.models import profile_extension
 import datetime
-from django.conf import settings
-from django.contrib.auth import SESSION_KEY, BACKEND_SESSION_KEY, load_backend
 from django.core.cache import cache
+
+from setting.models import Notification
+from django.utils import timezone
 
 @login_required
 def home(request):
+    notify_user()
+    data={}
     template_name = "home.html"
     try:
         if request.session['lang'] == 'in':
@@ -38,7 +39,9 @@ def home(request):
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
 
-    return render(request, template_name, {'profile_avatar': cache.get('profile_avatar')})
+    data['notification']={'medical':Notification.objects.filter(type=10)}
+    data['profile_avatar']=cache.get('profile_avatar')
+    return render(request, template_name, data)
 
 
 def get_client_ip(request):

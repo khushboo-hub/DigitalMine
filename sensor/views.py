@@ -25,7 +25,6 @@ from accounts.utils import manager
 
 
 @login_required
-@manager
 def node_add(request, template_name='node/node_add.html'):
     current_user = request.user
 
@@ -154,7 +153,6 @@ def manage_sensor(request, mine_id, node_id, template_name='sensor/manage_sensor
 
 
 @login_required
-@manager
 def add_sensor(request, mine_id, node_id, template_name='sensor/add_sensor.html'):
     mine_id = decrypt(mine_id)
     node_id = decrypt(node_id)

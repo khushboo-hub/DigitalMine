@@ -14,6 +14,7 @@ from django.views.generic import TemplateView
 
 from accounts.utils import manager
 from employee.forms import EmployeeForm, RateOfMinimumWageForm, MedicalReportForm, search_employee_form
+from setting.models import Notification
 from setting.utils import decrypt
 from .forms import MineDetailsForm, MiningRoleForm, MiningShiftForm
 from .models import MineDetails, MiningRole, MineShift, EmployeeShiftAssign, RateOfMinimumWages, \
@@ -30,6 +31,7 @@ from django.db import IntegrityError
 from django.utils.crypto import get_random_string
 from django.template.defaulttags import register
 
+
 # Create your views here.
 @login_required
 def employee_manage(request, template_name='employee/employee_manage.html'):
@@ -43,6 +45,8 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
         book = Employee.objects.filter(mine_id=profile.mine_id.id)
 
     data['object_list'] = book
+    data['medical'] = MedicalReport.objects.all()
+
     return render(request, template_name, data)
 
 
@@ -67,7 +71,7 @@ def employee_add(request, template_name='employee/employee_add.html'):
 
     if request.method == 'POST':
         form = EmployeeForm(request.POST or None, request.FILES or None)
-        # form.fields['mine'].widget.attrs['disabled'] = False
+
         if form.is_valid():
             employee = form.save()
             # fs=profile_extension()
@@ -107,12 +111,14 @@ def employee_edit(request, pk, template_name='employee/employee_add.html'):
     form = EmployeeForm(request.POST or None, request.FILES or None, instance=book)
     form.fields['mine'].widget.attrs['readonly'] = True
     form.fields['mining_role'].queryset = MiningRole.objects.filter(mine_id=book.mine_id)
-    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id)
+    form.fields['immediate_staff'].queryset = Employee.objects.filter(mine_id=book.mine_id).exclude(pk=book.pk)
     if form.is_valid():
         try:
             form.save()
+            messages.success(request, "Successful")
             return redirect('employee:employee_manage')
         except Exception as e:
+            messages.error(request, str(e))
             print("error msg-->", e)
 
     return render(request, template_name, {'form': form})
@@ -191,6 +197,11 @@ def more_details_ajax(request):
 
     data['error'] = "Something Went Wrong"
     return JsonResponse(data)
+
+
+def employee_view(request, pk, template_name='employee/employeeView.html'):
+    employee = Employee.objects.get(pk=pk)
+    return render(request, template_name, {'form': employee})
 
 
 @login_required
@@ -632,7 +643,7 @@ def save_updated_shift(request):
 def details_employee_shift_assign(request, emp_id, template_name="employee/shift_assign_report.html"):
     data = {}
     shiftassign_table = EmployeeShiftAssign.objects.all()
-    print('Shift Assign Table',shiftassign_table)
+    print('Shift Assign Table', shiftassign_table)
     data['result'] = shiftassign_table
 
     return render(request, template_name, data)
@@ -739,6 +750,7 @@ def profile_ajax(request):
     data['error'] = "Something Went Wrong!"
     return JsonResponse(data)
 
+
 @login_required
 def validate_token(request):
     data = {}
@@ -761,12 +773,47 @@ def validate_token(request):
     return JsonResponse(data)
 
 
-@background(schedule=10)
+@background(schedule=60)
 def notify_user():
     # lookup user by id and send them a message
+    from django.utils import timezone
+    employees = Employee.objects.all()
+    print('Employees', employees)
+    for emp in employees:
+        print('emp', emp)
+        medical = MedicalReport.objects.filter(employee_id_id=emp.pk).order_by('-id')[0]
+
+        days = medical.days_left_for_next_date()
+
+        print('Creating Notification')
+        if days < 14:
+            if days < 0:
+                try:
+                    Notification.objects.create(employee_id=emp, type=10, message="Medical for employee " + str(
+                        emp.name) + " has expired " + str(medical.days_left_for_next_date()) + " days ago")
+
+                except Exception as e:
+                    pass
+                    print(e)
+            else:
+                try:
+                    Notification.objects.create(employee_id=emp, type=10,
+                                                message="Medical for employee " + str(emp.name) + " is due in " + str(
+                                                    medical.days_left_for_next_date()) + " days")
+                except Exception as e:
+                    pass
+                    print(e)
+
     print('NOTIFTY USER')
-#-------------------------------------------------------------------------------------------------
+
+
+# -------------------------------------------------------------------------------------------------
 # for search employee
 def search_emp(request):
     form = search_employee_form()
-    return render(request,"employee/search_emp.html",{'form':form})
+    return render(request, "employee/search_emp.html", {'form': form})
+
+
+@register.filter(name='abs')
+def abs_filter(value):
+    return abs(value)

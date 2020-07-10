@@ -71,8 +71,7 @@ INSTALLED_APPS = [
     'setting',
     'wm_test',
     'Slope',
-
-
+    'safety',
     # 'pwa',
 
 ]
@@ -128,11 +127,11 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
 
-        'NAME': 'cimfr',
+        'NAME': 'iot',
 
         'USER': 'postgres',
 
-        'PASSWORD': '$Password#',
+        'PASSWORD': 'root',
 
         'HOST': '127.0.0.1',
 

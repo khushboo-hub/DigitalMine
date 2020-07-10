@@ -42,18 +42,18 @@
                 }
 
 
-            button.close {
-                visibility: hidden !important;
-            }
+                button.close {
+                    visibility: hidden !important;
+                }
 
-            #printSection * {
-                visibility: visible !important;
-                overflow: visible !important;
-            }
+                #printSection * {
+                    visibility: visible !important;
+                    overflow: visible !important;
+                }
 
-            .header {
-            background-color: #f1e6d6 !important;
-            }
+                .header {
+                    background-color: #f1e6d6 !important;
+                }
 
                 .modal {
                     position: absolute;
@@ -111,9 +111,28 @@
                                 {% for book in object_list %}
                                     <tr>
                                         <td>{{ forloop.counter }}
+
                                         </td>
                                         <!--                                <td>{{ book.id }}</td>-->
-                                        <td>{{ book.name }}</td>
+                                        <td>
+                                            {{ book.name }}<br>
+                                            {% if book.medicalreport_set.get.days_left_for_next_date == 0 %}
+                                                        <span class="label label-danger">Today is the medical date</span>
+
+                                            {% elif book.medicalreport_set.get.days_left_for_next_date %}
+
+                                                {% if book.medicalreport_set.get.days_left_for_next_date < 14 %}
+                                                    {% if book.medicalreport_set.get.days_left_for_next_date <= 0 %}
+                                                        <span class="label label-danger">Medical Date has expired <b>{{ book.medicalreport_set.get.days_left_for_next_date|abs }}</b> days ago</span>
+                                                    {% else %}
+                                                        <span class="label label-warning">only <b>{{ book.medicalreport_set.get.days_left_for_next_date }}</b> left for next medical date</span>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                            {% else %}
+                                                <span class="label label-warning">no medical history found</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ book.mine.name }}</td>
                                         <!--                                <td>{{ book.father_name }}</td>-->
                                         <td>{{ book.email }}</td>
@@ -129,12 +148,17 @@
                                         </td>
 
 
-                                        <td class="text-center"><span class="btn btn-info btn-sm more_details"
-                                                                      data-toggle="tooltip"
-                                                                      data-url="{% url 'employee:more_details_ajax' %}"
+                                        <td class="text-center">
 
-                                                                      id="{{ book.id }}"
-                                                                      title="Click here to get more details">More Details</span>
+                                            <a href="{% url 'employee:employee_view' book.id %}" target="_blank"><span
+                                                    class="btn btn-info btn-sm more_details"
+                                                    title="Click here to get more details">More Details</span></a>
+                                            {#                                            <span class="btn btn-info btn-sm more_details"#}
+                                            {#                                                                      data-toggle="tooltip"#}
+                                            {#                                                                      data-url="{% url 'employee:more_details_ajax' %}"#}
+                                            {##}
+                                            {#                                                                      id="{{ book.id }}"#}
+                                            {#                                                                      title="Click here to get more details">More Details</span>#}
                                             <br>
                                             <br>
                                             <span class="btn btn-info btn-sm generate_login"

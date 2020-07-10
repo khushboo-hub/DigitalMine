@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+    {% load static %}
+    <style>
+        @media print {
+            body {
+                height: 0%;
+            }
+
+            div.main {
+                padding-top: 0%;
+            }
+
+            button,a#go-back, div.spacer, div#form-not-print {
+                display: none !important;
+            }
+        }
+
+    </style>
+    <div class="container">
+        <div class="row">
+            <section class="col-md-12">
+                <div class="row">
+                    <div id="printablediv">
+
+                        <div class="form-group">
+
+                            <h3 class="page-header text-center"><b>STATUS REPORT ON PROGRESS MADE INTO MITIGATION OF ALL
+                                THE IDENTIFIED PRINCIPAL HAZARDS</b></h3>
+
+                            <h3 class="page-header"><b>******************************************************************************************************</b>
+                            </h3>
+                            <fieldset class="scheduler-border">
+                                <legend align="right" class="scheduler-border">
+                                    <div class="text-center"><button type="button" id="print" class="btn btn-success">PRINT <span class="glyphicon glyphicon-print"></span></button></div>
+                                </legend>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>
+                                            1.0 Name of the Mine:
+                                        </label>
+                                        {{ safety.mine.name }}
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>2.0 Name of the Owner:</label>
+                                        {{ safety.owner }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>3.0 Name of the Agent:</label>
+                                        {{ safety.agent }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>4.0 Name of the Manager:</label>
+                                        {{ safety.manager }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>5.0 Status report for the quarter ending on:</label>
+                                        {{ safety.status_report }}
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="content">
+                                        <thead>
+                                        <th>Sl. No</th>
+                                        <th>List of Principal Hazard identified</th>
+                                        <th>Mitigation date as per formulated SMP.</th>
+                                        <th>Details of auditable work plan made for mitigation</th>
+                                        <th>Actual date of completion as per work plan</th>
+                                        <th>Remarks,if any</th>
+                                        </thead>
+                                        <tbody>
+                                        {% for safe in safetytable %}
+                                            {% for s in safe %}
+                                                <tr>
+                                                    <td>{{ forloop.parentloop.counter }}.{{ forloop.counter }}</td>
+                                                    <td>{{ s.print_hazard }}</td>
+                                                    <td>{{ s.mit_date }}</td>
+                                                    <td>{{ s.auditable_work }}</td>
+                                                    <td>{{ s.comp_date }}</td>
+                                                    <td>{{ s.remarks }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <br>
+                                <br>
+                                <span>Signature with date of the Manager</span>
+                                <span style="float: right;">Signature with date of the Agent</span>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <div class="text-center">Signature with date of the Owner</div>
+                            </fieldset>
+                            <br>
+                            <div class="text-center"><a id="go-back" class="btn btn-info" href="{% url 'safety:manage' %}">Go Back</a></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <style>
+        fieldset.scheduler-border {
+            border: solid 1px #DDD !important;
+            padding: 0 10px 10px 10px;
+            border-bottom: none;
+        }
+
+        legend.scheduler-border {
+            width: auto !important;
+            border: none;
+            font-size: 14px;
+        }
+
+        fieldset ul {
+            list-style: none
+        }
+
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('button#print').click(function () {
+                window.print();
+            })
+        })
+
+    </script>
+{% endblock %}

@@ -1,5 +1,6 @@
 import numpy as np
 from django.db import models
+from datetime import datetime
 
 
 class Gasdb(models.Model):
@@ -188,7 +189,7 @@ class Gasdb(models.Model):
             'coco2_ratio': coco2,
             'jtr_ratio': jtr,
             'chra_ratio': chra,
-            'date':self.date.strftime('%Y-%m-%d %H:%M:%S')
+            'date':self.date
         }
         return data
 
@@ -337,7 +338,8 @@ class Gasdb(models.Model):
             'y': ely,
             'color': self.markerclr(elx, ely),
             'quadrant': self.quadrant(elx, ely),
-            'dates': self.date.strftime('%Y-%m-%d %H:%M:%S')}
+            'dates': self.date
+        }
 
         return graph
 
