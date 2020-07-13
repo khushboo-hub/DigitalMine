@@ -61,7 +61,7 @@ class temp_monitoring_automatic(models.Model):
     dew_status = models.CharField(max_length=100, default="Normal")
     ip_address = models.CharField(max_length=100, null=True, blank=True)
 
-    created_date = models.DateTimeField(default=now, blank=True)
+    created_date = models.DateTimeField(default=datetime.now, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:

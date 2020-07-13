@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content %}
-
+{% load tz %}
     <div class="container">
         <div class="row">
             <section class="col-md-12">
-                <h1 class="page-header"><b>LIVE TEMPERATURE DATA</b>
+                <h3 class="page-header"><b>LIVE TEMPERATURE DATA</b>
                     <small></small>
-                </h1>
+                </h3>
                 <div class="row">
                     <div class="form-group">
                         <form class="form-horizontal" method="post" enctype="multipart/form-data">
@@ -18,7 +18,7 @@
                                     <label>Temperature Sensor IP:</label>
                                 </div>
                                 <div class="col-md-4">
-                                    <input type="text" class="form-control" name="" value="192.168.1.166"
+                                    <input type="text" class="form-control" name="" value="192.168.1.11"
                                            id="id_sensor_list">
                                 </div>
                                 <div class="col-md-2">
@@ -30,36 +30,73 @@
                                     <input type="text" class="form-control" name="" value="10" id="id_interval">
                                 </div>
                             </div>
+                            <br>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label>Data Acquisition:</label>
+                                </div>
+                                <div class="col-md-1"><input
+                                        data-url="{% url 'temp_monitoring:start_save_sensor' %}"
+                                        id="isGoaf"
+                                        class="isGoaf"
+                                        type="checkbox"
+                                        data-toggle="toggle" data-on="Off"
+                                        data-off="On" data-onstyle="danger"
+                                        data-offstyle="success">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="button" id="btn_show" class="btn btn-primary" value="Show"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="submit" id="" class="btn btn-success" name="tabular"
+                                           value="View History(Tabular)"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="submit" id="" class="btn btn-success" name="graphical"
+                                           value="View History(Graphical)"/>
+                                </div>
+
+                            </div>
+
                         </form>
                         <br/>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label>Data Acquisition:</label>
-                            </div>
-                            <div class="col-md-1"><input
-                                    data-url="{% url 'temp_monitoring:start_save_sensor' %}"
-                                    id="isGoaf"
-                                    class="isGoaf"
-                                    type="checkbox"
-                                    data-toggle="toggle" data-on="Off"
-                                    data-off="On" data-onstyle="danger"
-                                    data-offstyle="success">
-                            </div>
-                            <div class="col-md-2">
-                                <input type="submit" id="btn_show" class="btn btn-primary" value="Show"/>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="button" id="" class="btn btn-success" value="View History(Tabular)"/>
-                            </div>
-                            <div class="col-md-2">
-                                <input type="button" id="" class="btn btn-success" value="View History(Graphical)"/>
-                            </div>
-
-
-                        </div>
-
                         <div class="col-md-12" style="margin-top:15px;">
                             <div id='stratamonitoring'></div>
+                            {% if graphical %}
+                                <table class="table table-bordered" id="graphical" hidden>
+                                    <thead>
+                                    <tr>
+                                        <th>Date Time</th>
+                                        <th>Sensor Name</th>
+                                        <th>WBT Value</th>
+                                        <th>DBT Value</th>
+                                        <th>Relative Humidity</th>
+                                        <th>Dew Point Temp</th>
+                                        <th>Moisture Content</th>
+                                        <th>Sigma Heat</th>
+                                        <th>Enthalpy</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="sensor_content_body">
+                                    {% load tz %} {% timezone "Asia/Kolkata" %}
+                                    {% for t in graphical %}
+                                        <tr>
+                                            <td>{{ t.created_date|date:'Y-m-d H:i:s'  }}</td>
+                                            <td>LM-35 (Temp Sensor)</td>
+                                            <td>{{ t.wbt }}</td>
+                                            <td>{{ t.dbt }}</td>
+                                            <td>{{ t.relativeHumidity }}</td>
+                                            <td>{{ t.dewPointTemp }}</td>
+                                            <td>{{ t.moistureContent }}</td>
+                                            <td>{{ t.sigmaHeat }}</td>
+                                            <td>{{ t.enthalpy }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    {% endtimezone %}
+                                    </tbody>
+                                </table>
+                            {% endif %}
                             <div class="table-responsive">
                                 <table class="table table-bordered" id="sensor_content">
                                     <thead>
@@ -75,9 +112,25 @@
                                         <th>Enthalpy</th>
                                     </tr>
                                     </thead>
+                                {% load tz %} {% timezone "Asia/Kolkata" %}
                                     <tbody id="sensor_content_body">
-
+                                    {% if tabular %}
+                                        {% for t in tabular %}
+                                            <tr>
+                                                <td>{{ t.created_date|date:'Y-m-d H:i:s'}}</td>
+                                                <td>LM-35 (Temp Sensor)</td>
+                                                <td>{{ t.wbt }}</td>
+                                                <td>{{ t.dbt }}</td>
+                                                <td>{{ t.relativeHumidity }}</td>
+                                                <td>{{ t.dewPointTemp }}</td>
+                                                <td>{{ t.moistureContent }}</td>
+                                                <td>{{ t.sigmaHeat }}</td>
+                                                <td>{{ t.enthalpy }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                     </tbody>
+                                   {% endtimezone %}
                                 </table>
                             </div>
 
@@ -93,208 +146,278 @@
         //======================================================================================================================
         //------------------------------------------------------------------------------------------------------------------
 
+        $(document).ready(function () {
+            show_graph();
+            d_table();
 
-        $("#btn_show").click(function () {
-            $.xhrPool.abortAll();
-            $("#btn_show").val("Please wait...");
-            $("#btn_show").prop('disabled', true);
-            interval_time = ($("#id_interval").val() * 1000);
-            let sensor_id = $("#id_sensor_list").val();
-            let strata_url = "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}";
-            if (sensor_id) {
+            $("#btn_show").click(function () {
+                var myTable = $('#sensor_content').DataTable();
 
-                $("#sensor_content_body").empty();//empty the table on each click
-                strataStart(sensor_id, strata_url);
+                myTable.destroy();
+                $("#sensor_content_body").empty();
+                d_table();
 
-            }
-        });
+                $("#btn_show").val("Please wait...");
+                $("#btn_show").prop('disabled', true);
+                let interval_time = ($("#id_interval").val() * 1000);
+                let sensor_id = $("#id_sensor_list").val();
+                let strata_url = "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}";
+                if (sensor_id) {
 
+                    //empty the table on each click
+                    strataStart(sensor_id, strata_url, interval_time);
 
-        function strataStart(sensor_id, url) {
-
-            function rand() {
-                return Math.random();
-            }
-
-            var time = new Date();
-
-            var WBT = {
-                x: [],
-                y: [],
-                mode: 'scatter',
-                line: {
-                    color: '#80CAF6',
-                    shape: 'spline'
-                },
-                name: 'WBT'
-            }
-
-            var DWT = {
-                x: [],
-                y: [],
-                xaxis: 'x2',
-                yaxis: 'y2',
-                mode: 'scatter',
-                line: {color: '#DF56F1'},
-                name: 'DBT'
-            };
-
-            var layout = {
-                xaxis: {
-                    type: 'date',
-                    domain: [0, 1],
-                    showticklabels: false
-                },
-                yaxis: {domain: [0.6, 1]},
-                xaxis2: {
-                    type: 'date',
-                    anchor: 'y2',
-                    domain: [0, 1]
-                },
-                yaxis2: {
-                    anchor: 'x2',
-                    domain: [0, 0.4]
-                },
-            }
-
-            var data = [WBT, DWT];
-
-            Plotly.newPlot('stratamonitoring', data, layout);
-
-            var cnt = 0;
+                }
+            });
 
 
-            var interval = setInterval(function () {
+            function strataStart(sensor_id, url, interval_time) {
+
+                function rand() {
+                    return Math.random();
+                }
 
                 var time = new Date();
-                $.ajax({
-                    type: "get",
-                    url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
-                    data: {
-                        'id': sensor_id
-                    },
-                    success: function (data) {
-                        if (data.hasOwnProperty('result')) {
-                            $('tr').css({'background-color': '#FFFFFF'});
-                            fill_table_sensor(data.result);
-                            let wbt = data.result.wbt;
-                            let dbt = data.result.dbt;
-                            let update = {
-                                x: [[time], [time]],
-                                y: [[wbt], [dbt]]
-                            };
-                            Plotly.extendTraces('stratamonitoring', update, [0, 1]);
-                            if (++cnt === 100) clearInterval(interval);
 
+                var WBT = {
+                    x: [],
+                    y: [],
+                    mode: 'scatter',
+                    line: {
+                        color: '#80CAF6',
+                        shape: 'spline'
+                    },
+                    name: 'WBT'
+                };
+
+                var DWT = {
+                    x: [],
+                    y: [],
+                    xaxis: 'x2',
+                    yaxis: 'y2',
+                    mode: 'scatter',
+                    line: {color: '#DF56F1'},
+                    name: 'DBT'
+                };
+
+                var layout = {
+                    xaxis: {
+                        type: 'date',
+                        domain: [0, 1],
+                        showticklabels: false
+                    },
+                    yaxis: {domain: [0.6, 1]},
+                    xaxis2: {
+                        type: 'date',
+                        anchor: 'y2',
+                        domain: [0, 1]
+                    },
+                    yaxis2: {
+                        anchor: 'x2',
+                        domain: [0, 0.4]
+                    },
+                }
+
+                var data = [WBT, DWT];
+
+                Plotly.newPlot('stratamonitoring', data, layout);
+
+                var cnt = 0;
+
+
+                var interval = setInterval(function () {
+
+                    var time = new Date();
+                    $.ajax({
+                        type: "get",
+                        url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
+                        data: {
+                            'id': sensor_id
+                        },
+                        success: function (data) {
+                            if (data.hasOwnProperty('result')) {
+                                $('tr').css({'background-color': '#FFFFFF'});
+                                fill_table_sensor(data.result);
+                                let wbt = data.result.wbt;
+                                let dbt = data.result.dbt;
+                                let update = {
+                                    x: [[time], [time]],
+                                    y: [[wbt], [dbt]]
+                                };
+                                Plotly.extendTraces('stratamonitoring', update, [0, 1]);
+                                if (++cnt === 100) clearInterval(interval);
+
+                            }
+                            return data;
+                        },
+                        error: function () {
+                            console.log("error he ji");
                         }
-                        return data;
-                    },
-                    error: function () {
-                        console.log("error he ji");
-                    }
-                });
-            }, interval_time);
+                    });
+                }, interval_time);
 
-        }
-
-        //====================================================================================================================Dewangshu
-
-
-        // var interval_time=0;
-        // $("#btn_show").click(function(){
-        //      var warning_validation = 2;
-        //     $("#btn_show").val("Please wait...");
-        //     $("#btn_show").prop('disabled', true);
-        //     interval_time=($("#id_interval").val()* 1000);
-        //     sensor_id=$("#id_sensor_list").val();
-
-
-        //         $("#sensor_content_body").empty();//empty the table on each click
-
-        //         setInterval(function(){
-        //                 $.ajax({
-        //                 type:"get",
-        //                 url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
-        //                 data: {
-        //                          'id': sensor_id
-        //                        },
-        //                 success: function(data) {
-        //                     // console.log(data.result);
-        //                     $('tr').css({ 'background-color' : '#FFFFFF'});
-        //                     fill_table_sensor(data.result);
-
-        //                     return data;
-        //                         },
-        //                 error: function(){
-        //                         console.log("error he ji");
-        //                      }
-        //                 });
-        //         }, interval_time);//time in milliseconds
-
-
-        // });
-        function fill_table_sensor(result) {
-
-            if ($.fn.DataTable.isDataTable('#sensor_content')) {
-                $('#sensor_content').DataTable().destroy();
             }
 
-            $("#sensor_content").prepend($("<tr bgcolor=''><td>" + result.date + "</td><td>LM-35 (Temp Sensor)</td><td>" + result.wbt + " &#8451;</td><td>" + result.dbt + " &#8451;</td><td>" + result.relativeHumidity + "<br>" + result.rel_hum_status + "</td><td>" + result.dewPointTemp + "<br>" + result.dew_status + "</td><td>" + result.moistureContent + "</td><td>" + result.sigmaHeat + "</td><td>" + result.enthalpy + "</td></tr>"));
+            //====================================================================================================================Dewangshu
 
 
-        }
+            // var interval_time=0;
+            // $("#btn_show").click(function(){
+            //      var warning_validation = 2;
+            //     $("#btn_show").val("Please wait...");
+            //     $("#btn_show").prop('disabled', true);
+            //     interval_time=($("#id_interval").val()* 1000);
+            //     sensor_id=$("#id_sensor_list").val();
 
-        $("#btn_print").click(function () {
-            window.print();
-        });
 
-        function d_table() {
-            $('#sensor_content').DataTable({
-                paging: false,
-                searching: true,
-                "ordering": false,
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ]
+            //         $("#sensor_content_body").empty();//empty the table on each click
+
+            //         setInterval(function(){
+            //                 $.ajax({
+            //                 type:"get",
+            //                 url: "{% url 'temp_monitoring:fetch_sensor_values_ajax' %}",
+            //                 data: {
+            //                          'id': sensor_id
+            //                        },
+            //                 success: function(data) {
+            //                     // console.log(data.result);
+            //                     $('tr').css({ 'background-color' : '#FFFFFF'});
+            //                     fill_table_sensor(data.result);
+
+            //                     return data;
+            //                         },
+            //                 error: function(){
+            //                         console.log("error he ji");
+            //                      }
+            //                 });
+            //         }, interval_time);//time in milliseconds
+
+
+            // });
+            function fill_table_sensor(result) {
+
+                if ($.fn.DataTable.isDataTable('#sensor_content')) {
+                    $('#sensor_content').DataTable().destroy();
+                }
+
+                $("#sensor_content").prepend($("<tr bgcolor=''><td>" + result.date + "</td><td>LM-35 (Temp Sensor)</td><td>" + result.wbt + " &#8451;</td><td>" + result.dbt + " &#8451;</td><td>" + result.relativeHumidity + "<br>" + result.rel_hum_status + "</td><td>" + result.dewPointTemp + "<br>" + result.dew_status + "</td><td>" + result.moistureContent + "</td><td>" + result.sigmaHeat + "</td><td>" + result.enthalpy + "</td></tr>"));
+                d_table();
+
+            }
+
+            $("#btn_print").click(function () {
+                window.print();
             });
-        }
 
-        $(document).ready(function () {
-
-            d_table();
+            function d_table() {
+                $('#sensor_content').DataTable({
+                    paging: false,
+                    searching: true,
+                    "ordering": false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            }
 
 
             // half_url=$("#isGoaf").data('url'),
             ip = $("#id_sensor_list").val();
             // save_url=uuu+$("#id_sensor_list").val();
             // $("#isGoaf").attr("data-url",save_url);
-        });
-        //---------for data acquisition
-        $('.isGoaf').change(function () {
-                    let goafId=this.id;
-                    $.ajax({
-                        type: "get",
-                        url: $(this).data('url'),
-                        data: {
-                            // csrfmiddlewaretoken: "{{ csrf_token }}",
-                            id:ip,
-                        },
-                        success: function (json) {
-                            console.log(json);
 
-                            // $('#'+goafId).bootstrapToggle(json.status);
-                            if(json.hasOwnProperty("error")){
-                                $('#'+goafId).bootstrapToggle('off');
-                            }
-                        },
-                        error: function () {
-                             $('#'+goafId).bootstrapToggle('off');
-                            console.log("something is not right.please contact admin - 1");
+            //---------for data acquisition
+            $('.isGoaf').change(function () {
+                let goafId = this.id;
+                $.ajax({
+                    type: "get",
+                    url: $(this).data('url'),
+                    data: {
+                        // csrfmiddlewaretoken: "{{ csrf_token }}",
+                        id: ip,
+                    },
+                    success: function (json) {
+                        console.log(json);
+
+                        // $('#'+goafId).bootstrapToggle(json.status);
+                        if (json.hasOwnProperty("error")) {
+                            $('#' + goafId).bootstrapToggle('off');
                         }
-                    });
-                    console.log($(this).data('val'), $(this).prop('checked'));
+                    },
+                    error: function () {
+                        $('#' + goafId).bootstrapToggle('off');
+                        console.log("something is not right.please contact admin - 1");
+                    }
                 });
+                console.log($(this).data('val'), $(this).prop('checked'));
+            });
+
+
+            function show_graph() {
+                let wbt = [], dbt = [],date=[];
+                $('table#graphical tbody tr td:nth-child(1)').each(function () {
+                    //add item to array
+                    date.push($(this).text());
+                });
+                $('table#graphical tbody tr td:nth-child(3)').each(function () {
+                    //add item to array
+                    wbt.push(parseFloat($(this).text()));
+                });
+                $('table#graphical tbody tr td:nth-child(4)').each(function () {
+                    //add item to array
+                    dbt.push(parseFloat($(this).text()));
+                });
+                console.log(wbt, dbt,date);
+
+
+                var WBT = {
+                    x: date,
+                    y: wbt,
+                    mode: 'scatter',
+                    line: {
+                        color: '#80CAF6',
+                        shape: 'spline'
+                    },
+                    name: 'WBT'
+                };
+
+                var DWT = {
+                    x: date,
+                    y: dbt,
+                    xaxis: 'x2',
+                    yaxis: 'y2',
+                    mode: 'scatter',
+                    line: {color: '#DF56F1'},
+                    name: 'DBT'
+                };
+
+                var layout = {
+                    xaxis: {
+                        type: 'date',
+                        domain: [0, 1],
+                        showticklabels: false
+                    },
+                    yaxis: {domain: [0.6, 1]},
+                    xaxis2: {
+                        type: 'date',
+                        anchor: 'y2',
+                        domain: [0, 1]
+                    },
+                    yaxis2: {
+                        anchor: 'x2',
+                        domain: [0, 0.4]
+                    },
+                }
+
+                var data = [WBT, DWT];
+                console.log('data',data);
+                if (!isEmpty(wbt)) {
+                    Plotly.newPlot('stratamonitoring', data, layout);
+                }
+            }
+
+        });
 
 
     </script>
