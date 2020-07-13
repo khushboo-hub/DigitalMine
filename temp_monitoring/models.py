@@ -11,6 +11,7 @@ class homeModel(models.Model):
     sigmaHeat = models.FloatField(default=0.00)
     rel_hum_status = models.CharField(max_length=100,default="Normal")
     dew_status = models.CharField(max_length=100,default="Normal")
+    date =models.DateField(default=date.today())
 
     class Meta:
         db_table = "temp_monitoring_manual"

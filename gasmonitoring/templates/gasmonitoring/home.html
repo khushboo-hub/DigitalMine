@@ -48,7 +48,16 @@
 								</div>
 							</div>
 							<br>
-						<input type="submit" class="btn btn-primary" name="Showbutton" value="Show" /><br><br>
+							<div class="row">
+								<div class="col-md-4">
+										<label>Date-Time</label>
+									{{form.dt}}
+								</div>
+							</div>
+							<hr/>
+						<input type="submit" class="btn btn-primary" name="Showbutton" value="Show" />
+						<button type="button" class="btn btn-primary" id="print">Print</button>
+							<br><br>
 						<!--RESULT STARTS-->
 						<div class="row">
 							<div class="col-md-12">
@@ -208,10 +217,24 @@
 					</div>
 </div>					
 <script>
-    $(document.body).on("click", ".delete", function () {
-        $("#del").attr("href", $(this).data('url'));
-        $('#del_confirm_dialogue').modal('show');
+ $(document).ready(function () {
+     $(document.body).on("click", ".delete", function () {
+
+                $("#sureDelete").attr("href", $(this).data('url'));
+                $('#update_info').modal('show');
+
+            });
+ $(function(){
+        $('#id_dt').datetimepicker({
+             format: 'YYYY-MM-DD HH:mm:ss'
+           });
     });
 
+     $(document.body).on('click','#print',function(key){
+    $("#print").hide();
+     window.print();
+     $("#print").show();
+    });
+	});
 </script>
 {% endblock %}
