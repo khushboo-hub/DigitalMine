@@ -86,11 +86,11 @@
                                             <td>LM-35 (Temp Sensor)</td>
                                             <td>{{ t.wbt }}</td>
                                             <td>{{ t.dbt }}</td>
-                                            <td>{{ t.relativeHumidity }}</td>
-                                            <td>{{ t.dewPointTemp }}</td>
-                                            <td>{{ t.moistureContent }}</td>
-                                            <td>{{ t.sigmaHeat }}</td>
-                                            <td>{{ t.enthalpy }}</td>
+                                            <td>{{ t.relativeHumidity|floatformat:2 }}</td>
+                                            <td>{{ t.dewPointTemp|floatformat:2 }}</td>
+                                            <td>{{ t.moistureContent|floatformat:2 }}</td>
+                                            <td>{{ t.sigmaHeat|floatformat:2 }}</td>
+                                            <td>{{ t.enthalpy|floatformat:2 }}</td>
                                         </tr>
                                     {% endfor %}
                                     {% endtimezone %}
@@ -121,11 +121,11 @@
                                                 <td>LM-35 (Temp Sensor)</td>
                                                 <td>{{ t.wbt }}</td>
                                                 <td>{{ t.dbt }}</td>
-                                                <td>{{ t.relativeHumidity }}</td>
-                                                <td>{{ t.dewPointTemp }}</td>
-                                                <td>{{ t.moistureContent }}</td>
-                                                <td>{{ t.sigmaHeat }}</td>
-                                                <td>{{ t.enthalpy }}</td>
+                                                <td>{{ t.relativeHumidity|floatformat:2 }}</td>
+                                                <td>{{ t.dewPointTemp|floatformat:2 }}</td>
+                                                <td>{{ t.moistureContent|floatformat:2 }}</td>
+                                                <td>{{ t.sigmaHeat|floatformat:2 }}</td>
+                                                <td>{{ t.enthalpy|floatformat:2 }}</td>
                                             </tr>
                                         {% endfor %}
                                     {% endif %}
