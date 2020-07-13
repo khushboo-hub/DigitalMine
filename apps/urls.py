@@ -25,7 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('snippets/', include('snippets.urls')),
     path('gasmonitoring/', include('gasmonitoring.urls', namespace='gasmonitoring')),
-    path('temp_monitoring', include('temp_monitoring.urls', namespace='temp_monitoring')),
+    path('temp_monitoring/', include('temp_monitoring.urls', namespace='temp_monitoring')),
     path('gasmonitoring_wifi/', include('gasmonitoring_wifi.urls', namespace='gasmonitoring_wifi')),
     path('inventory_management/', include('inventory_management.urls', namespace='inventory_management')),
 

@@ -9,60 +9,77 @@
                 <form action="" method="post" class="post-form">
                     {% csrf_token %}
                     <div class="row">
-                    <div class="col-md-4 text-center"><span class="text-center">WBT</span>{{ form.wbt }}</div>
-                    <div class="col-md-4 text-center"><span>DBT</span>{{ form.dbt }}</div>
-                    <div class="col-md-4 text-center"><span>Date</span>{{ form.date }}</div>
+                        <div class="col-md-4 text-center"><span class="text-center"><b>WBT</b></span>{{ form.wbt }}
+                        </div>
+                        <div class="col-md-4 text-center"><span><b>DBT</b></span>{{ form.dbt }}</div>
+                        <div class="col-md-4 text-center"><span><b>Date</b></span>{{ form.date }}</div>
                     </div>
 
                     <br><br>
                     <div class="row">
-                    <div class="text-center"><input type="submit" class="btn btn-primary text-center" name="Showbutton" value="Show">&nbsp;
-                        <input type="submit" class="btn btn-danger" name="erasebutton" value="Reset"/></div>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary text-center" name="Showbutton" value="Show">
+                        </div>
                     </div>
-
                 </form>
             </div>
         </div>
-    <br>
-    <div class="table-responsive">
-        <table class="table table-responsive table-bordered">
-            <tr>
-                <th> Date</th>
-                <th> Relative Humidity</th>
-                <th> Dew Point Temp</th>
-                <th> Moisture Content</th>
-                <th> Sigma Heat</th>
-                <th> Enthalpy</th>
-            </tr>
-            {% for temp in temperature %}
+        <br>
+        <div class="table-responsive">
+            <table class="table table-responsive table-bordered">
                 <tr>
-                     <td>{{ temp.date }}</td>
-                    <td>{{ temp.analysis.relativeHumidity }}<br>
-                        {% if temp.analysis.relativeHumidity_msg == "Normal" %}
-                            <span style="color:green">{{ temp.analysis.relativeHumidity_msg }}</span>
-                        {% else %}
-                            <span style="color:red">{{ temp.analysis.relativeHumidity_msg }}</span>
-                        {% endif %}
-                    </td>
-                    <td>{{ temp.analysis.dewpoint }}<br>
-                        {% if temp.analysis.dewpoint_msg == "Normal" %}
-                            <span style="color:green">{{ temp.analysis.dewpoint_msg }}</span>
-                        {% else %}
-                            <span style="color:red">{{ temp.analysis.dewpoint_msg }}</span>
-                        {% endif %}</td>
-                    <td>{{ temp.analysis.moistureContent }}</td>
-                    <td>{{ temp.analysis.sigmaHeat }}</td>
-                    <td>{{ temp.analysis.enthalpy }}</td>
+                    <th> Date</th>
+                    <th> Relative Humidity</th>
+                    <th> Dew Point Temp</th>
+                    <th> Moisture Content</th>
+                    <th> Sigma Heat</th>
+                    <th> Enthalpy</th>
+                    <th>Delete</th>
                 </tr>
-            {% endfor %}
+                {% for temp in temperature %}
+                    <tr>
+                        <td>{{ temp.date }}</td>
+                        <td>{{ temp.analysis.relativeHumidity }}<br>
+                            {% if temp.analysis.relativeHumidity_msg == "Normal" %}
+                                <span style="color:green">{{ temp.analysis.relativeHumidity_msg }}</span>
+                            {% else %}
+                                <span style="color:red">{{ temp.analysis.relativeHumidity_msg }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ temp.analysis.dewpoint }}<br>
+                            {% if temp.analysis.dewpoint_msg == "Normal" %}
+                                <span style="color:green">{{ temp.analysis.dewpoint_msg }}</span>
+                            {% else %}
+                                <span style="color:red">{{ temp.analysis.dewpoint_msg }}</span>
+                            {% endif %}</td>
+                        <td>{{ temp.analysis.moistureContent }}</td>
+                        <td>{{ temp.analysis.sigmaHeat }}</td>
+                        <td>{{ temp.analysis.enthalpy }}</td>
+                        <td><a href="#" class="delete" data-url="{% url 'temp_monitoring:delete' temp.id %}" title="Remove"><span class="glyphicon glyphicon-trash"></span></a></td>
+                    </tr>
+                {% endfor %}
 
-        </table>
-    </div>
+            </table>
+        </div>
     </div>
     <script>
-        $(function () {
-            $('#id_date').datetimepicker({
-                format: 'YYYY-MM-DD'
+        $(document).ready(function () {
+            $(document.body).on("click", ".delete", function () {
+
+                $("#sureDelete").attr("href", $(this).data('url'));
+                $('#update_info').modal('show');
+
+            });
+            $(function () {
+                $('#id_date').datetimepicker({
+                    format: 'YYYY-MM-DD'
+                });
+            });
+
+            $(document.body).on('click', '#print', function (key) {
+                $("#print").hide();
+                window.print();
+                $("#print").show();
             });
         });
     </script>

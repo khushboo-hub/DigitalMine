@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 import math
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.http import HttpResponse
 from typing import Any
@@ -22,13 +22,11 @@ from background_task import background
 @login_required
 def index(request,template_name='main/home.html'):
     form=temperatureForm()
-    obj=[]
     obj = temperature.objects.all()
     if request.method == 'POST' and 'Showbutton' in request.POST:
         form = temperatureForm(request.POST or None)
         if form.is_valid():
             form.save()
-
 
     return render(request, template_name,{'form':form,'temperature':obj})
 
@@ -41,10 +39,10 @@ def tables(request):
     # print(table)
     # return render(request, 'main/table1.html', {'table': table})
 
-def delete(request):
+def delete(request,pk):
 
-    temperature.objects.all().delete()
-    return tables(request)
+    temperature.objects.get(pk=pk).delete()
+    return redirect('temp_monitoring:index')
 
 def choose(request):
 
@@ -71,8 +69,6 @@ def live_temp_data(request):
 
 
 def fetch_sensor_values_ajax(request):
-    sdbt = swbt = vp = asv = asd = tsd = enthalpy = relativeHumidity = moistureContent = sigmaHeat = dewPointTemp = 0.0
-    enthalpym = relativeHumiditym = moistureContentm = sigmaHeatm = dewPointTempm = " "
     data = {}
     if request.is_ajax():
         sensor_data = []
@@ -83,68 +79,28 @@ def fetch_sensor_values_ajax(request):
         try:
             response = requests.get('http://' + str(sensor_id))
             sensor_val = strip_tags(response.text)
+
             if (sensor_val):
+
                 temps=sensor_val.split(',')
-                data = {'wbt1':temps[0],'dbt1':temps[1]}
-                wbt_object = temperature()
-                wbt_object.wbt = data['wbt1']
-                swbt = 610.5 * (2.713**((float(data['wbt1']) * 17.27) / (float(data['wbt1'])+273.3)))
+                data = {'wbt':temps[0],'dbt':temps[1]}
 
-                wbt_object.dbt = data['dbt1']
-                sdbt = 610.5 * (2.713**((float(data['dbt1']) * 17.27) / (float(data['dbt1'])+273.3)))
+                wbt_object = temperature(wbt=float(data['wbt']),
+                                         dbt=float(data['dbt']))
 
-                vp = swbt - ((0.000644*101000.00)*(float(data['dbt1'])-float(data['wbt1'])))
-
-                wbt_object.relativeHumidity = (vp/sdbt) * 100
-                relativeHumidity=wbt_object.relativeHumidity
-                wbt_object.moistureContent = 622 * (vp/(101000.00-vp))
-                moistureContent=wbt_object.moistureContent
-
-                wbt_object.enthalpy = (1.005 * float(data['dbt1'])) + (wbt_object.moistureContent * (2.5016 + (0.0018 * float(data['dbt1']))))
-                enthalpy=wbt_object.enthalpy
-                wbt_object.sigmaHeat = wbt_object.enthalpy - (0.004187 * wbt_object.moistureContent * float(data['wbt1']))
-                sigmaHeat=wbt_object.sigmaHeat
-                wbt_object.dewPointTemp = ((237.3 * math.log(vp/610.5))/17.27) - math.log(vp/610.5)
-                dewPointTemp=wbt_object.dewPointTemp
-
-                if (dewPointTemp <= 30.5):
-                    wbt_object.dew_status = "Normal"
-                else:
-                    wbt_object.dew_status = "Danger"
-
-                if (relativeHumidity > 99):
-                    wbt_object.rel_hum_status = "Safe"
-                else:
-                    wbt_object.rel_hum_status = "Danger"
-
-                # wbt_object.save()
-
-                if (dewPointTemp <= 30.5):
-                    dewPointTempm = "Normal"
-                else:
-                    dewPointTempm = "Danger"
-                if (relativeHumidity >99):
-                    relativeHumiditym = "Safe"
-                else:
-                    relativeHumiditym = "Danger"
-
-                    
-
-                    # sensor_data.append(str(ok_date) + ',' +str(temps[0])+ ',' +str(temps[1])+','
-                    # +str(wbt_object.relativeHumidity)+','+str(wbt_object.dewPointTemp)
-                    # +','+str(wbt_object.moistureContent)+','+str(wbt_object.sigmaHeat)
-                    # +','+str(wbt_object.enthalpy)+','+str(wbt_object.rel_hum_status)+','+str(wbt_object.dew_status)) 
+                analysis=wbt_object.analysis()
+                print('analysiss',analysis)
 
                 sensor_data = {'date': str(ok_date),
                                'wbt': str(temps[0]),
                                'dbt': str(temps[1]),
-                               'relativeHumidity': str(wbt_object.relativeHumidity),
-                               'dewPointTemp': str(wbt_object.dewPointTemp),
-                               'moistureContent': str(wbt_object.moistureContent),
-                               'sigmaHeat': str(wbt_object.sigmaHeat),
-                               'enthalpy': str(wbt_object.enthalpy),
-                               'rel_hum_status': str(wbt_object.rel_hum_status),
-                               'dew_status': str(wbt_object.dew_status)}
+                               'relativeHumidity': str(analysis['relativeHumidity']),
+                               'dewPointTemp': str(analysis['dewpoint']),
+                               'moistureContent': str(analysis['moistureContent']),
+                               'sigmaHeat': str(analysis['sigmaHeat']),
+                               'enthalpy': str(analysis['enthalpy']),
+                               'rel_hum_status': str(analysis['relativeHumidity_msg']),
+                               'dew_status': str(analysis['dewpoint_msg'])}
 
                     
             else:
@@ -158,7 +114,8 @@ def fetch_sensor_values_ajax(request):
                                'enthalpy': 0.0,
                                'rel_hum_status': "Not Found",
                                'dew_status': "Not Found"}
-        except Exception as x:
+        except Exception as e:
+            print(e)
             sensor_data = {'date': str(ok_date),
                                'wbt': 0.0,
                                'dbt': 0.0,
@@ -167,12 +124,12 @@ def fetch_sensor_values_ajax(request):
                                'moistureContent': 0.0,
                                'sigmaHeat': 0.0,
                                'enthalpy': 0.0,
-                               'rel_hum_status': "Network Error",
+                               'rel_hum_status': "Network Error"+str(e),
                                'dew_status': "Network Error"}
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
-    print(data)
+    # print(data)
     return JsonResponse(data)
 
 
@@ -183,61 +140,43 @@ def run_back_save(sensor_id): ## sensor_id means here ip address
     enthalpym = relativeHumiditym = moistureContentm = sigmaHeatm = dewPointTempm = " "
     data = {}
     print("===============Temp data background start=========================")
-    inst = temp_monitoring_automatic()
-    inst.ip_address = sensor_id
+
+
 
     try:
         response = requests.get('http://' + str(sensor_id))
         sensor_val = strip_tags(response.text)
+
+        now = datetime.now()
+        ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
         if (sensor_val):
-                temps=sensor_val.split(',')
-                data = {'wbt1':temps[0],'dbt1':temps[1]}
-                inst.wbt = data['wbt1']
-                swbt = 610.5 * (2.713**((float(data['wbt1']) * 17.27) / (float(data['wbt1'])+273.3)))
+            temps = sensor_val.split(',')
+            data = {'wbt': temps[0], 'dbt': temps[1]}
 
-                inst.dbt = data['dbt1']
-                sdbt = 610.5 * (2.713**((float(data['dbt1']) * 17.27) / (float(data['dbt1'])+273.3)))
+            wbt_object = temperature(wbt=float(data['wbt']),
+                                     dbt=float(data['dbt']))
 
-                vp = swbt - ((0.000644*101000.00)*(float(data['dbt1'])-float(data['wbt1'])))
+            analysis = wbt_object.analysis()
 
-                inst.relativeHumidity = (vp/sdbt) * 100
-                relativeHumidity=inst.relativeHumidity
-                inst.moistureContent = 622 * (vp/(101000.00-vp))
-                moistureContent=inst.moistureContent
-
-                inst.enthalpy = (1.005 * float(data['dbt1'])) + (inst.moistureContent * (2.5016 + (0.0018 * float(data['dbt1']))))
-                enthalpy=inst.enthalpy
-                inst.sigmaHeat = inst.enthalpy - (0.004187 * inst.moistureContent * float(data['wbt1']))
-                sigmaHeat=inst.sigmaHeat
-                inst.dewPointTemp = ((237.3 * math.log(vp/610.5))/17.27) - math.log(vp/610.5)
-                dewPointTemp=inst.dewPointTemp
-
-                if (dewPointTemp <= 30.5):
-                    inst.dew_status = "Normal"
-                else:
-                    inst.dew_status = "Danger"
-
-                if (relativeHumidity > 99):
-                    inst.rel_hum_status = "Safe"
-                else:
-                    inst.rel_hum_status = "Danger"
-
-                # wbt_object.save()
-
-                if (dewPointTemp <= 30.5):
-                    dewPointTempm = "Normal"
-                else:
-                    dewPointTempm = "Danger"
-                if (relativeHumidity >99):
-                    relativeHumiditym = "Safe"
-                else:
-                    relativeHumiditym = "Danger" 
-                inst.save()  
+            inst = temp_monitoring_automatic(
+                           ip_address = str(sensor_id),
+                           wbt= float(temps[0]),
+                           dbt= float(temps[1]),
+                           relativeHumidity= float(analysis['relativeHumidity']),
+                           dewPointTemp= float(analysis['dewpoint']),
+                           moistureContent= float(analysis['moistureContent']),
+                           sigmaHeat= float(analysis['sigmaHeat']),
+                           enthalpy= float(analysis['enthalpy']),
+                           rel_hum_status= str(analysis['relativeHumidity_msg']),
+                           dew_status= str(analysis['dewpoint_msg']))
+            inst.save()
+            # wbt_object.save()
             
         else:
             pass
             # inst.wbt = 0.0
-    except Exception as x:
+    except Exception as e:
+        print('exeetion',str(e))
         pass
         # inst.wbt = 0.0
     # inst.save()

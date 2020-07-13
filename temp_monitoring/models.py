@@ -1,12 +1,13 @@
 import math
 from django.db import models
 from datetime import date, datetime
-
+from django.utils.timezone import now
 
 class temperature(models.Model):
     wbt = models.FloatField(default=0.00)
     dbt = models.FloatField(default=0.00)
-    date = models.DateField(default=date.today())
+
+    date = models.DateField(default=now)
 
     def analysis(self):
         swbt = 610.5 * (2.713 ** ((self.wbt * 17.27) / (self.wbt + 273.3)))
@@ -28,7 +29,7 @@ class temperature(models.Model):
         else:
             dewPointTempm = "Danger"
         if (relativeHumidity > 99):
-            relativeHumiditym = "Safe"
+            relativeHumiditym = "Normal"
         else:
             relativeHumiditym = "Danger"
 
@@ -60,7 +61,7 @@ class temp_monitoring_automatic(models.Model):
     dew_status = models.CharField(max_length=100, default="Normal")
     ip_address = models.CharField(max_length=100, null=True, blank=True)
 
-    created_date = models.DateTimeField(default=datetime.now, blank=True)
+    created_date = models.DateTimeField(default=now, blank=True)
     modified_date = models.DateTimeField(auto_now=True)
 
     class Meta:
