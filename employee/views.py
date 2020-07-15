@@ -818,7 +818,7 @@ def search_emp(request):
 def abs_filter(value):
     return abs(value)
 
-
+@login_required
 def org_chart(request, template_name='employee/employeechart.html'):
     data = {}
     if request.method == "POST":
