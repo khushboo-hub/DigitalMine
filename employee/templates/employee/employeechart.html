@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+<link href="https://fonts.googleapis.com/css?family=Gochi+Hand" rel="stylesheet">
+    <script src="{% static 'js/OrgChart.js' %}"></script>
+    <style>
+        html, body {
+            margin: 0px;
+            padding: 0px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: Helvetica;
+        }
+
+        #tree {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        /*partial*/
+        .node.QA rect {
+            fill: #F57C00;
+        }
+
+        .node.Dev rect {
+            fill: #039BE5;
+        }
+
+        .node.Marketing rect {
+            fill: #FFCA28;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
+                      method="POST">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <!-- <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                          <button class="btn btn-primary" type="button">
+                            <i class="fas fa-search fa-sm"></i>
+                          </button>
+                        </div> -->
+                        <label for="mine"></label><select name="mine_name" onchange="this.form.submit()" id="mine"
+                                                          class="form-control">
+                        {% for x in mine_table %}
+                            {% firstof var1 var2 var3 %}
+                            <option {% if selected == x.id %} selected {% endif %}
+                                                              value="{{ x.id }}">{{ x.name }}</option>
+                        {% endfor %}
+                    </select>
+                    </div>
+                </form>
+            <div id="org-chart" hidden>
+                {{ emp }}</div>
+            <section class="col-md-12">
+                <h3 class="page-header text-center"><b>Organizational Chart for mine <span class="label label-success">{{ mine_name }}</b></h3>
+                <!-- Table content -->
+                <div class="row">
+                    <div class="form-group">
+                      <div id="tree"></div>
+                    </div>
+                </div><!--end Table content -->
+            </section>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('input#print').click(function () {
+                window.print();
+            });
+            let  nodes=$('#org-chart').html();
+            nodes=JSON.parse(nodes);
+            for (var i = 0; i < nodes.length; i++) {
+                var node = nodes[i];
+                switch (node.title) {
+                    case "QA":
+                        node.tags = ["QA"];
+                        break;
+                    case "Marketer":
+                    case "Designer":
+                    case "Sales Manager":
+                        node.tags = ["Marketing"];
+                        break;
+                }
+            }
+
+            var chart = new OrgChart(document.getElementById("tree"), {
+                layout: OrgChart.mixed,
+                nodeBinding: {
+                    field_0: "name",
+                    field_1: "title",
+                    img_0: "img"
+                },
+                nodes: nodes
+            });
+        });
+
+    </script>
+{% endblock %}
+

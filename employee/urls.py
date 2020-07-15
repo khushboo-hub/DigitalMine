@@ -21,6 +21,7 @@ urlpatterns = [
     path('delete/<int:pk>', views.employee_delete, name='employee_delete'),
     path('more_details_ajax', views.more_details_ajax, name='more_details_ajax'),
     path('view/<int:pk>',views.employee_view,name='employee_view'),
+    path('org-chart',views.org_chart,name='org_chart'),
     path('generate_login_details_ajax', views.generate_login_details_ajax, name='generate_login_details_ajax'),
     path('update_shift_link_ajax', views.update_shift_link_ajax, name="update_shift_link_ajax"),
     path('minimum_wage', views.MinimumWage, name='minimum_wage'),#new

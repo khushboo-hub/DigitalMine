@@ -181,7 +181,8 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.name
-
+    def ids(self):
+        return self.id
     def mine_name(self):
         return "Hello"
 
