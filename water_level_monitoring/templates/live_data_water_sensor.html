@@ -167,14 +167,14 @@
                             water_third_audio = water.level1_audio;
                             $('#sensor_content').DataTable({
                                 'rowCallback': function (row, data, index) {
-                                    if (parseFloat(data[3]) < parseFloat(water_l_value)) {
+                                    if (parseFloat(data[3]) <= parseFloat(water_l_value)) {
                                         $(row).find('td:eq(3)').css('color', 'blue');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) < parseFloat(water_m_value)) {
+                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) <= parseFloat(water_m_value)) {
                                         $(row).find('td:eq(3)').css('color', 'green');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) < parseFloat(water_h_value)) {
-                                        $(row).find('td:eq(3)').css('color', 'yellow');
+                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) <= parseFloat(water_h_value)) {
+                                        $(row).find('td:eq(3)').css('color', '#ff9800');
 
                                     } else {
                                         $(row).find('td:eq(3)').css('color', 'red');

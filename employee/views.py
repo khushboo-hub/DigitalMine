@@ -45,7 +45,7 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
         book = Employee.objects.filter(mine_id=profile.mine_id.id)
 
     data['object_list'] = book
-    data['medical'] = MedicalReport.objects.all()
+    # data['medical'] = MedicalReport.objects.all()
 
     return render(request, template_name, data)
 

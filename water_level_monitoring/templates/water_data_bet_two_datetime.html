@@ -150,14 +150,14 @@
                             let water_third_audio = water.level1_audio;
                             $('#sensor_content').DataTable({
                                 'rowCallback': function (row, data, index) {
-                                    if (parseFloat(data[3]) < parseFloat(water_l_value)) {
+                                    if (parseFloat(data[3]) <= parseFloat(water_l_value)) {
                                         $(row).find('td:eq(3)').css('color', 'blue');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) < parseFloat(water_m_value)) {
+                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) <= parseFloat(water_m_value)) {
                                         $(row).find('td:eq(3)').css('color', 'green');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) < parseFloat(water_h_value)) {
-                                        $(row).find('td:eq(3)').css('color', 'yellow');
+                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) <= parseFloat(water_h_value)) {
+                                        $(row).find('td:eq(3)').css('color', '#ff9800');
 
                                     } else {
                                         $(row).find('td:eq(3)').css('color', 'red');
@@ -196,7 +196,7 @@
                                     'copy', 'csv', 'pdf'
                                 ],
                             });
-                            waterTable(location_id, date_from, date_to);
+                            waterTable(location_id, date_from, date_to,water_t_height);
 
 
                         }
@@ -207,7 +207,7 @@
                 });
             });
 
-            var waterTable = function (location_id, date_from, date_to) {
+            var waterTable = function (location_id, date_from, date_to,water_t_height) {
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_data_bet_two_datetime' %}",
@@ -223,7 +223,7 @@
                             let datatable = $('#sensor_content').DataTable();
                             for (let water in water_data) {
                                 if (water_data.hasOwnProperty(water)) {
-                                    datatable.row.add([water_data[water].date, water_data[water].mine, water_data[water].area, water_data[water].sensor_value]).draw().node();
+                                    datatable.row.add([water_data[water].date, water_data[water].mine, water_data[water].area, water_t_height-water_data[water].sensor_value]).draw().node();
                                 }
                             }
                         }
