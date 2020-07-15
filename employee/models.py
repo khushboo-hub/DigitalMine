@@ -291,7 +291,7 @@ class MedicalReport(models.Model):
         now = timezone.now()
         nextdate = datetime.strptime(self.nextdate(), '%Y-%m-%d')
         diff = nextdate-now
-        return diff
+        return diff.days
 
     class Meta:
         db_table = "medical_report"
