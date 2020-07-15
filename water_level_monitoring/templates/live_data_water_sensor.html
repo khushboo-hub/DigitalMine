@@ -189,7 +189,7 @@
                                     'copy', 'csv', 'pdf', 'print'
                                 ],
                             });
-                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
 
                         }
                     },
@@ -200,7 +200,7 @@
 
             });
 
-            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
+            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -211,15 +211,17 @@
                         if (data.hasOwnProperty('result')) {
                             let water = data.result;
                             let datatable = $('#sensor_content').DataTable();
-                            datatable.row.add([water.date, water.mine, water.mine, water.sensor_value]).draw().node();
-                            checkAndPlay(water.sensor_value, water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio)
+                            let value = parseFloat(water_t_height) - parseFloat(water.sensor_value);
+                            console.log('t hieght sensor value',water_t_height,water.sensor_value);
+                            datatable.row.add([water.date, water.mine, water.mine, value]).draw().node();
+                            checkAndPlay(value, water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio)
                         }
                     },
                     error: function () {
                         console.log("Something Went Wrong!");
                     },
                     complete: function () {
-                        setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+                        setTimeout(waterTable(location_id, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
                     }
                 });
             };

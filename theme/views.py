@@ -38,8 +38,8 @@ def home(request):
         # cache.set('profile_avatar','employee_image/male_alt_photo.svg', 30)
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
-
-    data['notification']={'medical':Notification.objects.filter(type=10)}
+    print('Notification',Notification.objects.filter(type=10).distinct())
+    data['notification']={'medical':Notification.objects.filter(type=10).distinct('employee_id')}
     data['profile_avatar']=cache.get('profile_avatar')
     return render(request, template_name, data)
 

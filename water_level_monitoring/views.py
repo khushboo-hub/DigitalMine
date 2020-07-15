@@ -149,6 +149,7 @@ def fetch_sensor_details(request):  # fetch IP address and water level only (For
                               'audio_type': sensor.audio_play_type,
                               'moter_start_level': sensor.moter_start_level,
                               'moter_stop_level': sensor.moter_stop_level
+
                               }
     else:
         data['result'] = "Not Ajax"
@@ -164,6 +165,8 @@ def fetch_water_level_ajax(request):
 
         sensor_id = request.GET.get('id', None)
         sensor_details = water_level_monitoring_model.objects.get(id=sensor_id)
+
+
         mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
