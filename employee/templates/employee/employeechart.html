@@ -34,30 +34,22 @@
     </style>
     <div class="container">
         <div class="row">
+
+            <div id="org-chart" hidden>
+                {{ emp }}</div>
+            <section class="col-md-12">
             <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
                       method="POST">
                     {% csrf_token %}
-                    <div class="input-group">
-                        <!-- <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-                        <div class="input-group-append">
-                          <button class="btn btn-primary" type="button">
-                            <i class="fas fa-search fa-sm"></i>
-                          </button>
-                        </div> -->
-                        <label for="mine"></label><select name="mine_name" onchange="this.form.submit()" id="mine"
-                                                          class="form-control">
+                <h3 class="page-header text-center"><b>Organizational Chart for Mine: <span class="label label-success"><select name="mine_name" onchange="this.form.submit()" id="mine"
+                                                          class="label label-success">
                         {% for x in mine_table %}
                             {% firstof var1 var2 var3 %}
                             <option {% if selected == x.id %} selected {% endif %}
                                                               value="{{ x.id }}">{{ x.name }}</option>
                         {% endfor %}
-                    </select>
-                    </div>
-                </form>
-            <div id="org-chart" hidden>
-                {{ emp }}</div>
-            <section class="col-md-12">
-                <h3 class="page-header text-center"><b>Organizational Chart for mine <span class="label label-success">{{ mine_name }}</b></h3>
+                    </select></b></h3>
+             </form>
                 <!-- Table content -->
                 <div class="row">
                     <div class="form-group">
