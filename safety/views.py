@@ -29,7 +29,7 @@ def safe(request):
 
             SafetyTable.objects.bulk_create(safety_table)
 
-            return redirect('safety:show')
+            return redirect('safety:show',str(safety_id.id))
 
     return render(request, 'safety/index.html', {'form1': form1, 'form2': form2})
 
@@ -110,7 +110,13 @@ def edit(request, pk, template_name='safety/index.html'):
 
 
 def delete(request, pk):
-    pass
+    try:
+        safety=Safety.objects.get(pk=pk)
+        safety.delete()
+        messages.success(request,"Deleted Successfully")
+    except :
+        messages.error(request,"Something went wrong")
+    return redirect('safety:manage')
 
 
 def fetch_dropdownlist(request):

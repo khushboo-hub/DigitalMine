@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-    {% load static %}
-    <style>
-        @media print {
+{% load static %}
+<style>
+        @media print
+        {
             body {
                 height: 0%;
             }
@@ -14,9 +15,8 @@
             button,a#go-back, div.spacer, div#form-not-print {
                 display: none !important;
             }
-        }
-
-    </style>
+    }
+</style>
     <div class="container">
         <div class="row">
             <section class="col-md-12">
