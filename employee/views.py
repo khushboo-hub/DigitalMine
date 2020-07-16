@@ -45,7 +45,7 @@ def employee_manage(request, template_name='employee/employee_manage.html'):
         book = Employee.objects.filter(mine_id=profile.mine_id.id)
 
     data['object_list'] = book
-    data['medical'] = MedicalReport.objects.all()
+    # data['medical'] = MedicalReport.objects.all()
 
     return render(request, template_name, data)
 
@@ -817,3 +817,43 @@ def search_emp(request):
 @register.filter(name='abs')
 def abs_filter(value):
     return abs(value)
+
+@login_required
+def org_chart(request, template_name='employee/employeechart.html'):
+    data = {}
+    if request.method == "POST":
+        print('calling post')
+        mine_name = request.POST.get("mine_name", None)
+        mine = get_object_or_404(MineDetails, pk=mine_name)
+    else:
+        print('calling else')
+        try:
+            mine = MineDetails.objects.all()[:1].get()
+        except:
+            return HttpResponse('No mine found. Please add mine')
+
+    employees = Employee.objects.filter(mine_id=mine.id).order_by('id')
+    mine_table = MineDetails.objects.all()
+
+    data['selected'] = mine.id
+    data['mine_name'] = mine.name
+    data['mine_table'] = mine_table
+    empl = []
+    for emp in employees:
+        try:
+            parent_id = str(emp.immediate_staff.id)
+        except:
+            parent_id = ''
+            pass
+        empl.append({
+            'id': str(emp.id),
+            'pid': str(parent_id),
+            'name': str(emp.name),
+            'title': str(emp.mining_role),
+            'email': str(emp.email),
+            'img': str(emp.photo.url)
+        })
+    import json
+    return_data = json.dumps(empl)
+    data['emp'] = return_data
+    return render(request, template_name, data)

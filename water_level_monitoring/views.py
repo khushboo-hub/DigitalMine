@@ -149,6 +149,7 @@ def fetch_sensor_details(request):  # fetch IP address and water level only (For
                               'audio_type': sensor.audio_play_type,
                               'moter_start_level': sensor.moter_start_level,
                               'moter_stop_level': sensor.moter_stop_level
+
                               }
     else:
         data['result'] = "Not Ajax"
@@ -164,6 +165,8 @@ def fetch_water_level_ajax(request):
 
         sensor_id = request.GET.get('id', None)
         sensor_details = water_level_monitoring_model.objects.get(id=sensor_id)
+
+
         mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
@@ -280,6 +283,7 @@ def fetch_water_data_bet_two_datetime(request):
             sensor_id=location).filter(created_date__range=(date_from, date_to)).order_by('-id')
 
         for water in water_data_details:
+
             prepared_data.append({'date':water.created_date,'mine':mine_details.name,'area':water_level_data_details.area_name,'sensor_value':water.sensor_value})
 
         data['result'] = prepared_data
@@ -346,7 +350,7 @@ def warning_fetch_water_data_bet_two_datetime(request):
 
 
 def warning_report(request):
-    HttpResponse("development")
+    return HttpResponse("development")
 #======================== Background task only==================================
 
 @background(schedule=5)

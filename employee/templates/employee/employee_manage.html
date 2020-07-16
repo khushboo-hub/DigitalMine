@@ -83,6 +83,8 @@
                     <div class="col-md-12">
                         <a class="btn btn-primary" href="{% url 'employee:employee_add' %}" data-toggle="tooltip"
                            title="Click here to Add New Employee">Add Employee</a>
+                        <a class="btn btn-primary" href="{% url 'employee:org_chart' %}" data-toggle="tooltip"
+                           title="Click here see organizational chart">Organizational Chart</a>
                     </div>
                 </div>
                 <hr>
@@ -116,16 +118,19 @@
                                         <!--                                <td>{{ book.id }}</td>-->
                                         <td>
                                             {{ book.name }}<br>
-                                            {% if book.medicalreport_set.get.days_left_for_next_date == 0 %}
-                                                        <span class="label label-danger">Today is the medical date</span>
+                                            {% if book.medicalreport_set.all.last.days_left_for_next_date == 0 %}
 
-                                            {% elif book.medicalreport_set.get.days_left_for_next_date %}
+                                                <span class="label label-success">Today is the medical date</span>
 
-                                                {% if book.medicalreport_set.get.days_left_for_next_date < 14 %}
-                                                    {% if book.medicalreport_set.get.days_left_for_next_date <= 0 %}
-                                                        <span class="label label-danger">Medical Date has expired <b>{{ book.medicalreport_set.get.days_left_for_next_date|abs }}</b> days ago</span>
+                                            {% elif book.medicalreport_set.all.last.days_left_for_next_date %}
+
+
+                                                {% if book.medicalreport_set.all.last.days_left_for_next_date < 14 %}
+
+                                                    {% if book.medicalreport_set.all.last.days_left_for_next_date <= 0 %}
+                                                        <span class="label label-danger">Medical Date has expired <b>{{ book.medicalreport_set.all.last.days_left_for_next_date|abs }}</b> days ago</span>
                                                     {% else %}
-                                                        <span class="label label-warning">only <b>{{ book.medicalreport_set.get.days_left_for_next_date }}</b> left for next medical date</span>
+                                                        <span class="label label-warning">only <b>{{ book.medicalreport_set.all.last.days_left_for_next_date }}</b> days left for next medical date</span>
                                                     {% endif %}
                                                 {% endif %}
 
