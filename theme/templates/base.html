@@ -258,7 +258,7 @@
 
     </script>
 
-    <link rel="stylesheet" href="{% static 'css/kisku_custom.css' %}">
+{#    <link rel="stylesheet" href="{% static 'css/kisku_custom.css' %}">#}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/toastr.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/filepond.css' %}">
@@ -419,7 +419,9 @@
                                             Monitoring</strong>
                                         </li>
 
-                                        {% if request|manager %}<li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>{% endif %}
+{#                                        {% if request|manager %}#}
+                                            <li><a href="{% url 'sensor:node_add' %}">Add Wireless Node<sub></sub></a></li>
+{#                                        {% endif %}#}
                                         <li><a href="{% url 'sensor:node_manage' %}">Manage Wireless Node<sub></sub></a>
                                         </li>
                                         <li><a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a></li>

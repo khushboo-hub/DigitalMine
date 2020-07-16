@@ -38,8 +38,12 @@ def home(request):
         # cache.set('profile_avatar','employee_image/male_alt_photo.svg', 30)
         profile["profile_avatar"] = 'employee_image/male_alt_photo.svg'
         pass
-
-    data['notification']={'medical':Notification.objects.filter(type=10)}
+    medical=[]
+    EmployeesNotif=Notification.objects.filter(type=10).values('employee_id').distinct()
+    for emp in EmployeesNotif:
+        message=Notification.objects.order_by('-id').filter(employee_id=emp['employee_id'])[0]
+        medical.append({'message':message.message})
+    data['notification']={'medical':medical}
     data['profile_avatar']=cache.get('profile_avatar')
     return render(request, template_name, data)
 

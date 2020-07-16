@@ -181,7 +181,8 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.name
-
+    def ids(self):
+        return self.id
     def mine_name(self):
         return "Hello"
 
@@ -288,8 +289,9 @@ class MedicalReport(models.Model):
 
     def days_left_for_next_date(self):
         now = timezone.now()
+        print('NOWWW',now)
         nextdate = datetime.strptime(self.nextdate(), '%Y-%m-%d')
-        diff = nextdate-now
+        diff = nextdate-datetime.strptime(now.strftime('%Y-%m-%d'), '%Y-%m-%d')
         return diff.days
 
     class Meta:

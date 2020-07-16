@@ -169,14 +169,14 @@
                             water_third_audio = water.level3_audio;
                             $('#sensor_content').DataTable({
                                 'rowCallback': function (row, data, index) {
-                                    if (parseFloat(data[3]) < parseFloat(water_l_value)) {
+                                    if (parseFloat(data[3]) <= parseFloat(water_l_value)) {
                                         $(row).find('td:eq(3)').css('color', 'blue');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) < parseFloat(water_m_value)) {
+                                    } else if (parseFloat(data[3]) > parseFloat(water_l_value) && parseFloat(data[3]) <= parseFloat(water_m_value)) {
                                         $(row).find('td:eq(3)').css('color', 'green');
 
-                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) < parseFloat(water_h_value)) {
-                                        $(row).find('td:eq(3)').css('color', 'yellow');
+                                    } else if (parseFloat(data[3]) > parseFloat(water_m_value) && parseFloat(data[3]) <= parseFloat(water_h_value)) {
+                                        $(row).find('td:eq(3)').css('color', '#ff9800');
 
                                     } else {
                                         $(row).find('td:eq(3)').css('color', 'red');
@@ -191,7 +191,8 @@
                                     'copy', 'csv', 'pdf', 'print'
                                 ],
                             });
-                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio,water_t_height,loc_name), 2000);
+
+                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
 
                         }
                     },
@@ -202,7 +203,7 @@
 
             });
 
-            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio,water_t_height,loc_name) {
+            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -218,13 +219,15 @@
                             let datatable = $('#sensor_content').DataTable();
                             datatable.row.add([water.date, water.mine, loc_name,s_value]).draw().node();
                             checkAndPlay(s_value, water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio)
+
                         }
                     },
                     error: function () {
                         console.log("Something Went Wrong!");
                     },
                     complete: function () {
-                        setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio,water_t_height,loc_name), 2000);
+
+                        setTimeout(waterTable(location_id, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
                     }
                 });
             };

@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaulttags import register
 
 from apps import settings
-from setting.utils import decrypt
+from setting.utils import decrypt, encrypt
 from .models import Node, Sensor_Node, gasModel_auto
 from .models import MineDetails
 from .forms import NodeForm, Sensor_NodeForm
