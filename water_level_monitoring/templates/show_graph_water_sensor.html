@@ -119,6 +119,7 @@
                         if (data.hasOwnProperty('result')) {
                             let water = data.result;
                             $('#ip_hidden').val(water.ip);
+                           // console.log(water);
                             water_l_value = parseFloat(water.level1);
                             water_m_value = parseFloat(water.level2);
                             water_h_value = parseFloat(water.level3);
@@ -131,8 +132,8 @@
                             water_third_warning = water.level3_msg;
 
                             water_first_audio = water.level1_audio;
-                            water_second_audio = water.level1_audio;
-                            water_third_audio = water.level1_audio;
+                            water_second_audio = water.level2_audio;
+                            water_third_audio = water.level3_audio;
                             var time = new Date();
                             var y = [];
                             var watertrace = {
@@ -245,7 +246,7 @@
             });
 
             var watermonitoringajax = function (location_id, water_l_value, water_m_value, water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
-                console.log('ajax',location_id);
+               // console.log('ajax',location_id);
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -259,6 +260,7 @@
                         if (data.hasOwnProperty('result')) {
                             let water = data.result;
                             let value = water_t_height - water.sensor_value;
+                            console.log(value);
                             time = new Date();
                             //console.log('Generate', water_l_value, water_m_value, water_h_value);
                             let update = {
@@ -278,7 +280,7 @@
                             };
                             Plotly.relayout('watermonitoring', minuteView);
                             Plotly.extendTraces('watermonitoring', update, [0]);
-                            {#checkAndPlay(Number(value), water_l_value, water_m_value, water_h_value, water_t_height, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);#}
+                            checkAndPlay(Number(value), water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio);
 
                         }
                     },
@@ -289,7 +291,7 @@
             };
 
             function checkAndPlay(sensorValue, l_value, m_value, h_value, string, audio_type, first_warning, second_warning, third_warning, first_audio, second_audio, third_audio) {
-                // console.log(sensorValue);
+                //console.log(first_audio,second_audio,third_audio);
 
                 var loc = window.location;
                 var baseUrl = loc.protocol + "//" + loc.hostname + (loc.port ? ":" + loc.port : "") + "/media/";
@@ -340,6 +342,7 @@
                         Speak(third_warning, 9, 0.5);
                     } else {
                         path = baseUrl + third_audio;
+                        console.log(path);
                         var playNow = new Audio(path);
                         playNow.play();
                     }

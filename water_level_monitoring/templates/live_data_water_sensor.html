@@ -115,6 +115,7 @@
             var h_color = "#F37C84";
 
 
+
             //------------------------------------------------------------------------------------------------------------------
 
             $(document.body).on('click', '#btn_show', function () {
@@ -127,6 +128,7 @@
                     return;
                 }
                 let location_id = $('#id_location_list').val();
+                let loc_name =$("#id_location_list option:selected").text();
 
                 let water_l_value = 0.0;
                 let water_m_value = 0.0;
@@ -163,8 +165,8 @@
                             water_third_warning = water.level3_msg;
 
                             water_first_audio = water.level1_audio;
-                            water_second_audio = water.level1_audio;
-                            water_third_audio = water.level1_audio;
+                            water_second_audio = water.level2_audio;
+                            water_third_audio = water.level3_audio;
                             $('#sensor_content').DataTable({
                                 'rowCallback': function (row, data, index) {
                                     if (parseFloat(data[3]) <= parseFloat(water_l_value)) {
@@ -189,7 +191,8 @@
                                     'copy', 'csv', 'pdf', 'print'
                                 ],
                             });
-                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+
+                            setTimeout(waterTable(location_id,loc_name, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
 
                         }
                     },
@@ -200,7 +203,7 @@
 
             });
 
-            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
+            var waterTable = function (location_id, loc_name,water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -208,20 +211,23 @@
                         'id': location_id
                     },
                     success: function (data) {
+
                         if (data.hasOwnProperty('result')) {
                             let water = data.result;
+                            let s_value =  parseInt(water_t_height) - parseInt(water.sensor_value);
+                            console.log(water_t_height+"/"+(water.sensor_value));
                             let datatable = $('#sensor_content').DataTable();
-                            let value = parseFloat(water_t_height) - parseFloat(water.sensor_value);
-                            console.log('t hieght sensor value',water_t_height,water.sensor_value);
-                            datatable.row.add([water.date, water.mine, water.mine, value]).draw().node();
-                            checkAndPlay(value, water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio)
+                            datatable.row.add([water.date, water.mine, loc_name,s_value]).draw().node();
+                            checkAndPlay(s_value, water_l_value, water_m_value, water_h_value, "Water Level Warning", water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio)
+
                         }
                     },
                     error: function () {
                         console.log("Something Went Wrong!");
                     },
                     complete: function () {
-                        setTimeout(waterTable(location_id, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+
+                        setTimeout(waterTable(location_id,loc_name, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
                     }
                 });
             };
@@ -244,6 +250,7 @@
                         Speak(first_warning, 9, 0.5);
                     } else {
                         path = baseUrl + first_audio;
+                        console.log("first : "+(path));
                         var playNow = new Audio(path);
                         playNow.play();
                     }
@@ -261,6 +268,7 @@
                         Speak(second_warning, 9, 0.5);
                     } else {
                         path = baseUrl + second_audio;
+                        console.log("middle : "+(path));
                         var playNow = new Audio(path);
                         playNow.play();
                     }
@@ -278,6 +286,7 @@
                         Speak(third_warning, 9, 0.5);
                     } else {
                         path = baseUrl + third_audio;
+                        console.log("third : "+(path));
                         var playNow = new Audio(path);
                         playNow.play();
                     }

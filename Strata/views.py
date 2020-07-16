@@ -846,7 +846,7 @@ def fetch_sensor_average_date_range(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT COUNT(id) as number_of_record ,AVG(CONVERT(sensor_value,UNSIGNED INTEGER)) as average, Max(CONVERT(sensor_value,UNSIGNED INTEGER)) as max_value,Min(CONVERT(sensor_value,UNSIGNED INTEGER)) as min_value, DATE(created_date) as date,HOUR(created_date) as hour FROM strata_sensor_data where sensor_id ='"+sensor_id+"' and created_date BETWEEN '"+datetime_from+"' and '"+datetime_to+"' and sensor_value*0 != sensor_value GROUP BY DATE(created_date ), HOUR( created_date ) order by created_date, hour  desc")
         row = cursor.fetchall()
-        #print("SELECT COUNT(id) as number_of_record ,AVG(CONVERT(sensor_value,UNSIGNED INTEGER)) as average, Max(CONVERT(sensor_value,UNSIGNED INTEGER)) as max_value,Min(CONVERT(sensor_value,UNSIGNED INTEGER)) as min_value, DATE(created_date) as date,HOUR(created_date) as hour FROM strata_sensor_data where sensor_id ='"+sensor_id+"' and created_date BETWEEN '"+datetime_from+"' and '"+datetime_to+"' and sensor_value*0 != sensor_value GROUP BY DATE(created_date ), HOUR( created_date ) order by created_date, hour  desc")
+        print("SELECT COUNT(id) as number_of_record ,AVG(CONVERT(sensor_value,UNSIGNED INTEGER)) as average, Max(CONVERT(sensor_value,UNSIGNED INTEGER)) as max_value,Min(CONVERT(sensor_value,UNSIGNED INTEGER)) as min_value, DATE(created_date) as date,HOUR(created_date) as hour FROM strata_sensor_data where sensor_id ='"+sensor_id+"' and created_date BETWEEN '"+datetime_from+"' and '"+datetime_to+"' and sensor_value*0 != sensor_value GROUP BY DATE(created_date ), HOUR( created_date ) order by created_date, hour  desc")
 
     datetime_from = datetime_from.split(" ")
 

@@ -246,7 +246,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="pe-7s-mail">
-                                    <span class="label">{{ notification.medical.count }}</span>
+                                    <span class="label">{{ notification.medical|length }}</span>
                                 </i>
                                 <p>Notification</p>
                             </a>
@@ -403,7 +403,6 @@
     </div>
 </div><!--  end navbar -->
 </div> <!-- end menu-dropdown -->
-
 <div class="main">
     <div class="container tim-container" style="max-width:100%; padding-top:00px">
         <div class="ots" style="padding-top:0px">
@@ -423,7 +422,7 @@
                                     <a href="{% url 'employee:manage_mine' %}">Mine Details | Mine Shift</a>
                                     <a href="{% url 'employee:manage_mining_role' %}">Miner&#39;s Role &amp;
                                         Hierarchy</a>
-                                    <a href="{% url 'attendance:index' %}">Add Employee Attendance</a>
+                                    <a href="{% url 'employee:org_chart' %}">Role Structure</a>
                                 </div>
                             </div>
                         </div>
@@ -448,34 +447,16 @@
                                 <span class="icon fa fa-industry" aria-hidden="true"></span>
                                 <h4>Environment Monitoring</h4>
                                 <div class="ots-btn-group">
-                                    <a href="{% url 'gasmonitoring_wifi:add_goaf_area' %}">Add Goaf Area</a>
-                                    <a href="{% url 'gasmonitoring_wifi:manage_goaf_area' %}">Manage Goaf
-                                        Area</a>
+                                    <a href="{% url 'sensor:node_manage' %}">Manage Wireless Node</a>
+                                    <a href="{% url 'sensor:live_data_tabular' %}">Live Data in Tabular</a>
                                     <!--<a href="{% url 'sensor:node_add' %}">Add Wireless Node</a>-->
                                     <!--<a href="{% url 'sensor:live_data_tabular' %}">Live Data (Tabular)</a>-->
                                     <!--<a href="{% url 'sensor:live_data_graph' %}">Live Data (Graph)</a>-->
-                                    <a href="{% url 'sensor:live_map' %}">Live Data(Map)</a>
-                                    <a href="{% url 'temp_monitoring:index' %}">Show Temperature Information</a>
+                                    <a href="{% url 'sensor:live_data_graph' %}">Live Data in Graph</a>
+                                    <a href="{% url 'sensor:avg_report_table' %}">Average Reporting</a>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 ">
-                            <div class="ots-inner text-center content ripple-effect">
-                                <span class="icon fa fa-bank" aria-hidden="true"></span>
-                                <h4>E-Governance</h4>
-                                <div class="ots-btn-group">
-                                    <a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Annual
-                                        Report</a>
-                                    <a target="_blank"
-                                       href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
-                                        Annual Annexure I
-                                        (Coal Mine)</a>
-                                    <a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!--row ends-->
-                    <div class="row row-flex">
                         <div class="col-md-3 ">
                             <div class="ots-inner text-center content ripple-effect">
                                 <span class="icon fa fa-cube" aria-hidden="true"></span>
@@ -489,6 +470,24 @@
                                     <a href="{% url 'Strata:manage_sensor_in_location' %}">Manage Sensor</a>
                                     <a href="{% url 'Strata:live_data_tabular' %}">Live Data(Tabular)</a>
                                     <a href="{% url 'Strata:show_sensor_graph' %}">Live Data(Graph)</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div><!--row ends-->
+                    <div class="row row-flex">
+                        <div class="col-md-3 ">
+                            <div class="ots-inner text-center content ripple-effect">
+                                <span class="icon fa fa-bank" aria-hidden="true"></span>
+                                <h4>E-Governance</h4>
+                                <div class="ots-btn-group">
+                                    <a target="_blank" href="http://peso.gov.in/index.aspx">Fill Quaterly Annual
+                                        Report</a>
+                                    <a target="_blank"
+                                       href="{% url 'DGMS_Forms:Manage_DGMS_CoalMine_Annual_Annexure_I' %}">Manage
+                                        Annual Annexure I
+                                        (Coal Mine)</a>
+                                    <a target="_blank" href="{% url 'DGMS_Forms:sendMail' %}">Compose Mail</a>
                                 </div>
                             </div>
                         </div>

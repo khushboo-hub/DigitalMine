@@ -845,13 +845,19 @@ def org_chart(request, template_name='employee/employeechart.html'):
         except:
             parent_id = ''
             pass
+
+        try:
+            photo = str(emp.photo.url)
+        except:
+            photo = '/media/employee_image/male_alt_photo.svg'
+            pass
         empl.append({
             'id': str(emp.id),
             'pid': str(parent_id),
             'name': str(emp.name),
             'title': str(emp.mining_role),
             'email': str(emp.email),
-            'img': str(emp.photo.url)
+            'img': photo
         })
     import json
     return_data = json.dumps(empl)

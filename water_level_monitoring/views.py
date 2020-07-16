@@ -166,23 +166,22 @@ def fetch_water_level_ajax(request):
         sensor_id = request.GET.get('id', None)
         sensor_details = water_level_monitoring_model.objects.get(id=sensor_id)
 
-
         mine_details = MineDetails.objects.get(id=sensor_details.mine_id_id)
         now = datetime.now()
         ok_date = (str(now.strftime('%Y-%m-%d %H:%M:%S')))
-
         try:
             response = requests.get('http://' + str(sensor_details.ip_address))
             sensor_val = strip_tags(response.text)
+
             if sensor_val:
                 sensor_data = {'id': str(sensor_details.id),
                                # 'ip': str(sensor_details.ip_address),
                                'date': str(ok_date),
                                'mine': str(mine_details.name),
-                               # 'location': str(sensor_details.location_id),
+                               #'location': str(sensor_details.location_id),
                                # 'sensor_name': str(sensor_details.sensor_name),
                                # 'unit': str(sensor_details.sensor_unit),
-                               'sensor_value': str(sensor_val),
+                               'sensor_value': sensor_val
                                # 'tag': str(sensor_details.tag_no),
                                # 'audio_type': str(sensor_details.audio_play_type),
                                # 'first_warning_msg': str(sensor_details.level_1_msg),
@@ -234,6 +233,7 @@ def fetch_water_level_ajax(request):
         data['result'] = sensor_data
     else:
         data['result'] = "Not Ajax"
+    print(data)
     return JsonResponse(data)
 
 

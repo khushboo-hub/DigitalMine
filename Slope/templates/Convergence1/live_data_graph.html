@@ -366,7 +366,7 @@
                         },
                         error: function () {
                             console.log("Something Went Wrong!");
-                        }, timeout: 10000
+                        }, timeout: 50000
                     });
                 }
 
@@ -427,7 +427,7 @@
                                 slopeFlag = 0;
                                 return;
                             }
-                            setTimeout(slopemonitoringajax(slope_l_Value, slope_m_Value, slope_h_Value, url, sensor_id), 100);
+                            setTimeout(slopemonitoringajax(slope_l_Value, slope_m_Value, slope_h_Value, url, sensor_id), 50000);
                         }, timeout: 60000,
                     });
                 };
@@ -484,8 +484,8 @@
                                 slopeFlag = 0;
                                 return;
                             }
-                            setTimeout(slopemonitoringajax1(slope_l_Value, slope_m_Value, slope_h_Value, url, api_url), 100);
-                        }, timeout: 60000,
+                            setTimeout(slopemonitoringajax1(slope_l_Value, slope_m_Value, slope_h_Value, url, api_url), 50000);
+                        }, timeout: 50000,
                     });
                 };
                 function checkAndPlay(sensorValue) {
@@ -696,7 +696,7 @@
                         },
                         error: function () {
                             console.log("Something Went Wrong!");
-                        }, timeout: 10000
+                        }, timeout: 50000
                     });
                 }
 
