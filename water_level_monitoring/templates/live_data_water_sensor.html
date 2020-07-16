@@ -128,7 +128,7 @@
                     return;
                 }
                 let location_id = $('#id_location_list').val();
-                var loc_name =$("#id_location_list option:selected").text();
+                let loc_name =$("#id_location_list option:selected").text();
 
                 let water_l_value = 0.0;
                 let water_m_value = 0.0;
@@ -192,7 +192,7 @@
                                 ],
                             });
 
-                            setTimeout(waterTable(location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+                            setTimeout(waterTable(location_id,loc_name, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
 
                         }
                     },
@@ -203,7 +203,7 @@
 
             });
 
-            var waterTable = function (location_id, water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
+            var waterTable = function (location_id, loc_name,water_l_value, water_m_value, water_h_value,water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio) {
                 $.ajax({
                     type: "get",
                     url: "{% url 'water_level_monitoring:fetch_water_level_ajax' %}",
@@ -227,7 +227,7 @@
                     },
                     complete: function () {
 
-                        setTimeout(waterTable(location_id, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
+                        setTimeout(waterTable(location_id,loc_name, water_l_value, water_m_value,water_h_value, water_t_height, water_audio_type, water_first_warning, water_second_warning, water_third_warning, water_first_audio, water_second_audio, water_third_audio), 2000);
                     }
                 });
             };
