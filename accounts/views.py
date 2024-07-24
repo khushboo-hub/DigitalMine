@@ -11,11 +11,12 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
+from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import profile_extension, UserSession
 from django.core.mail import EmailMessage
 from theme import views as homeViews
-from django.contrib import messages
+
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponse, JsonResponse
 from setting.utils import decrypt

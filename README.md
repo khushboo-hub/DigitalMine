@@ -19,7 +19,8 @@ tested with Django 2.x version. To install it use the following command:
     pip install -r requirements.txt
     
 You might encounter problem during the installation of mysqlclient.
-To install mysqlclieny you can download the supported mysqlclient wheel from [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient) or you can give this job to a custom utility python script 
+To install mysqlclieny you can download the supported mysqlclient wheel from
+[here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#mysqlclient) or you can give this job to a custom utility python script 
 
     ./install_mysqlclient_custom.py # This script will search for a desired wheel and instal it for you
 
@@ -51,7 +52,8 @@ or
 
 `We can just import the file ''iot_structure.sql'' or ''iot_structure_and_data'' into phpmyadmin for the structure of the project and the structure and data respectively `
 
-If you encounter any problem during migrations than there might probably be some problem with init.py and pycache file under migrations folder.
+If you encounter any problem during migrations than there might probably be some problem 
+with init.py and pycache file under migrations folder.
 To solve it you can delete those files using a custom utility python script
 
     ./delete_migrations_custom.py

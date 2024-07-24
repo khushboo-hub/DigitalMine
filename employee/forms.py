@@ -56,7 +56,8 @@ u'rRXVe68NO7m3mHoBS488KdHaqQPD6Ofv'
 class EmployeeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EmployeeForm, self).__init__(*args, **kwargs)
-        # Defined this __init_ function for Mining Role according to the Mine id, for this Mine Id needs to be passed from the view
+        # Defined this __init_ function for Mining Role according to the Mine id,
+        # for this Mine Id needs to be passed from the view
 
     # =================for Personal Details======================
     GENDER_CHOICES = (

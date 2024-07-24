@@ -27,6 +27,8 @@ ENCRYPT_KEY = b'zuXLx4c01oe15FstyxBPqyjgC0RKbzMEPZKA--bUHyI='
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = ['your-production-site.com']
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -35,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
+    'django.contrib.sessions', #session Management through cookies in-build
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'gdstorage',
@@ -78,14 +80,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     # 'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', #session Management
+    'django.middleware.common.CommonMiddleware', #session Management
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     # 'htmlmin.middleware.HtmlMinifyMiddleware',
@@ -126,9 +127,9 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cimfr_iot',
+        'NAME': 'digi_mine',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'OPTIONS':{
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
@@ -182,7 +183,7 @@ LANGUAGES = (
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'Asia/Kolkata'
-
+#to support multiple languages and regions.
 USE_I18N = True
 
 USE_L10N = True
@@ -203,6 +204,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 LOGIN_REDIRECT_URL = '/accounts/login'
 LOGOUT_REDIRECT_URL = "/"
 
+#Set up your Django settings to handle media files. Add the following settings in settings.py:
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

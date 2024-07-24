@@ -50,11 +50,11 @@
                 <div class="form-group">
                     <form class="form-horizontal" method="post" enctype="multipart/form-data" >{% csrf_token %}
                         <fieldset class="scheduler-border">
-                            <legend class="scheduler-border"><font color="blue">Mine Specific Details</font></legend>
+                            <legend class="scheduler-border"><font color="blue">Clinic Specific Details</font></legend>
                         <div class="form-group col-md-12">
                             <div class="col-md-12">
                                 <div class="col-md-4">
-                                    <label name="mine_id" for="" class="" id="mine_id">Choose Mine:<font color="red">*</font></label>
+                                    <label name="mine_id" for="" class="" id="mine_id">Choose Clinic Area:<font color="red">*</font></label>
                                 </div>
                                 <div class="col-md-8">
                                     {{form.mine_id}}

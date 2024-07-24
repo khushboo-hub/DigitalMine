@@ -4,7 +4,6 @@ from django.db import models
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
-
 from employee.models import MineDetails,MineShift
 from django.contrib.sessions.models import Session
 from django.conf import settings
